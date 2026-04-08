@@ -1,0 +1,132 @@
+/* --- ตั้งค่าพื้นฐาน Tabbar ให้พื้นหลังเป็น "สีขาว" --- */
+.ai-tabbar-wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 70px;
+  background-color: #ffffff;
+  z-index: 1000;
+  transition: box-shadow 0.3s ease;
+  display: flex;
+  justify-content: center; /* จัด Container ให้อยู่ตรงกลางจอ */
+  border-bottom: 1px solid #f3f4f6; /* เส้นขอบบางๆ ดูคลีนๆ */
+}
+
+/* --- เมื่อเลื่อนหน้าจอ (คลาส shadow ทำงาน) ให้เพิ่มเงา --- */
+.ai-tabbar-wrapper.shadow {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+  border-bottom: transparent;
+}
+
+/* Container จำกัดความกว้าง และจัดเรียง */
+.ai-tabbar-container {
+  width: 100%;
+  max-width: 1440px;
+  padding: 0 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+/* --- ฝั่งซ้าย: โลโก้ --- */
+/* ใช้ flex: 1 เพื่อให้ฝั่งซ้ายและขวากินพื้นที่เท่ากัน ดันให้เมนูอยู่ตรงกลางเป๊ะๆ */
+.ai-tabbar-left {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  justify-content: flex-start;
+}
+
+.ai-logo-link {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+}
+
+.ai-tabbar-logo-img {
+  height: 28px;
+  object-fit: contain;
+}
+
+/* --- ตรงกลาง: เมนูลิงก์ --- */
+.ai-tabbar-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.ai-tabbar-links {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  gap: 32px; /* ระยะห่างระหว่างเมนู */
+  align-items: center;
+}
+
+.ai-tabbar-links li a {
+  text-decoration: none;
+  color: #4b5563; /* สีเทาเข้มแบบเว็บยุคใหม่ */
+  font-size: 15px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  transition: color 0.2s ease;
+}
+
+/* Hover หรือตอนที่อยู่หน้านั้นๆ */
+.ai-tabbar-links li a:hover,
+.ai-tabbar-links li a.active {
+  color: #75ba40; /* เปลี่ยนสีเป็นเขียวตอนเลือก */
+}
+
+/* --- ฝั่งขวา: ปุ่มกด --- */
+/* ใช้ flex: 1 ควบคู่กับฝั่งซ้าย เพื่อรักษาสมดุล */
+.ai-tabbar-right {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 24px;
+  flex: 1;
+}
+
+/* ปุ่มดาวน์โหลดเอกสาร (แบบ Text Link มีเส้นใต้) */
+.ai-tabbar-text-link {
+  text-decoration: underline;
+  text-underline-offset: 4px; /* ให้เส้นใต้อยู่ห่างจากตัวหนังสือเล็กน้อย */
+  text-decoration-color: #d1d5db; /* สีเส้นใต้ตอนปกติ */
+  color: #4b5563;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  white-space: nowrap; /* ป้องกันข้อความตกบรรทัด */
+}
+
+.ai-tabbar-text-link:hover {
+  color: #111827; /* ตัวหนังสือเข้มขึ้น */
+  text-decoration-color: #111827; /* เส้นใต้เข้มขึ้น */
+}
+
+/* ปุ่มเข้าสู่ระบบ */
+.ai-tabbar-btn {
+  text-decoration: none;
+  padding: 8px 20px;
+  border-radius: 20px; /* ทรงสี่เหลี่ยมโค้งมนมน */
+  font-size: 14px;
+  font-weight: 600;
+  color: #ffffff;
+  background-color: #75ba40; /* สีเขียว */
+  transition: all 0.2s ease;
+  white-space: nowrap; /* ป้องกันข้อความตกบรรทัด */
+}
+
+.ai-tabbar-btn:hover {
+  background-color: #75ba40; /* สีเข้มขึ้นตอนเอาเมาส์ชี้ */
+}
+
+.ai-tabbar-btn:active {
+  transform: scale(0.97); /* ยุบลงนิดนึงตอนกด */
+}

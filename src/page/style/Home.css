@@ -1,0 +1,179 @@
+/* ครอบคลาสทั้งหมดด้วย hm- เพื่อให้มีผลเฉพาะหน้า Home */
+.hm-wrapper {
+  width: 100vw;
+  background-color: #ffffff; /* พื้นหลังเผื่อไว้เวลามีเนื้อหาต่อด้านล่าง */
+}
+
+/* --- โครงสร้าง Hero Slider --- */
+.hm-hero-slider {
+  position: relative;
+  width: 100vw;
+  height: 100vh; /* ให้แบนเนอร์กว้างและสูงเต็มหน้าจอ */
+  overflow: hidden;
+  background-color: #000000; /* พื้นหลังสีดำกันกระตุกตอนโหลดรูป */
+}
+
+/* --- แต่ละสไลด์ --- */
+.hm-slide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  opacity: 0; /* ซ่อนไว้ก่อน */
+  transition: opacity 1s ease-in-out; /* อนิเมชั่น Fade */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+}
+
+.hm-slide.active {
+  opacity: 1; /* แสดงสไลด์ปัจจุบัน */
+  z-index: 2;
+}
+
+/* [UPDATE] ฟิลเตอร์เข้มทับรูป เพื่อให้ข้อความสีขาวเด่น */
+.hm-slide-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.65); /* ฟิลเตอร์สีดำ ความทึบ 65% */
+  z-index: 3;
+}
+
+/* --- เนื้อหาในสไลด์ --- */
+.hm-slide-content {
+  position: relative;
+  z-index: 4;
+  text-align: center;
+  color: #ffffff; /* [UPDATE] ปรับสีข้อความเป็นสีขาว */
+  max-width: 900px;
+  padding: 0 20px;
+  transform: translateY(30px);
+  transition:
+    transform 1s ease,
+    opacity 1s ease;
+  opacity: 0;
+}
+
+.hm-slide.active .hm-slide-content {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.hm-slide-title {
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 20px;
+  line-height: 1.3;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); /* เพิ่มเงาให้ตัวหนังสือลอยขึ้นนิดนึง */
+  color: #ffffff;
+  font-style: italic;
+  font-family: "IBM Plex Sans Thai";
+}
+
+.hm-slide-subtitle {
+  font-size: 1.15rem;
+  font-weight: 300;
+  margin-bottom: 40px;
+  color: rgba(255, 255, 255, 0.9); /* [UPDATE] สีขาวจางๆ ให้อ่านง่ายสบายตา */
+  line-height: 1.6;
+}
+
+/* --- ปุ่มในแบนเนอร์ --- */
+.hm-slide-actions {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+}
+
+.hm-slide-actions button {
+  padding: 12px 30px;
+  font-size: 15px;
+  font-weight: 600;
+  border-radius: 20px; /* [UPDATE] ปรับปุ่มโค้ง 20px ตามต้องการ */
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: "IBM Plex Sans Thai";
+}
+
+.hm-btn-primary {
+  background-color: #75ba40; /* สีเขียวจากโลโก้ */
+  color: white;
+  border: none;
+}
+.hm-btn-primary:hover {
+  background-color: #639d36;
+  transform: translateY(-2px);
+}
+
+.hm-btn-secondary {
+  background-color: transparent;
+  color: #ffffff; /* [UPDATE] ปรับสีข้อความเป็นสีขาว */
+  border: 1px solid #ffffff; /* [UPDATE] ปรับสีเส้นขอบเป็นสีขาว */
+}
+.hm-btn-secondary:hover {
+  background-color: rgba(255, 255, 255, 0.1); /* Hover เป็นสีขาวใสๆ */
+  color: #ffffff;
+  transform: translateY(-2px);
+}
+
+/* --- ปุ่มลูกศรซ้าย-ขวา --- */
+.hm-slider-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.1); /* ปุ่มใสสีขาว */
+  color: #ffffff; /* ลูกศรสีขาว */
+  border: none;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  transition: background 0.3s ease;
+}
+
+.hm-slider-arrow:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.hm-slider-arrow.left {
+  left: 30px;
+}
+.hm-slider-arrow.right {
+  right: 30px;
+}
+
+/* --- จุดนำทาง (Dots) --- */
+.hm-slider-dots {
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 12px;
+  z-index: 10;
+}
+
+.hm-dot {
+  width: 10px;
+  height: 10px;
+  background-color: rgba(255, 255, 255, 0.4); /* จุดใสสีขาว */
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.hm-dot.active {
+  background-color: #75ba40; /* จุด Active เป็นสีเขียวโลโก้ */
+  transform: scale(1.3);
+}
