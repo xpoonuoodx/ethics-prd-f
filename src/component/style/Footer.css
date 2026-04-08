@@ -1,0 +1,217 @@
+/* บังคับฟอนต์ IBM Plex Sans Thai */
+.ai-footer,
+.ai-footer * {
+  font-family: "IBM Plex Sans Thai", sans-serif !important;
+  box-sizing: border-box;
+}
+
+.ai-footer {
+  background-color: #ffffff;
+  border-top: 1px solid #f0f0f0;
+  padding: 70px 0 40px 0;
+  color: #333;
+}
+
+.ai-footer-container {
+  max-width: 1200px; /* คุมความกว้างไม่ให้บานเกินไป */
+  margin: 0 auto;
+  padding: 0 25px;
+}
+
+/* การจัด Grid 4 คอลัมน์ให้สมดุล */
+.ai-footer-main-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 0.7fr 1fr 1.1fr; /* ปรับสัดส่วนคอลัมน์ให้พอดีกับเนื้อหา */
+  gap: 50px;
+  margin-bottom: 50px;
+  align-items: start;
+}
+
+.footer-logo-img {
+  height: 35px;
+  margin-bottom: 20px;
+}
+
+.footer-about-text {
+  font-size: 14px;
+  color: #666;
+  line-height: 1.7;
+  margin-bottom: 20px;
+  padding-right: 20px;
+}
+
+.footer-social-row {
+  display: flex;
+  gap: 15px;
+}
+
+.social-link-item {
+  color: #666;
+  transition: 0.3s;
+}
+
+.social-link-item:hover {
+  color: #75ba40;
+}
+
+/* หัวข้อ (Title) */
+.footer-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #111;
+  margin-bottom: 25px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* รายการลิงก์ (Quick Links) */
+.footer-nav {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-nav li {
+  margin-bottom: 12px;
+}
+
+.footer-nav li a {
+  text-decoration: none;
+  color: #666;
+  font-size: 14.5px;
+  transition: 0.2s;
+}
+
+.footer-nav li a:hover {
+  color: #75ba40;
+  padding-left: 5px; /* ลูกเล่นเล็กๆ ตอนชี้ */
+}
+
+/* รายการติดต่อ (Contact) */
+.footer-contact-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-contact-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 15px;
+}
+
+.f-icon {
+  color: #75ba40;
+  margin-top: 3px;
+}
+
+/* การ์ดความปลอดภัย (PDPA Card) */
+.footer-pdpa-card {
+  display: flex;
+  gap: 15px;
+  background: #f9fafb;
+  padding: 20px;
+  border-radius: 16px;
+  border: 1px solid #f0f0f0;
+}
+
+.pdpa-text strong {
+  display: block;
+  font-size: 14px;
+  color: #111;
+  margin-bottom: 4px;
+}
+
+.pdpa-text p {
+  font-size: 12px;
+  color: #888;
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* ส่วนล่างสุด (Copyright) */
+.ai-footer-bottom {
+  border-top: 1px solid #f3f4f6;
+  padding-top: 30px;
+}
+
+.copyright-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.copyright-content p {
+  font-size: 13px;
+  color: #999;
+  margin: 0;
+}
+
+.legal-links {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.legal-links a {
+  color: #999;
+  font-size: 13px;
+  text-decoration: none;
+  transition: 0.2s;
+}
+
+.legal-links a:hover {
+  color: #333;
+}
+
+.sep {
+  color: #ddd;
+  font-size: 10px;
+}
+
+/* =========================================
+   RESPONSIVE (ปรับให้สมดุลบนมือถือ)
+   ========================================= */
+
+@media (max-width: 1024px) {
+  .ai-footer-main-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+  }
+}
+
+@media (max-width: 700px) {
+  .ai-footer {
+    padding: 50px 0 30px 0;
+  }
+
+  .ai-footer-main-grid {
+    grid-template-columns: 1fr;
+    gap: 35px;
+    text-align: center;
+  }
+
+  .footer-logo-img,
+  .footer-social-row {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .footer-contact-list li {
+    justify-content: center;
+  }
+
+  .footer-pdpa-card {
+    text-align: left;
+    max-width: 300px;
+    margin: 0 auto;
+  }
+
+  .copyright-content {
+    flex-direction: column;
+    gap: 15px;
+  }
+}
