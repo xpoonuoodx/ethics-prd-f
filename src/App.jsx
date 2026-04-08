@@ -2,7 +2,7 @@ import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Home from "./page/Home"; // นำเข้า Home (ปรับ Path ตามโฟลเดอร์ของคุณ)
 
-// จำลอง Component สำหรับหน้าอื่นๆ (สร้างไฟล์แยกได้เลยครับ)
+// จำลอง Component สำหรับหน้าอื่นๆ (สร้างไฟล์แยกได้เลยครับ) v.1
 const Services = () => (
   <div>
     <h1>บริการของเรา</h1>
