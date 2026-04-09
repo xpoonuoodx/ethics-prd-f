@@ -29,10 +29,14 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/services" element={<Services />} />
-        <Route path="/workflow" element={<Workflow />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+
+        {/* กลุ่ม Route สำหรับหน้าเกี่ยวกับเรา */}
+        <Route path="/about/background" element={<AboutBackground />} />
+        <Route path="/about/principles" element={<AboutPrinciples />} />
+        <Route path="/about/process" element={<AboutProcess />} />
+        <Route path="/about/participation" element={<AboutParticipation />} />
+        <Route path="/contact" element={<Contact />} />
       </Routes>
     </Router>
   );

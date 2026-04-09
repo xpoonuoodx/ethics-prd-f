@@ -1,0 +1,408 @@
+/* บังคับใช้ฟอนต์ IBM Plex Sans Thai กับทุก Element ภายใน Dashboard */
+.db-wrapper,
+.db-wrapper * {
+  font-family: "IBM Plex Sans Thai", sans-serif !important;
+}
+
+/* [UPDATE] เปิดใช้งาน box-sizing เฉพาะในส่วนเนื้อหาของ Dashboard เพื่อไม่ให้กระทบดีไซน์ของ Tabbar */
+.db-main-content,
+.db-main-content * {
+  box-sizing: border-box;
+}
+
+.db-wrapper {
+  background-color: #f4f7f9; /* สีเทาอมฟ้าอ่อนๆ สบายตา */
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden; /* ป้องกันการเลื่อนแนวนอน */
+}
+
+.db-main-content {
+  flex-grow: 1;
+  /* ขยายความกว้างเต็มจอมากขึ้น */
+  max-width: 1536px;
+  width: 100%;
+  margin: 0 auto;
+  /* เพิ่ม Padding ให้มี Space สวยๆ */
+  padding: 130px 40px 80px 40px;
+}
+
+/* =========================================
+   HEADER SECTION
+   ========================================= */
+.db-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 40px;
+}
+
+.db-title {
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: #111827;
+  margin: 0 0 10px 0;
+  letter-spacing: -0.5px;
+}
+
+.db-subtitle {
+  font-size: 1.1rem;
+  color: #6b7280;
+  margin: 0;
+}
+
+.db-btn-export {
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+  color: #374151;
+  padding: 12px 24px;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+}
+
+.db-btn-export:hover {
+  background-color: #f9fafb;
+  border-color: #d1d5db;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.04);
+  transform: translateY(-1px);
+}
+
+/* =========================================
+   STAT CARDS (การ์ดสถิติ)
+   ========================================= */
+.db-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 30px;
+  margin-bottom: 40px;
+}
+
+.db-stat-card {
+  background-color: #ffffff;
+  border-radius: 20px;
+  padding: 30px;
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
+  border: 1px solid rgba(0, 0, 0, 0.02);
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.db-stat-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.06);
+}
+
+.db-stat-icon-wrapper {
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.db-stat-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.db-stat-label {
+  font-size: 14.5px;
+  color: #6b7280;
+  margin: 0 0 8px 0;
+  font-weight: 500;
+}
+
+.db-stat-value {
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: #111827;
+  margin: 0 0 10px 0;
+  line-height: 1;
+}
+
+.db-stat-trend {
+  font-size: 13px;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 600;
+}
+
+.db-stat-trend.positive {
+  color: #10b981;
+}
+.db-stat-trend.negative {
+  color: #ef4444;
+}
+
+/* =========================================
+   CONTENT GRID (กราฟและตาราง)
+   ========================================= */
+.db-content-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+}
+
+.db-card {
+  background-color: #ffffff;
+  border-radius: 20px;
+  border: 1px solid rgba(0, 0, 0, 0.02);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.db-card-header {
+  padding: 25px 30px;
+  border-bottom: 1px solid #f3f4f6;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #ffffff;
+}
+
+.db-card-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #111827;
+  margin: 0;
+}
+
+.db-btn-link {
+  background: none;
+  border: none;
+  color: #75ba40;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 8px 12px;
+  border-radius: 8px;
+  transition: background 0.2s;
+}
+
+.db-btn-link:hover {
+  background: rgba(117, 186, 64, 0.1);
+}
+
+.db-card-body {
+  padding: 30px;
+  flex-grow: 1;
+}
+
+/* --- Progress Bars (ฝั่งซ้าย) --- */
+.db-progress-list {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.db-progress-item {
+  width: 100%;
+}
+
+.db-progress-info {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.db-progress-label {
+  font-size: 15px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.db-progress-percent {
+  font-size: 15.5px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.db-progress-bar-bg {
+  width: 100%;
+  height: 10px;
+  background-color: #f3f4f6;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.db-progress-bar-fill {
+  height: 100%;
+  border-radius: 10px;
+  transition: width 1s ease-in-out;
+}
+
+/* --- Activity List (ฝั่งขวา) --- */
+.db-activity-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.db-activity-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 18px;
+  padding-bottom: 25px;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.db-activity-item:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.db-activity-icon {
+  margin-top: 2px;
+  background: #f9fafb;
+  border-radius: 50%;
+  padding: 4px;
+}
+
+.db-activity-details {
+  flex-grow: 1;
+}
+
+.db-activity-org {
+  font-size: 15.5px;
+  font-weight: 700;
+  color: #111827;
+  margin: 0 0 6px 0;
+}
+
+.db-activity-action {
+  font-size: 14px;
+  color: #6b7280;
+  margin: 0;
+}
+
+.db-activity-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+  min-width: 110px;
+}
+
+.db-activity-date {
+  font-size: 13px;
+  color: #9ca3af;
+}
+
+.db-status-badge {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 5px 12px;
+  border-radius: 50px;
+}
+
+.db-status-badge.success {
+  background-color: #d1fae5;
+  color: #047857;
+}
+.db-status-badge.warning {
+  background-color: #fef3c7;
+  color: #b45309;
+}
+.db-status-badge.processing {
+  background-color: #e0e7ff;
+  color: #1d4ed8;
+}
+
+/* =========================================
+   RESPONSIVE (มือถือ และ แท็บเล็ต)
+   ========================================= */
+@media (max-width: 1200px) {
+  .db-stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .db-content-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .db-main-content {
+    padding: 100px 15px 40px 15px;
+  }
+
+  .db-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+    margin-bottom: 30px;
+  }
+
+  .db-title {
+    font-size: 1.6rem;
+  }
+
+  .db-stats-grid {
+    grid-template-columns: 1fr;
+    gap: 15px;
+    margin-bottom: 30px;
+  }
+
+  .db-stat-card {
+    padding: 20px;
+  }
+
+  .db-stat-value {
+    font-size: 1.8rem;
+  }
+
+  .db-content-grid {
+    gap: 20px;
+  }
+
+  .db-card-header {
+    padding: 20px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .db-btn-link {
+    align-self: flex-start;
+  }
+
+  .db-card-body {
+    padding: 20px;
+  }
+
+  .db-activity-item {
+    flex-direction: column;
+    gap: 10px;
+    align-items: flex-start;
+    padding-bottom: 20px;
+  }
+
+  .db-activity-meta {
+    width: 100%;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 5px;
+  }
+
+  .db-progress-label {
+    font-size: 13.5px;
+  }
+}
