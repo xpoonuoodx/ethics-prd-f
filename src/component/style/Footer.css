@@ -1,4 +1,4 @@
-/* บังคับฟอนต์ IBM Plex Sans Thai */
+/* บังคับฟอนต์ IBM Plex Sans Thai และควบคุม Layout ไม่ให้พัง */
 .ai-footer,
 .ai-footer * {
   font-family: "IBM Plex Sans Thai", sans-serif !important;
@@ -7,36 +7,40 @@
 
 .ai-footer {
   background-color: #ffffff;
-  border-top: 1px solid #f0f0f0;
-  padding: 70px 0 40px 0;
-  color: #333;
+  border-top: 1px solid #f3f4f6;
+  padding: 80px 0 30px 0; /* เพิ่ม Padding บนให้ดูมีพื้นที่หายใจ */
+  color: #374151;
 }
 
 .ai-footer-container {
-  max-width: 1200px; /* คุมความกว้างไม่ให้บานเกินไป */
+  max-width: 1240px; /* ขยายให้พอดีกับกรอบเนื้อหาเว็บส่วนอื่น */
   margin: 0 auto;
-  padding: 0 25px;
+  padding: 0 40px;
 }
 
-/* การจัด Grid 4 คอลัมน์ให้สมดุล */
+/* =========================================
+   MAIN GRID (จัดสัดส่วนใหม่ให้สมดุล)
+   ========================================= */
 .ai-footer-main-grid {
   display: grid;
-  grid-template-columns: 1.2fr 0.7fr 1fr 1.1fr; /* ปรับสัดส่วนคอลัมน์ให้พอดีกับเนื้อหา */
-  gap: 50px;
-  margin-bottom: 50px;
+  grid-template-columns: 1.4fr 0.8fr 1fr 1.2fr; /* ปรับสัดส่วนคอลัมน์ให้ข้อความไม่โดนบีบ */
+  gap: 40px;
+  margin-bottom: 60px;
   align-items: start;
 }
 
+/* --- Column 1: About --- */
 .footer-logo-img {
-  height: 35px;
-  margin-bottom: 20px;
+  height: 32px; /* ขนาดโลโก้กำลังดี */
+  margin-bottom: 25px;
+  object-fit: contain;
 }
 
 .footer-about-text {
-  font-size: 14px;
-  color: #666;
-  line-height: 1.7;
-  margin-bottom: 20px;
+  font-size: 14.5px;
+  color: #4b5563; /* สีเทาเข้ม อ่านง่าย */
+  line-height: 1.8; /* ช่องไฟบรรทัดโปร่งสบาย */
+  margin-bottom: 25px;
   padding-right: 20px;
 }
 
@@ -46,25 +50,28 @@
 }
 
 .social-link-item {
-  color: #666;
-  transition: 0.3s;
+  color: #9ca3af;
+  transition: color 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .social-link-item:hover {
   color: #75ba40;
 }
 
-/* หัวข้อ (Title) */
+/* --- หัวข้อคอลัมน์ (Title) --- */
 .footer-title {
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 700;
-  color: #111;
+  color: #111827; /* สีดำเข้ม */
   margin-bottom: 25px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 
-/* รายการลิงก์ (Quick Links) */
+/* --- Column 2: Quick Links --- */
 .footer-nav {
   list-style: none;
   padding: 0;
@@ -72,22 +79,24 @@
 }
 
 .footer-nav li {
-  margin-bottom: 12px;
+  margin-bottom: 16px; /* ระยะห่างระหว่างลิงก์ */
 }
 
 .footer-nav li a {
   text-decoration: none;
-  color: #666;
+  color: #4b5563;
   font-size: 14.5px;
-  transition: 0.2s;
+  font-weight: 400;
+  transition: all 0.2s ease;
+  display: inline-block;
 }
 
 .footer-nav li a:hover {
   color: #75ba40;
-  padding-left: 5px; /* ลูกเล่นเล็กๆ ตอนชี้ */
+  transform: translateX(4px); /* ลูกเล่นขยับเบาๆ */
 }
 
-/* รายการติดต่อ (Contact) */
+/* --- Column 3: Contact List --- */
 .footer-contact-list {
   list-style: none;
   padding: 0;
@@ -96,43 +105,60 @@
 
 .footer-contact-list li {
   display: flex;
-  align-items: flex-start;
+  align-items: flex-start; /* ให้ไอคอนอยู่ตรงกับบรรทัดแรกเสมอ */
   gap: 12px;
-  font-size: 14px;
-  color: #666;
-  margin-bottom: 15px;
+  font-size: 14.5px;
+  color: #4b5563;
+  margin-bottom: 18px;
+  line-height: 1.6;
 }
 
 .f-icon {
   color: #75ba40;
-  margin-top: 3px;
+  margin-top: 2px; /* ดันไอคอนลงมานิดให้กึ่งกลางตัวหนังสือ */
+  flex-shrink: 0; /* ป้องกันไอคอนบีบเบี้ยว */
 }
 
-/* การ์ดความปลอดภัย (PDPA Card) */
+/* --- Column 4: PDPA Card --- */
 .footer-pdpa-card {
   display: flex;
-  gap: 15px;
-  background: #f9fafb;
-  padding: 20px;
+  align-items: flex-start;
+  gap: 16px;
+  background: #f9fafb; /* พื้นหลังเทาอ่อนๆ ตัดกับพื้นขาว */
+  padding: 24px;
   border-radius: 16px;
-  border: 1px solid #f0f0f0;
+  border: 1px solid #f3f4f6;
+  transition: transform 0.3s ease;
+}
+
+.footer-pdpa-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.03);
+}
+
+.pdpa-icon {
+  flex-shrink: 0;
+  margin-top: 2px;
 }
 
 .pdpa-text strong {
   display: block;
-  font-size: 14px;
-  color: #111;
-  margin-bottom: 4px;
+  font-size: 15px;
+  color: #111827;
+  margin-bottom: 6px;
+  font-weight: 700;
 }
 
 .pdpa-text p {
-  font-size: 12px;
-  color: #888;
+  font-size: 13px;
+  color: #6b7280;
   margin: 0;
-  line-height: 1.5;
+  line-height: 1.6;
 }
 
-/* ส่วนล่างสุด (Copyright) */
+/* =========================================
+   BOTTOM SECTION (Copyright)
+   ========================================= */
 .ai-footer-bottom {
   border-top: 1px solid #f3f4f6;
   padding-top: 30px;
@@ -145,8 +171,8 @@
 }
 
 .copyright-content p {
-  font-size: 13px;
-  color: #999;
+  font-size: 13.5px;
+  color: #9ca3af;
   margin: 0;
 }
 
@@ -157,45 +183,55 @@
 }
 
 .legal-links a {
-  color: #999;
-  font-size: 13px;
+  color: #9ca3af;
+  font-size: 13.5px;
   text-decoration: none;
-  transition: 0.2s;
+  transition: color 0.2s;
 }
 
 .legal-links a:hover {
-  color: #333;
+  color: #4b5563;
 }
 
 .sep {
-  color: #ddd;
-  font-size: 10px;
+  color: #e5e7eb;
+  font-size: 12px;
 }
 
 /* =========================================
-   RESPONSIVE (ปรับให้สมดุลบนมือถือ)
+   RESPONSIVE (มือถือและแท็บเล็ต)
    ========================================= */
 
 @media (max-width: 1024px) {
   .ai-footer-main-grid {
-    grid-template-columns: 1fr 1fr;
-    gap: 40px;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 50px 30px;
   }
 }
 
-@media (max-width: 700px) {
+@media (max-width: 768px) {
   .ai-footer {
-    padding: 50px 0 30px 0;
+    padding: 60px 0 30px 0;
+  }
+
+  .ai-footer-container {
+    padding: 0 25px;
   }
 
   .ai-footer-main-grid {
     grid-template-columns: 1fr;
-    gap: 35px;
+    gap: 40px;
     text-align: center;
   }
 
   .footer-logo-img,
   .footer-social-row {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .footer-about-text {
+    padding-right: 0;
     margin-left: auto;
     margin-right: auto;
   }
@@ -206,12 +242,13 @@
 
   .footer-pdpa-card {
     text-align: left;
-    max-width: 300px;
+    max-width: 320px;
     margin: 0 auto;
   }
 
   .copyright-content {
     flex-direction: column;
     gap: 15px;
+    text-align: center;
   }
 }

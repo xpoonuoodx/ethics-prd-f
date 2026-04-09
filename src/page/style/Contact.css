@@ -1,0 +1,199 @@
+/* บังคับใช้ฟอนต์ IBM Plex Sans Thai กับทุก Element ภายในหน้า Contact */
+.contact-wrapper,
+.contact-wrapper * {
+  font-family: "IBM Plex Sans Thai", sans-serif !important;
+}
+
+/* [UPDATE] เปิดใช้งาน box-sizing เฉพาะในส่วนเนื้อหาของ Contact เพื่อไม่ให้กระทบ Tabbar */
+.contact-main-content,
+.contact-main-content * {
+  box-sizing: border-box;
+}
+
+.contact-wrapper {
+  background-color: #fafbfc; /* พื้นหลังสีเทาอ่อนมากๆ ให้ดูสะอาดตา */
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* =========================================
+   HEADER SECTION
+   ========================================= */
+.contact-header-clean {
+  text-align: center;
+  padding: 160px 20px 50px 20px; /* หลบ Tabbar ด้านบน */
+  box-sizing: border-box; /* เพิ่มตรงนี้เผื่อ Header ด้วย */
+}
+
+.contact-page-title {
+  font-size: 2.8rem;
+  font-weight: 700;
+  color: #111827;
+  margin: 0 0 15px 0;
+  letter-spacing: -0.5px;
+}
+
+.contact-page-subtitle {
+  font-size: 1.15rem;
+  color: #6b7280;
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+/* =========================================
+   MAIN CONTENT & SPLIT CARDS
+   ========================================= */
+.contact-main-content {
+  flex-grow: 1;
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 20px 100px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 40px; /* ระยะห่างระหว่างกล่องที่สม่ำเสมอ */
+}
+
+.contact-card-split {
+  display: flex;
+  flex-direction: row; /* บังคับให้เป็นซ้าย-ขวาเสมอ ไม่สลับฟันปลา */
+  background: #ffffff;
+  border-radius: 24px; /* มุมโค้งมนที่ดูพอดี ไม่มากเกินไป */
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04); /* เงาบางๆ นุ่มๆ */
+  border: 1px solid #f0f0f0;
+}
+
+/* ฝั่งข้อความ (ซ้าย) */
+.contact-text-side {
+  flex: 1;
+  padding: 80px 60px; /* Padding ที่กว้างขวาง ให้ข้อความมี Space หายใจ */
+  background: #fdfdfc; /* สีพื้นหลังกล่องข้อความโทนอุ่นเบาๆ */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start; /* บังคับให้ทุกอย่างชิดซ้าย */
+  text-align: left; /* บังคับให้ตัวหนังสือชิดซ้าย */
+}
+
+.contact-tag-label {
+  color: #75ba40;
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+.contact-heading {
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin: 0 0 20px 0;
+  line-height: 1.3;
+}
+
+.contact-paragraph {
+  font-size: 1.05rem;
+  color: #4b5563;
+  line-height: 1.8;
+  margin: 0;
+  width: 100%;
+}
+
+.contact-alert-text {
+  color: #ef4444;
+  font-weight: 600;
+}
+
+/* รายการติดต่อย่อย */
+.contact-info-group {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  width: 100%;
+}
+
+.contact-info-block {
+  display: flex;
+  align-items: flex-start;
+  gap: 15px;
+  text-align: left;
+}
+
+.contact-small-icon {
+  color: #75ba40;
+  margin-top: 2px;
+}
+
+.contact-info-detail h4 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin: 0 0 5px 0;
+}
+
+.contact-info-detail p {
+  font-size: 1rem;
+  color: #4b5563;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* ฝั่งรูปภาพ/แผนที่ (ขวา) */
+.contact-visual-side {
+  flex: 1;
+  position: relative;
+  min-height: 400px;
+  background: #e5e7eb; /* สีเทารองรับตอนรูปกำลังโหลด */
+  overflow: hidden;
+}
+
+.contact-visual-side img,
+.contact-visual-side iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border: none;
+}
+
+/* =========================================
+   RESPONSIVE (มือถือ และ แท็บเล็ต)
+   ========================================= */
+@media (max-width: 1024px) {
+  .contact-text-side {
+    padding: 50px 40px;
+  }
+}
+
+@media (max-width: 768px) {
+  .contact-header-clean {
+    padding: 130px 20px 40px 20px;
+  }
+
+  .contact-page-title {
+    font-size: 2.2rem;
+  }
+
+  .contact-card-split {
+    flex-direction: column; /* เปลี่ยนเป็นแนวตั้งบนมือถือ (รูปอยู่บน ข้อความล่าง) */
+  }
+
+  .contact-visual-side {
+    min-height: 300px;
+    order: -1; /* ดันรูปภาพ/แผนที่ ไปไว้ด้านบนในมือถือ */
+  }
+
+  .contact-text-side {
+    padding: 40px 25px;
+  }
+
+  .contact-heading {
+    font-size: 1.8rem;
+  }
+}

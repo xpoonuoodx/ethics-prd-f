@@ -9,7 +9,7 @@ function Footer() {
     <footer className="ai-footer">
       <div className="ai-footer-container">
         <div className="ai-footer-main-grid">
-          {/* คอลัมน์ 1: Logo & About (กว้างหน่อยเพื่อความสมดุล) */}
+          {/* คอลัมน์ 1: Logo & About */}
           <div className="ai-footer-col col-about">
             <img src={logoBDE} alt="BDE Logo" className="footer-logo-img" />
             <p className="footer-about-text">
@@ -34,9 +34,9 @@ function Footer() {
               <li>
                 <Link to="/dashboard">แดชบอร์ด</Link>
               </li>
-              <li>
+              {/* <li>
                 <Link to="/about">เกี่ยวกับเรา</Link>
-              </li>
+              </li> */}
               <li>
                 <Link to="/guideline">AI Ethics Guideline</Link>
               </li>
@@ -48,24 +48,25 @@ function Footer() {
             <h4 className="footer-title">ติดต่อเรา</h4>
             <ul className="footer-contact-list">
               <li>
-                <Mail size={16} className="f-icon" />{" "}
+                <Mail size={18} className="f-icon" />
                 <span>contact@onde.go.th</span>
               </li>
               <li>
-                <Phone size={16} className="f-icon" /> <span>02-141-XXXX</span>
+                <Phone size={18} className="f-icon" />
+                <span>02-141-XXXX</span>
               </li>
               <li>
-                <MapPin size={16} className="f-icon" />{" "}
+                <MapPin size={18} className="f-icon" />
                 <span>สดช. หลักสี่ กรุงเทพฯ</span>
               </li>
             </ul>
           </div>
 
-          {/* คอลัมน์ 4: Safety & PDPA (จัดกลุ่มใหม่ให้ดูเป็นระเบียบ) */}
+          {/* คอลัมน์ 4: Safety & PDPA */}
           <div className="ai-footer-col col-safety">
             <h4 className="footer-title">ความปลอดภัย</h4>
             <div className="footer-pdpa-card">
-              <ShieldCheck size={24} color="#75ba40" />
+              <ShieldCheck size={28} color="#75ba40" className="pdpa-icon" />
               <div className="pdpa-text">
                 <strong>PDPA Compliant</strong>
                 <p>ระบบรองรับการคุ้มครองข้อมูลส่วนบุคคลตามมาตรฐานสากล</p>

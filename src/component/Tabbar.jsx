@@ -61,8 +61,8 @@ function Tabbar() {
             {/* --- เมนูเกี่ยวกับเรา (แบบ Dropdown) --- */}
             <li className="ai-dropdown-container">
               <Link
-                to="/about"
-                className={location.pathname.includes("/about") ? "active" : ""}
+                // to="/about"
+                // className={location.pathname.includes("/about") ? "active" : ""}
               >
                 เกี่ยวกับเรา{" "}
                 <ChevronDown size={14} className="ai-dropdown-arrow" />
