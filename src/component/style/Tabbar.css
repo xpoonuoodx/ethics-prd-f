@@ -1,3 +1,9 @@
+/* บังคับใช้ฟอนต์ IBM Plex Sans Thai ทั่วทั้ง Tabbar */
+.ai-tabbar-wrapper,
+.ai-tabbar-wrapper * {
+  font-family: "IBM Plex Sans Thai", sans-serif !important;
+}
+
 .ai-tabbar-wrapper {
   position: fixed;
   top: 0;
@@ -9,10 +15,12 @@
   display: flex;
   justify-content: center;
   border-bottom: 1px solid #f3f4f6;
+  transition: box-shadow 0.3s ease;
 }
 
 .ai-tabbar-wrapper.shadow {
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+  border-bottom: transparent;
 }
 
 .ai-tabbar-container {
@@ -22,6 +30,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  height: 100%;
 }
 
 .ai-tabbar-logo-img {
@@ -34,6 +43,16 @@
   display: flex;
   list-style: none;
   gap: 25px;
+  margin: 0;
+  padding: 0;
+  align-items: center;
+  height: 100%;
+}
+
+.ai-tabbar-links > li {
+  height: 100%;
+  display: flex;
+  align-items: center;
 }
 
 .ai-tabbar-links li a {
@@ -41,13 +60,82 @@
   color: #4b5563;
   font-size: 15px;
   font-weight: 500;
+  display: flex;
+  align-items: center;
+  transition: color 0.2s ease;
 }
 
 .ai-tabbar-links li a:hover,
-.ai-tabbar-links li a.active {
+.ai-tabbar-links li a.active,
+.ai-mobile-dropdown-header span.active {
   color: #75ba40;
 }
 
+/* =========================================
+   DROPDOWN DESKTOP ("เกี่ยวกับเรา")
+   ========================================= */
+.ai-dropdown-container {
+  position: relative;
+}
+
+.ai-dropdown-arrow {
+  margin-left: 4px;
+  transition: transform 0.2s ease;
+}
+
+/* ตอนชี้ให้ลูกศรหมุนกลับหัว */
+.ai-dropdown-container:hover .ai-dropdown-arrow {
+  transform: rotate(180deg);
+}
+
+.ai-dropdown-menu {
+  position: absolute;
+  top: 100%; /* ห้อยลงมาจากกล่องแม่ */
+  left: 0;
+  background-color: #ffffff;
+  min-width: 240px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  border: 1px solid #f3f4f6;
+  border-radius: 8px;
+  list-style: none;
+  padding: 10px 0;
+  margin: 0;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(10px);
+  transition: all 0.3s ease;
+  z-index: 100;
+}
+
+/* แสดง Dropdown ตอน Hover */
+.ai-dropdown-container:hover .ai-dropdown-menu {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.ai-dropdown-menu li {
+  width: 100%;
+  height: auto;
+}
+
+.ai-dropdown-menu li a {
+  display: block;
+  padding: 12px 20px;
+  color: #4b5563;
+  font-size: 14.5px;
+  text-decoration: none;
+  transition:
+    background-color 0.2s,
+    color 0.2s;
+}
+
+.ai-dropdown-menu li a:hover {
+  background-color: #f9fafb;
+  color: #75ba40;
+}
+
+/* --- ฝั่งขวา: ปุ่มกด --- */
 .ai-tabbar-right-desktop {
   display: flex;
   align-items: center;
@@ -56,8 +144,14 @@
 
 .ai-tabbar-text-link {
   text-decoration: underline;
+  text-underline-offset: 4px;
   color: #4b5563;
   font-size: 14px;
+  font-weight: 500;
+}
+
+.ai-tabbar-text-link:hover {
+  color: #111827;
 }
 
 .ai-tabbar-btn {
@@ -68,6 +162,11 @@
   color: white;
   font-weight: 600;
   font-size: 14px;
+  transition: background-color 0.2s;
+}
+
+.ai-tabbar-btn:hover {
+  background-color: #639d36;
 }
 
 /* --- Mobile Menu Elements (Hidden by default) --- */
@@ -106,7 +205,7 @@
     flex-direction: column;
     position: fixed;
     top: 0;
-    right: -100%; /* ซ่อน */
+    right: -100%;
     width: 85%;
     max-width: 320px;
     height: 100vh;
@@ -118,10 +217,9 @@
   }
 
   .ai-mobile-menu.open {
-    right: 0; /* เลื่อนมาแสดง */
+    right: 0;
   }
 
-  /* Header ในเมนูมือถือ */
   .ai-mobile-menu-header {
     display: flex;
     justify-content: space-between;
@@ -132,7 +230,7 @@
   }
 
   .ai-mobile-logo-small {
-    height: 22px; /* [UPDATE] ลดขนาดโลโก้บนมือถือให้เล็กลง */
+    height: 22px;
     object-fit: contain;
   }
 
@@ -149,9 +247,10 @@
     padding: 0;
     margin: 0;
     flex-grow: 1;
+    overflow-y: auto; /* เผื่อเมนูยาวเกินจอ */
   }
 
-  .ai-mobile-nav-links li {
+  .ai-mobile-nav-links > li {
     margin-bottom: 25px;
   }
 
@@ -160,6 +259,51 @@
     color: #333;
     font-size: 17px;
     font-weight: 500;
+  }
+
+  /* --- DROPDOWN MOBILE --- */
+  .ai-mobile-dropdown-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    color: #333;
+    font-size: 17px;
+    font-weight: 500;
+  }
+
+  .ai-mobile-arrow {
+    transition: transform 0.3s ease;
+    color: #666;
+  }
+
+  .ai-mobile-arrow.open {
+    transform: rotate(180deg);
+  }
+
+  .ai-mobile-dropdown-menu {
+    list-style: none;
+    padding: 0 0 0 15px; /* ดันเมนูย่อยให้เยื้องเข้าไป */
+    margin: 0;
+    max-height: 0;
+    overflow: hidden;
+    transition:
+      max-height 0.3s ease-in-out,
+      margin 0.3s ease-in-out;
+  }
+
+  .ai-mobile-dropdown-menu.open {
+    max-height: 300px; /* กางออก */
+    margin-top: 15px;
+  }
+
+  .ai-mobile-dropdown-menu li {
+    margin-bottom: 15px;
+  }
+
+  .ai-mobile-dropdown-menu li a {
+    font-size: 15px !important;
+    color: #6b7280 !important; /* สีเทาอ่อนลงหน่อยเพื่อบอกว่าเป็นเมนูย่อย */
   }
 
   /* Footer ของเมนูมือถือ (ปุ่มต่างๆ) */
@@ -188,7 +332,6 @@
     font-weight: 600;
   }
 
-  /* พื้นหลังมืดตอนเปิดเมนู */
   .ai-mobile-overlay {
     display: block;
     position: fixed;

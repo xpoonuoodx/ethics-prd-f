@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X } from "lucide-react";
+import { Menu, X, ChevronDown } from "lucide-react"; // เพิ่ม ChevronDown สำหรับลูกศร
 import "./style/Tabbar.css";
 import logoBDE from "../assets/logo-bde.png";
 
 function Tabbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isAboutOpen, setIsAboutOpen] = useState(false); // State สำหรับเปิด/ปิด Dropdown ในมือถือ
   const location = useLocation();
 
   useEffect(() => {
@@ -24,6 +25,7 @@ function Tabbar() {
   // ปิดเมนูเมื่อเปลี่ยนหน้า
   useEffect(() => {
     setIsMobileMenuOpen(false);
+    setIsAboutOpen(false);
   }, [location]);
 
   return (
@@ -55,14 +57,32 @@ function Tabbar() {
                 แดชบอร์ด
               </Link>
             </li>
-            <li>
+
+            {/* --- เมนูเกี่ยวกับเรา (แบบ Dropdown) --- */}
+            <li className="ai-dropdown-container">
               <Link
                 to="/about"
-                className={location.pathname === "/about" ? "active" : ""}
+                className={location.pathname.includes("/about") ? "active" : ""}
               >
-                เกี่ยวกับเรา
+                เกี่ยวกับเรา{" "}
+                <ChevronDown size={14} className="ai-dropdown-arrow" />
               </Link>
+              <ul className="ai-dropdown-menu">
+                <li>
+                  <Link to="/about/background">ที่มา และความสำคัญ</Link>
+                </li>
+                <li>
+                  <Link to="/about/principles">หลักการ และวัตถุประสงค์</Link>
+                </li>
+                <li>
+                  <Link to="/about/process">ขั้นตอนการดำเนินการ</Link>
+                </li>
+                <li>
+                  <Link to="/about/participation">รูปแบบการเข้าร่วมประชุม</Link>
+                </li>
+              </ul>
             </li>
+
             <li>
               <Link
                 to="/guideline"
@@ -119,9 +139,63 @@ function Tabbar() {
             <li>
               <Link to="/dashboard">แดชบอร์ด</Link>
             </li>
-            <li>
-              <Link to="/about">เกี่ยวกับเรา</Link>
+
+            {/* --- เมนูเกี่ยวกับเรา มือถือ (แบบ Accordion กดเพื่อกาง) --- */}
+            <li className="ai-mobile-dropdown-container">
+              <div
+                className="ai-mobile-dropdown-header"
+                onClick={() => setIsAboutOpen(!isAboutOpen)}
+              >
+                <span
+                  className={
+                    location.pathname.includes("/about") ? "active" : ""
+                  }
+                >
+                  เกี่ยวกับเรา
+                </span>
+                <ChevronDown
+                  size={20}
+                  className={`ai-mobile-arrow ${isAboutOpen ? "open" : ""}`}
+                />
+              </div>
+              <ul
+                className={`ai-mobile-dropdown-menu ${isAboutOpen ? "open" : ""}`}
+              >
+                <li>
+                  <Link
+                    to="/about/background"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    ที่มา และความสำคัญ
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to="/about/principles"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    หลักการ และวัตถุประสงค์
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to="/about/process"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    ขั้นตอนการดำเนินการ
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to="/about/participation"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    รูปแบบการเข้าร่วมประชุม
+                  </Link>
+                </li>
+              </ul>
             </li>
+
             <li>
               <Link to="/guideline">Thailand AI Ethics Guideline</Link>
             </li>
