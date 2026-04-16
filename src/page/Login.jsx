@@ -2,18 +2,65 @@ import React, { useState } from "react";
 import "./style/Login.css";
 import { FaEye, FaEyeSlash, FaArrowLeft } from "react-icons/fa";
 import logo from "../assets/logo-bde.png"; // นำเข้าโลโก้จากโฟลเดอร์ assets ของคุณ
+import axios from "axios";
+import Swal from "sweetalert2";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false); // ไว้ทำปุ่มโหลด
+
+  // State สำหรับเก็บค่าที่พิมพ์
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    // เพิ่ม Logic การเข้าสู่ระบบที่นี่
-    console.log("Login submitted");
+    setLoading(true);
+
+    try {
+      const API_URL = `${import.meta.env.VITE_APP_API_ENDPOINT}/auth/login`;
+
+      const response = await axios.post(API_URL, {
+        username: username,
+        password: password,
+      });
+
+      const { token, user } = response.data;
+
+      localStorage.setItem("token", token);
+      localStorage.setItem("user", JSON.stringify(user));
+
+      let targetUrl = "/";
+      if (user.role === "admin") {
+        targetUrl = "/admin-dashboard";
+      } else if (user.role === "regulator") {
+        targetUrl = "/regulator-dashboard";
+      } else if (user.role === "provider") {
+        targetUrl = "/provider-dashboard";
+      } else if (user.role === "user") {
+        targetUrl = "/user-dashboard";
+      }
+
+      window.location.href = targetUrl;
+    } catch (error) {
+      console.error("Login Error:", error);
+      const errorMessage =
+        error.response?.data?.message ||
+        "เกิดข้อผิดพลาดในการเชื่อมต่อเซิร์ฟเวอร์";
+
+      Swal.fire({
+        icon: "error",
+        title: "เข้าสู่ระบบไม่สำเร็จ",
+        text: errorMessage,
+        confirmButtonColor: "#75ba40",
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -35,11 +82,14 @@ const Login = () => {
 
           <form onSubmit={handleLogin}>
             <div className="auth-login-input-group">
-              <label htmlFor="email">อีเมลผู้ใช้งาน</label>
+              {/* เปลี่ยนจาก อีเมลผู้ใช้งาน เป็น ชื่อผู้ใช้งาน เพื่อให้ตรงกับ Backend */}
+              <label htmlFor="username">ชื่อผู้ใช้งาน (Username)</label>
               <input
-                type="email"
-                id="email"
-                placeholder="example@email.com"
+                type="text"
+                id="username"
+                placeholder="กรอกชื่อผู้ใช้งานของคุณ"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
                 required
               />
             </div>
@@ -51,6 +101,8 @@ const Login = () => {
                   type={showPassword ? "text" : "password"}
                   id="password"
                   placeholder="กรอกรหัสผ่านของคุณ"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                   required
                 />
                 <span
@@ -68,8 +120,14 @@ const Login = () => {
               </a>
             </div>
 
-            <button type="submit" className="auth-login-submit-btn">
-              เข้าสู่ระบบ
+            {/* เพิ่มสถานะ Loading ในปุ่ม */}
+            <button
+              type="submit"
+              className="auth-login-submit-btn"
+              disabled={loading}
+              style={{ opacity: loading ? 0.7 : 1 }}
+            >
+              {loading ? "กำลังตรวจสอบ..." : "เข้าสู่ระบบ"}
             </button>
           </form>
 

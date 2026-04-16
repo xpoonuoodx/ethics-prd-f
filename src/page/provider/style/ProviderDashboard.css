@@ -1,0 +1,109 @@
+@import url("https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600&display=swap");
+
+.provider-portal-layout * {
+  box-sizing: border-box;
+  font-family: "Prompt", sans-serif;
+}
+.provider-portal-layout {
+  display: flex;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+}
+.provider-portal-content {
+  flex: 1;
+  margin-left: 260px;
+  transition: margin-left 0.3s ease;
+}
+.provider-portal-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 40px 20px;
+}
+
+.provider-portal-card {
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  width: 100%;
+  max-width: 550px;
+  overflow: hidden;
+  text-align: center;
+}
+
+.provider-portal-header {
+  background-color: #75ba40;
+  padding: 30px 20px 20px 20px;
+  color: white;
+}
+.provider-portal-icon-wrapper {
+  background-color: rgba(255, 255, 255, 0.2);
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto 15px auto;
+}
+.provider-portal-icon {
+  font-size: 32px;
+  color: #ffffff;
+}
+.provider-portal-title {
+  font-size: 24px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.provider-portal-body {
+  padding: 30px 40px 40px 40px;
+}
+.provider-portal-greeting {
+  font-size: 16px;
+  color: #4b5563;
+  margin-bottom: 12px;
+}
+.provider-portal-name {
+  color: #111827;
+  font-weight: 600;
+  font-size: 18px;
+}
+.provider-portal-role-container {
+  margin-bottom: 25px;
+}
+
+.provider-portal-badge {
+  display: inline-block;
+  padding: 6px 16px;
+  background-color: #f0f9eb;
+  color: #4a7826;
+  border: 1px solid #c2e7b0;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.provider-portal-divider {
+  border: 0;
+  border-top: 1px dashed #d1d5db;
+  margin: 0 0 25px 0;
+}
+.provider-portal-welcome {
+  color: #6b7280;
+  font-size: 15px;
+  line-height: 1.6;
+  margin-bottom: 10px;
+}
+
+@media (max-width: 899px) {
+  .provider-portal-content {
+    margin-left: 0;
+  }
+}
+@media (max-width: 480px) {
+  .provider-portal-body {
+    padding: 25px 20px 30px 20px;
+  }
+}

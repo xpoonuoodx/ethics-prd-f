@@ -1,0 +1,130 @@
+/* นำเข้าฟอนต์ Prompt */
+@import url("https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600&display=swap");
+
+/* โครงสร้าง Layout หลัก */
+.user-portal-layout * {
+  box-sizing: border-box;
+  font-family: "Prompt", sans-serif;
+}
+
+.user-portal-layout {
+  display: flex;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+}
+
+/* ส่วนเนื้อหาด้านขวา จะหลบ Sidebar อัตโนมัติ */
+.user-portal-content {
+  flex: 1;
+  margin-left: 260px; /* เว้นพื้นที่ซ้ายมือ 260px */
+  transition: margin-left 0.3s ease;
+}
+
+/* พื้นหลังหลักของหน้า Dashboard */
+.user-portal-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 40px 20px;
+}
+
+/* การ์ด Dashboard */
+.user-portal-card {
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  width: 100%;
+  max-width: 550px;
+  overflow: hidden;
+  text-align: center;
+}
+
+/* ส่วนหัวของการ์ด (โทนสีเขียว ธีมหลัก) */
+.user-portal-header {
+  background-color: #75ba40;
+  padding: 30px 20px 20px 20px;
+  color: white;
+}
+
+.user-portal-icon-wrapper {
+  background-color: rgba(255, 255, 255, 0.2);
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto 15px auto;
+}
+
+.user-portal-icon {
+  font-size: 32px;
+  color: #ffffff;
+}
+
+.user-portal-title {
+  font-size: 24px;
+  font-weight: 600;
+  margin: 0;
+  letter-spacing: 0.5px;
+}
+
+/* ส่วนเนื้อหาภายในการ์ด */
+.user-portal-body {
+  padding: 30px 40px 40px 40px;
+}
+
+.user-portal-greeting {
+  font-size: 16px;
+  color: #4b5563;
+  margin-bottom: 12px;
+}
+
+.user-portal-name {
+  color: #111827;
+  font-weight: 600;
+  font-size: 18px;
+}
+
+.user-portal-role-container {
+  margin-bottom: 25px;
+}
+
+/* Badge แสดง Role */
+.user-portal-badge {
+  display: inline-block;
+  padding: 6px 16px;
+  background-color: #f0f9eb;
+  color: #4a7826;
+  border: 1px solid #c2e7b0;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.user-portal-divider {
+  border: 0;
+  border-top: 1px dashed #d1d5db;
+  margin: 0 0 25px 0;
+}
+
+.user-portal-welcome {
+  color: #6b7280;
+  font-size: 15px;
+  line-height: 1.6;
+  margin-bottom: 10px;
+}
+
+/* Responsive สำหรับมือถือและจอเล็ก */
+@media (max-width: 899px) {
+  .user-portal-content {
+    margin-left: 0; /* บนมือถือ Sidebar ซ่อนไป เลยไม่ต้องเว้น margin */
+  }
+}
+
+@media (max-width: 480px) {
+  .user-portal-body {
+    padding: 25px 20px 30px 20px;
+  }
+}
