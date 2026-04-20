@@ -50,8 +50,8 @@
   background-color: #ffffff;
   border: 1px solid #e5e7eb;
   color: #374151;
-  padding: 12px 20px;
-  border-radius: 10px;
+  padding: 10px 20px;
+  border-radius: 8px;
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
@@ -59,7 +59,9 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
   display: flex;
   align-items: center;
-  gap: 8px; /* เว้นระยะห่างไอคอนกับข้อความ */
+  justify-content: center;
+  gap: 8px;
+  height: fit-content;
 }
 
 .db-btn-export:hover {
@@ -116,6 +118,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
 }
 
 /* โทนสีไอคอนตามต้นฉบับเรฟ */
@@ -167,6 +170,7 @@
   font-weight: 400;
   color: #9ca3af;
   margin-left: 2px;
+  display: inline-block;
 }
 
 .db-stat-trend.positive {
@@ -426,12 +430,14 @@
 /* Table Style */
 .db-table-wrapper {
   overflow-x: auto;
+  -webkit-overflow-scrolling: touch; /* ทำให้การเลื่อนบน iOS ลื่นไหล */
 }
 
 .db-table {
   width: 100%;
   border-collapse: collapse;
   text-align: left;
+  min-width: 800px; /* บังคับให้ตารางไม่หดจนเกินไปเมื่ออยู่บนมือถือ */
 }
 
 .db-table th {
@@ -536,6 +542,7 @@
   border-radius: 6px;
   font-size: 12px;
   font-weight: 500;
+  white-space: nowrap;
 }
 
 .db-badge.active {
@@ -552,7 +559,7 @@
 }
 
 /* =========================================
-   RESPONSIVE
+   RESPONSIVE (มือถือ และ แท็บเล็ต)
    ========================================= */
 @media (max-width: 1200px) {
   .db-top-layout {
@@ -567,38 +574,132 @@
   .db-chart-main-card {
     min-height: 400px;
   }
+
+  .db-wrapper,
+  .db-wrapper * {
+    font-family: "IBM Plex Sans Thai", sans-serif !important;
+    box-sizing: border-box;
+  }
 }
 
+/* สำหรับแท็บเล็ตและมือถือทั่วไป */
 @media (max-width: 768px) {
   .db-main-content {
-    padding: 100px 15px 40px 15px;
+    padding: 100px 15px 40px 15px; /* ลด Padding ด้านข้างให้เหลือพื้นที่เนื้อหามากขึ้น */
   }
+
+  /* แก้ไขส่วน Header ให้ปุ่มและหัวข้อจัดเรียงสวยงามขึ้น */
   .db-header {
     flex-direction: column;
     align-items: flex-start;
     gap: 15px;
     margin-bottom: 24px;
   }
-  .db-btn-export {
+  .db-header > div {
     width: 100%;
-    justify-content: center;
   }
+  .db-title {
+    font-size: 1.6rem;
+  }
+
+  /* ให้ปุ่ม Export ชิดซ้าย หรือขยายเต็ม */
+  .db-btn-export {
+    width: auto;
+    align-self: flex-start;
+  }
+
+  /* บังคับการ์ดสถิติเป็น 2 คอลัมน์บนมือถือเหมือนในเรฟ */
   .db-stats-grid {
     grid-template-columns: 1fr 1fr;
+    gap: 12px; /* ลดช่องว่างระหว่างการ์ด */
   }
+
+  .db-stat-card {
+    padding: 16px;
+  }
+  .db-stat-value {
+    font-size: 22px; /* ลดขนาดตัวเลขลงนิดหน่อยให้พอดี */
+  }
+
+  /* ซ่อนคำว่า from last week บนมือถือเพื่อประหยัดพื้นที่ */
+  .db-stat-trend span {
+    display: none;
+  }
+
   .db-chart-header {
     flex-direction: column;
     align-items: flex-start;
     gap: 15px;
   }
+  .db-chart-filters {
+    width: 100%;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .db-date-range {
+    width: 100%;
+    justify-content: center;
+  }
+  .db-select {
+    width: 100%;
+    padding: 8px 0;
+  }
+
+  /* ปรับ Toolbar ของตารางให้พอดีจอมือถือ */
   .db-table-toolbar {
     flex-direction: column;
     align-items: flex-start;
+    width: 100%;
   }
   .db-search-box {
     width: 100%;
   }
+  .db-filter-group {
+    width: 100%;
+    flex-wrap: wrap; /* ให้ปุ่ม Filter ตกลงมาบรรทัดใหม่ถ้าพื้นที่ไม่พอ */
+  }
+  .db-btn-filter {
+    flex: 1; /* ปุ่ม Filter ขยายเต็มพื้นที่ที่เหลือ */
+    justify-content: center;
+  }
   .db-sort-group {
     margin-left: 0;
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .db-wrapper,
+  .db-wrapper * {
+    font-family: "IBM Plex Sans Thai", sans-serif !important;
+    box-sizing: border-box;
+  }
+}
+
+/* สำหรับหน้าจอมือถือขนาดเล็กมาก (iPhone SE, รุ่นเก่าๆ) */
+@media (max-width: 480px) {
+  /* ถ้ายอมให้เป็น 1 คอลัมน์เมื่อจอเล็กมากๆ (ต่ำกว่า 480px) ให้เปิดโค้ดนี้ แต่ถ้าอยากคง 2 คอลัมน์ไว้ ให้ลบบล็อกนี้ทิ้งได้ครับ */
+  /* .db-stats-grid {
+    grid-template-columns: 1fr; 
+  } */
+
+  .db-chart-main-card,
+  .db-card,
+  .db-table-card {
+    padding: 16px; /* ลด Padding กรอบนอก */
+  }
+  .db-card-body {
+    padding: 0 16px 16px 16px;
+  }
+  .db-card-header-simple {
+    padding: 16px 16px 10px 16px;
+  }
+  .db-title {
+    font-size: 1.4rem;
+  }
+
+  .db-wrapper,
+  .db-wrapper * {
+    font-family: "IBM Plex Sans Thai", sans-serif !important;
+    box-sizing: border-box;
   }
 }
