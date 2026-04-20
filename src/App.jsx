@@ -9,6 +9,7 @@ import AboutParticipation from "./page/AboutParticipation";
 import Contact from "./page/Contact";
 import Login from "./page/Login";
 import Register from "./page/Register";
+import NewsDetail from "./page/NewsDetail";
 
 // Route
 import UserRoute from "./route/UserRoute";
@@ -40,6 +41,7 @@ function App() {
         <Route path="/contact" element={<Contact />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/news/:id" element={<NewsDetail />} />
 
         <Route
           path="/admin-dashboard"
