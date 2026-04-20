@@ -57,7 +57,7 @@ function Footer() {
                 <Link to="/guideline">AI Ethics Guideline</Link>
               </li>
               <li>
-                <Link to="/contact">ติดต่อโครงการ</Link>
+                <Link to="/contact">ติดต่อเรา</Link>
               </li>
             </ul>
           </div>

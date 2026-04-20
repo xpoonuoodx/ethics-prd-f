@@ -1,7 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&display=swap");
 
 .nd-wrapper * {
-  box-sizing: border-box;
+  /* box-sizing: border-box; */
   font-family: "IBM Plex Sans Thai", sans-serif !important;
 }
 
@@ -18,7 +18,7 @@
 }
 
 .nd-container {
-  max-width: 800px; /* จำกัดความกว้างเพื่อให้อ่านง่าย */
+  max-width: 1000px; /* จำกัดความกว้างเพื่อให้อ่านง่าย */
   margin: 0 auto;
   background-color: #ffffff;
   padding: 40px;
