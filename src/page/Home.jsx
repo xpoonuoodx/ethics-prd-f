@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom"; // เพิ่มอันนี้
 import Tabbar from "../component/Tabbar";
 import Footer from "../component/Footer";
 import {
@@ -16,10 +17,10 @@ import "./style/Home.css";
 import ethicAiImg from "../assets/ethic-ai.png";
 
 // ==========================================
-// ข้อมูล Data ต่างๆ
+// ข้อมูล Data ต่างๆ (Export ออกมาเพื่อให้หน้า NewsDetail ดึงไปใช้ด้วย)
 // ==========================================
 
-const slideData = [
+export const slideData = [
   {
     id: 1,
     image:
@@ -49,7 +50,7 @@ const slideData = [
   },
 ];
 
-const newsData = [
+export const newsData = [
   {
     id: 1,
     image:
@@ -58,6 +59,8 @@ const newsData = [
     desc: "มอบรางวัลยกย่องบุคคลและองค์กรที่มีการนำแนวทางจริยธรรมปัญญาประดิษฐ์มาประยุกต์ใช้งานดีเด่น",
     date: "12 เม.ย. 2569",
     category: "ข่าวประกาศ",
+    content:
+      "รายละเอียดข่าวฉบับเต็มของ สำนักงานคณะกรรมการดิจิทัลเพื่อเศรษฐกิจและสังคมแห่งชาติ... (เนื้อหาจำลองเพิ่มเติม)",
   },
   {
     id: 2,
@@ -67,6 +70,8 @@ const newsData = [
     desc: "ที่มีการนำแนวทางจริยธรรมปัญญาประดิษฐ์มาประยุกต์ใช้งานดีเด่น เพื่อเป็นแบบอย่างในการแปลงแนวปฏิบัติ...",
     date: "10 เม.ย. 2569",
     category: "กิจกรรม",
+    content:
+      "รายละเอียดข่าวฉบับเต็มของ สดช. มอบรางวัลยกย่องบุคคลและองค์กร... (เนื้อหาจำลองเพิ่มเติม)",
   },
   {
     id: 3,
@@ -76,6 +81,8 @@ const newsData = [
     desc: "สำหรับท่านที่ลงชื่อเข้าอบรมภาคปฏิบัติไว้โปรด Login เข้าระบบเพื่อตรวจสอบและลงทะเบียน",
     date: "05 เม.ย. 2569",
     category: "อบรมสัมมนา",
+    content:
+      "รายละเอียดข่าวฉบับเต็มของ กำหนดตารางจัดอบรมในจังหวัดต่างๆ... (เนื้อหาจำลองเพิ่มเติม)",
   },
   {
     id: 4,
@@ -85,6 +92,8 @@ const newsData = [
     desc: "องค์กรสามารถเข้าใช้เครื่องมือออนไลน์เพื่อประเมินความเสี่ยงและจริยธรรมการใช้ AI ได้ฟรี",
     date: "01 เม.ย. 2569",
     category: "ข่าวประกาศ",
+    content:
+      "รายละเอียดข่าวฉบับเต็มของ เปิดตัวระบบตรวจสอบความพร้อม AI สำหรับองค์กร... (เนื้อหาจำลองเพิ่มเติม)",
   },
   {
     id: 5,
@@ -94,6 +103,8 @@ const newsData = [
     desc: "สรุปผลการรับฟังความคิดเห็นต่อ (ร่าง) แนวปฏิบัติจริยธรรมปัญญาประดิษฐ์ เพิ่มเติมปี 2569",
     date: "28 มี.ค. 2569",
     category: "ข่าวประกาศ",
+    content:
+      "รายละเอียดข่าวฉบับเต็มของ ประชุมรับฟังความคิดเห็นสาธารณะ... (เนื้อหาจำลองเพิ่มเติม)",
   },
   {
     id: 6,
@@ -103,12 +114,15 @@ const newsData = [
     desc: "เปิดรับสมัครเยาวชนรุ่นใหม่เข้าร่วมเรียนรู้วิธีการเขียนโปรแกรม AI อย่างมีจริยธรรมและรับผิดชอบ",
     date: "20 มี.ค. 2569",
     category: "กิจกรรม",
+    content:
+      "รายละเอียดข่าวฉบับเต็มของ เวิร์กชอป AI สำหรับนิสิตนักศึกษา... (เนื้อหาจำลองเพิ่มเติม)",
   },
 ];
 
 const Home = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [newsIndex, setNewsIndex] = useState(0); // State สำหรับเลื่อนข่าวสาร
+  const [newsIndex, setNewsIndex] = useState(0);
+  const navigate = useNavigate(); // ดึงใช้งาน navigate
 
   // Slider แบนเนอร์หลัก
   const nextSlide = () => {
@@ -120,7 +134,6 @@ const Home = () => {
 
   // Slider ข่าวสาร (เลื่อนครั้งละ 1 ใบ)
   const nextNews = () => {
-    // ปรับเงื่อนไขตามจำนวนที่โชว์บนหน้าจอ (คอมโชว์ 4 ใบ มี 6 ใบ เลื่อนได้สูงสุด index 2)
     if (newsIndex < newsData.length - 4) {
       setNewsIndex(newsIndex + 1);
     }
@@ -129,6 +142,11 @@ const Home = () => {
     if (newsIndex > 0) {
       setNewsIndex(newsIndex - 1);
     }
+  };
+
+  // ฟังก์ชันพากดไปหน้ารายละเอียดข่าว
+  const handleReadMore = (newsId) => {
+    navigate(`/news/${newsId}`);
   };
 
   useEffect(() => {
@@ -288,9 +306,6 @@ const Home = () => {
           <div className="hm-news-header-flex">
             <div>
               <h2 className="hm-section-title">ข่าวสารและกิจกรรมต่างๆ</h2>
-              {/* <p className="hm-section-subtitle">
-                ติดตามความเคลื่อนไหว กิจกรรมอบรม และประกาศรางวัลล่าสุด
-              </p> */}
             </div>
             <div className="hm-news-nav-btns">
               <button
@@ -332,7 +347,14 @@ const Home = () => {
                       </div>
                       <h3 className="hm-news-title">{news.title}</h3>
                       <p className="hm-news-desc">{news.desc}</p>
-                      <button className="hm-news-btn">อ่านเพิ่มเติม</button>
+
+                      {/* เปลี่ยนปุ่มให้อิงกับ onClick navigate */}
+                      <button
+                        className="hm-news-btn"
+                        onClick={() => handleReadMore(news.id)}
+                      >
+                        อ่านเพิ่มเติม
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -340,9 +362,9 @@ const Home = () => {
             </div>
           </div>
 
-          <div className="hm-news-view-all">
+          {/* <div className="hm-news-view-all">
             <button className="hm-btn-outline">ดูข่าวสารทั้งหมด</button>
-          </div>
+          </div> */}
         </div>
       </section>
       <Footer />
