@@ -1,0 +1,223 @@
+/* นำเข้าฟอนต์ Prompt จาก Google Fonts */
+@import url("https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600&display=swap");
+
+/* รีเซ็ตค่าเริ่มต้นเฉพาะหน้า Register */
+.auth-register-container * {
+  box-sizing: border-box;
+  font-family: "Prompt", sans-serif;
+}
+
+.auth-register-container {
+  display: flex;
+  min-height: 100vh;
+  width: 100%;
+  background-color: #f8f9fa;
+}
+
+/* ส่วนซ้าย (ฟอร์ม Register) */
+.auth-register-left {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background-color: #ffffff;
+  position: relative;
+  padding: 60px 0; /* เว้นระยะบนล่างให้ Scroll ได้สวยๆ */
+}
+
+/* ปุ่มกลับสู่หน้า Login */
+.auth-register-back-btn {
+  position: absolute;
+  top: 30px;
+  left: 40px;
+  text-decoration: none;
+  color: #6c757d;
+  font-size: 14px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: color 0.3s ease;
+}
+
+.auth-register-back-btn:hover {
+  color: #111827;
+}
+
+/* กล่องเนื้อหาฟอร์ม (ขยายให้กว้างขึ้นเพื่อรองรับ 2 คอลัมน์) */
+.auth-register-form-wrapper {
+  margin: 0 auto;
+  width: 100%;
+  max-width: 600px; /* ปรับให้กว้างกว่าหน้า Login เล็กน้อย */
+  padding: 40px;
+}
+
+/* โลโก้ */
+.auth-register-logo {
+  max-width: 180px;
+  height: auto;
+  margin: 0 auto 24px auto;
+  display: block;
+}
+
+.auth-register-form-wrapper h2 {
+  text-align: center;
+  font-size: 32px;
+  color: #111827;
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+.auth-register-subtitle {
+  text-align: center;
+  color: #6b7280;
+  margin-bottom: 32px;
+  font-size: 15px;
+}
+
+/* === ระบบ Grid 2 คอลัมน์ สำหรับฟอร์มที่มีหลายช่อง === */
+.auth-register-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px 20px; /* ระยะห่าง บน-ล่าง 16px, ซ้าย-ขวา 20px */
+  margin-bottom: 24px;
+}
+
+.auth-register-input-group label {
+  display: block;
+  margin-bottom: 8px;
+  color: #374151;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.auth-register-input-group input {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 15px;
+  transition: all 0.3s ease;
+  outline: none;
+}
+
+.auth-register-input-group input:focus {
+  border-color: #75ba40;
+  box-shadow: 0 0 0 3px rgba(117, 186, 64, 0.15);
+}
+
+/* จัดการช่องรหัสผ่านและปุ่มลูกตา */
+.auth-register-password-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.auth-register-password-wrapper input {
+  padding-right: 45px;
+}
+
+.auth-register-toggle-password {
+  position: absolute;
+  right: 15px;
+  color: #9ca3af;
+  cursor: pointer;
+  transition: color 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+}
+
+.auth-register-toggle-password:hover {
+  color: #4b5563;
+}
+
+/* ปุ่ม Register */
+.auth-register-submit-btn {
+  width: 100%;
+  padding: 14px;
+  background-color: #75ba40;
+  color: white;
+  border: none;
+  border-radius: 30px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition:
+    background-color 0.3s ease,
+    transform 0.1s ease;
+}
+
+.auth-register-submit-btn:hover {
+  background-color: #5bb615;
+}
+
+.auth-register-submit-btn:active {
+  transform: scale(0.98);
+}
+
+/* ลิงก์กลับไปหน้า Login */
+.auth-register-login-link {
+  margin-top: 32px;
+  text-align: center;
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.auth-register-login-link a {
+  color: #75ba40;
+  text-decoration: none;
+  font-weight: 600;
+  margin-left: 4px;
+  transition: color 0.3s ease;
+}
+
+.auth-register-login-link a:hover {
+  color: #5bb615;
+  text-decoration: underline;
+}
+
+/* ส่วนขวา (รูปภาพ) */
+.auth-register-right {
+  flex: 1;
+  /* รูปภาพประกอบ (ใช้คนละรูปกับหน้า Login จะได้ดูไม่งง หรือจะใช้รูปเดิมก็ได้ครับ) */
+  background: url("https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=1920&auto=format&fit=crop")
+    center center / cover no-repeat;
+  position: relative;
+}
+
+.auth-register-image-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.3),
+    rgba(0, 0, 0, 0.7)
+  );
+}
+
+/* สำหรับมือถือและหน้าจอขนาดเล็ก (Responsive) */
+@media (max-width: 900px) {
+  .auth-register-right {
+    display: none;
+  }
+  .auth-register-back-btn {
+    top: 20px;
+    left: 20px;
+  }
+  .auth-register-left {
+    padding: 80px 0 20px 0;
+  }
+  .auth-register-form-wrapper {
+    padding: 20px;
+  }
+
+  /* เมื่อจอเล็ก ให้เปลี่ยน Grid กลับมาเป็น 1 คอลัมน์เรียงลงมาตามปกติ */
+  .auth-register-form-grid {
+    grid-template-columns: 1fr;
+  }
+}
