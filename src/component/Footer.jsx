@@ -1,6 +1,10 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { Mail, Phone, MapPin, Globe, ShieldCheck } from "lucide-react";
+/* นำเข้าไอคอนจาก lucide-react (เอา ChevronRight ออกเพื่อให้เรียบง่ายตามเรฟเฟอเรนซ์) */
+import { Mail, Phone, MapPin } from "lucide-react";
+/* นำเข้าไอคอน Social จาก react-icons */
+import { FaGlobe, FaFacebookF, FaTwitter, FaLinkedinIn } from "react-icons/fa";
+
 import "./style/Footer.css";
 import logoBDE from "../assets/logo-bde.png";
 
@@ -11,22 +15,37 @@ function Footer() {
         <div className="ai-footer-main-grid">
           {/* คอลัมน์ 1: Logo & About */}
           <div className="ai-footer-col col-about">
-            <img src={logoBDE} alt="BDE Logo" className="footer-logo-img" />
+            <div className="footer-logo-wrapper">
+              {/* โลโก้ปรับขนาดเล็กลงแล้วผ่าน CSS */}
+              <img src={logoBDE} alt="BDE Logo" className="footer-logo-img" />
+            </div>
             <p className="footer-about-text">
               โครงการสร้างความเข้าใจและส่งเสริมการใช้แนวปฏิบัติจริยธรรมปัญญาประดิษฐ์
               (Thailand AI Ethics Guideline)
               เพื่อสังคมดิจิทัลที่ปลอดภัยและยั่งยืน
             </p>
             <div className="footer-social-row">
-              <a href="#" className="social-link-item">
-                <Globe size={20} />
+              <a href="#" className="social-link-item" aria-label="Website">
+                <FaGlobe size={16} />
+              </a>
+              <a href="#" className="social-link-item" aria-label="Facebook">
+                <FaFacebookF size={16} />
+              </a>
+              <a href="#" className="social-link-item" aria-label="Twitter">
+                <FaTwitter size={16} />
+              </a>
+              <a href="#" className="social-link-item" aria-label="LinkedIn">
+                <FaLinkedinIn size={16} />
               </a>
             </div>
           </div>
 
-          {/* คอลัมน์ 2: Quick Links */}
+          {/* คอลัมน์ 2: Quick Links (ดีไซน์เรียบง่ายตามเรฟ) */}
           <div className="ai-footer-col">
-            <h4 className="footer-title">เมนูหลัก</h4>
+            <h4 className="footer-title">
+              เมนูหลัก
+              <span className="title-underline"></span>
+            </h4>
             <ul className="footer-nav">
               <li>
                 <Link to="/">หน้าหลัก</Link>
@@ -34,56 +53,51 @@ function Footer() {
               <li>
                 <Link to="/dashboard">แดชบอร์ด</Link>
               </li>
-              {/* <li>
-                <Link to="/about">เกี่ยวกับเรา</Link>
-              </li> */}
               <li>
                 <Link to="/guideline">AI Ethics Guideline</Link>
+              </li>
+              <li>
+                <Link to="/contact">ติดต่อโครงการ</Link>
               </li>
             </ul>
           </div>
 
           {/* คอลัมน์ 3: Contact */}
           <div className="ai-footer-col">
-            <h4 className="footer-title">ติดต่อเรา</h4>
+            <h4 className="footer-title">
+              ติดต่อเรา
+              <span className="title-underline"></span>
+            </h4>
             <ul className="footer-contact-list">
               <li>
-                <Mail size={18} className="f-icon" />
-                <span>contact@onde.go.th</span>
+                <MapPin size={18} className="contact-icon" />
+                <span>
+                  สำนักงานคณะกรรมการดิจิทัลเพื่อเศรษฐกิจและสังคมแห่งชาติ (สดช.)
+                  หลักสี่ กรุงเทพฯ
+                </span>
               </li>
               <li>
-                <Phone size={18} className="f-icon" />
+                <Phone size={18} className="contact-icon" />
                 <span>02-141-XXXX</span>
               </li>
               <li>
-                <MapPin size={18} className="f-icon" />
-                <span>สดช. หลักสี่ กรุงเทพฯ</span>
+                <Mail size={18} className="contact-icon" />
+                <span>contact@onde.go.th</span>
               </li>
             </ul>
-          </div>
-
-          {/* คอลัมน์ 4: Safety & PDPA */}
-          <div className="ai-footer-col col-safety">
-            <h4 className="footer-title">ความปลอดภัย</h4>
-            <div className="footer-pdpa-card">
-              <ShieldCheck size={28} color="#75ba40" className="pdpa-icon" />
-              <div className="pdpa-text">
-                <strong>PDPA Compliant</strong>
-                <p>ระบบรองรับการคุ้มครองข้อมูลส่วนบุคคลตามมาตรฐานสากล</p>
-              </div>
-            </div>
           </div>
         </div>
 
         {/* ส่วนล่างสุด: Copyright */}
         <div className="ai-footer-bottom">
-          <div className="copyright-content">
-            <p>© 2026 Thailand AI Ethics Guideline. All rights reserved.</p>
-            <div className="legal-links">
-              <Link to="/privacy">Privacy Policy</Link>
-              <span className="sep">•</span>
-              <Link to="/terms">Terms of Service</Link>
-            </div>
+          <p className="copyright-text">
+            © {new Date().getFullYear()} Thailand AI Ethics Guideline. All
+            rights reserved.
+          </p>
+          <div className="legal-links">
+            <Link to="/privacy">Privacy Policy</Link>
+            <span className="sep">•</span>
+            <Link to="/terms">Terms of Service</Link>
           </div>
         </div>
       </div>

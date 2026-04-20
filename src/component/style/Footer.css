@@ -1,4 +1,6 @@
-/* บังคับฟอนต์ IBM Plex Sans Thai และควบคุม Layout ไม่ให้พัง */
+/* นำเข้าฟอนต์และกำหนดค่าพื้นฐาน */
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&display=swap");
+
 .ai-footer,
 .ai-footer * {
   font-family: "IBM Plex Sans Thai", sans-serif !important;
@@ -6,42 +8,44 @@
 }
 
 .ai-footer {
-  background-color: #ffffff;
-  border-top: 1px solid #f3f4f6;
-  padding: 80px 0 30px 0; /* เพิ่ม Padding บนให้ดูมีพื้นที่หายใจ */
-  color: #374151;
+  background-color: #ffffff; /* พื้นหลังสีขาว */
+  color: #4b5563; /* สีตัวอักษรเทาเข้ม อ่านสบายตา */
+  border-top: 1px solid #f3f4f6; /* เส้นขอบบางๆ กั้นเนื้อหาด้านบน */
 }
 
 .ai-footer-container {
-  max-width: 1240px; /* ขยายให้พอดีกับกรอบเนื้อหาเว็บส่วนอื่น */
+  max-width: 1280px;
   margin: 0 auto;
-  padding: 0 40px;
+  padding: 60px 40px 30px 40px;
 }
 
 /* =========================================
-   MAIN GRID (จัดสัดส่วนใหม่ให้สมดุล)
+   MAIN GRID (3 คอลัมน์)
    ========================================= */
 .ai-footer-main-grid {
   display: grid;
-  grid-template-columns: 1.4fr 0.8fr 1fr 1.2fr; /* ปรับสัดส่วนคอลัมน์ให้ข้อความไม่โดนบีบ */
-  gap: 40px;
-  margin-bottom: 60px;
+  grid-template-columns: 2fr 1fr 1.5fr; /* อัตราส่วนความกว้างคอลัมน์ */
+  gap: 50px 40px;
+  margin-bottom: 50px;
   align-items: start;
 }
 
 /* --- Column 1: About --- */
+.footer-logo-wrapper {
+  margin-bottom: 20px;
+}
+
 .footer-logo-img {
-  height: 32px; /* ขนาดโลโก้กำลังดี */
-  margin-bottom: 25px;
+  height: 28px; /* ปรับลดขนาดโลโก้ลงให้ดูมินิมอลขึ้น */
   object-fit: contain;
 }
 
 .footer-about-text {
-  font-size: 14.5px;
-  color: #4b5563; /* สีเทาเข้ม อ่านง่าย */
-  line-height: 1.8; /* ช่องไฟบรรทัดโปร่งสบาย */
-  margin-bottom: 25px;
-  padding-right: 20px;
+  font-size: 14px;
+  color: #6b7280;
+  line-height: 1.8;
+  margin-bottom: 20px;
+  padding-right: 40px; /* เว้นระยะขวาไม่ให้ชิดขอบคอลัมน์เกินไป */
 }
 
 .footer-social-row {
@@ -51,24 +55,37 @@
 
 .social-link-item {
   color: #9ca3af;
-  transition: color 0.3s ease;
   display: flex;
   align-items: center;
   justify-content: center;
+  text-decoration: none;
+  transition: all 0.3s ease;
 }
 
 .social-link-item:hover {
-  color: #75ba40;
+  color: #75ba40; /* เปลี่ยนเป็นสีเขียวเมื่อชี้ */
+  transform: translateY(-2px);
 }
 
-/* --- หัวข้อคอลัมน์ (Title) --- */
+/* --- หัวข้อคอลัมน์ (Title) อิงตามดีไซน์ GAP+ --- */
 .footer-title {
   font-size: 16px;
-  font-weight: 700;
-  color: #111827; /* สีดำเข้ม */
-  margin-bottom: 25px;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+  font-weight: 600;
+  color: #111827;
+  margin-bottom: 20px;
+  position: relative;
+  display: inline-block;
+  padding-bottom: 8px; /* เว้นที่ให้เส้นขีดล่าง */
+}
+
+.title-underline {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 24px;
+  height: 2px;
+  background-color: #75ba40; /* เส้นขีดใต้หัวข้อสีเขียว */
+  border-radius: 2px;
 }
 
 /* --- Column 2: Quick Links --- */
@@ -76,24 +93,21 @@
   list-style: none;
   padding: 0;
   margin: 0;
-}
-
-.footer-nav li {
-  margin-bottom: 16px; /* ระยะห่างระหว่างลิงก์ */
+  display: flex;
+  flex-direction: column;
+  gap: 12px; /* ระยะห่างระหว่างลิงก์ */
 }
 
 .footer-nav li a {
   text-decoration: none;
   color: #4b5563;
   font-size: 14.5px;
-  font-weight: 400;
   transition: all 0.2s ease;
   display: inline-block;
 }
 
 .footer-nav li a:hover {
   color: #75ba40;
-  transform: translateX(4px); /* ลูกเล่นขยับเบาๆ */
 }
 
 /* --- Column 3: Contact List --- */
@@ -101,100 +115,64 @@
   list-style: none;
   padding: 0;
   margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
 .footer-contact-list li {
   display: flex;
-  align-items: flex-start; /* ให้ไอคอนอยู่ตรงกับบรรทัดแรกเสมอ */
+  align-items: flex-start;
   gap: 12px;
   font-size: 14.5px;
   color: #4b5563;
-  margin-bottom: 18px;
-  line-height: 1.6;
+  line-height: 1.5;
 }
 
-.f-icon {
-  color: #75ba40;
-  margin-top: 2px; /* ดันไอคอนลงมานิดให้กึ่งกลางตัวหนังสือ */
-  flex-shrink: 0; /* ป้องกันไอคอนบีบเบี้ยว */
-}
-
-/* --- Column 4: PDPA Card --- */
-.footer-pdpa-card {
-  display: flex;
-  align-items: flex-start;
-  gap: 16px;
-  background: #f9fafb; /* พื้นหลังเทาอ่อนๆ ตัดกับพื้นขาว */
-  padding: 24px;
-  border-radius: 16px;
-  border: 1px solid #f3f4f6;
-  transition: transform 0.3s ease;
-}
-
-.footer-pdpa-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.03);
-}
-
-.pdpa-icon {
+.contact-icon {
+  color: #75ba40; /* ไอคอนสีเขียว */
   flex-shrink: 0;
-  margin-top: 2px;
-}
-
-.pdpa-text strong {
-  display: block;
-  font-size: 15px;
-  color: #111827;
-  margin-bottom: 6px;
-  font-weight: 700;
-}
-
-.pdpa-text p {
-  font-size: 13px;
-  color: #6b7280;
-  margin: 0;
-  line-height: 1.6;
+  margin-top: 2px; /* ดันไอคอนให้ตรงกับบรรทัดแรกของข้อความ */
 }
 
 /* =========================================
    BOTTOM SECTION (Copyright)
    ========================================= */
 .ai-footer-bottom {
-  border-top: 1px solid #f3f4f6;
-  padding-top: 30px;
-}
-
-.copyright-content {
+  border-top: 1px solid #e5e7eb; /* เส้นกั้นบางๆ */
+  padding-top: 25px;
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
   align-items: center;
+  gap: 10px;
 }
 
-.copyright-content p {
+.copyright-text {
   font-size: 13.5px;
-  color: #9ca3af;
+  color: #6b7280;
   margin: 0;
+  text-align: center;
 }
 
 .legal-links {
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: 12px;
 }
 
 .legal-links a {
-  color: #9ca3af;
-  font-size: 13.5px;
+  color: #6b7280;
+  font-size: 13px;
   text-decoration: none;
   transition: color 0.2s;
 }
 
 .legal-links a:hover {
-  color: #4b5563;
+  color: #75ba40;
 }
 
 .sep {
-  color: #e5e7eb;
+  color: #d1d5db;
   font-size: 12px;
 }
 
@@ -202,53 +180,33 @@
    RESPONSIVE (มือถือและแท็บเล็ต)
    ========================================= */
 
-@media (max-width: 1024px) {
+@media (min-width: 769px) and (max-width: 1024px) {
   .ai-footer-main-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 50px 30px;
+    grid-template-columns: 1fr 1fr; /* แท็บเล็ตแบ่ง 2 คอลัมน์ */
+  }
+  .col-about {
+    grid-column: span 2; /* คอลัมน์แรกกินพื้นที่เต็ม 2 แถวบนแท็บเล็ต */
+    max-width: 600px;
   }
 }
 
 @media (max-width: 768px) {
-  .ai-footer {
-    padding: 60px 0 30px 0;
-  }
-
   .ai-footer-container {
-    padding: 0 25px;
+    padding: 40px 20px 20px 20px;
   }
 
   .ai-footer-main-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr; /* มือถือเรียง 1 คอลัมน์ */
     gap: 40px;
-    text-align: center;
-  }
-
-  .footer-logo-img,
-  .footer-social-row {
-    margin-left: auto;
-    margin-right: auto;
+    margin-bottom: 40px;
   }
 
   .footer-about-text {
-    padding-right: 0;
-    margin-left: auto;
-    margin-right: auto;
+    padding-right: 0; /* เอาเว้นวรรคขวาออกบนมือถือ */
   }
 
-  .footer-contact-list li {
-    justify-content: center;
-  }
-
-  .footer-pdpa-card {
-    text-align: left;
-    max-width: 320px;
-    margin: 0 auto;
-  }
-
-  .copyright-content {
+  .ai-footer-bottom {
     flex-direction: column;
-    gap: 15px;
     text-align: center;
   }
 }

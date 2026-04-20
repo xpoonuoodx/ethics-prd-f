@@ -1,10 +1,11 @@
 /* บังคับใช้ฟอนต์ IBM Plex Sans Thai กับทุก Element ภายใน Dashboard */
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&display=swap");
+
 .db-wrapper,
 .db-wrapper * {
   font-family: "IBM Plex Sans Thai", sans-serif !important;
 }
 
-/* [UPDATE] เปิดใช้งาน box-sizing เฉพาะในส่วนเนื้อหาของ Dashboard เพื่อไม่ให้กระทบดีไซน์ของ Tabbar */
 .db-main-content,
 .db-main-content * {
   box-sizing: border-box;
@@ -15,16 +16,14 @@
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  overflow-x: hidden; /* ป้องกันการเลื่อนแนวนอน */
+  overflow-x: hidden;
 }
 
 .db-main-content {
   flex-grow: 1;
-  /* ขยายความกว้างเต็มจอมากขึ้น */
   max-width: 1536px;
   width: 100%;
   margin: 0 auto;
-  /* เพิ่ม Padding ให้มี Space สวยๆ */
   padding: 130px 40px 80px 40px;
 }
 
@@ -79,7 +78,7 @@
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 30px;
-  margin-bottom: 40px;
+  margin-bottom: 30px;
 }
 
 .db-stat-card {
@@ -148,12 +147,24 @@
 }
 
 /* =========================================
-   CONTENT GRID (กราฟและตาราง)
+   CHART GRIDS (กราฟและตาราง)
    ========================================= */
-.db-content-grid {
+.db-charts-row-1 {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 2fr 1fr; /* กราฟเส้นกว้างกว่ากราฟวงกลม */
   gap: 30px;
+  margin-bottom: 30px;
+}
+
+.db-charts-row-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* กราฟแท่งกับ Progress แบ่งครึ่งเท่ากัน */
+  gap: 30px;
+  margin-bottom: 30px;
+}
+
+.db-full-width {
+  width: 100%;
 }
 
 .db-card {
@@ -203,11 +214,19 @@
   flex-grow: 1;
 }
 
-/* --- Progress Bars (ฝั่งซ้าย) --- */
+/* --- Recharts Overrides --- */
+/* ปรับแต่งแกนและ Label ของกราฟให้แสดงผลตรงกับฟอนต์ระบบ */
+.recharts-text {
+  font-family: "IBM Plex Sans Thai", sans-serif !important;
+}
+
+/* --- Progress Bars --- */
 .db-progress-list {
   display: flex;
   flex-direction: column;
   gap: 30px;
+  justify-content: center;
+  height: 100%;
 }
 
 .db-progress-item {
@@ -246,7 +265,7 @@
   transition: width 1s ease-in-out;
 }
 
-/* --- Activity List (ฝั่งขวา) --- */
+/* --- Activity List --- */
 .db-activity-list {
   list-style: none;
   padding: 0;
@@ -333,8 +352,11 @@
   .db-stats-grid {
     grid-template-columns: repeat(2, 1fr);
   }
-  .db-content-grid {
-    grid-template-columns: 1fr;
+  .db-charts-row-1 {
+    grid-template-columns: 1fr; /* ให้กราฟเส้นและวงกลมเรียงลงมาบนแท็บเล็ต */
+  }
+  .db-charts-row-2 {
+    grid-template-columns: 1fr; /* ให้กราฟแท่งและ Progress เรียงลงมา */
   }
 }
 
@@ -357,7 +379,6 @@
   .db-stats-grid {
     grid-template-columns: 1fr;
     gap: 15px;
-    margin-bottom: 30px;
   }
 
   .db-stat-card {
@@ -366,10 +387,6 @@
 
   .db-stat-value {
     font-size: 1.8rem;
-  }
-
-  .db-content-grid {
-    gap: 20px;
   }
 
   .db-card-header {
@@ -400,9 +417,5 @@
     justify-content: space-between;
     align-items: center;
     margin-top: 5px;
-  }
-
-  .db-progress-label {
-    font-size: 13.5px;
   }
 }
