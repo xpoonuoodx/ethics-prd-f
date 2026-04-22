@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X, ChevronDown } from "lucide-react"; // เพิ่ม ChevronDown สำหรับลูกศร
+import { Menu, X, ChevronDown } from "lucide-react";
 import "./style/Tabbar.css";
 import logoBDE from "../assets/logo-bde.png";
 
 function Tabbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isAboutOpen, setIsAboutOpen] = useState(false); // State สำหรับเปิด/ปิด Dropdown ในมือถือ
+  const [isAboutOpen, setIsAboutOpen] = useState(false);
   const location = useLocation();
 
   useEffect(() => {
@@ -61,8 +61,8 @@ function Tabbar() {
             {/* --- เมนูเกี่ยวกับเรา (แบบ Dropdown) --- */}
             <li className="ai-dropdown-container">
               <Link
-                // to="/about"
-                // className={location.pathname.includes("/about") ? "active" : ""}
+              // to="/about"
+              // className={location.pathname.includes("/about") ? "active" : ""}
               >
                 เกี่ยวกับเรา{" "}
                 <ChevronDown size={14} className="ai-dropdown-arrow" />
@@ -88,7 +88,7 @@ function Tabbar() {
                 to="/guideline"
                 className={location.pathname === "/guideline" ? "active" : ""}
               >
-                Thailand AI Ethics Guideline
+                คู่มือระบบ AI Ethics
               </Link>
             </li>
             <li>
@@ -104,8 +104,9 @@ function Tabbar() {
 
         {/* --- ฝั่งขวา: ปุ่มกด (Desktop) --- */}
         <div className="ai-tabbar-right-desktop">
-          <Link to="/download" className="ai-tabbar-text-link">
-            ดาวน์โหลดเอกสาร
+          {/* เพิ่มปุ่มสมัครเข้าร่วมโครงการ */}
+          <Link to="/register" className="ai-tabbar-outline-btn">
+            สมัครเข้าร่วมโครงการ
           </Link>
           <Link to="/login" className="ai-tabbar-btn">
             เข้าสู่ระบบ
@@ -207,6 +208,10 @@ function Tabbar() {
           <div className="ai-mobile-footer">
             <Link to="/download" className="ai-mobile-download-link">
               ดาวน์โหลดเอกสาร
+            </Link>
+            {/* เพิ่มปุ่มสมัครเข้าร่วมโครงการในมือถือ */}
+            <Link to="/register" className="ai-mobile-outline-btn">
+              สมัครเข้าร่วมโครงการ
             </Link>
             <Link to="/login" className="ai-mobile-login-btn">
               เข้าสู่ระบบ
