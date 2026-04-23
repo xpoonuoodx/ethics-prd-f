@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import "./style/Login.css";
 import { FaEye, FaEyeSlash, FaArrowLeft } from "react-icons/fa";
-import logo from "../assets/logo-bde.png"; // นำเข้าโลโก้จากโฟลเดอร์ assets ของคุณ
+import logo from "../assets/logo-bde.png"; // นำเข้าโลโก้จากโฟลเดอร์ assets
 import axios from "axios";
 import Swal from "sweetalert2";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
-  const [loading, setLoading] = useState(false); // ไว้ทำปุ่มโหลด
+  const [loading, setLoading] = useState(false);
 
   // State สำหรับเก็บค่าที่พิมพ์
   const [username, setUsername] = useState("");
@@ -34,15 +34,14 @@ const Login = () => {
       localStorage.setItem("token", token);
       localStorage.setItem("user", JSON.stringify(user));
 
-      let targetUrl = "/";
-      if (user.role === "admin") {
+      // --- ปรับให้เหลือแค่ 2 Role (admin และ user) ---
+      let targetUrl = "/user-dashboard";
+
+      if (
+        user.role === "admin" ||
+        (user.roles && user.roles.includes("admin"))
+      ) {
         targetUrl = "/admin-dashboard";
-      } else if (user.role === "regulator") {
-        targetUrl = "/regulator-dashboard";
-      } else if (user.role === "provider") {
-        targetUrl = "/provider-dashboard";
-      } else if (user.role === "user") {
-        targetUrl = "/user-dashboard";
       }
 
       window.location.href = targetUrl;
@@ -64,25 +63,30 @@ const Login = () => {
   };
 
   return (
-    <div className="auth-login-container">
-      {/* ส่วนซ้าย: ฟอร์มเข้าสู่ระบบ */}
-      <div className="auth-login-left">
-        <a href="/" className="auth-login-back-btn">
-          <FaArrowLeft /> กลับสู่หน้าหลัก
-        </a>
+    <div className="premium-login-container">
+      {/* ================= ส่วนซ้าย: ฟอร์มเข้าสู่ระบบ ================= */}
+      <div className="premium-login-left">
+        {/* แถบด้านบน */}
+        <div className="premium-login-top-nav">
+          <a href="/" className="premium-back-btn">
+            <FaArrowLeft size={14} /> กลับสู่หน้าหลัก
+          </a>
+        </div>
 
-        <div className="auth-login-form-wrapper">
-          {/* ดึงโลโก้จากโฟลเดอร์ assets ของคุณ */}
-          <img src={logo} alt="BDE Logo" className="auth-login-logo" />
+        {/* กล่องฟอร์ม */}
+        <div className="premium-form-wrapper">
+          <div className="premium-brand-header">
+            <img src={logo} alt="BDE Logo" className="premium-logo" />
+          </div>
 
-          <h2>เข้าสู่ระบบ</h2>
-          <p className="auth-login-subtitle">
-            ยินดีต้อนรับ กรุณาเข้าสู่ระบบเพื่อดำเนินการต่อ
-          </p>
+          <div className="premium-form-header">
+            <h2>เข้าสู่ระบบ</h2>
+            <p>ยินดีต้อนรับ กรุณาเข้าสู่ระบบเพื่อดำเนินการต่อในระบบ</p>
+          </div>
 
           <form onSubmit={handleLogin}>
-            <div className="auth-login-input-group">
-              {/* เปลี่ยนจาก อีเมลผู้ใช้งาน เป็น ชื่อผู้ใช้งาน เพื่อให้ตรงกับ Backend */}
+            {/* ช่องชื่อผู้ใช้งาน */}
+            <div className="premium-input-group">
               <label htmlFor="username">ชื่อผู้ใช้งาน (Username)</label>
               <input
                 type="text"
@@ -94,9 +98,10 @@ const Login = () => {
               />
             </div>
 
-            <div className="auth-login-input-group">
+            {/* ช่องรหัสผ่าน */}
+            <div className="premium-input-group">
               <label htmlFor="password">รหัสผ่าน</label>
-              <div className="auth-login-password-wrapper">
+              <div className="premium-password-wrapper">
                 <input
                   type={showPassword ? "text" : "password"}
                   id="password"
@@ -105,25 +110,27 @@ const Login = () => {
                   onChange={(e) => setPassword(e.target.value)}
                   required
                 />
-                <span
-                  className="auth-login-toggle-password"
+                <button
+                  type="button"
+                  className="premium-toggle-password"
                   onClick={togglePasswordVisibility}
                 >
                   {showPassword ? <FaEyeSlash /> : <FaEye />}
-                </span>
+                </button>
               </div>
             </div>
 
-            <div className="auth-login-options">
-              <a href="/forgot-password" className="auth-login-forgot-pass">
+            {/* ลืมรหัสผ่าน */}
+            <div className="premium-form-options">
+              <a href="/forgot-password" className="premium-forgot-pass">
                 ลืมรหัสผ่านใช่หรือไม่?
               </a>
             </div>
 
-            {/* เพิ่มสถานะ Loading ในปุ่ม */}
+            {/* ปุ่ม Submit */}
             <button
               type="submit"
-              className="auth-login-submit-btn"
+              className="premium-submit-btn"
               disabled={loading}
               style={{ opacity: loading ? 0.7 : 1 }}
             >
@@ -131,16 +138,28 @@ const Login = () => {
             </button>
           </form>
 
-          <p className="auth-login-register-link">
-            ยังไม่มีบัญชีผู้ใช้งาน? <a href="/register">ลงทะเบียนที่นี่</a>
-          </p>
+          {/* ลิงก์สมัครสมาชิก */}
+          <div className="premium-register-prompt">
+            <p>
+              ยังไม่มีบัญชีผู้ใช้งาน? <a href="/register">ลงทะเบียนที่นี่</a>
+            </p>
+          </div>
         </div>
       </div>
 
-      {/* ส่วนขวา: รูปภาพ */}
-      <div className="auth-login-right">
-        {/* สามารถเปลี่ยน URL รูปภาพด้านล่างเป็นรูปภาพที่ต้องการได้ในไฟล์ CSS */}
-        <div className="auth-login-image-overlay"></div>
+      {/* ================= ส่วนขวา: รูปภาพและข้อความต้อนรับ ================= */}
+      <div className="premium-login-right">
+        <div className="premium-image-overlay">
+          <div className="premium-hero-content">
+            <div className="premium-glass-card">
+              <h3>Thailand AI Ethics Guideline</h3>
+              <p>
+                โครงการสร้างความเข้าใจและส่งเสริมการใช้แนวปฏิบัติจริยธรรมปัญญาประดิษฐ์
+                เพื่อสังคมดิจิทัลที่ปลอดภัยและยั่งยืน
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

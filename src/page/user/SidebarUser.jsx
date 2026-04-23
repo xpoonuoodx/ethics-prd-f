@@ -1,21 +1,35 @@
 import React, { useState } from "react";
-import "./style/SidebarUser.css"; // อย่าลืมสร้างไฟล์ CSS ด้วยนะครับ
+import "./style/SidebarUser.css";
 import {
   FaHome,
-  FaUserAlt,
-  FaClipboardList,
+  FaBookOpen,
+  FaClipboardCheck,
+  FaTools,
+  FaFileDownload,
   FaCog,
   FaSignOutAlt,
   FaBars,
   FaTimes,
+  FaGripLinesVertical,
 } from "react-icons/fa";
 
 const SidebarUser = () => {
   const [isOpen, setIsOpen] = useState(true);
+  const [isMobileOpen, setIsMobileOpen] = useState(false);
+
   const user = JSON.parse(localStorage.getItem("user"));
+
+  const getInitials = (name) => {
+    if (!name) return "US";
+    return name.substring(0, 2).toUpperCase();
+  };
 
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
+  };
+
+  const toggleMobileSidebar = () => {
+    setIsMobileOpen(!isMobileOpen);
   };
 
   const handleLogout = () => {
@@ -24,70 +38,145 @@ const SidebarUser = () => {
     window.location.href = "/login";
   };
 
+  // ตรวจสอบ URL ปัจจุบันเพื่อให้เมนูขึ้นแถบ Active ถูกหน้า
+  const currentPath = window.location.pathname + window.location.search;
+
   return (
     <>
-      {/* ปุ่ม Toggle สำหรับมือถือ */}
-      <button className="user-sidebar-mobile-toggle" onClick={toggleSidebar}>
-        {isOpen ? <FaTimes /> : <FaBars />}
+      {/* ปุ่ม Toggle สำหรับหน้าจอมือถือ */}
+      <button className="su-mobile-toggle" onClick={toggleMobileSidebar}>
+        {isMobileOpen ? <FaTimes /> : <FaBars />}
       </button>
 
-      {/* กล่อง Sidebar */}
-      <div className={`user-sidebar-container ${isOpen ? "open" : "closed"}`}>
-        {/* ส่วนหัว Sidebar */}
-        <div className="user-sidebar-header">
-          <div className="user-sidebar-brand">
-            <FaUserAlt className="user-sidebar-brand-icon" />
-            <h2 className={`user-sidebar-title ${!isOpen && "hidden"}`}>
-              User Panel
-            </h2>
+      {/* Overlay พื้นหลังเวลาเปิดเมนูบนมือถือ */}
+      {isMobileOpen && (
+        <div className="su-mobile-overlay" onClick={toggleMobileSidebar}></div>
+      )}
+
+      {/* ตัว Sidebar */}
+      <aside
+        className={`su-container ${isOpen ? "open" : "closed"} ${
+          isMobileOpen ? "mobile-open" : ""
+        }`}
+      >
+        {/* ================= Header ================= */}
+        <div className="su-header">
+          <div className={`su-brand ${!isOpen && "hidden"}`}>
+            <div className="su-brand-icon-wrapper">
+              <span className="su-brand-sparkle">❈</span>
+            </div>
+            <h2 className="su-brand-title">BDE THE ETHIC AI PL</h2>
           </div>
-        </div>
 
-        {/* เมนูนำทาง */}
-        <div className="user-sidebar-menu">
-          <a href="/user" className="user-sidebar-item active">
-            <FaHome className="user-sidebar-icon" />
-            <span className={`user-sidebar-text ${!isOpen && "hidden"}`}>
-              หน้าหลัก
-            </span>
-          </a>
-
-          <a href="/user/profile" className="user-sidebar-item">
-            <FaUserAlt className="user-sidebar-icon" />
-            <span className={`user-sidebar-text ${!isOpen && "hidden"}`}>
-              โปรไฟล์ของฉัน
-            </span>
-          </a>
-
-          <a href="/user/requests" className="user-sidebar-item">
-            <FaClipboardList className="user-sidebar-icon" />
-            <span className={`user-sidebar-text ${!isOpen && "hidden"}`}>
-              ติดตามคำขอ
-            </span>
-          </a>
-
-          <a href="/user/settings" className="user-sidebar-item">
-            <FaCog className="user-sidebar-icon" />
-            <span className={`user-sidebar-text ${!isOpen && "hidden"}`}>
-              ตั้งค่าบัญชี
-            </span>
-          </a>
-        </div>
-
-        {/* ส่วนล่าง Sidebar */}
-        <div className="user-sidebar-footer">
-          <div className={`user-sidebar-user-info ${!isOpen && "hidden"}`}>
-            <p className="user-sidebar-user-name">{user?.name || "User"}</p>
-            <p className="user-sidebar-user-role">ผู้ใช้งานทั่วไป</p>
-          </div>
-          <button onClick={handleLogout} className="user-sidebar-logout-btn">
-            <FaSignOutAlt className="user-sidebar-logout-icon" />
-            <span className={`user-sidebar-text ${!isOpen && "hidden"}`}>
-              ออกจากระบบ
-            </span>
+          <button className="su-desktop-toggle" onClick={toggleSidebar}>
+            <FaGripLinesVertical />
           </button>
         </div>
-      </div>
+
+        {/* ================= Main Menu ================= */}
+        <nav className="su-menu">
+          <a
+            href="/user-dashboard"
+            className={`su-menu-item ${
+              currentPath === "/user-dashboard" ? "active" : ""
+            }`}
+            title="แดชบอร์ด"
+          >
+            <FaHome className="su-icon" />
+            <span className={`su-text ${!isOpen && "hidden"}`}>แดชบอร์ด</span>
+          </a>
+
+          <a
+            href="/user-select-role?type=learn"
+            className={`su-menu-item ${
+              currentPath.includes("type=learn") ||
+              currentPath.includes("classroom")
+                ? "active"
+                : ""
+            }`}
+            title="สื่อการเรียนรู้"
+          >
+            <FaBookOpen className="su-icon" />
+            <span className={`su-text ${!isOpen && "hidden"}`}>
+              สื่อการเรียนรู้
+            </span>
+          </a>
+
+          <a
+            href="/user-select-role?type=test"
+            className={`su-menu-item ${
+              currentPath.includes("type=test") ||
+              currentPath.includes("user-test")
+                ? "active"
+                : ""
+            }`}
+            title="แบบทดสอบ"
+          >
+            <FaClipboardCheck className="su-icon" />
+            <span className={`su-text ${!isOpen && "hidden"}`}>แบบทดสอบ</span>
+          </a>
+
+          <a
+            href="/user-tools"
+            className={`su-menu-item ${
+              currentPath === "/user-tools" ? "active" : ""
+            }`}
+            title="เครื่องมือ"
+          >
+            <FaTools className="su-icon" />
+            <span className={`su-text ${!isOpen && "hidden"}`}>เครื่องมือ</span>
+          </a>
+
+          <a
+            href="/user-download"
+            className={`su-menu-item ${
+              currentPath === "/user-download" ? "active" : ""
+            }`}
+            title="ดาวน์โหลดเอกสาร"
+          >
+            <FaFileDownload className="su-icon" />
+            <span className={`su-text ${!isOpen && "hidden"}`}>
+              ดาวน์โหลดเอกสาร
+            </span>
+          </a>
+        </nav>
+
+        {/* ================= Footer ================= */}
+        <div className="su-footer">
+          <div className="su-bottom-menu">
+            <a
+              href="/user-settings"
+              className="su-menu-item"
+              title="ตั้งค่าบัญชี"
+            >
+              <FaCog className="su-icon" />
+              <span className={`su-text ${!isOpen && "hidden"}`}>
+                ตั้งค่าบัญชี
+              </span>
+            </a>
+            <button
+              onClick={handleLogout}
+              className="su-menu-item su-logout-btn"
+              title="ออกจากระบบ"
+            >
+              <FaSignOutAlt className="su-icon" />
+              <span className={`su-text ${!isOpen && "hidden"}`}>
+                ออกจากระบบ
+              </span>
+            </button>
+          </div>
+
+          <div className="su-user-card" title={user?.name || "ผู้ใช้งาน"}>
+            <div className="su-avatar">{getInitials(user?.name)}</div>
+            <div className={`su-user-info ${!isOpen && "hidden"}`}>
+              <p className="su-user-name">{user?.name || "ผู้ใช้งานระบบ"}</p>
+              <p className="su-user-email">
+                {user?.username || "user@email.com"}
+              </p>
+            </div>
+          </div>
+        </div>
+      </aside>
     </>
   );
 };

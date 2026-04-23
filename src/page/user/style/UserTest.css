@@ -1,0 +1,174 @@
+@import url("https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap");
+
+.ut-container * {
+  box-sizing: border-box;
+  font-family: "Prompt", sans-serif;
+}
+
+.ut-container {
+  padding: 40px;
+  max-width: 800px;
+  margin: 0 auto;
+  min-height: 80vh;
+}
+
+.ut-back-btn {
+  background: none;
+  border: none;
+  color: #6b7280;
+  font-size: 15px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  margin-bottom: 30px;
+  padding: 0;
+}
+.ut-back-btn:hover {
+  color: #111827;
+}
+
+/* การ์ดแบบทดสอบ */
+.ut-quiz-card {
+  background: white;
+  border-radius: 20px;
+  padding: 40px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+}
+
+.ut-quiz-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.ut-quiz-header h3 {
+  margin: 0;
+  font-size: 18px;
+  color: #3b6161; /* สีเขียวเข้ม */
+}
+
+.ut-progress {
+  background: #f3f4f6;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #4b5563;
+}
+
+.ut-question-box h4 {
+  font-size: 22px;
+  font-weight: 600;
+  color: #111827;
+  margin: 0 0 30px 0;
+  line-height: 1.5;
+}
+
+.ut-options-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-bottom: 40px;
+}
+
+.ut-option-item {
+  display: flex;
+  align-items: center;
+  padding: 18px 20px;
+  border: 2px solid #e5e7eb;
+  border-radius: 12px;
+  font-size: 16px;
+  color: #374151;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.ut-option-item:hover {
+  background: #f9fafb;
+}
+
+.ut-option-item.selected {
+  border-color: #75ba40;
+  background: #f0fdf4;
+  font-weight: 500;
+  color: #15803d;
+}
+
+.ut-option-item input[type="radio"] {
+  margin-right: 15px;
+  width: 18px;
+  height: 18px;
+  accent-color: #75ba40;
+}
+
+.ut-quiz-footer {
+  text-align: right;
+}
+
+.ut-btn-primary {
+  background: #75ba40;
+  color: white;
+  border: none;
+  padding: 14px 30px;
+  font-size: 16px;
+  font-weight: 600;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.ut-btn-primary:disabled {
+  background: #d1d5db;
+  cursor: not-allowed;
+}
+.ut-btn-primary:hover:not(:disabled) {
+  background: #639d36;
+}
+.mt-4 {
+  margin-top: 20px;
+}
+
+/* หน้าผลลัพธ์ */
+.ut-result-card {
+  background: white;
+  border-radius: 20px;
+  padding: 60px 40px;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+}
+
+.ut-result-icon {
+  font-size: 80px;
+  color: #75ba40;
+  margin-bottom: 20px;
+}
+
+.ut-result-card h2 {
+  font-size: 28px;
+  margin: 0 0 10px 0;
+}
+
+.ut-result-card p {
+  font-size: 18px;
+  color: #6b7280;
+}
+
+@media (max-width: 600px) {
+  .ut-container {
+    padding: 20px;
+  }
+  .ut-quiz-card {
+    padding: 25px;
+  }
+  .ut-question-box h4 {
+    font-size: 18px;
+  }
+  .ut-option-item {
+    font-size: 14.5px;
+    padding: 15px;
+  }
+}
