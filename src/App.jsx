@@ -1,5 +1,7 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+
+// หน้าทั่วไป (Public Pages)
 import Home from "./page/Home";
 import Dashboard from "./page/Dashboard";
 import AboutBackground from "./page/AboutBackground";
@@ -11,27 +13,26 @@ import Login from "./page/Login";
 import Register from "./page/Register";
 import NewsDetail from "./page/NewsDetail";
 
-// Route
+// Route Guards (สิทธิ์การเข้าถึง)
 import UserRoute from "./route/UserRoute";
 import AdminRoute from "./route/AdminRoute";
-import ProviderRoute from "./route/ProviderRoute";
-import RegulatorRoute from "./route/RegulatorRoute";
+// ลบ ProviderRoute และ RegulatorRoute ออก เพราะไม่ใช้แล้ว
 
-// Admin
+// Admin Pages
 import AdminDashboard from "./page/admin/AdminDashboard";
 
-// Regulator
-import RegulatorDashboard from "./page/regulator/RegulatorDashboard";
-
-// Provider
-import ProviderDashboard from "./page/provider/ProviderDashboard";
-// User
+// User Pages
 import UserDashboard from "./page/user/UserDashboard";
+import UserSelectRole from "./page/user/UserSelectRole"; // หน้าเลือกบทบาท
+import UserClassroom from "./page/user/UserClassroom"; // หน้าเรียน
+import UserTest from "./page/user/UserTest"; // หน้าสอบ
+// ลบหน้า Dashboard ของ Regulator และ Provider ออก
 
 function App() {
   return (
     <Router>
       <Routes>
+        {/* === Public Routes === */}
         <Route path="/" element={<Home />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/about/background" element={<AboutBackground />} />
@@ -43,6 +44,7 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/news/:id" element={<NewsDetail />} />
 
+        {/* === Admin Routes === */}
         <Route
           path="/admin-dashboard"
           element={
@@ -51,27 +53,44 @@ function App() {
             </AdminRoute>
           }
         />
-        <Route
-          path="/regulator-dashboard"
-          element={
-            <RegulatorRoute>
-              <RegulatorDashboard />
-            </RegulatorRoute>
-          }
-        />
-        <Route
-          path="/provider-dashboard"
-          element={
-            <ProviderRoute>
-              <ProviderDashboard />
-            </ProviderRoute>
-          }
-        />
+
+        {/* === User Routes === */}
+        {/* หน้าหลัก User */}
         <Route
           path="/user-dashboard"
           element={
             <UserRoute>
               <UserDashboard />
+            </UserRoute>
+          }
+        />
+
+        {/* หน้าเลือกสายงาน (เรียน หรือ สอบ) */}
+        <Route
+          path="/user-select-role"
+          element={
+            <UserRoute>
+              <UserSelectRole />
+            </UserRoute>
+          }
+        />
+
+        {/* หน้าห้องเรียน */}
+        <Route
+          path="/user-classroom"
+          element={
+            <UserRoute>
+              <UserClassroom />
+            </UserRoute>
+          }
+        />
+
+        {/* หน้าทำแบบทดสอบ */}
+        <Route
+          path="/user-test"
+          element={
+            <UserRoute>
+              <UserTest />
             </UserRoute>
           }
         />

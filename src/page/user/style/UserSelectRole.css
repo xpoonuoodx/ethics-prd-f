@@ -1,0 +1,176 @@
+@import url("https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap");
+
+.usr-container * {
+  box-sizing: border-box;
+  font-family: "Prompt", sans-serif;
+}
+
+.usr-container {
+  padding: 60px 40px;
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 80vh;
+}
+
+/* =========================================
+   HEADER
+   ========================================= */
+.usr-header {
+  text-align: center;
+  margin-bottom: 50px;
+}
+
+.usr-title {
+  font-size: 32px;
+  font-weight: 700;
+  color: #111827;
+  margin: 0 0 15px 0;
+  letter-spacing: -0.5px;
+}
+
+.usr-subtitle {
+  font-size: 15px;
+  color: #6b7280;
+  margin: 0;
+}
+
+/* =========================================
+   CARDS WRAPPER & IMAGE BACKGROUND
+   ========================================= */
+.usr-cards-wrapper {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 30px;
+  width: 100%;
+}
+
+.usr-card {
+  position: relative;
+  width: 260px; /* ความกว้างแบบการ์ดแนวตั้งตามเรฟ */
+  height: 450px; /* ความสูงการ์ด */
+  border-radius: 24px; /* มุมโค้งมน */
+  overflow: hidden;
+  cursor: pointer;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+  transition:
+    transform 0.4s ease,
+    box-shadow 0.4s ease;
+}
+
+.usr-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.2);
+}
+
+/* รูปภาพพื้นหลัง */
+.usr-card-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  transition: transform 0.6s ease; /* เอฟเฟกต์ซูมเวลา Hover */
+  z-index: 1;
+}
+
+.usr-card:hover .usr-card-bg {
+  transform: scale(1.1); /* ขยายรูปเบาๆ */
+}
+
+/* แผ่นฟิล์มสีดำทับรูปภาพ และเนื้อหาตรงกลาง */
+.usr-card-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  /* ไล่สีจากโปร่งแสงด้านบน ไปเข้มด้านล่างให้อ่านข้อความง่ายขึ้น */
+  background: linear-gradient(
+    to bottom,
+    rgba(17, 24, 39, 0.4) 0%,
+    rgba(17, 24, 39, 0.85) 100%
+  );
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 30px 20px;
+  text-align: center;
+  color: white;
+  transition: background 0.4s ease;
+}
+
+.usr-card:hover .usr-card-overlay {
+  background: linear-gradient(
+    to bottom,
+    rgba(17, 24, 39, 0.3) 0%,
+    rgba(17, 24, 39, 0.9) 100%
+  );
+}
+
+.usr-card-icon {
+  font-size: 55px;
+  margin-bottom: 15px;
+  color: #75ba40; /* ใช้สีเขียวธีมเว็บเพื่อให้โดดเด่นแบบในเรฟ */
+  filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.4));
+  transition: transform 0.3s ease;
+}
+
+.usr-card:hover .usr-card-icon {
+  transform: scale(1.1);
+}
+
+.usr-card-title {
+  font-size: 26px;
+  font-weight: 700;
+  margin: 0 0 15px 0;
+  letter-spacing: 0.5px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+}
+
+.usr-card-desc {
+  font-size: 14.5px;
+  color: #e5e7eb;
+  margin: 0;
+  line-height: 1.8; /* ระยะห่างบรรทัดให้อ่านง่าย */
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
+}
+
+/* =========================================
+   RESPONSIVE
+   ========================================= */
+@media (max-width: 1024px) {
+  .usr-cards-wrapper {
+    gap: 20px;
+  }
+  .usr-card {
+    width: 240px;
+    height: 400px;
+  }
+}
+
+@media (max-width: 768px) {
+  .usr-container {
+    padding: 40px 20px;
+  }
+  .usr-title {
+    font-size: 24px;
+  }
+  .usr-cards-wrapper {
+    flex-direction: column;
+    align-items: center;
+  }
+  .usr-card {
+    width: 100%;
+    max-width: 320px; /* บนมือถือให้กว้างขึ้นมาหน่อยและวางเรียงลงมา */
+    height: 380px;
+  }
+}

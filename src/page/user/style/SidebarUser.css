@@ -1,5 +1,4 @@
-/* นำเข้าฟอนต์ Kanit */
-@import url("https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap");
 
 .su-container * {
   box-sizing: border-box;
@@ -17,20 +16,21 @@
   background-color: #ffffff;
   color: #374151;
   border: 1px solid #e5e7eb;
-  border-radius: 8px;
-  width: 42px;
-  height: 42px;
+  border-radius: 12px;
+  width: 45px;
+  height: 45px;
   display: flex;
   justify-content: center;
   align-items: center;
   font-size: 20px;
   cursor: pointer;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-  transition: background-color 0.3s;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
 }
 
 .su-mobile-toggle:hover {
   background-color: #f9fafb;
+  transform: scale(1.05);
 }
 
 .su-mobile-overlay {
@@ -39,7 +39,8 @@
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(0, 0, 0, 0.3);
+  background: rgba(17, 24, 39, 0.4);
+  backdrop-filter: blur(2px);
   z-index: 998;
 }
 
@@ -51,23 +52,23 @@
   top: 0;
   left: 0;
   height: 100vh;
-  background-color: #ffffff; /* เปลี่ยนเป็นพื้นหลังสีขาวตามรูปเรฟ */
-  color: #4b5563; /* สีตัวอักษรเทาเข้ม */
+  background-color: #ffffff;
   display: flex;
   flex-direction: column;
   transition:
-    width 0.3s ease,
-    transform 0.3s ease;
+    width 0.4s cubic-bezier(0.2, 0.8, 0.2, 1),
+    transform 0.4s ease;
   z-index: 999;
-  border-right: 1px solid #f3f4f6; /* เส้นคั่นบางๆ ด้านขวา */
+  border-right: 1px solid #f3f4f6;
+  box-shadow: 4px 0 20px rgba(0, 0, 0, 0.02);
 }
 
 .su-container.open {
-  width: 260px;
+  width: 270px; /* ขยายให้กว้างขึ้นนิดหน่อย ดูโปร่งขึ้น */
 }
 
 .su-container.closed {
-  width: 80px;
+  width: 84px;
 }
 
 .hidden {
@@ -78,16 +79,17 @@
    Header (Logo & Toggle)
    ========================================= */
 .su-header {
-  height: 80px;
+  height: 85px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 20px;
-  margin-bottom: 10px;
+  padding: 0 22px;
+  margin-bottom: 20px;
 }
 
 .su-container.closed .su-header {
   justify-content: center;
+  padding: 0;
 }
 
 .su-brand {
@@ -99,18 +101,19 @@
 }
 
 .su-brand-icon-wrapper {
-  color: #3b6161; /* สีเขียวอมฟ้าเข้มแบบในรูปเรฟ */
-  font-size: 24px;
+  color: #213f3f; /* สีเขียวเข้มแบบในเรฟ */
+  font-size: 26px;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .su-brand-title {
-  font-size: 18px;
-  font-weight: 600;
+  font-size: 17px;
+  font-weight: 700;
   color: #111827;
   margin: 0;
+  letter-spacing: 0.5px;
 }
 
 .su-desktop-toggle {
@@ -122,12 +125,14 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 4px;
-  transition: color 0.2s;
+  padding: 6px;
+  border-radius: 8px;
+  transition: all 0.2s ease;
 }
 
 .su-desktop-toggle:hover {
   color: #4b5563;
+  background-color: #f3f4f6;
 }
 
 /* =========================================
@@ -135,36 +140,37 @@
    ========================================= */
 .su-menu {
   flex: 1;
-  padding: 0 15px;
+  padding: 0 16px;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
   overflow-y: auto;
 }
 
+/* ปรับ Scrollbar ให้ดูมินิมอล */
 .su-menu::-webkit-scrollbar {
   width: 4px;
 }
 .su-menu::-webkit-scrollbar-thumb {
   background-color: #e5e7eb;
-  border-radius: 4px;
+  border-radius: 10px;
 }
 
 .su-menu-item {
   display: flex;
   align-items: center;
-  padding: 12px 15px;
-  color: #6b7280;
+  padding: 14px 16px;
+  color: #6b7280; /* สีเทาเข้มสำหรับเมนูที่ไม่ได้เลือก */
   text-decoration: none;
-  border-radius: 12px; /* มุมโค้งมนแบบ Pill shape */
+  border-radius: 14px; /* โค้งมนนุ่มนวล */
   transition: all 0.2s ease;
   white-space: nowrap;
-  gap: 15px;
+  gap: 16px;
 }
 
 .su-container.closed .su-menu-item {
   justify-content: center;
-  padding: 12px 0;
+  padding: 14px 0;
 }
 
 .su-icon {
@@ -172,45 +178,52 @@
   min-width: 18px;
   display: flex;
   justify-content: center;
+  transition: color 0.2s ease;
 }
 
 .su-text {
-  font-size: 15px;
+  font-size: 15.5px;
   font-weight: 500;
 }
 
 /* Hover State */
 .su-menu-item:hover {
   background-color: #f9fafb;
-  color: #111827;
+  color: #374151;
 }
 
-/* Active State (ตามรูปเรฟ: พื้นหลังสีอ่อนขอบมน ตัวหนังสือเข้ม) */
+/* Active State (ปรับตามเรฟเป๊ะๆ) */
 .su-menu-item.active {
-  background-color: #f0fdf4; /* สีเขียวอ่อนสุดๆ */
-  color: #3b6161; /* สีเขียวอมฟ้าเข้ม */
-  box-shadow: 0 2px 4px rgba(59, 97, 97, 0.05);
+  background-color: #f0fdf4; /* พื้นหลังสีเขียวอ่อนมาก */
+  color: #213f3f; /* สีเขียวเข้ม/เทาเข้ม */
 }
 
 .su-menu-item.active .su-icon {
-  color: #3b6161;
+  color: #213f3f;
+}
+
+.su-menu-item.active .su-text {
+  font-weight: 600; /* ทำให้ตัวหนาขึ้นเวลา Active */
 }
 
 /* =========================================
    Footer & User Card
    ========================================= */
 .su-footer {
-  padding: 15px;
+  padding: 16px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
+  background-color: #ffffff;
 }
 
 .su-bottom-menu {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  margin-bottom: 10px;
+  gap: 6px;
+  margin-bottom: 15px;
+  border-top: 1px solid #f3f4f6; /* เส้นคั่นบางๆ */
+  padding-top: 15px;
 }
 
 .su-logout-btn {
@@ -220,45 +233,53 @@
   cursor: pointer;
   text-align: left;
 }
+
 .su-logout-btn:hover {
-  color: #ef4444; /* สีแดงเวลาชี้ปุ่มออกระบบ */
+  color: #ef4444;
   background-color: #fef2f2;
 }
 
-/* User Card ดีไซน์ใหม่ */
+.su-logout-btn:hover .su-icon {
+  color: #ef4444;
+}
+
+/* User Card ด้านล่าง */
 .su-user-card {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 10px;
-  border-radius: 12px;
+  gap: 14px;
+  padding: 12px 14px;
+  border-radius: 14px;
   transition: background-color 0.2s;
   cursor: pointer;
   white-space: nowrap;
   overflow: hidden;
+  background-color: #f9fafb; /* ให้กล่องโปรไฟล์มีพื้นหลังจางๆ */
+  border: 1px solid #f3f4f6;
 }
 
 .su-user-card:hover {
-  background-color: #f9fafb;
+  background-color: #f3f4f6;
 }
 
 .su-container.closed .su-user-card {
   justify-content: center;
-  padding: 10px 0;
+  padding: 12px 0;
+  background-color: transparent;
+  border-color: transparent;
 }
 
-/* รููปโปรไฟล์วงกลมแบบตัวอักษรย่อ */
 .su-avatar {
-  width: 40px;
-  height: 40px;
-  min-width: 40px;
+  width: 42px;
+  height: 42px;
+  min-width: 42px;
   border-radius: 50%;
-  background-color: #3b6161; /* สีเขียวเข้มแบบในรูป */
+  background-color: #213f3f; /* สีเขียวเข้ม */
   color: #ffffff;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 600;
   letter-spacing: 1px;
 }
@@ -271,14 +292,14 @@
 
 .su-user-name {
   margin: 0 0 2px 0;
-  font-size: 14px;
-  font-weight: 600;
+  font-size: 14.5px;
+  font-weight: 700;
   color: #111827;
 }
 
 .su-user-email {
   margin: 0;
-  font-size: 12px;
+  font-size: 12.5px;
   color: #9ca3af;
 }
 
@@ -292,14 +313,13 @@
 }
 
 @media (max-width: 899px) {
-  /* ซ่อนปุ่มย่อขยายบนมือถือ */
   .su-desktop-toggle {
     display: none;
   }
 
   .su-container {
     transform: translateX(-100%);
-    width: 260px; /* บังคับความกว้างเมื่อเปิดบนมือถือ */
+    width: 280px;
   }
 
   .su-container.mobile-open {
@@ -307,7 +327,6 @@
     box-shadow: 4px 0 24px rgba(0, 0, 0, 0.1);
   }
 
-  /* ล้างคลาส closed ออกไปเพื่อให้เมนูไม่หดตัวตอนเปิดบนมือถือ */
   .su-container.closed.mobile-open .su-brand,
   .su-container.closed.mobile-open .su-text,
   .su-container.closed.mobile-open .su-user-info {
@@ -316,11 +335,12 @@
 
   .su-container.closed.mobile-open .su-header {
     justify-content: flex-start;
+    padding: 0 22px;
   }
 
   .su-container.closed.mobile-open .su-menu-item,
   .su-container.closed.mobile-open .su-user-card {
     justify-content: flex-start;
-    padding: 12px 15px;
+    padding: 14px 16px;
   }
 }
