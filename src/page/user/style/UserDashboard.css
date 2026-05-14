@@ -8,15 +8,12 @@
 .user-portal-layout {
   display: flex;
   min-height: 100vh;
-  background-color: #f3f4f6; /* พื้นหลังสีเทาอ่อนสะอาดตา ให้การ์ดโดดเด่น */
+  background-color: #f3f4f6;
 }
 
-/* =========================================
-   SIDEBAR & MAIN CONTENT
-   ========================================= */
 .user-portal-content {
   flex: 1;
-  margin-left: 260px; /* สำหรับพื้นที่ Desktop */
+  margin-left: 260px;
   transition: margin-left 0.3s ease;
   display: flex;
   flex-direction: column;
@@ -24,29 +21,191 @@
 
 .ud-container {
   padding: 40px;
-  width: 100%; /* ปรับให้ขยายเต็มความกว้าง */
-  max-width: 100%; /* ปลดล็อก max-width เดิมที่กั้นไว้ */
+  width: 100%;
+  max-width: 100%;
   margin: 0 auto;
 }
 
 /* =========================================
-   SIMPLE HEADER
+   HEADER WRAPPER & TOP CERT BUTTON
    ========================================= */
-.ud-simple-header {
+.ud-header-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
   margin-bottom: 30px;
+}
+
+.ud-simple-header {
+  flex: 1;
 }
 
 .ud-greeting-title {
   font-size: 28px;
-  font-weight: 500;
+  font-weight: 600;
   color: #111827;
   margin: 0 0 8px 0;
 }
-
 .ud-greeting-subtitle {
   font-size: 16px;
   color: #6b7280;
   margin: 0;
+}
+
+.ud-btn-top-cert {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  color: #111827;
+  padding: 12px 20px;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.03);
+  transition: all 0.2s ease;
+}
+
+.ud-btn-top-cert:hover {
+  background: #f9fafb;
+  border-color: #d1d5db;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.06);
+}
+
+.ud-icon-cert {
+  color: #f59e0b; /* สีเหลืองทองให้ดูพรีเมียม */
+  font-size: 18px;
+}
+
+/* =========================================
+   QUICK STATS
+   ========================================= */
+.ud-quick-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-bottom: 24px;
+}
+.ud-stat-card {
+  background: white;
+  border-radius: 16px;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
+  border: 1px solid #f3f4f6;
+}
+.ud-stat-icon {
+  width: 50px;
+  height: 50px;
+  border-radius: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 22px;
+}
+.bg-blue-light {
+  background: #eff6ff;
+}
+.text-blue {
+  color: #3b82f6;
+}
+.bg-green-light {
+  background: #f0fdf4;
+}
+.text-green {
+  color: #10b981;
+}
+.bg-purple-light {
+  background: #faf5ff;
+}
+.text-purple {
+  color: #8b5cf6;
+}
+.text-yellow {
+  color: #f59e0b;
+}
+
+.ud-stat-info {
+  display: flex;
+  flex-direction: column;
+}
+.ud-stat-label {
+  margin: 0 0 4px 0;
+  font-size: 13px;
+  color: #6b7280;
+  font-weight: 500;
+}
+.ud-stat-value {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 700;
+  color: #111827;
+}
+.ud-stat-unit {
+  font-size: 14px;
+  color: #9ca3af;
+  font-weight: 500;
+}
+
+/* =========================================
+   CONTINUE LEARNING BANNER
+   ========================================= */
+.ud-action-banner {
+  background: rgb(213 229 255);
+  border: rgb(185 212 255);
+  border-radius: 16px;
+  padding: 20px 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 40px;
+  box-shadow: 0 4px 10px rgba(22, 163, 74, 0.05);
+}
+.ud-banner-content {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+.ud-banner-badge {
+  background: rgb(25 79 164);
+  color: white;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.ud-banner-text h3 {
+  margin: 0 0 4px 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: rgb(25 79 164);
+}
+.ud-banner-text p {
+  margin: 0;
+  font-size: 14px;
+  color: #6a6a6a;
+}
+.ud-btn-banner {
+  background: rgb(25 79 164);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: background 0.2s;
+}
+.ud-btn-banner:hover {
+  background: #166534;
 }
 
 /* =========================================
@@ -58,11 +217,10 @@
   gap: 30px;
   margin-bottom: 40px;
 }
-
 .ud-recipe-card {
   background-color: #ffffff;
   border-radius: 20px;
-  overflow: hidden; /* ให้รูปลงขอบโค้งพอดี */
+  overflow: hidden;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
   transition:
     transform 0.3s ease,
@@ -70,25 +228,20 @@
   display: flex;
   flex-direction: column;
 }
-
 .ud-recipe-card:hover {
   transform: translateY(-6px);
   box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
 }
-
-/* ส่วนรูปภาพด้านบน */
 .ud-recipe-img-wrapper {
   position: relative;
   height: 200px;
   width: 100%;
 }
-
 .ud-recipe-img-wrapper img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
-
 .ud-recipe-badge {
   position: absolute;
   top: 16px;
@@ -104,15 +257,12 @@
   gap: 6px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
-
-/* ส่วนเนื้อหาภายใน */
 .ud-recipe-content {
   padding: 24px;
   display: flex;
   flex-direction: column;
   flex-grow: 1;
 }
-
 .ud-recipe-title {
   font-size: 20px;
   font-weight: 700;
@@ -120,7 +270,6 @@
   margin: 0 0 10px 0;
   letter-spacing: -0.3px;
 }
-
 .ud-recipe-desc {
   font-size: 14.5px;
   color: #6b7280;
@@ -128,22 +277,18 @@
   margin: 0 0 20px 0;
   flex-grow: 1;
 }
-
 .ud-recipe-divider {
   height: 1px;
   background-color: #f3f4f6;
   margin: 0 0 16px 0;
   width: 100%;
 }
-
-/* แถบ Maturity Level คล้ายๆ เวลา/คนเสิร์ฟในรูปเรฟ */
 .ud-recipe-meta {
   display: flex;
   align-items: center;
   justify-content: space-between;
   margin-bottom: 24px;
 }
-
 .ud-meta-item {
   display: flex;
   align-items: center;
@@ -152,29 +297,23 @@
   color: #4b5563;
   font-weight: 500;
 }
-
 .meta-icon {
   color: #9ca3af;
 }
-
 .ud-meta-divider {
   width: 1px;
   height: 20px;
   background-color: #e5e7eb;
 }
-
 .font-bold {
   font-weight: 700;
   color: #111827;
 }
-
-/* หลอด Progress ขนาดเล็กใน Meta */
 .progress-wrap {
   flex: 1;
   padding: 0 15px;
   justify-content: center;
 }
-
 .ud-mini-progress {
   width: 100%;
   height: 6px;
@@ -182,23 +321,19 @@
   border-radius: 10px;
   overflow: hidden;
 }
-
 .ud-mini-progress-fill {
   height: 100%;
   border-radius: 10px;
   transition: width 1s ease-in-out;
 }
-
-/* ปุ่ม ซ้ายขวาบรรทัดเดียวกัน */
 .ud-recipe-actions {
   display: flex;
   gap: 12px;
 }
-
 .ud-btn-half {
   flex: 1;
   padding: 12px 10px;
-  border-radius: 30px; /* ทำให้ปุ่มโค้งมนคล้ายแคปซูลยา เหมือนในเรฟ */
+  border-radius: 30px;
   font-size: 14px;
   font-weight: 600;
   display: flex;
@@ -209,8 +344,6 @@
   transition: all 0.2s ease;
   border: none;
 }
-
-/* ปุ่มสีเข้ม (สื่อการเรียนรู้) */
 .ud-btn-half.dark {
   background-color: #1f2937;
   color: #ffffff;
@@ -220,8 +353,6 @@
   background-color: #111827;
   transform: translateY(-2px);
 }
-
-/* ปุ่มโปร่ง (แบบทดสอบ) */
 .ud-btn-half.outline {
   background-color: transparent;
   border: 1px solid #d1d5db;
@@ -237,47 +368,40 @@
    ========================================= */
 .ud-progress-layout {
   display: grid;
-  grid-template-columns: 1fr 1fr; /* แบ่ง 2 ฝั่งเท่ากัน */
+  grid-template-columns: 1fr 1fr;
   gap: 24px;
+  margin-bottom: 40px;
 }
-
 .ud-card {
   background: white;
-  border-radius: 20px; /* ปรับให้โค้งมนรับกับการ์ดด้านบน */
+  border-radius: 20px;
   border: 1px solid #f3f4f6;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.03);
   display: flex;
   flex-direction: column;
 }
-
 .ud-card-header {
   padding: 24px;
   border-bottom: 1px solid #f3f4f6;
 }
-
 .ud-card-title {
   font-size: 18px;
   color: #111827;
   font-weight: 600;
   margin: 0;
 }
-
 .ud-card-body {
   padding: 24px;
   flex-grow: 1;
 }
-
 .ud-card-body.ud-p-0 {
   padding: 0;
 }
-
-/* Activity List */
 .ud-activity-list {
   list-style: none;
   padding: 0;
   margin: 0;
 }
-
 .ud-activity-item {
   display: flex;
   align-items: center;
@@ -288,7 +412,6 @@
 .ud-activity-item:last-child {
   border-bottom: none;
 }
-
 .ud-activity-icon {
   width: 44px;
   height: 44px;
@@ -299,25 +422,15 @@
   justify-content: center;
   flex-shrink: 0;
 }
-
-.text-purple {
-  color: #8b5cf6;
-}
-.text-blue {
-  color: #3b82f6;
-}
-
 .ud-activity-details {
   flex-grow: 1;
 }
-
 .ud-activity-name {
   font-size: 15px;
   font-weight: 500;
   color: #1f2937;
   margin: 0 0 6px 0;
 }
-
 .ud-activity-meta {
   display: flex;
   align-items: center;
@@ -325,7 +438,6 @@
   font-size: 13px;
   color: #9ca3af;
 }
-
 .ud-date {
   display: flex;
   align-items: center;
@@ -335,11 +447,9 @@
   font-weight: 500;
   color: #4b5563;
 }
-
 .ud-activity-status {
   flex-shrink: 0;
 }
-
 .ud-badge {
   font-size: 12px;
   padding: 6px 12px;
@@ -356,50 +466,153 @@
 }
 
 /* =========================================
+   SECTIONS (Recommendations)
+   ========================================= */
+.ud-section-spacer {
+  margin-bottom: 40px;
+}
+.ud-section-heading {
+  display: flex;
+  align-items: center;
+  font-size: 20px;
+  font-weight: 600;
+  color: #111827;
+  margin: 0 0 6px 0;
+}
+.ud-section-subheading {
+  font-size: 15px;
+  color: #6b7280;
+  margin: 0 0 20px 0;
+}
+
+.ud-recom-card {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  padding: 20px 25px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.02);
+  transition: border-color 0.3s;
+}
+.ud-recom-card:hover {
+  border-color: #d1d5db;
+}
+.ud-recom-icon-wrap {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: #fffbeb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  flex-shrink: 0;
+}
+.ud-recom-details {
+  flex: 1;
+}
+.ud-recom-details h4 {
+  margin: 0 0 6px 0;
+  font-size: 16px;
+  color: #111827;
+}
+.ud-recom-details p {
+  margin: 0;
+  font-size: 14px;
+  color: #6b7280;
+  line-height: 1.5;
+}
+.ud-btn-outline {
+  background: white;
+  border: 1px solid #d1d5db;
+  padding: 10px 18px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #374151;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: background 0.2s;
+  white-space: nowrap;
+}
+.ud-btn-outline:hover {
+  background: #f9fafb;
+}
+
+/* =========================================
    RESPONSIVE
    ========================================= */
 @media (max-width: 1400px) {
-  /* ทำให้ฝั่งกราฟ 6 เหลี่ยมมีขนาดพอดีขึ้นเมื่อหน้าจอไม่กว้างมาก */
   .ud-progress-layout {
     grid-template-columns: 1fr 1fr;
   }
 }
-
 @media (max-width: 1200px) {
   .ud-progress-layout {
-    grid-template-columns: 1fr; /* กราฟและกิจกรรมเรียงลงมาบนหน้าจอที่แคบลง */
+    grid-template-columns: 1fr;
   }
 }
-
 @media (max-width: 1024px) {
   .ud-recipe-cards-grid {
-    grid-template-columns: 1fr 1fr; /* แท็บเล็ตเรียง 2 การ์ด */
+    grid-template-columns: 1fr 1fr;
+  }
+  .ud-quick-stats-grid {
+    grid-template-columns: 1fr 1fr;
   }
 }
-
 @media (max-width: 899px) {
   .user-portal-content {
-    margin-left: 0; /* มือถือ/แท็บเล็ตเล็ก ซ่อน Sidebar ตลอดเวลา */
+    margin-left: 0;
   }
 }
-
 @media (max-width: 768px) {
   .ud-container {
     padding: 20px 15px;
   }
+  .ud-header-wrapper {
+    flex-direction: column;
+    gap: 20px;
+  }
+  .ud-btn-top-cert {
+    width: 100%;
+    justify-content: center;
+  }
   .ud-greeting-title {
     font-size: 24px;
   }
-
-  .ud-recipe-cards-grid {
-    grid-template-columns: 1fr; /* มือถือเรียง 1 การ์ด */
+  .ud-quick-stats-grid {
+    grid-template-columns: 1fr;
+    gap: 15px;
   }
-
+  .ud-action-banner {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+  .ud-btn-banner {
+    width: 100%;
+    justify-content: center;
+  }
+  .ud-recipe-cards-grid {
+    grid-template-columns: 1fr;
+  }
+  .ud-recom-card {
+    flex-direction: column;
+    text-align: center;
+  }
+  .ud-btn-outline {
+    width: 100%;
+    justify-content: center;
+  }
   .ud-activity-item {
     flex-direction: column;
     align-items: flex-start;
   }
   .ud-activity-status {
-    margin-left: 60px; /* ดัน Status Badge ให้ตรงกับ Text */
+    margin-left: 60px;
   }
 }

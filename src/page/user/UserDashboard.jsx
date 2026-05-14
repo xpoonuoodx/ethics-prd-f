@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./style/UserDashboard.css";
 import SidebarUser from "./SidebarUser";
 import {
@@ -9,6 +10,10 @@ import {
   FaClock,
   FaStar,
   FaChartLine,
+  FaTrophy,
+  FaLightbulb,
+  FaArrowRight,
+  FaCertificate,
 } from "react-icons/fa";
 import {
   Radar,
@@ -22,6 +27,7 @@ import {
 
 const UserDashboard = () => {
   const [userData, setUserData] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -35,7 +41,7 @@ const UserDashboard = () => {
   const readinessData = [
     { subject: "ความโปร่งใส", score: 4.5, fullMark: 5 },
     { subject: "ความปลอดภัย", score: 4.2, fullMark: 5 },
-    { subject: "ความเป็นธรรม", score: 3.8, fullMark: 5 },
+    { subject: "ความเป็นธรรม", score: 3.8, fullMark: 5 }, // จุดอ่อนที่นำไปใช้แนะนำคอร์ส
     { subject: "ความเป็นส่วนตัว", score: 4.8, fullMark: 5 },
     { subject: "ความรับผิดชอบ", score: 4.0, fullMark: 5 },
     { subject: "จริยธรรม", score: 4.6, fullMark: 5 },
@@ -77,16 +83,80 @@ const UserDashboard = () => {
       <div className="user-portal-content">
         <div className="ud-container">
           {/* =======================================
-              ส่วนหัวทักทาย (Simple Header)
+              ส่วนหัวทักทาย และปุ่มใบประกาศมุมขวาบน
               ======================================= */}
-          <div className="ud-simple-header">
-            <h1 className="ud-greeting-title">
-              ยินดีต้อนรับ, {userData?.name || "Somchai"}
-            </h1>
-            <p className="ud-greeting-subtitle">
-              เลือกบทบาทของคุณเพื่อดูระดับความพร้อม (Maturity Level 1-5)
-              และเข้าสู่การเรียนรู้
-            </p>
+          <div className="ud-header-wrapper">
+            <div className="ud-simple-header">
+              <h1 className="ud-greeting-title">
+                ยินดีต้อนรับ, {userData?.name || "Somchai"}
+              </h1>
+              <p className="ud-greeting-subtitle">
+                เลือกบทบาทของคุณเพื่อดูระดับความพร้อม (Maturity Level 1-5)
+                และเข้าสู่การเรียนรู้
+              </p>
+            </div>
+
+            <button
+              className="ud-btn-top-cert"
+              onClick={() => navigate("/user-certificate")}
+            >
+              <FaCertificate className="ud-icon-cert" /> ใบประกาศนียบัตร
+            </button>
+          </div>
+
+          {/* =======================================
+              1. แถบสรุปสถิติด่วน (Quick Stats)
+              ======================================= */}
+          <div className="ud-quick-stats-grid">
+            <div className="ud-stat-card">
+              <div className="ud-stat-icon bg-blue-light">
+                <FaClock className="text-blue" />
+              </div>
+              <div className="ud-stat-info">
+                <p className="ud-stat-label">ชั่วโมงเรียนสะสม</p>
+                <h4 className="ud-stat-value">
+                  12.5 <span className="ud-stat-unit">ชม.</span>
+                </h4>
+              </div>
+            </div>
+            <div className="ud-stat-card">
+              <div className="ud-stat-icon bg-green-light">
+                <FaClipboardCheck className="text-green" />
+              </div>
+              <div className="ud-stat-info">
+                <p className="ud-stat-label">แบบทดสอบที่ผ่าน</p>
+                <h4 className="ud-stat-value">
+                  2 <span className="ud-stat-unit">หมวด</span>
+                </h4>
+              </div>
+            </div>
+            <div className="ud-stat-card">
+              <div className="ud-stat-icon bg-purple-light">
+                <FaTrophy className="text-purple" />
+              </div>
+              <div className="ud-stat-info">
+                <p className="ud-stat-label">ใบประกาศนียบัตร</p>
+                <h4 className="ud-stat-value">
+                  2 <span className="ud-stat-unit">ใบ</span>
+                </h4>
+              </div>
+            </div>
+          </div>
+
+          {/* =======================================
+              2. แนะนำให้เรียนต่อ (Continue Learning)
+              ======================================= */}
+          <div className="ud-action-banner">
+            <div className="ud-banner-content">
+              <span className="ud-banner-badge">เรียนค้างไว้</span>
+              <div className="ud-banner-text">
+                <h3>กฎหมายและข้อบังคับที่เกี่ยวข้อง (PDPA & AI Act)</h3>
+                <p>สายงาน: Regulator • ความคืบหน้า 50%</p>
+              </div>
+            </div>
+            <button className="ud-btn-banner">
+              เรียนต่อ <FaArrowRight />
+            </button>
           </div>
 
           {/* =======================================
@@ -119,7 +189,6 @@ const UserDashboard = () => {
                   <div className="ud-meta-divider"></div>
                   <div className="ud-meta-item progress-wrap">
                     <div className="ud-mini-progress">
-                      {/* สมมติ Level 4 จากเต็ม 5 (80%) */}
                       <div
                         className="ud-mini-progress-fill"
                         style={{ width: "80%", backgroundColor: "#3b82f6" }}
@@ -169,7 +238,6 @@ const UserDashboard = () => {
                   <div className="ud-meta-divider"></div>
                   <div className="ud-meta-item progress-wrap">
                     <div className="ud-mini-progress">
-                      {/* สมมติ Level 2 จากเต็ม 5 (40%) */}
                       <div
                         className="ud-mini-progress-fill"
                         style={{ width: "40%", backgroundColor: "#8b5cf6" }}
@@ -204,9 +272,7 @@ const UserDashboard = () => {
               </div>
               <div className="ud-recipe-content">
                 <h3 className="ud-recipe-title">Users </h3>
-                <p className="ud-recipe-desc">
-                  Aware Utilize Feedback (AUF)
-                </p>
+                <p className="ud-recipe-desc">Aware Utilize Feedback (AUF)</p>
 
                 <div className="ud-recipe-divider"></div>
 
@@ -217,7 +283,6 @@ const UserDashboard = () => {
                   <div className="ud-meta-divider"></div>
                   <div className="ud-meta-item progress-wrap">
                     <div className="ud-mini-progress">
-                      {/* สมมติ Level 5 จากเต็ม 5 (100%) */}
                       <div
                         className="ud-mini-progress-fill"
                         style={{ width: "100%", backgroundColor: "#10b981" }}
@@ -244,7 +309,6 @@ const UserDashboard = () => {
               ส่วนกราฟ 6 เหลี่ยม และกิจกรรมล่าสุด
               ======================================= */}
           <div className="ud-progress-layout">
-            {/* กราฟหกเหลี่ยมแสดงความพร้อมรวม (ฐาน 5) */}
             <div className="ud-card">
               <div className="ud-card-header">
                 <h3 className="ud-card-title">
@@ -264,7 +328,6 @@ const UserDashboard = () => {
                       dataKey="subject"
                       tick={{ fill: "#4b5563", fontSize: 13 }}
                     />
-                    {/* ตั้งค่า domain 0-5 ให้สอดคล้องกับ Maturity Level */}
                     <PolarRadiusAxis
                       angle={30}
                       domain={[0, 5]}
@@ -295,7 +358,6 @@ const UserDashboard = () => {
               </div>
             </div>
 
-            {/* ประวัติกิจกรรมล่าสุด */}
             <div className="ud-card">
               <div className="ud-card-header">
                 <h3 className="ud-card-title">ประวัติกิจกรรมล่าสุด</h3>
@@ -333,6 +395,41 @@ const UserDashboard = () => {
                   ))}
                 </ul>
               </div>
+            </div>
+          </div>
+
+          {/* =======================================
+              3. Smart Recommendations
+              ======================================= */}
+          <div className="ud-section-spacer">
+            <h2 className="ud-section-heading">
+              <FaLightbulb
+                className="text-yellow"
+                style={{ marginRight: "8px" }}
+              />{" "}
+              แนะนำสำหรับคุณ (Smart Recommendations)
+            </h2>
+            <p className="ud-section-subheading">
+              ระบบวิเคราะห์จากคะแนนกราฟด้าน "ความเป็นธรรม" (3.8/5)
+              ที่ยังสามารถพัฒนาได้อีก
+            </p>
+
+            <div className="ud-recom-card">
+              <div className="ud-recom-icon-wrap">
+                <FaLightbulb className="text-yellow" />
+              </div>
+              <div className="ud-recom-details">
+                <h4>
+                  หลักสูตรเสริม: การลดอคติและสร้างความเป็นธรรมใน AI (Bias
+                  Mitigation)
+                </h4>
+                <p>
+                  เนื้อหาเจาะลึกเกี่ยวกับการตรวจสอบชุดข้อมูลและการปรับแต่งอัลกอริทึมเพื่อป้องกันผลกระทบเชิงลบ
+                </p>
+              </div>
+              <button className="ud-btn-outline">
+                <FaPlayCircle /> ดูรายละเอียด
+              </button>
             </div>
           </div>
         </div>

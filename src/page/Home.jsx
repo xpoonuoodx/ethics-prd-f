@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom"; // เพิ่มอันนี้
+import { useNavigate } from "react-router-dom";
 import Tabbar from "../component/Tabbar";
 import Footer from "../component/Footer";
 import {
@@ -122,7 +122,7 @@ export const newsData = [
 const Home = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [newsIndex, setNewsIndex] = useState(0);
-  const navigate = useNavigate(); // ดึงใช้งาน navigate
+  const navigate = useNavigate();
 
   // Slider แบนเนอร์หลัก
   const nextSlide = () => {
@@ -150,7 +150,7 @@ const Home = () => {
   };
 
   useEffect(() => {
-    const slideInterval = setInterval(nextSlide, 5000);
+    const slideInterval = setInterval(nextSlide, 6000); // ปรับเวลาสไลด์ให้นานขึ้นนิดนึงเพื่อความหรูหรา
     return () => clearInterval(slideInterval);
   }, []);
 
@@ -166,6 +166,7 @@ const Home = () => {
             className={`hm-slide ${index === currentSlide ? "active" : ""}`}
             style={{ backgroundImage: `url(${slide.image})` }}
           >
+            {/* ปรับ Overlay ให้เป็น Gradient แทนสีดำทึบ */}
             <div className="hm-slide-overlay"></div>
             <div className="hm-slide-content">
               <h1 className="hm-slide-title">{slide.title}</h1>
@@ -184,10 +185,10 @@ const Home = () => {
           </div>
         ))}
         <button className="hm-slider-arrow left" onClick={prevSlide}>
-          <ChevronLeft />
+          <ChevronLeft size={28} strokeWidth={1.5} />
         </button>
         <button className="hm-slider-arrow right" onClick={nextSlide}>
-          <ChevronRight />
+          <ChevronRight size={28} strokeWidth={1.5} />
         </button>
         <div className="hm-slider-dots">
           {slideData.map((_, index) => (
@@ -200,7 +201,7 @@ const Home = () => {
         </div>
       </section>
 
-      {/* 2. ส่วนวิดีโอแนะนำโครงการ */}
+      {/* 2. ส่วนวิดีโอแนะนำโครงการ (ปรับเป็น YouTube) */}
       <section className="hm-section hm-featured-video-section">
         <div className="hm-container text-center">
           <span className="hm-badge">วิดีโอแนะนำ</span>
@@ -210,11 +211,13 @@ const Home = () => {
           </p>
           <div className="hm-video-featured-wrapper">
             <div className="hm-video-placeholder large">
+              {/* เปลี่ยนเป็น YouTube Embed Link */}
               <iframe
-                src="https://player.vimeo.com/video/703220222?title=0&byline=0&portrait=0"
+                src="https://www.youtube.com/embed/mqLhEpib-Yg?rel=0"
                 width="100%"
                 height="100%"
                 frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen
                 style={{ position: "absolute", top: 0, left: 0 }}
               ></iframe>
@@ -223,7 +226,7 @@ const Home = () => {
         </div>
       </section>
 
-      {/* 4. ส่วนความสำคัญของ Ethical AI */}
+      {/* 3. ส่วนความสำคัญของ Ethical AI */}
       <section
         className="hm-importance-section"
         style={{ backgroundImage: `url(${ethicAiImg})` }}
@@ -246,7 +249,7 @@ const Home = () => {
         </div>
       </section>
 
-      {/* 3. ส่วนกรอบแนวคิดนโยบาย (Split Layout) */}
+      {/* 4. ส่วนกรอบแนวคิดนโยบาย (Split Layout) */}
       <section className="hm-section hm-policy-section">
         <div className="hm-container">
           <div className="hm-policy-header text-center">
@@ -257,6 +260,7 @@ const Home = () => {
               จุดเริ่มต้นและเป้าหมายหลักของการสร้างมาตรฐานจริยธรรมปัญญาประดิษฐ์ในประเทศไทย
             </p>
           </div>
+
           <div className="hm-policy-horizontal-card">
             <div className="hm-policy-card-img">
               <img
@@ -276,9 +280,10 @@ const Home = () => {
               </p>
             </div>
           </div>
+
           <div
-            className="hm-policy-horizontal-card"
-            style={{ marginTop: "30px" }}
+            className="hm-policy-horizontal-card reverse"
+            style={{ marginTop: "40px" }}
           >
             <div className="hm-policy-card-img">
               <img
@@ -313,14 +318,14 @@ const Home = () => {
                 onClick={prevNews}
                 disabled={newsIndex === 0}
               >
-                <ChevronLeft size={20} />
+                <ChevronLeft size={20} strokeWidth={2} />
               </button>
               <button
                 className="hm-news-nav-btn"
                 onClick={nextNews}
                 disabled={newsIndex >= newsData.length - 4}
               >
-                <ChevronRight size={20} />
+                <ChevronRight size={20} strokeWidth={2} />
               </button>
             </div>
           </div>
@@ -348,12 +353,12 @@ const Home = () => {
                       <h3 className="hm-news-title">{news.title}</h3>
                       <p className="hm-news-desc">{news.desc}</p>
 
-                      {/* เปลี่ยนปุ่มให้อิงกับ onClick navigate */}
                       <button
                         className="hm-news-btn"
                         onClick={() => handleReadMore(news.id)}
                       >
-                        อ่านเพิ่มเติม
+                        อ่านเพิ่มเติม{" "}
+                        <ArrowRight size={14} className="icon-right" />
                       </button>
                     </div>
                   </div>
@@ -361,12 +366,9 @@ const Home = () => {
               ))}
             </div>
           </div>
-
-          {/* <div className="hm-news-view-all">
-            <button className="hm-btn-outline">ดูข่าวสารทั้งหมด</button>
-          </div> */}
         </div>
       </section>
+
       <Footer />
     </div>
   );

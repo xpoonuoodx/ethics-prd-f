@@ -31,7 +31,9 @@ function AboutBackground() {
       <main className="about-main">
         <div className="about-card">
           <h2 className="about-section-title">
-            <BookOpen className="icon" size={28} />
+            <div className="icon-wrapper">
+              <BookOpen className="icon" size={24} strokeWidth={2.5} />
+            </div>
             บริบทและการเปลี่ยนแปลง
           </h2>
           <div className="about-text-content">
@@ -57,7 +59,9 @@ function AboutBackground() {
 
         <div className="about-card">
           <h2 className="about-section-title">
-            <Lightbulb className="icon" size={28} />
+            <div className="icon-wrapper">
+              <Lightbulb className="icon" size={24} strokeWidth={2.5} />
+            </div>
             ข้อสั่งการคณะรัฐมนตรี
           </h2>
           <div className="about-text-content">

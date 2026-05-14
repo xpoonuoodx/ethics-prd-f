@@ -26,6 +26,8 @@ import UserDashboard from "./page/user/UserDashboard";
 import UserSelectRole from "./page/user/UserSelectRole"; // หน้าเลือกบทบาท
 import UserClassroom from "./page/user/UserClassroom"; // หน้าเรียน
 import UserTest from "./page/user/UserTest"; // หน้าสอบ
+import UserClassroomDetail from "./page/user/UserClassroomDetail"; // หน้าเรียนรายละเอียด
+import UserCertificate from "./page/user/UserCertificate"; // หน้าใบประกาศนียบัตร
 // ลบหน้า Dashboard ของ Regulator และ Provider ออก
 
 function App() {
@@ -91,6 +93,24 @@ function App() {
           element={
             <UserRoute>
               <UserTest />
+            </UserRoute>
+          }
+        />
+
+        <Route
+          path="/user-classroom-detail"
+          element={
+            <UserRoute>
+              <UserClassroomDetail />
+            </UserRoute>
+          }
+        />
+
+        <Route
+          path="/user-certificate"
+          element={
+            <UserRoute>
+              <UserCertificate />
             </UserRoute>
           }
         />
