@@ -1,0 +1,220 @@
+@import url("https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap");
+
+.uct-container * {
+  box-sizing: border-box;
+  font-family: "Prompt", sans-serif;
+}
+
+.uct-container {
+  padding: 40px;
+  /* max-width: 1200px;
+  margin: 0 auto; */
+}
+
+/* =========================================
+   BACK BUTTON & HEADER
+   ========================================= */
+.uct-back-btn {
+  background: none;
+  border: none;
+  color: #6b7280;
+  font-size: 15px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  margin-bottom: 30px;
+  padding: 0;
+  transition: color 0.2s;
+}
+.uct-back-btn:hover {
+  color: #111827;
+}
+
+.uct-header {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 40px;
+  background: white;
+  padding: 30px;
+  border-radius: 16px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
+  border: 1px solid #f3f4f6;
+}
+
+.uct-header-icon {
+  width: 60px;
+  height: 60px;
+  background: #fffbeb; /* สีเหลืองอ่อน */
+  color: #f59e0b;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+}
+
+.uct-title {
+  font-size: 26px;
+  font-weight: 700;
+  color: #111827;
+  margin: 0 0 8px 0;
+}
+
+.uct-subtitle {
+  font-size: 15px;
+  color: #6b7280;
+  margin: 0;
+}
+
+/* =========================================
+   CERTIFICATE GRID & CARDS
+   ========================================= */
+.uct-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 25px;
+}
+
+.uct-card {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 20px;
+  padding: 30px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition:
+    transform 0.3s,
+    box-shadow 0.3s;
+}
+
+.uct-card:hover:not(.locked) {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.06);
+  border-color: #d1d5db;
+}
+
+.uct-card.locked {
+  background: #f9fafb;
+  opacity: 0.8;
+}
+
+.uct-card-icon {
+  font-size: 50px;
+  color: #f59e0b; /* สีทอง */
+  margin-bottom: 20px;
+}
+
+.uct-card.locked .uct-card-icon {
+  color: #9ca3af;
+}
+
+.uct-card-info {
+  flex-grow: 1;
+  margin-bottom: 25px;
+  width: 100%;
+}
+
+.uct-role-badge {
+  font-size: 12px;
+  font-weight: 600;
+  color: #15803d;
+  background: #f0fdf4;
+  padding: 6px 12px;
+  border-radius: 20px;
+  display: inline-block;
+  margin-bottom: 12px;
+}
+
+.uct-card.locked .uct-role-badge {
+  color: #6b7280;
+  background: #e5e7eb;
+}
+
+.uct-card-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #111827;
+  margin: 0 0 10px 0;
+  line-height: 1.4;
+}
+
+.uct-card-date {
+  font-size: 13.5px;
+  color: #6b7280;
+  margin: 0;
+}
+
+/* =========================================
+   BUTTONS
+   ========================================= */
+.uct-card-action {
+  width: 100%;
+}
+
+.uct-btn-download {
+  width: 100%;
+  background: #111827;
+  color: #ffffff;
+  border: none;
+  padding: 12px;
+  border-radius: 12px;
+  font-size: 14.5px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: background 0.2s;
+}
+
+.uct-btn-download:hover {
+  background: #374151;
+}
+
+.uct-btn-locked {
+  width: 100%;
+  background: transparent;
+  color: #9ca3af;
+  border: 1px solid #d1d5db;
+  padding: 12px;
+  border-radius: 12px;
+  font-size: 14.5px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: not-allowed;
+}
+
+/* =========================================
+   RESPONSIVE
+   ========================================= */
+@media (max-width: 1024px) {
+  .uct-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .uct-container {
+    padding: 20px 15px;
+  }
+  .uct-header {
+    flex-direction: column;
+    text-align: center;
+    padding: 20px;
+  }
+  .uct-title {
+    font-size: 22px;
+  }
+  .uct-grid {
+    grid-template-columns: 1fr;
+  }
+}

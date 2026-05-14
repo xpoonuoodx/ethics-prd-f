@@ -2,22 +2,23 @@
 .hm-wrapper,
 .hm-wrapper * {
   font-family: "IBM Plex Sans Thai", sans-serif !important;
+  box-sizing: border-box;
 }
 
 .hm-wrapper {
   width: 100vw;
-  background-color: #ffffff;
+  background-color: #fafbfc; /* เปลี่ยนสีพื้นเป็น Off-white หรูหรา */
   overflow-x: hidden;
 }
 
 .hm-container {
-  max-width: 1200px;
+  max-width: 1240px; /* ขยายความกว้างนิดหน่อยให้โปร่งขึ้น */
   margin: 0 auto;
   width: 100%;
 }
 
 .hm-section {
-  padding: 100px 20px;
+  padding: 120px 20px; /* เพิ่ม Padding ให้ดูโปร่ง หายใจสะดวก */
 }
 
 .text-center {
@@ -25,13 +26,13 @@
 }
 
 /* =========================================
-   1. HERO SLIDER (คงเดิม ห้ามแก้)
+   1. HERO SLIDER (PREMIUM REDESIGN)
    ========================================= */
 .hm-hero-slider {
   position: relative;
   width: 100vw;
   height: 100vh;
-  background-color: #000;
+  background-color: #0f172a; /* สีกรมท่าเข้ม พรีเมียม */
 }
 
 .hm-slide {
@@ -43,7 +44,7 @@
   background-size: cover;
   background-position: center;
   opacity: 0;
-  transition: opacity 1.2s ease-in-out;
+  transition: opacity 1.5s cubic-bezier(0.4, 0, 0.2, 1);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -54,13 +55,20 @@
   z-index: 2;
 }
 
+/* เปลี่ยนเป็น Gradient ไล่สีจากซ้ายไปขวา และล่างขึ้นบน */
 .hm-slide-overlay {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.7);
+  background:
+    linear-gradient(
+      90deg,
+      rgba(15, 23, 42, 0.9) 0%,
+      rgba(15, 23, 42, 0.4) 100%
+    ),
+    linear-gradient(0deg, rgba(0, 0, 0, 0.4) 0%, transparent 100%);
   z-index: 3;
 }
 
@@ -70,9 +78,9 @@
   text-align: center;
   color: #fff;
   max-width: 900px;
-  padding: 0 25px;
-  transform: translateY(30px);
-  transition: 1s ease;
+  padding: 0 30px;
+  transform: translateY(40px);
+  transition: all 1.2s cubic-bezier(0.16, 1, 0.3, 1);
   opacity: 0;
 }
 
@@ -82,95 +90,110 @@
 }
 
 .hm-slide-title {
-  font-size: 3rem;
+  font-size: 3.5rem;
   font-weight: 700;
-  margin-bottom: 20px;
-  line-height: 1.3;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  margin-bottom: 24px;
+  line-height: 1.2;
   color: #ffffff;
-  font-style: italic;
+  letter-spacing: -0.5px;
 }
 
 .hm-slide-subtitle {
   font-size: 1.25rem;
   font-weight: 300;
-  margin-bottom: 40px;
-  color: rgba(255, 255, 255, 0.9);
-  line-height: 1.6;
+  margin-bottom: 50px;
+  color: rgba(255, 255, 255, 0.85);
+  line-height: 1.7;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .hm-slide-actions {
   display: flex;
-  gap: 15px;
+  gap: 20px;
   justify-content: center;
 }
 
 .hm-slide-actions button {
-  padding: 14px 35px;
+  padding: 16px 40px;
   font-size: 16px;
   font-weight: 600;
-  border-radius: 20px;
+  border-radius: 50px; /* ทรงแคปซูล ดูแพง */
   cursor: pointer;
-  transition: 0.3s;
+  transition: all 0.3s ease;
+  letter-spacing: 0.5px;
 }
 
+/* ปุ่มหลัก สีเขียวหรูหราพร้อมเงา */
 .hm-btn-primary {
   background: #75ba40;
   color: #fff;
-  border: none;
+  border: 1px solid #75ba40;
+  box-shadow: 0 10px 20px -5px rgba(117, 186, 64, 0.4);
 }
 .hm-btn-primary:hover {
   background: #639d36;
-  transform: translateY(-3px);
+  border-color: #639d36;
+  transform: translateY(-4px);
+  box-shadow: 0 15px 25px -5px rgba(117, 186, 64, 0.5);
 }
 
+/* ปุ่มรอง Glassmorphism */
 .hm-btn-secondary {
-  background: transparent;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
   color: #fff;
-  border: 1px solid #fff;
+  border: 1px solid rgba(255, 255, 255, 0.3);
 }
 .hm-btn-secondary:hover {
   background: #fff;
-  color: #000;
-  transform: translateY(-3px);
+  color: #0f172a;
+  transform: translateY(-4px);
+  box-shadow: 0 15px 25px -5px rgba(0, 0, 0, 0.2);
 }
 
+/* ปุ่มเลื่อนสไลด์ (ซ้าย-ขวา) หรูหรา */
 .hm-slider-arrow {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  background: rgba(255, 255, 255, 0.1); /* ปุ่มใสสีขาว */
-  color: #ffffff; /* ลูกศรสีขาว */
-  border: none;
-  width: 50px;
-  height: 50px;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  width: 60px;
+  height: 60px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   z-index: 10;
-  transition: background 0.3s ease;
+  transition: all 0.4s ease;
 }
 
 .hm-slider-arrow:hover {
-  background: rgba(255, 255, 255, 0.3);
+  background: #ffffff;
+  color: #0f172a;
+  transform: translateY(-50%) scale(1.1);
 }
 
 .hm-slider-arrow.left {
-  left: 30px;
+  left: 40px;
 }
 .hm-slider-arrow.right {
-  right: 30px;
+  right: 40px;
 }
 
+/* จุดนำทาง (Dots) */
 .hm-slider-dots {
   position: absolute;
-  bottom: 30px;
+  bottom: 40px;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
-  gap: 10px;
+  gap: 12px;
   z-index: 10;
 }
 .hm-dot {
@@ -179,37 +202,45 @@
   background: rgba(255, 255, 255, 0.3);
   border-radius: 50%;
   cursor: pointer;
+  transition: all 0.3s ease;
 }
 .hm-dot.active {
   background: #75ba40;
-  transform: scale(1.3);
+  width: 30px; /* ยืดออกเวลากด (Pill shape dot) */
+  border-radius: 10px;
 }
 
 /* =========================================
-   2. FEATURED VIDEO (คงเดิม ห้ามแก้)
+   2. FEATURED VIDEO (PREMIUM)
    ========================================= */
 .hm-featured-video-section {
-  background-color: #ffffff;
+  background-color: #fafbfc;
 }
 .hm-badge {
-  background: rgba(117, 186, 64, 0.1);
-  color: #75ba40;
-  padding: 5px 15px;
+  background: #f0fdf4;
+  color: #16a34a;
+  padding: 8px 20px;
   border-radius: 50px;
   font-weight: 600;
-  font-size: 14px;
+  font-size: 13px;
   display: inline-block;
+  letter-spacing: 1px;
+  border: 1px solid #bbf7d0;
+  text-transform: uppercase;
+  margin-bottom: 20px;
 }
 .hm-section-title {
   font-size: 2.5rem;
   font-weight: 700;
-  color: #111;
-  margin: 15px 0;
+  color: #0f172a;
+  margin: 0 0 20px 0;
+  letter-spacing: -0.5px;
 }
 .hm-section-subtitle {
-  color: #666;
-  margin-bottom: 50px;
-  font-size: 1.1rem;
+  color: #64748b;
+  margin-bottom: 60px;
+  font-size: 1.15rem;
+  line-height: 1.6;
 }
 .hm-video-featured-wrapper {
   width: 100%;
@@ -217,77 +248,24 @@
   margin: 0 auto;
   border-radius: 24px;
   overflow: hidden;
-  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.25); /* เงาเข้มลึก ดูมีมิติ */
+  border: 1px solid rgba(0, 0, 0, 0.05);
 }
 .hm-video-placeholder.large {
   position: relative;
   aspect-ratio: 16 / 9;
   background: #000;
-  cursor: pointer;
 }
 
 /* =========================================
-   3. POLICY SECTION (Split Layout - รูปซ้าย เนื้อหาขวา)
-   ========================================= */
-.hm-policy-section {
-  background-color: #fdfdfd;
-}
-.hm-policy-horizontal-card {
-  display: flex;
-  background: #ffffff;
-  border-radius: 40px;
-  overflow: hidden;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.04);
-  transition: all 0.4s ease;
-  border: 1px solid #f0f0f0;
-}
-.hm-policy-card-img {
-  flex: 1;
-  max-width: 45%;
-  overflow: hidden;
-}
-.hm-policy-card-img img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-.hm-policy-card-info {
-  flex: 1.2;
-  padding: 50px;
-  background: #fcfcf9;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-.hm-policy-step-tag {
-  color: #75ba40;
-  font-size: 13px;
-  font-weight: 600;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-}
-.hm-policy-card-title {
-  font-size: 1.8rem;
-  font-weight: 700;
-  color: #111827;
-  margin-bottom: 20px;
-}
-.hm-policy-card-desc {
-  font-size: 1.05rem;
-  color: #4b5563;
-  line-height: 1.8;
-  margin: 0;
-}
-
-/* =========================================
-   4. IMPORTANCE (คงเดิม ห้ามแก้)
+   3. IMPORTANCE SECTION (GLASSMORPHISM)
    ========================================= */
 .hm-importance-section {
   position: relative;
-  padding: 120px 20px;
+  padding: 150px 20px;
   background-size: cover;
   background-position: center;
-  background-attachment: fixed;
+  background-attachment: fixed; /* Parallax effect */
 }
 .hm-importance-overlay {
   position: absolute;
@@ -295,7 +273,11 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.85);
+  background: linear-gradient(
+    135deg,
+    rgba(15, 23, 42, 0.9) 0%,
+    rgba(15, 23, 42, 0.6) 100%
+  );
   z-index: 1;
 }
 .hm-importance-content {
@@ -308,152 +290,247 @@
   min-height: 100%;
 }
 .hm-importance-text-box {
-  max-width: 800px;
+  max-width: 900px;
   text-align: center;
-  padding: 40px;
-  /* background: rgba(255, 255, 255, 0.05); */
-  border-radius: 20px;
-  backdrop-filter: blur(5px);
+  padding: 60px;
+  /* Glassmorphism Effect */
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 32px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
 }
 .hm-importance-text-box h2 {
-  font-size: 2.8rem;
+  font-size: 3rem;
   font-weight: 700;
-  margin-bottom: 25px;
+  margin-bottom: 30px;
   color: #fff;
+  letter-spacing: -0.5px;
 }
 .hm-importance-text-box p {
   line-height: 1.9;
-  color: rgba(255, 255, 255, 0.9);
+  color: rgba(255, 255, 255, 0.85);
   margin-bottom: 40px;
   font-size: 1.15rem;
 }
 .hm-btn-readmore {
-  background: #75ba40;
-  color: #fff;
+  background: #ffffff;
+  color: #0f172a;
   border: none;
-  padding: 14px 35px;
+  padding: 16px 40px;
   border-radius: 50px;
   font-weight: 600;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  transition: 0.3s;
+  transition: all 0.3s ease;
+}
+.hm-btn-readmore:hover {
+  background: #75ba40;
+  color: #ffffff;
+  transform: translateY(-3px);
+  box-shadow: 0 10px 20px rgba(117, 186, 64, 0.3);
 }
 
 /* =========================================
-   5. NEWS SECTION (ปรับปรุงให้เลื่อนได้)
+   4. POLICY SECTION (CLEAN CARDS)
    ========================================= */
+.hm-policy-section {
+  background-color: #ffffff; /* ตัดกับพื้นหลังเทาด้านบน */
+}
+.hm-policy-horizontal-card {
+  display: flex;
+  background: #ffffff;
+  border-radius: 24px; /* ลดความมนลงให้ดูโตและโปรขึ้น */
+  overflow: hidden;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.04);
+  transition: all 0.4s ease;
+  border: 1px solid #f1f5f9;
+}
+.hm-policy-horizontal-card:hover {
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+  transform: translateY(-5px);
+}
+/* สลับรูปขวาใน Card ที่ 2 */
+.hm-policy-horizontal-card.reverse {
+  flex-direction: row-reverse;
+}
+
+.hm-policy-card-img {
+  flex: 1;
+  max-width: 45%;
+  position: relative;
+  overflow: hidden;
+}
+.hm-policy-card-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s ease;
+}
+.hm-policy-horizontal-card:hover .hm-policy-card-img img {
+  transform: scale(1.05); /* เอฟเฟกต์ซูมรูปนุ่มนวล */
+}
+
+.hm-policy-card-info {
+  flex: 1.2;
+  padding: 60px;
+  background: #ffffff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.hm-policy-step-tag {
+  color: #75ba40;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 15px;
+}
+.hm-policy-card-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 25px;
+}
+.hm-policy-card-desc {
+  font-size: 1.1rem;
+  color: #64748b;
+  line-height: 1.8;
+  margin: 0;
+}
+
+/* =========================================
+   5. NEWS SECTION (SLEEK SLIDER)
+   ========================================= */
+.hm-news-section {
+  background-color: #fafbfc;
+}
 .hm-news-header-flex {
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
-  margin-bottom: 30px;
+  margin-bottom: 40px;
 }
 
 .hm-news-nav-btns {
   display: flex;
-  gap: 10px;
+  gap: 15px;
 }
 
 .hm-news-nav-btn {
-  width: 45px;
-  height: 45px;
+  width: 50px;
+  height: 50px;
   border-radius: 50%;
-  border: 1px solid #ddd;
-  background: white;
-  color: #333;
+  border: 1px solid #e2e8f0;
+  background: #ffffff;
+  color: #0f172a;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: 0.3s;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
 }
 .hm-news-nav-btn:hover:not(:disabled) {
-  background: #75ba40;
+  background: #0f172a;
   color: white;
-  border-color: #75ba40;
+  border-color: #0f172a;
+  transform: translateY(-2px);
 }
 .hm-news-nav-btn:disabled {
-  opacity: 0.3;
+  opacity: 0.4;
   cursor: not-allowed;
+  background: #f8fafc;
 }
 
 .hm-news-slider-container {
   width: 100%;
-  overflow: hidden; /* ซ่อนส่วนที่เกิน */
+  overflow: hidden;
+  padding-bottom: 20px; /* เผื่อที่ให้ Drop shadow */
 }
 
 .hm-news-track {
   display: flex;
-  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1); /* แอนิเมชันสมูทขึ้น */
   width: 100%;
 }
 
 .hm-news-card-wrapper {
-  flex: 0 0 25%; /* โชว์หน้าจอละ 4 ใบ (100/4 = 25%) */
-  padding: 0 12px;
+  flex: 0 0 25%;
+  padding: 0 15px;
   box-sizing: border-box;
 }
 
 .hm-news-card {
   background: #fff;
-  border-radius: 16px;
+  border-radius: 20px;
   overflow: hidden;
-  border: 1px solid #f3f4f6;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.03);
-  transition: 0.3s;
+  border: 1px solid #f1f5f9;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.03);
+  transition: all 0.4s ease;
   display: flex;
   flex-direction: column;
   height: 100%;
 }
 
 .hm-news-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.08);
+  transform: translateY(-10px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
 }
 
 .hm-news-img-wrapper {
   position: relative;
-  height: 180px;
+  height: 200px;
   overflow: hidden;
 }
 .hm-news-img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: 0.5s;
+  transition: transform 0.8s ease;
 }
+.hm-news-card:hover .hm-news-img {
+  transform: scale(1.08);
+}
+/* Tag หรูหรากึ่ง Glassmorphism */
 .hm-news-category {
   position: absolute;
   top: 15px;
   left: 15px;
-  background: #75ba40;
+  background: rgba(15, 23, 42, 0.7);
+  backdrop-filter: blur(8px);
   color: #fff;
-  padding: 4px 12px;
+  padding: 6px 16px;
   border-radius: 50px;
   font-size: 12px;
-  font-weight: 600;
+  font-weight: 500;
+  letter-spacing: 0.5px;
 }
+
 .hm-news-info {
-  padding: 25px;
+  padding: 30px;
   flex-grow: 1;
   display: flex;
   flex-direction: column;
 }
 .hm-news-date {
-  font-size: 12px;
-  color: #9ca3af;
-  margin-bottom: 12px;
+  font-size: 13px;
+  color: #94a3b8;
+  margin-bottom: 15px;
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 8px;
+  font-weight: 500;
 }
 .hm-news-title {
-  font-size: 1.1rem;
+  font-size: 1.25rem;
   font-weight: 700;
-  color: #1f2937;
-  margin-bottom: 12px;
+  color: #0f172a;
+  margin-bottom: 15px;
   line-height: 1.5;
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -461,10 +538,10 @@
   overflow: hidden;
 }
 .hm-news-desc {
-  font-size: 0.9rem;
-  color: #6b7280;
+  font-size: 1rem;
+  color: #64748b;
   line-height: 1.6;
-  margin-bottom: 20px;
+  margin-bottom: 25px;
   flex-grow: 1;
   display: -webkit-box;
   -webkit-line-clamp: 3;
@@ -476,56 +553,84 @@
   background: none;
   border: none;
   color: #75ba40;
-  font-weight: 700;
-  cursor: pointer;
-  text-decoration: underline;
-}
-
-.hm-news-view-all {
-  margin-top: 50px;
-  text-align: center;
-}
-.hm-btn-outline {
-  background: transparent;
-  border: 1px solid #d1d5db;
-  color: #4b5563;
-  padding: 12px 40px;
-  border-radius: 50px;
   font-weight: 600;
+  font-size: 15px;
   cursor: pointer;
-  transition: 0.3s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0;
+  transition: color 0.3s ease;
+}
+.hm-news-btn .icon-right {
+  transition: transform 0.3s ease;
+}
+.hm-news-btn:hover {
+  color: #0f172a;
+}
+.hm-news-btn:hover .icon-right {
+  transform: translateX(4px); /* ลูกศรเลื่อนเวลา Hover */
 }
 
 /* =========================================
    RESPONSIVE
    ========================================= */
+@media (max-width: 1200px) {
+  .hm-news-card-wrapper {
+    flex: 0 0 33.33%; /* ลดเหลือ 3 ใบสำหรับจอขนาดกลาง */
+  }
+}
+
 @media (max-width: 1024px) {
   .hm-news-card-wrapper {
-    flex: 0 0 50%;
-  } /* โชว์ 2 ใบ */
-  .hm-policy-horizontal-card {
+    flex: 0 0 50%; /* โชว์ 2 ใบ */
+  }
+  .hm-policy-horizontal-card,
+  .hm-policy-horizontal-card.reverse {
     flex-direction: column;
   }
   .hm-policy-card-img {
     max-width: 100%;
-    height: 300px;
+    height: 350px;
   }
   .hm-slide-title {
-    font-size: 2.5rem;
+    font-size: 3rem;
+  }
+  .hm-importance-text-box {
+    padding: 40px;
   }
 }
 
 @media (max-width: 768px) {
   .hm-news-card-wrapper {
-    flex: 0 0 100%;
-  } /* โชว์ 1 ใบ */
+    flex: 0 0 100%; /* โชว์ 1 ใบ */
+  }
   .hm-section {
-    padding: 60px 20px;
+    padding: 80px 20px;
   }
   .hm-section-title {
     font-size: 2rem;
   }
   .hm-importance-text-box h2 {
-    font-size: 2rem;
+    font-size: 2.2rem;
+  }
+  .hm-slide-title {
+    font-size: 2.2rem;
+  }
+  .hm-slide-actions {
+    flex-direction: column;
+  }
+  .hm-slider-arrow {
+    width: 40px;
+    height: 40px;
+  }
+  .hm-slider-arrow.left {
+    left: 15px;
+  }
+  .hm-slider-arrow.right {
+    right: 15px;
+  }
+  .hm-policy-card-info {
+    padding: 40px 20px;
   }
 }
