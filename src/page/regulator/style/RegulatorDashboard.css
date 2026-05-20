@@ -1,100 +1,444 @@
-@import url("https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&display=swap");
 
 .regulator-portal-layout * {
   box-sizing: border-box;
-  font-family: "Prompt", sans-serif;
+  font-family: "IBM Plex Sans Thai", sans-serif;
 }
+
 .regulator-portal-layout {
   display: flex;
   min-height: 100vh;
-  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  background-color: #fafbfc; /* พื้นหลังพรีเมียม Off-white */
 }
+
 .regulator-portal-content {
   flex: 1;
-  margin-left: 260px;
+  margin-left: 260px; /* เว้นให้ Sidebar */
   transition: margin-left 0.3s ease;
-}
-.regulator-portal-container {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  padding: 40px 20px;
+  flex-direction: column;
 }
 
-.regulator-portal-card {
-  background: #ffffff;
-  border-radius: 16px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+.rgd-container {
+  padding: 40px;
   width: 100%;
-  max-width: 550px;
-  overflow: hidden;
-  text-align: center;
+  /* max-width: 1400px; */
+  margin: 0 auto;
 }
 
-.regulator-portal-header {
-  background-color: #75ba40;
-  padding: 30px 20px 20px 20px;
-  color: white;
-}
-.regulator-portal-icon-wrapper {
-  background-color: rgba(255, 255, 255, 0.2);
-  width: 70px;
-  height: 70px;
-  border-radius: 50%;
+/* =========================================
+   HEADER
+   ========================================= */
+.rgd-welcome-header {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: 0 auto 15px auto;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 30px;
 }
-.regulator-portal-icon {
-  font-size: 32px;
-  color: #ffffff;
+
+.rgd-greeting-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 8px 0;
+  letter-spacing: -0.5px;
 }
-.regulator-portal-title {
-  font-size: 24px;
-  font-weight: 600;
+
+.rgd-greeting-subtitle {
+  font-size: 16px;
+  color: #64748b;
   margin: 0;
 }
 
-.regulator-portal-body {
-  padding: 30px 40px 40px 40px;
-}
-.regulator-portal-greeting {
-  font-size: 16px;
-  color: #4b5563;
-  margin-bottom: 12px;
-}
-.regulator-portal-name {
-  color: #111827;
-  font-weight: 600;
-  font-size: 18px;
-}
-.regulator-portal-role-container {
-  margin-bottom: 25px;
-}
-
-.regulator-portal-badge {
-  display: inline-block;
-  padding: 6px 16px;
-  background-color: #f0f9eb;
-  color: #4a7826;
-  border: 1px solid #c2e7b0;
-  border-radius: 20px;
+.rgd-role-badge {
+  background-color: #eff6ff;
+  color: #1e40af;
+  border: 1px solid #bfdbfe;
+  padding: 8px 16px;
+  border-radius: 50px;
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
-.regulator-portal-divider {
-  border: 0;
-  border-top: 1px dashed #d1d5db;
-  margin: 0 0 25px 0;
+/* =========================================
+   [ปรับปรุงใหม่] QUICK STATS (V2 Widget Style)
+   ========================================= */
+.rgd-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  margin-bottom: 30px;
 }
-.regulator-portal-welcome {
-  color: #6b7280;
+
+.rgd-stat-v2-card {
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 24px;
+  display: flex;
+  justify-content: space-between;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+  border: 1px solid #f1f5f9;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.rgd-stat-v2-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.06);
+}
+
+.rgd-stat-v2-left {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.rgd-stat-v2-title {
   font-size: 15px;
-  line-height: 1.6;
-  margin-bottom: 10px;
+  font-weight: 600;
+  color: #64748b;
+  margin: 0 0 12px 0;
+}
+
+.rgd-stat-v2-value-wrap {
+  display: flex;
+  align-items: baseline;
+  margin-bottom: 8px;
+}
+
+.rgd-stat-v2-value {
+  font-size: 34px;
+  font-weight: 700;
+  color: #0f172a;
+  line-height: 1;
+  letter-spacing: -1px;
+}
+
+.rgd-stat-v2-unit {
+  font-size: 14px;
+  font-weight: 600;
+  color: #64748b;
+  margin-left: 4px;
+}
+
+.rgd-stat-v2-sub {
+  font-size: 13px;
+  font-weight: 500;
+  color: #94a3b8;
+  margin: 0;
+}
+
+.rgd-stat-v2-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+
+.rgd-stat-v2-more {
+  background: none;
+  border: none;
+  color: #94a3b8;
+  cursor: pointer;
+  padding: 0;
+  margin-top: -4px;
+  margin-right: -4px;
+  transition: color 0.2s ease;
+}
+
+.rgd-stat-v2-more:hover {
+  color: #0f172a;
+}
+
+/* วงกลมเปอร์เซ็นต์ */
+.rgd-stat-chart-wrap {
+  width: 58px;
+  height: 58px;
+}
+
+.rgd-stat-circular-chart {
+  display: block;
+  margin: 0 auto;
+  max-width: 100%;
+  max-height: 250px;
+}
+
+.rgd-stat-circle-bg {
+  fill: #f8fafc; /* สีพื้นหลังในวงกลมอ่อนๆ */
+  stroke: #f1f5f9; /* สีเส้นขอบวงกลมเปล่า */
+  stroke-width: 3.5;
+}
+
+.rgd-stat-circle {
+  fill: none;
+  stroke-width: 3.5;
+  stroke-linecap: round;
+  animation: progress 1s ease-out forwards;
+}
+
+@keyframes progress {
+  0% {
+    stroke-dasharray: 0 100;
+  }
+}
+
+.rgd-stat-percentage {
+  fill: #0f172a;
+  font-family: "IBM Plex Sans Thai", sans-serif;
+  font-size: 9px;
+  font-weight: 700;
+  text-anchor: middle;
+}
+
+/* =========================================
+   CARDS & MIDDLE LAYOUT
+   ========================================= */
+.rgd-middle-layout {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 30px;
+  margin-bottom: 30px;
+}
+
+.rgd-card {
+  background: white;
+  border-radius: 20px;
+  border: 1px solid #f1f5f9;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.02);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.rgd-card-header {
+  padding: 24px 24px 15px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.rgd-card-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0;
+}
+
+.rgd-link-btn {
+  font-size: 14px;
+  color: #3b82f6;
+  text-decoration: none;
+  font-weight: 600;
+}
+.rgd-link-btn:hover {
+  text-decoration: underline;
+}
+
+.rgd-card-body {
+  padding: 0 24px 24px 24px;
+  flex-grow: 1;
+}
+.rgd-card-body.p-0 {
+  padding: 0;
+}
+
+/* =========================================
+   PENDING APPROVALS LIST
+   ========================================= */
+.rgd-approval-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.rgd-approval-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 24px;
+  border-bottom: 1px solid #f1f5f9;
+  transition: background 0.2s;
+}
+
+.rgd-approval-item:last-child {
+  border-bottom: none;
+}
+.rgd-approval-item:hover {
+  background: #f8fafc;
+}
+
+.rgd-approval-info h4 {
+  margin: 0 0 4px 0;
+  font-size: 15px;
+  color: #0f172a;
+  font-weight: 600;
+}
+.rgd-approval-info p {
+  margin: 0;
+  font-size: 13px;
+  color: #64748b;
+}
+
+.rgd-approval-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.rgd-btn-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 14px;
+}
+
+.rgd-btn-icon.reject {
+  background: #fee2e2;
+  color: #ef4444;
+}
+.rgd-btn-icon.reject:hover {
+  background: #fca5a5;
+}
+.rgd-btn-icon.approve {
+  background: #dcfce7;
+  color: #10b981;
+}
+.rgd-btn-icon.approve:hover {
+  background: #86efac;
+}
+
+/* =========================================
+   PROJECTS TABLE
+   ========================================= */
+.rgd-search-box {
+  display: flex;
+  align-items: center;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  padding: 8px 16px;
+  border-radius: 50px;
+  width: 250px;
+}
+.rgd-search-box .search-icon {
+  color: #94a3b8;
+  margin-right: 10px;
+}
+.rgd-search-box input {
+  border: none;
+  background: transparent;
+  outline: none;
+  width: 100%;
+  font-size: 14px;
+  font-family: "IBM Plex Sans Thai", sans-serif;
+}
+
+.rgd-table-wrapper {
+  overflow-x: auto;
+}
+.rgd-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 700px;
+  text-align: left;
+}
+.rgd-table th {
+  background: #f8fafc;
+  color: #64748b;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 16px 24px;
+  border-bottom: 2px solid #f1f5f9;
+}
+.rgd-table td {
+  padding: 18px 24px;
+  border-bottom: 1px solid #f1f5f9;
+  font-size: 14px;
+  color: #0f172a;
+}
+
+.text-gray {
+  color: #64748b;
+  font-size: 13px;
+}
+.font-bold {
+  font-weight: 600;
+}
+
+.rgd-user-cell {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.rgd-avatar-small {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #e0e7ff;
+  color: #3b82f6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.rgd-progress-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.rgd-progress-track {
+  flex: 1;
+  height: 6px;
+  background: #f1f5f9;
+  border-radius: 10px;
+  overflow: hidden;
+  min-width: 80px;
+}
+.rgd-progress-fill {
+  height: 100%;
+  border-radius: 10px;
+}
+
+.rgd-status-badge {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.rgd-status-badge.success {
+  background: #dcfce7;
+  color: #16a34a;
+}
+.rgd-status-badge.active {
+  background: #eff6ff;
+  color: #2563eb;
+}
+.rgd-status-badge.warning {
+  background: #fef9c3;
+  color: #ca8a04;
+}
+
+/* =========================================
+   RESPONSIVE
+   ========================================= */
+@media (max-width: 1200px) {
+  .rgd-stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .rgd-middle-layout {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (max-width: 899px) {
@@ -102,8 +446,25 @@
     margin-left: 0;
   }
 }
-@media (max-width: 480px) {
-  .regulator-portal-body {
-    padding: 25px 20px 30px 20px;
+
+@media (max-width: 768px) {
+  .rgd-container {
+    padding: 80px 20px 40px 20px;
+  }
+  .rgd-welcome-header {
+    flex-direction: column;
+    gap: 15px;
+  }
+  .rgd-stats-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .rgd-card-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+  .rgd-search-box {
+    width: 100%;
   }
 }

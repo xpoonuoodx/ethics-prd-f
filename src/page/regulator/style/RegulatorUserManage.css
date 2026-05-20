@@ -1,0 +1,192 @@
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&display=swap");
+
+.rum-container * {
+  box-sizing: border-box;
+  font-family: "IBM Plex Sans Thai", sans-serif;
+}
+
+.rum-container {
+  padding: 40px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+/* Header */
+.rum-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 30px;
+}
+.rum-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 8px 0;
+}
+.rum-subtitle {
+  font-size: 14px;
+  color: #64748b;
+  margin: 0;
+}
+
+.rum-btn-add {
+  background: #3b82f6;
+  color: white;
+  padding: 12px 24px;
+  border-radius: 50px;
+  border: none;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+.rum-btn-add:hover {
+  background: #2563eb;
+  transform: translateY(-2px);
+}
+
+/* Toolbar */
+.rum-toolbar {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.rum-search-box {
+  background: white;
+  border: 1px solid #e2e8f0;
+  padding: 10px 16px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+}
+.rum-search-box input {
+  border: none;
+  outline: none;
+  width: 100%;
+}
+
+.rum-filter-select {
+  padding: 10px 16px;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  background: white;
+  color: #475569;
+}
+
+/* Table */
+.rum-card {
+  background: white;
+  border-radius: 20px;
+  border: 1px solid #e2e8f0;
+  overflow: hidden;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.03);
+}
+
+.rum-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.rum-table th {
+  background: #f8fafc;
+  padding: 18px 24px;
+  font-size: 13px;
+  color: #64748b;
+  text-align: left;
+  border-bottom: 2px solid #f1f5f9;
+}
+.rum-table td {
+  padding: 18px 24px;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.rum-user-cell {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.rum-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #e0e7ff;
+  color: #3b82f6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+}
+.rum-user-name {
+  font-weight: 600;
+}
+.rum-text-muted {
+  color: #64748b;
+  font-size: 14px;
+}
+
+/* Badges */
+.rum-role-badge {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.rum-role-badge.admin {
+  background: #fee2e2;
+  color: #dc2626;
+}
+.rum-role-badge.staff {
+  background: #eff6ff;
+  color: #2563eb;
+}
+
+.rum-status-badge {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+.rum-status-badge.active {
+  background: #dcfce7;
+  color: #16a34a;
+}
+.rum-status-badge.inactive {
+  background: #f3f4f6;
+  color: #64748b;
+}
+
+/* Actions */
+.rum-actions {
+  display: flex;
+  gap: 8px;
+}
+.rum-btn-edit {
+  background: #f1f5f9;
+  color: #475569;
+  border: none;
+  padding: 8px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.rum-btn-delete {
+  background: #fee2e2;
+  color: #dc2626;
+  border: none;
+  padding: 8px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.rum-btn-edit:hover {
+  background: #e2e8f0;
+}
+.rum-btn-delete:hover {
+  background: #fecaca;
+}
