@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import "./style/RegulatorUserManage.css";
 import SidebarRegulator from "./SidebarRegulator";
 import {
@@ -7,8 +7,8 @@ import {
   FaEdit,
   FaTrash,
   FaUserShield,
-  FaUserTie,
   FaUser,
+  FaUsers,
 } from "react-icons/fa";
 import Swal from "sweetalert2";
 
@@ -55,13 +55,18 @@ const RegulatorUserManage = () => {
       text: "คุณจะไม่สามารถกู้คืนข้อมูลนี้ได้!",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: "#ef4444",
+      confirmButtonColor: "#dc2626", // ปรับเป็นสีแดงที่เข้ากับธีม
       cancelButtonColor: "#94a3b8",
       confirmButtonText: "ลบข้อมูล",
     }).then((result) => {
       if (result.isConfirmed) {
         setUsers(users.filter((u) => u.id !== id));
-        Swal.fire("ลบสำเร็จ!", "ข้อมูลถูกลบออกแล้ว", "success");
+        Swal.fire({
+          title: "ลบสำเร็จ!",
+          text: "ข้อมูลถูกลบออกแล้ว",
+          icon: "success",
+          confirmButtonColor: "#3b82f6",
+        });
       }
     });
   };
@@ -71,18 +76,29 @@ const RegulatorUserManage = () => {
       <SidebarRegulator />
       <div className="regulator-portal-content">
         <div className="rum-container">
+          {/* =======================================
+              Header & Add Button
+              ======================================= */}
           <div className="rum-header">
-            <div>
-              <h1 className="rum-title">จัดการบุคลากร</h1>
-              <p className="rum-subtitle">
-                ดูรายชื่อและบริหารจัดการสิทธิ์ผู้ใช้งานภายในหน่วยงาน
-              </p>
+            <div className="rum-header-title-wrap">
+              <div className="rum-header-icon">
+                <FaUsers />
+              </div>
+              <div>
+                <h1 className="rum-title">จัดการบุคลากร</h1>
+                <p className="rum-subtitle">
+                  ดูรายชื่อและบริหารจัดการสิทธิ์ผู้ใช้งานภายในหน่วยงาน
+                </p>
+              </div>
             </div>
             <button className="rum-btn-add">
-              <FaPlus /> เพิ่มบุคลากร
+              <FaPlus size={14} /> เพิ่มบุคลากร
             </button>
           </div>
 
+          {/* =======================================
+              Toolbar (Search & Filter)
+              ======================================= */}
           <div className="rum-toolbar">
             <div className="rum-search-box">
               <FaSearch className="rum-search-icon" />
@@ -100,6 +116,9 @@ const RegulatorUserManage = () => {
             </select>
           </div>
 
+          {/* =======================================
+              Data Table
+              ======================================= */}
           <div className="rum-card">
             <div className="rum-table-wrapper">
               <table className="rum-table">
@@ -109,7 +128,7 @@ const RegulatorUserManage = () => {
                     <th>อีเมล</th>
                     <th>บทบาท</th>
                     <th>สถานะ</th>
-                    <th>จัดการ</th>
+                    <th style={{ textAlign: "center" }}>จัดการ</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -129,10 +148,10 @@ const RegulatorUserManage = () => {
                           className={`rum-role-badge ${user.role.toLowerCase()}`}
                         >
                           {user.role === "Admin" ? (
-                            <FaUserShield />
+                            <FaUserShield size={12} />
                           ) : (
-                            <FaUser />
-                          )}{" "}
+                            <FaUser size={12} />
+                          )}
                           {user.role}
                         </span>
                       </td>
@@ -140,16 +159,17 @@ const RegulatorUserManage = () => {
                         <span
                           className={`rum-status-badge ${user.status.toLowerCase()}`}
                         >
-                          {user.status}
+                          <span className="status-dot"></span> {user.status}
                         </span>
                       </td>
                       <td>
                         <div className="rum-actions">
-                          <button className="rum-btn-edit">
+                          <button className="rum-btn-action edit" title="แก้ไข">
                             <FaEdit />
                           </button>
                           <button
-                            className="rum-btn-delete"
+                            className="rum-btn-action delete"
+                            title="ลบ"
                             onClick={() => handleDelete(user.id)}
                           >
                             <FaTrash />
@@ -158,6 +178,15 @@ const RegulatorUserManage = () => {
                       </td>
                     </tr>
                   ))}
+
+                  {/* แสดงเมื่อค้นหาไม่เจอ */}
+                  {filteredUsers.length === 0 && (
+                    <tr>
+                      <td colSpan="5" className="rum-empty-state">
+                        ไม่พบข้อมูลบุคลากรที่ค้นหา
+                      </td>
+                    </tr>
+                  )}
                 </tbody>
               </table>
             </div>

@@ -6,11 +6,15 @@ import {
   FaCheck,
   FaTimes,
   FaSearch,
+  FaUsers,
+  FaFolderOpen,
+  FaFileSignature,
+  FaChartBar,
   FaEllipsisV, // เพิ่มไอคอน 3 จุดสำหรับ Widget
 } from "react-icons/fa";
 import {
-  BarChart,
-  Bar,
+  LineChart,
+  Line,
   XAxis,
   YAxis,
   CartesianGrid,
@@ -31,7 +35,7 @@ const RegulatorDashboard = () => {
   // ข้อมูลจำลอง (Mock Data) สำหรับ Regulator
   // ----------------------------------------
 
-  // ข้อมูลสำหรับ Quick Stats สไตล์ใหม่
+  // ข้อมูลสำหรับ Quick Stats (สไตล์การ์ดสีทึบ)
   const quickStats = [
     {
       id: 1,
@@ -40,7 +44,7 @@ const RegulatorDashboard = () => {
       unit: "/คน",
       sub: "กำลังใช้งาน: 38 คน",
       progress: 85,
-      color: "#2563eb", // สีน้ำเงิน
+      theme: "solid-blue",
     },
     {
       id: 2,
@@ -49,7 +53,7 @@ const RegulatorDashboard = () => {
       unit: "/โครงการ",
       sub: "ดำเนินการอยู่: 8",
       progress: 66,
-      color: "#8b5cf6", // สีม่วง
+      theme: "solid-indigo",
     },
     {
       id: 3,
@@ -58,7 +62,7 @@ const RegulatorDashboard = () => {
       unit: "/รายการ",
       sub: "ด่วน: 1 รายการ",
       progress: 25,
-      color: "#0ea5e9", // สีฟ้าคราม
+      theme: "solid-orange",
     },
     {
       id: 4,
@@ -67,7 +71,7 @@ const RegulatorDashboard = () => {
       unit: "%",
       sub: "อัปเดต: 2 วันที่แล้ว",
       progress: 84,
-      color: "#10b981", // สีเขียว
+      theme: "solid-green",
     },
   ];
 
@@ -136,12 +140,12 @@ const RegulatorDashboard = () => {
       <div className="regulator-portal-content">
         <div className="rgd-container">
           {/* =======================================
-              ส่วนหัวต้อนรับ (Header)
+              ส่วนหัวต้อนรับ (Header) ดีไซน์คลีน
               ======================================= */}
-          <div className="rgd-welcome-header">
-            <div>
+          <div className="rgd-header-wrapper">
+            <div className="rgd-simple-header">
               <h1 className="rgd-greeting-title">
-                ยินดีต้อนรับ, {userData?.name || "ผู้กำกับดูแล"} 
+                ยินดีต้อนรับ, {userData?.name || "ผู้กำกับดูแล"}
               </h1>
               <p className="rgd-greeting-subtitle">
                 ภาพรวมระบบหน่วยงาน คุณสามารถติดตาม ตรวจสอบ และอนุมัติข้อมูลต่างๆ
@@ -149,27 +153,31 @@ const RegulatorDashboard = () => {
               </p>
             </div>
             <div className="rgd-role-badge">
-              <FaBalanceScale /> {userData?.role || "Regulator"}
+              <FaBalanceScale className="rgd-icon-gold" />{" "}
+              {userData?.role || "Regulator"}
             </div>
           </div>
 
           {/* =======================================
-              Quick Stats (สไตล์ Widget ตาม Ref Image)
+              Quick Stats (สไตล์การ์ดสีทึบ Solid Color)
               ======================================= */}
           <div className="rgd-stats-grid">
             {quickStats.map((stat) => (
-              <div key={stat.id} className="rgd-stat-v2-card">
-                <div className="rgd-stat-v2-left">
-                  <h4 className="rgd-stat-v2-title">{stat.title}</h4>
-                  <div className="rgd-stat-v2-value-wrap">
-                    <span className="rgd-stat-v2-value">{stat.value}</span>
-                    <span className="rgd-stat-v2-unit">{stat.unit}</span>
+              <div
+                key={stat.id}
+                className={`rgd-stat-solid-card ${stat.theme}`}
+              >
+                <div className="rgd-stat-solid-left">
+                  <h4 className="rgd-stat-solid-title">{stat.title}</h4>
+                  <div className="rgd-stat-solid-value-wrap">
+                    <span className="rgd-stat-solid-value">{stat.value}</span>
+                    <span className="rgd-stat-solid-unit">{stat.unit}</span>
                   </div>
-                  <p className="rgd-stat-v2-sub">{stat.sub}</p>
+                  <p className="rgd-stat-solid-sub">{stat.sub}</p>
                 </div>
 
-                <div className="rgd-stat-v2-right">
-                  <button className="rgd-stat-v2-more">
+                <div className="rgd-stat-solid-right">
+                  <button className="rgd-stat-solid-more">
                     <FaEllipsisV size={14} />
                   </button>
                   <div className="rgd-stat-chart-wrap">
@@ -177,16 +185,18 @@ const RegulatorDashboard = () => {
                       viewBox="0 0 36 36"
                       className="rgd-stat-circular-chart"
                     >
+                      {/* แก้ไข fill="none" เพื่อป้องกันปัญหากราฟดำทึบ */}
                       <path
                         className="rgd-stat-circle-bg"
+                        fill="none"
                         d="M18 2.0845
                           a 15.9155 15.9155 0 0 1 0 31.831
                           a 15.9155 15.9155 0 0 1 0 -31.831"
                       />
                       <path
                         className="rgd-stat-circle"
+                        fill="none"
                         strokeDasharray={`${stat.progress}, 100`}
-                        stroke={stat.color}
                         d="M18 2.0845
                           a 15.9155 15.9155 0 0 1 0 31.831
                           a 15.9155 15.9155 0 0 1 0 -31.831"
@@ -202,65 +212,80 @@ const RegulatorDashboard = () => {
           </div>
 
           {/* =======================================
-              Middle Layout: Chart & Approvals (คงเดิม)
+              Middle Layout: Chart & Approvals
               ======================================= */}
-          <div className="rgd-middle-layout">
-            {/* ฝั่งซ้าย: กราฟ */}
-            <div className="rgd-card chart-card">
+          <div className="rgd-progress-layout">
+            {/* ฝั่งซ้าย: กราฟเส้น (Line Chart) */}
+            <div className="rgd-card chart-wrapper">
               <div className="rgd-card-header">
                 <h3 className="rgd-card-title">คะแนนความพร้อมแยกตามฝ่าย</h3>
               </div>
               <div className="rgd-card-body" style={{ height: "300px" }}>
                 <ResponsiveContainer width="100%" height="100%">
-                  <BarChart
+                  <LineChart
                     data={chartData}
-                    margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
+                    margin={{ top: 20, right: 20, left: -20, bottom: 0 }}
                   >
                     <CartesianGrid
                       strokeDasharray="3 3"
                       vertical={false}
-                      stroke="#f1f5f9"
+                      stroke="#f3f4f6"
                     />
                     <XAxis
                       dataKey="name"
                       axisLine={false}
                       tickLine={false}
-                      tick={{ fill: "#64748b", fontSize: 13 }}
+                      tick={{ fill: "#6b7280", fontSize: 13 }}
                       dy={10}
                     />
                     <YAxis
                       axisLine={false}
                       tickLine={false}
-                      tick={{ fill: "#64748b", fontSize: 13 }}
+                      tick={{ fill: "#6b7280", fontSize: 13 }}
                     />
                     <Tooltip
-                      cursor={{ fill: "rgba(59, 130, 246, 0.05)" }}
+                      cursor={{
+                        stroke: "rgba(59, 130, 246, 0.1)",
+                        strokeWidth: 2,
+                      }}
                       contentStyle={{
                         borderRadius: "12px",
-                        border: "none",
-                        boxShadow: "0 10px 25px rgba(0,0,0,0.1)",
+                        border: "1px solid #f3f4f6",
+                        boxShadow: "0 10px 25px rgba(0,0,0,0.05)",
                       }}
                     />
-                    <Bar
+                    <Line
+                      type="monotone"
                       dataKey="score"
-                      fill="#3b82f6"
-                      radius={[6, 6, 0, 0]}
-                      barSize={30}
+                      stroke="#3b82f6"
+                      strokeWidth={4}
+                      dot={{
+                        r: 5,
+                        fill: "#ffffff",
+                        stroke: "#3b82f6",
+                        strokeWidth: 2,
+                      }}
+                      activeDot={{
+                        r: 8,
+                        fill: "#3b82f6",
+                        stroke: "#ffffff",
+                        strokeWidth: 3,
+                      }}
                     />
-                  </BarChart>
+                  </LineChart>
                 </ResponsiveContainer>
               </div>
             </div>
 
             {/* ฝั่งขวา: รายการรออนุมัติ */}
-            <div className="rgd-card">
+            <div className="rgd-card list-wrapper">
               <div className="rgd-card-header">
-                <h3 className="rgd-card-title">รายการรออนุมัติ (Pending)</h3>
-                <a href="/regulator/approvals" className="rgd-link-btn">
+                <h3 className="rgd-card-title">รายการรออนุมัติ</h3>
+                <a href="/regulator/approvals" className="rgd-link-primary">
                   ดูทั้งหมด
                 </a>
               </div>
-              <div className="rgd-card-body p-0">
+              <div className="rgd-card-body rgd-p-0">
                 <ul className="rgd-approval-list">
                   {pendingApprovals.map((req) => (
                     <li key={req.id} className="rgd-approval-item">
@@ -289,13 +314,13 @@ const RegulatorDashboard = () => {
           </div>
 
           {/* =======================================
-              Bottom Section: Projects Table (คงเดิม)
+              Bottom Section: Projects Table
               ======================================= */}
           <div className="rgd-card">
             <div className="rgd-card-header">
               <h3 className="rgd-card-title">โครงการในหน่วยงาน</h3>
               <div className="rgd-search-box">
-                <FaSearch className="search-icon" />
+                <FaSearch className="rgd-search-icon" />
                 <input type="text" placeholder="ค้นหาโครงการ..." />
               </div>
             </div>
@@ -313,8 +338,8 @@ const RegulatorDashboard = () => {
                 <tbody>
                   {recentProjects.map((proj) => (
                     <tr key={proj.id}>
-                      <td className="text-gray">{proj.id}</td>
-                      <td className="font-bold">{proj.name}</td>
+                      <td className="rgd-text-muted">{proj.id}</td>
+                      <td className="rgd-font-bold">{proj.name}</td>
                       <td>
                         <div className="rgd-user-cell">
                           <div className="rgd-avatar-small">
@@ -325,9 +350,9 @@ const RegulatorDashboard = () => {
                       </td>
                       <td>
                         <div className="rgd-progress-wrap">
-                          <div className="rgd-progress-track">
+                          <div className="rgd-mini-progress">
                             <div
-                              className="rgd-progress-fill"
+                              className="rgd-mini-progress-fill"
                               style={{
                                 width: `${proj.progress}%`,
                                 backgroundColor:
@@ -335,12 +360,14 @@ const RegulatorDashboard = () => {
                               }}
                             ></div>
                           </div>
-                          <span className="text-gray">{proj.progress}%</span>
+                          <span className="rgd-text-muted-bold">
+                            {proj.progress}%
+                          </span>
                         </div>
                       </td>
                       <td>
                         <span
-                          className={`rgd-status-badge ${proj.progress === 100 ? "success" : proj.progress < 50 ? "warning" : "active"}`}
+                          className={`rgd-badge ${proj.progress === 100 ? "success" : proj.progress < 50 ? "warning" : "active"}`}
                         >
                           {proj.status}
                         </span>
