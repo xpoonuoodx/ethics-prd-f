@@ -16,6 +16,7 @@ import NewsDetail from "./page/NewsDetail";
 // Route Guards (สิทธิ์การเข้าถึง)
 import UserRoute from "./route/UserRoute";
 import AdminRoute from "./route/AdminRoute";
+import RegulatorRoute from "./route/RegulatorRoute";
 // ลบ ProviderRoute และ RegulatorRoute ออก เพราะไม่ใช้แล้ว
 
 // Admin Pages
@@ -28,7 +29,13 @@ import UserClassroom from "./page/user/UserClassroom"; // หน้าเรี�
 import UserTest from "./page/user/UserTest"; // หน้าสอบ
 import UserClassroomDetail from "./page/user/UserClassroomDetail"; // หน้าเรียนรายละเอียด
 import UserCertificate from "./page/user/UserCertificate"; // หน้าใบประกาศนียบัตร
-// ลบหน้า Dashboard ของ Regulator และ Provider ออก
+import UserTools from "./page/user/UserTools"; // หน้าเครื่องมือการเรียนรู้
+import UserToolsCreate from "./page/user/UserToolsCreate";
+
+//Ragulator Pages
+import RegulatorDashboard from "./page/regulator/RegulatorDashboard"; // หน้าแดชบอร์ดของ Regulator
+import RegulatorUserManage from "./page/regulator/RegulatorUserManage";
+import RegulatorProjectManage from "./page/regulator/RegulatorProjectManage";
 
 function App() {
   return (
@@ -53,6 +60,15 @@ function App() {
             <AdminRoute>
               <AdminDashboard />
             </AdminRoute>
+          }
+        />
+
+        <Route
+          path="/regulator-dashboard"
+          element={
+            <RegulatorRoute>
+              <RegulatorDashboard />
+            </RegulatorRoute>
           }
         />
 
@@ -112,6 +128,42 @@ function App() {
             <UserRoute>
               <UserCertificate />
             </UserRoute>
+          }
+        />
+
+        <Route
+          path="/user-tools"
+          element={
+            <UserRoute>
+              <UserTools />
+            </UserRoute>
+          }
+        />
+
+        <Route
+          path="/user-tools-create"
+          element={
+            <UserRoute>
+              <UserToolsCreate />
+            </UserRoute>
+          }
+        />
+
+        <Route
+          path="/regulator-user-manage"
+          element={
+            <RegulatorRoute>
+              <RegulatorUserManage />
+            </RegulatorRoute>
+          }
+        />
+
+        <Route
+          path="/regulator-project-manage"
+          element={
+            <RegulatorRoute>
+              <RegulatorProjectManage />
+            </RegulatorRoute>
           }
         />
 

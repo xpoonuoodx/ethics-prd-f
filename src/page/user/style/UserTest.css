@@ -7,9 +7,24 @@
 
 .ut-container {
   padding: 40px;
-  max-width: 800px;
+  width: 100%;
   margin: 0 auto;
   min-height: 80vh;
+}
+
+/* Animations */
+.fade-in {
+  animation: fadeIn 0.4s ease-out;
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .ut-back-btn {
@@ -24,12 +39,135 @@
   cursor: pointer;
   margin-bottom: 30px;
   padding: 0;
+  transition: color 0.2s;
 }
 .ut-back-btn:hover {
   color: #111827;
 }
 
-/* การ์ดแบบทดสอบ */
+/* =========================================
+   หน้า Intro (รายละเอียดก่อนเริ่มแบบทดสอบ)
+   ========================================= */
+.ut-intro-card {
+  background: white;
+  border-radius: 20px;
+  padding: 50px 40px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.ut-intro-icon-wrapper {
+  width: 80px;
+  height: 80px;
+  background: #f0fdf4;
+  color: #75ba40;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 32px;
+  margin-bottom: 24px;
+}
+
+.ut-intro-title {
+  font-size: 26px;
+  font-weight: 700;
+  color: #111827;
+  margin: 0 0 12px 0;
+}
+
+.ut-intro-desc {
+  font-size: 16px;
+  color: #6b7280;
+  line-height: 1.6;
+  margin: 0 0 40px 0;
+  max-width: 600px;
+}
+
+.ut-intro-grid {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  margin-bottom: 40px;
+  flex-wrap: wrap;
+}
+
+.ut-intro-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  background: #f9fafb;
+  padding: 20px 25px;
+  border-radius: 16px;
+  border: 1px solid #f3f4f6;
+  min-width: 200px;
+  text-align: left;
+}
+
+.ut-intro-item-icon {
+  width: 45px;
+  height: 45px;
+  border-radius: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 18px;
+  color: white;
+}
+.bg-blue {
+  background-color: #3b82f6;
+}
+.bg-orange {
+  background-color: #f59e0b;
+}
+.bg-green {
+  background-color: #75ba40;
+}
+
+.ut-intro-item-text span {
+  font-size: 13px;
+  color: #6b7280;
+  font-weight: 500;
+  display: block;
+  margin-bottom: 4px;
+}
+.ut-intro-item-text h4 {
+  margin: 0;
+  font-size: 16px;
+  color: #111827;
+  font-weight: 600;
+}
+
+.ut-intro-footer {
+  margin-top: 10px;
+}
+
+.ut-btn-start {
+  background: linear-gradient(135deg, #75ba40 0%, #5a9130 100%);
+  color: white;
+  border: none;
+  padding: 16px 36px;
+  font-size: 16px;
+  font-weight: 600;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 4px 15px rgba(117, 186, 64, 0.3);
+}
+.ut-btn-start:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(117, 186, 64, 0.4);
+}
+
+/* =========================================
+   หน้าการ์ดแบบทดสอบ (Quiz Card)
+   ========================================= */
 .ut-quiz-card {
   background: white;
   border-radius: 20px;
@@ -124,6 +262,7 @@
 .ut-btn-primary:disabled {
   background: #d1d5db;
   cursor: not-allowed;
+  box-shadow: none;
 }
 .ut-btn-primary:hover:not(:disabled) {
   background: #639d36;
@@ -132,7 +271,9 @@
   margin-top: 20px;
 }
 
-/* หน้าผลลัพธ์ */
+/* =========================================
+   หน้าผลลัพธ์ (Result Card)
+   ========================================= */
 .ut-result-card {
   background: white;
   border-radius: 20px;
@@ -150,11 +291,32 @@
 .ut-result-card h2 {
   font-size: 28px;
   margin: 0 0 10px 0;
+  color: #111827;
 }
 
 .ut-result-card p {
   font-size: 18px;
   color: #6b7280;
+}
+
+/* =========================================
+   RESPONSIVE
+   ========================================= */
+@media (max-width: 768px) {
+  .ut-intro-grid {
+    flex-direction: column;
+    gap: 15px;
+  }
+  .ut-intro-item {
+    width: 100%;
+  }
+  .ut-intro-card {
+    padding: 30px 20px;
+  }
+  .ut-btn-start {
+    width: 100%;
+    justify-content: center;
+  }
 }
 
 @media (max-width: 600px) {
@@ -164,11 +326,22 @@
   .ut-quiz-card {
     padding: 25px;
   }
+  .ut-quiz-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
   .ut-question-box h4 {
     font-size: 18px;
   }
   .ut-option-item {
     font-size: 14.5px;
     padding: 15px;
+  }
+  .ut-quiz-footer {
+    text-align: center;
+  }
+  .ut-btn-primary {
+    width: 100%;
   }
 }

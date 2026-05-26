@@ -1,100 +1,483 @@
-@import url("https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap");
 
 .regulator-portal-layout * {
   box-sizing: border-box;
   font-family: "Prompt", sans-serif;
 }
+
 .regulator-portal-layout {
   display: flex;
   min-height: 100vh;
-  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  background-color: #f3f4f6; /* สีพื้นหลังเหมือนหน้า UserDashboard */
 }
+
 .regulator-portal-content {
   flex: 1;
   margin-left: 260px;
   transition: margin-left 0.3s ease;
-}
-.regulator-portal-container {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  padding: 40px 20px;
+  flex-direction: column;
 }
 
-.regulator-portal-card {
-  background: #ffffff;
-  border-radius: 16px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+.rgd-container {
+  padding: 40px;
   width: 100%;
-  max-width: 550px;
-  overflow: hidden;
-  text-align: center;
+  max-width: 100%;
+  margin: 0 auto;
 }
 
-.regulator-portal-header {
-  background-color: #75ba40;
-  padding: 30px 20px 20px 20px;
-  color: white;
-}
-.regulator-portal-icon-wrapper {
-  background-color: rgba(255, 255, 255, 0.2);
-  width: 70px;
-  height: 70px;
-  border-radius: 50%;
+/* =========================================
+   HEADER WRAPPER
+   ========================================= */
+.rgd-header-wrapper {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: 0 auto 15px auto;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 30px;
 }
-.regulator-portal-icon {
-  font-size: 32px;
+
+.rgd-simple-header {
+  flex: 1;
+}
+
+.rgd-greeting-title {
+  font-size: 28px;
+  font-weight: 600;
+  color: #111827;
+  margin: 0 0 8px 0;
+}
+
+.rgd-greeting-subtitle {
+  font-size: 16px;
+  color: #6b7280;
+  margin: 0;
+}
+
+.rgd-role-badge {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  color: #111827;
+  padding: 10px 20px;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.03);
+}
+
+.rgd-icon-gold {
+  color: #f59e0b;
+  font-size: 18px;
+}
+
+/* =========================================
+   QUICK STATS (SOLID CARDS WITH DONUT)
+   ========================================= */
+.rgd-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  margin-bottom: 30px;
+}
+
+.rgd-stat-solid-card {
+  border-radius: 20px;
+  padding: 24px;
+  display: flex;
+  justify-content: space-between;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  transition:
+    transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    box-shadow 0.3s ease;
+  color: #ffffff; /* บังคับตัวอักษรทุกตัวในการ์ดให้เป็นสีขาว */
+  border: none;
+}
+
+.rgd-stat-solid-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+}
+
+/* ธีมสีทึบแบบ Gradient */
+.solid-blue {
+  background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+}
+.solid-indigo {
+  background: linear-gradient(135deg, #3730a3 0%, #8b5cf6 100%);
+}
+.solid-orange {
+  background: linear-gradient(135deg, #9a3412 0%, #f97316 100%);
+}
+.solid-green {
+  background: linear-gradient(135deg, #065f46 0%, #10b981 100%);
+}
+
+.rgd-stat-solid-left {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.rgd-stat-solid-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.85); /* ขาวโปร่งแสงนิดๆ */
+  margin: 0 0 12px 0;
+}
+
+.rgd-stat-solid-value-wrap {
+  display: flex;
+  align-items: baseline;
+  margin-bottom: 8px;
+}
+
+.rgd-stat-solid-value {
+  font-size: 38px;
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 1;
+  letter-spacing: -1px;
+}
+
+.rgd-stat-solid-unit {
+  font-size: 14px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.7);
+  margin-left: 4px;
+}
+
+.rgd-stat-solid-sub {
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.75);
+  margin: 0;
+}
+
+.rgd-stat-solid-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+
+.rgd-stat-solid-more {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.6);
+  cursor: pointer;
+  padding: 0;
+  margin-top: -4px;
+  margin-right: -4px;
+  transition: color 0.2s ease;
+}
+
+.rgd-stat-solid-more:hover {
   color: #ffffff;
 }
-.regulator-portal-title {
-  font-size: 24px;
+
+/* วงกลมเปอร์เซ็นต์ (Donut Chart) - สีขาว */
+.rgd-stat-chart-wrap {
+  width: 65px;
+  height: 65px;
+  position: relative;
+}
+
+.rgd-stat-circular-chart {
+  display: block;
+  margin: 0 auto;
+  max-width: 100%;
+  max-height: 250px;
+}
+
+.rgd-stat-circle-bg {
+  stroke: rgba(255, 255, 255, 0.2); /* พื้นหลังวงกลมสีขาวโปร่งแสง */
+  stroke-width: 3.5;
+}
+
+.rgd-stat-circle {
+  stroke: #ffffff; /* เส้นสีขาวทึบ */
+  stroke-width: 3.5;
+  stroke-linecap: round;
+  animation: rgd-progress 1.5s ease-out forwards;
+}
+
+@keyframes rgd-progress {
+  0% {
+    stroke-dasharray: 0 100;
+  }
+}
+
+.rgd-stat-percentage {
+  fill: #ffffff;
+  font-family: "Prompt", sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  text-anchor: middle;
+}
+
+/* =========================================
+   MIDDLE LAYOUT (Chart & Approvals)
+   ========================================= */
+.rgd-progress-layout {
+  display: grid;
+  grid-template-columns: 2fr 1fr; /* กราฟกินพื้นที่ 2 ส่วน รายการ 1 ส่วน */
+  gap: 24px;
+  margin-bottom: 30px;
+}
+
+.rgd-card {
+  background: white;
+  border-radius: 20px;
+  border: 1px solid #f3f4f6;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.03);
+  display: flex;
+  flex-direction: column;
+}
+
+.rgd-card-header {
+  padding: 24px;
+  border-bottom: 1px solid #f3f4f6;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.rgd-card-title {
+  font-size: 18px;
+  color: #111827;
   font-weight: 600;
   margin: 0;
 }
 
-.regulator-portal-body {
-  padding: 30px 40px 40px 40px;
+.rgd-link-primary {
+  font-size: 14px;
+  color: #3b82f6;
+  text-decoration: none;
+  font-weight: 600;
 }
-.regulator-portal-greeting {
-  font-size: 16px;
-  color: #4b5563;
-  margin-bottom: 12px;
+.rgd-link-primary:hover {
+  text-decoration: underline;
 }
-.regulator-portal-name {
+
+.rgd-card-body {
+  padding: 24px;
+  flex-grow: 1;
+}
+.rgd-card-body.rgd-p-0 {
+  padding: 0;
+}
+
+/* =========================================
+   APPROVAL LIST
+   ========================================= */
+.rgd-approval-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.rgd-approval-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.rgd-approval-item:last-child {
+  border-bottom: none;
+}
+
+.rgd-approval-info h4 {
+  margin: 0 0 6px 0;
+  font-size: 15px;
   color: #111827;
   font-weight: 600;
-  font-size: 18px;
-}
-.regulator-portal-role-container {
-  margin-bottom: 25px;
 }
 
-.regulator-portal-badge {
-  display: inline-block;
-  padding: 6px 16px;
-  background-color: #f0f9eb;
-  color: #4a7826;
-  border: 1px solid #c2e7b0;
-  border-radius: 20px;
+.rgd-approval-info p {
+  margin: 0;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.rgd-approval-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.rgd-btn-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.rgd-btn-icon.reject {
+  background: #fef2f2;
+  color: #dc2626;
+}
+.rgd-btn-icon.reject:hover {
+  background: #fee2e2;
+}
+
+.rgd-btn-icon.approve {
+  background: #ecfdf5;
+  color: #10b981;
+}
+.rgd-btn-icon.approve:hover {
+  background: #dcfce7;
+}
+
+/* =========================================
+   PROJECTS TABLE
+   ========================================= */
+.rgd-search-box {
+  background: #f9fafb;
+  border: 1px solid #f3f4f6;
+  padding: 8px 16px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 250px;
+}
+
+.rgd-search-icon {
+  color: #9ca3af;
+}
+
+.rgd-search-box input {
+  border: none;
+  background: transparent;
+  outline: none;
+  width: 100%;
   font-size: 14px;
+  font-family: "Prompt", sans-serif;
+  color: #111827;
+}
+
+.rgd-table-wrapper {
+  overflow-x: auto;
+}
+
+.rgd-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  min-width: 800px;
+}
+
+.rgd-table th {
+  background: #f9fafb;
+  color: #6b7280;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 16px 24px;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.rgd-table td {
+  padding: 20px 24px;
+  border-bottom: 1px solid #f3f4f6;
+  font-size: 14px;
+  color: #111827;
+}
+
+.rgd-table tbody tr:hover td {
+  background-color: #f9fafb;
+}
+
+.rgd-text-muted {
+  color: #6b7280;
+}
+.rgd-text-muted-bold {
+  color: #4b5563;
+  font-weight: 600;
+  font-size: 13px;
+}
+.rgd-font-bold {
+  font-weight: 600;
+}
+
+.rgd-user-cell {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.rgd-avatar-small {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #eff6ff;
+  color: #3b82f6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+/* Progress Bar */
+.rgd-progress-wrap {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.rgd-mini-progress {
+  flex: 1;
+  height: 6px;
+  background-color: #f3f4f6;
+  border-radius: 10px;
+  overflow: hidden;
+  min-width: 100px;
+}
+
+.rgd-mini-progress-fill {
+  height: 100%;
+  border-radius: 10px;
+  transition: width 1s ease-in-out;
+}
+
+/* Badges */
+.rgd-badge {
+  font-size: 12px;
+  padding: 6px 12px;
+  border-radius: 20px;
   font-weight: 500;
 }
-
-.regulator-portal-divider {
-  border: 0;
-  border-top: 1px dashed #d1d5db;
-  margin: 0 0 25px 0;
+.rgd-badge.success {
+  background: #ecfdf5;
+  color: #059669;
 }
-.regulator-portal-welcome {
-  color: #6b7280;
-  font-size: 15px;
-  line-height: 1.6;
-  margin-bottom: 10px;
+.rgd-badge.active {
+  background: #eff6ff;
+  color: #2563eb;
+}
+.rgd-badge.warning {
+  background: #fffbeb;
+  color: #d97706;
+}
+
+/* =========================================
+   RESPONSIVE
+   ========================================= */
+@media (max-width: 1200px) {
+  .rgd-progress-layout {
+    grid-template-columns: 1fr;
+  }
+  .rgd-stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 @media (max-width: 899px) {
@@ -102,8 +485,25 @@
     margin-left: 0;
   }
 }
-@media (max-width: 480px) {
-  .regulator-portal-body {
-    padding: 25px 20px 30px 20px;
+
+@media (max-width: 768px) {
+  .rgd-container {
+    padding: 20px 15px;
+  }
+  .rgd-header-wrapper {
+    flex-direction: column;
+    gap: 15px;
+  }
+  .rgd-stats-grid {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+  .rgd-card-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+  .rgd-search-box {
+    width: 100%;
   }
 }

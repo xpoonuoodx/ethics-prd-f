@@ -34,14 +34,19 @@ const Login = () => {
       localStorage.setItem("token", token);
       localStorage.setItem("user", JSON.stringify(user));
 
-      // --- ปรับให้เหลือแค่ 2 Role (admin และ user) ---
-      let targetUrl = "/user-dashboard";
+      // --- กำหนดเส้นทางตาม Role ของผู้ใช้งาน ---
+      let targetUrl = "/user-dashboard"; // ค่าเริ่มต้นสำหรับ user ทั่วไป
 
       if (
         user.role === "admin" ||
         (user.roles && user.roles.includes("admin"))
       ) {
         targetUrl = "/admin-dashboard";
+      } else if (
+        user.role === "regulator" ||
+        (user.roles && user.roles.includes("regulator"))
+      ) {
+        targetUrl = "/regulator-dashboard"; // เพิ่มเงื่อนไขสำหรับ regulator
       }
 
       window.location.href = targetUrl;

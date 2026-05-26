@@ -200,7 +200,10 @@ const UserDashboard = () => {
                 </div>
 
                 <div className="ud-recipe-actions">
-                  <button className="ud-btn-half dark">
+                  <button
+                    className="ud-btn-half dark"
+                    onClick={() => navigate("/user-classroom?role=regulator")}
+                  >
                     <FaPlayCircle /> สื่อการเรียนรู้
                   </button>
                   <button className="ud-btn-half outline">
@@ -249,7 +252,10 @@ const UserDashboard = () => {
                 </div>
 
                 <div className="ud-recipe-actions">
-                  <button className="ud-btn-half dark">
+                  <button
+                    className="ud-btn-half dark"
+                    onClick={() => navigate("/user-classroom?role=provider")}
+                  >
                     <FaPlayCircle /> สื่อการเรียนรู้
                   </button>
                   <button className="ud-btn-half outline">
@@ -294,7 +300,10 @@ const UserDashboard = () => {
                 </div>
 
                 <div className="ud-recipe-actions">
-                  <button className="ud-btn-half dark">
+                  <button
+                    className="ud-btn-half dark"
+                    onClick={() => navigate("/user-classroom?role=user")}
+                  >
                     <FaPlayCircle /> สื่อการเรียนรู้
                   </button>
                   <button className="ud-btn-half outline">

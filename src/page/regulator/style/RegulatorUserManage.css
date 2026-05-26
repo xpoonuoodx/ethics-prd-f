@@ -1,0 +1,350 @@
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&display=swap");
+
+.rum-container * {
+  box-sizing: border-box;
+  font-family: "IBM Plex Sans Thai", sans-serif;
+}
+
+.rum-container {
+  padding: 40px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+/* =========================================
+   HEADER
+   ========================================= */
+.rum-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 30px;
+}
+
+.rum-header-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.rum-header-icon {
+  width: 50px;
+  height: 50px;
+  background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+  color: #1d4ed8;
+  border-radius: 14px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 22px;
+  box-shadow: 0 4px 10px rgba(59, 130, 246, 0.1);
+  border: 1px solid #bfdbfe;
+}
+
+.rum-title {
+  font-size: 26px;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 6px 0;
+  letter-spacing: -0.5px;
+}
+
+.rum-subtitle {
+  font-size: 15px;
+  color: #64748b;
+  margin: 0;
+}
+
+.rum-btn-add {
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  color: white;
+  padding: 12px 24px;
+  border-radius: 50px; /* ปุ่มแคปซูล */
+  border: none;
+  font-size: 15px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(37, 99, 235, 0.2);
+}
+
+.rum-btn-add:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(37, 99, 235, 0.3);
+}
+
+/* =========================================
+   TOOLBAR (Search & Filter)
+   ========================================= */
+.rum-toolbar {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 25px;
+}
+
+.rum-search-box {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  padding: 10px 20px;
+  border-radius: 50px; /* แคปซูล */
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 350px;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.02);
+}
+
+.rum-search-box:focus-within {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.rum-search-icon {
+  color: #94a3b8;
+}
+
+.rum-search-box input {
+  border: none;
+  outline: none;
+  width: 100%;
+  font-size: 14px;
+  color: #0f172a;
+}
+.rum-search-box input::placeholder {
+  color: #94a3b8;
+}
+
+.rum-filter-select {
+  padding: 10px 20px;
+  border-radius: 50px;
+  border: 1px solid #e2e8f0;
+  background: #ffffff;
+  color: #0f172a;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  outline: none;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.02);
+}
+
+.rum-filter-select:focus {
+  border-color: #3b82f6;
+}
+
+/* =========================================
+   DATA TABLE
+   ========================================= */
+.rum-card {
+  background: white;
+  border-radius: 20px;
+  border: 1px solid #e2e8f0;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
+}
+
+.rum-table-wrapper {
+  overflow-x: auto;
+}
+
+.rum-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 800px;
+}
+
+.rum-table th {
+  background: #f8fafc;
+  padding: 18px 24px;
+  font-size: 13px;
+  color: #64748b;
+  text-align: left;
+  border-bottom: 2px solid #f1f5f9;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.rum-table td {
+  padding: 20px 24px;
+  border-bottom: 1px solid #f1f5f9;
+  font-size: 14px;
+}
+
+.rum-table tbody tr {
+  transition: background-color 0.2s;
+}
+.rum-table tbody tr:hover {
+  background-color: #f8fafc;
+}
+
+/* Avatar Cell */
+.rum-user-cell {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.rum-avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+  color: #1e40af;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 14px;
+  border: 2px solid #ffffff;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.rum-user-name {
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.rum-text-muted {
+  color: #64748b;
+  font-weight: 500;
+}
+
+/* =========================================
+   BADGES (Role & Status)
+   ========================================= */
+.rum-role-badge {
+  padding: 6px 14px;
+  border-radius: 50px;
+  font-size: 12px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.rum-role-badge.admin {
+  background: #fef2f2;
+  color: #dc2626;
+  border: 1px solid #fecaca;
+}
+.rum-role-badge.staff {
+  background: #f8fafc;
+  color: #475569;
+  border: 1px solid #e2e8f0;
+}
+
+.rum-status-badge {
+  padding: 6px 14px;
+  border-radius: 50px;
+  font-size: 12px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+.rum-status-badge.active {
+  background: #ecfdf5;
+  color: #059669;
+  border: 1px solid #bbf7d0;
+}
+.rum-status-badge.active .status-dot {
+  background-color: #059669;
+}
+
+.rum-status-badge.inactive {
+  background: #f8fafc;
+  color: #64748b;
+  border: 1px solid #e2e8f0;
+}
+.rum-status-badge.inactive .status-dot {
+  background-color: #64748b;
+}
+
+/* =========================================
+   ACTIONS BUTTONS
+   ========================================= */
+.rum-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.rum-btn-action {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  font-size: 14px;
+}
+
+.rum-btn-action.edit {
+  background: #eff6ff;
+  color: #2563eb;
+}
+.rum-btn-action.edit:hover {
+  background: #dbeafe;
+  transform: translateY(-2px);
+}
+
+.rum-btn-action.delete {
+  background: #fef2f2;
+  color: #dc2626;
+}
+.rum-btn-action.delete:hover {
+  background: #fee2e2;
+  transform: translateY(-2px);
+}
+
+/* Empty State */
+.rum-empty-state {
+  text-align: center;
+  padding: 40px !important;
+  color: #94a3b8;
+  font-size: 15px;
+}
+
+/* =========================================
+   RESPONSIVE
+   ========================================= */
+@media (max-width: 899px) {
+  .regulator-portal-content {
+    margin-left: 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .rum-container {
+    padding: 100px 20px 40px 20px;
+  }
+  .rum-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+  }
+  .rum-btn-add {
+    width: 100%;
+    justify-content: center;
+  }
+  .rum-toolbar {
+    flex-direction: column;
+  }
+  .rum-search-box {
+    width: 100%;
+  }
+  .rum-filter-select {
+    width: 100%;
+  }
+}
