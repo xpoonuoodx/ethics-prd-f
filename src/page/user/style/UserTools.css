@@ -1,0 +1,454 @@
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&display=swap");
+
+.user-portal-layout * {
+  box-sizing: border-box;
+  font-family: "IBM Plex Sans Thai", sans-serif;
+}
+
+.user-portal-layout {
+  display: flex;
+  min-height: 100vh;
+  background-color: #f8fafc; /* พื้นหลังเทาอ่อน คลีนๆ */
+}
+
+.user-portal-content {
+  flex: 1;
+  margin-left: 260px;
+  transition: margin-left 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.ut-v2-container {
+  padding: 40px;
+  width: 100%;
+  /* max-width: 1200px; */
+  margin: 0 auto;
+}
+
+/* Animations */
+.fade-in-down {
+  animation: fadeInDown 0.3s ease-out forwards;
+}
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* =========================================
+   HEADER SECTION
+   ========================================= */
+.ut-v2-header-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 40px;
+  background: white;
+  padding: 30px;
+  border-radius: 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+  border: 1px solid #f1f5f9;
+}
+
+.ut-v2-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 8px 0;
+  letter-spacing: -0.5px;
+}
+
+.ut-v2-subtitle {
+  font-size: 15px;
+  color: #64748b;
+  margin: 0;
+}
+
+.ut-v2-actions-box {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.ut-v2-btn-video {
+  background-color: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  color: #334155;
+  padding: 12px 20px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.ut-v2-btn-video:hover {
+  background-color: #e2e8f0;
+  color: #0f172a;
+}
+
+.ut-v2-btn-create {
+  background: linear-gradient(135deg, #4f46e5 0%, #3b82f6 100%);
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+}
+.ut-v2-btn-create:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(59, 130, 246, 0.4);
+}
+
+/* =========================================
+   GRID LAYOUT & CARDS
+   ========================================= */
+.ut-v2-grid-wrapper {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(450px, 1fr));
+  gap: 24px;
+}
+
+.ut-v2-card {
+  background: #ffffff;
+  border-radius: 20px;
+  border: 1px solid #e2e8f0;
+  /* border-left: 6px solid #8b5cf6; */
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.02);
+  display: flex;
+  flex-direction: column;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.ut-v2-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.06);
+}
+
+/* Badges (บนสุดของการ์ด) */
+.ut-v2-card-badges {
+  display: flex;
+  gap: 10px;
+  padding: 24px 24px 0 24px;
+  flex-wrap: wrap;
+}
+
+.ut-v2-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 50px;
+  font-size: 12px;
+  font-weight: 600;
+}
+.ut-v2-badge.date {
+  background: #f1f5f9;
+  color: #475569;
+}
+.ut-v2-badge.level {
+  background: #f3e8ff;
+  color: #7e22ce;
+}
+.ut-v2-badge.progress {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+/* Main Content */
+.ut-v2-card-main {
+  padding: 20px 24px 10px 24px;
+}
+
+.ut-v2-role-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 0 0 6px 0;
+}
+
+.ut-v2-role-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 8px 0;
+  line-height: 1.4;
+}
+
+.ut-v2-role-desc {
+  font-size: 14px;
+  color: #64748b;
+  margin: 0;
+  line-height: 1.6;
+}
+
+/* Expanded Details */
+.ut-v2-card-details {
+  padding: 0 24px 10px 24px;
+}
+
+.ut-v2-divider {
+  height: 1px;
+  background: #f1f5f9;
+  margin: 10px 0 20px 0;
+}
+
+.ut-v2-principle-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: #94a3b8;
+  margin: 0 0 6px 0;
+}
+
+.ut-v2-principle-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: #1e293b;
+  margin: 0 0 6px 0;
+}
+
+.ut-v2-principle-desc {
+  font-size: 13.5px;
+  color: #64748b;
+  margin: 0 0 20px 0;
+  line-height: 1.6;
+}
+.whitespace-pre-line {
+  white-space: pre-line;
+}
+
+.ut-v2-subitem-box {
+  background-color: #f8fafc;
+  border: 1px solid #e2e8f0;
+  padding: 12px 16px;
+  border-radius: 10px;
+  font-size: 13px;
+  color: #475569;
+  font-weight: 500;
+}
+
+/* Card Footer (Actions) */
+.ut-v2-card-footer {
+  padding: 16px 24px;
+  background: #f8fafc;
+  border-top: 1px solid #f1f5f9;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto;
+}
+
+.ut-v2-btn-toggle {
+  background: none;
+  border: none;
+  color: #3b82f6;
+  font-size: 14px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  padding: 0;
+  transition: color 0.2s;
+}
+.ut-v2-btn-toggle:hover {
+  color: #1d4ed8;
+  text-decoration: underline;
+}
+
+.ut-v2-btn-delete {
+  background: white;
+  border: 1px solid #fecaca;
+  color: #ef4444;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.ut-v2-btn-delete:hover {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+/* Empty State */
+.ut-v2-empty-state {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 80px 20px;
+  background: white;
+  border-radius: 20px;
+  border: 2px dashed #cbd5e1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.ut-v2-empty-icon {
+  font-size: 48px;
+  color: #cbd5e1;
+  margin-bottom: 20px;
+}
+.ut-v2-empty-state h3 {
+  font-size: 20px;
+  color: #1e293b;
+  margin: 0 0 10px 0;
+}
+.ut-v2-empty-state p {
+  color: #64748b;
+  margin: 0;
+}
+
+/* =========================================
+   VIDEO MODAL POPUP
+   ========================================= */
+.ut-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(15, 23, 42, 0.75);
+  backdrop-filter: blur(5px);
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.ut-modal-content {
+  background: #ffffff;
+  width: 100%;
+  max-width: 800px;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  animation: modalScaleUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes modalScaleUp {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.ut-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px;
+  border-bottom: 1px solid #f1f5f9;
+  background: #f8fafc;
+}
+
+.ut-modal-header h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.ut-modal-close {
+  background: #e2e8f0;
+  border: none;
+  color: #475569;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.ut-modal-close:hover {
+  background: #fecaca;
+  color: #ef4444;
+}
+
+.ut-modal-body {
+  padding: 24px;
+}
+
+.ut-video-wrapper {
+  position: relative;
+  padding-bottom: 56.25%;
+  height: 0;
+  overflow: hidden;
+  border-radius: 12px;
+  background: #000;
+}
+
+.ut-video-wrapper iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* =========================================
+   RESPONSIVE
+   ========================================= */
+@media (max-width: 1024px) {
+  .ut-v2-grid-wrapper {
+    grid-template-columns: 1fr; /* กลายเป็น 1 คอลัมน์บนจอแท็บเล็ต */
+  }
+}
+
+@media (max-width: 899px) {
+  .user-portal-content {
+    margin-left: 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .ut-v2-container {
+    padding: 20px 15px;
+  }
+  .ut-v2-header-section {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+    padding: 20px;
+  }
+  .ut-v2-actions-box {
+    width: 100%;
+    flex-direction: column;
+  }
+  .ut-v2-btn-video,
+  .ut-v2-btn-create {
+    width: 100%;
+    justify-content: center;
+  }
+}

@@ -1,7 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import SidebarUser from "./SidebarUser";
-import { FaArrowLeft, FaCheckCircle } from "react-icons/fa";
+import {
+  FaArrowLeft,
+  FaCheckCircle,
+  FaClipboardList,
+  FaClock,
+  FaListUl,
+  FaStar,
+  FaPlay,
+} from "react-icons/fa";
 import "./style/UserTest.css";
 
 const UserTest = () => {
@@ -15,6 +23,7 @@ const UserTest = () => {
   const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [score, setScore] = useState(0);
   const [showResult, setShowResult] = useState(false);
+  const [quizStarted, setQuizStarted] = useState(false); // เพิ่ม State ควบคุมการเริ่มแบบทดสอบ
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -104,20 +113,75 @@ const UserTest = () => {
     }
   };
 
+  const handleStartQuiz = () => {
+    setQuizStarted(true);
+  };
+
   return (
     <div className="user-portal-layout">
       <SidebarUser />
       <div className="user-portal-content">
         <div className="ut-container">
-          <button
-            className="ut-back-btn"
-            onClick={() => navigate("/user-select-role?type=test")}
-          >
-            <FaArrowLeft /> เปลี่ยนสายงาน
+          <button className="ut-back-btn" onClick={() => navigate(-1)}>
+            <FaArrowLeft /> ย้อนกลับ
           </button>
 
-          {showResult ? (
-            <div className="ut-result-card">
+          {!quizStarted && !showResult ? (
+            // =======================================
+            // หน้า Intro ก่อนเริ่มทำแบบทดสอบ
+            // =======================================
+            <div className="ut-intro-card fade-in">
+              <div className="ut-intro-icon-wrapper">
+                <FaClipboardList />
+              </div>
+              <h2 className="ut-intro-title">รายละเอียดแบบทดสอบ</h2>
+              <p className="ut-intro-desc">
+                แบบประเมินความรู้และความพร้อมสาย{" "}
+                <strong>{role.toUpperCase()}</strong> <br />
+                โปรดอ่านคำถามอย่างละเอียดและเลือกคำตอบที่ถูกต้องที่สุดเพียงข้อเดียว
+              </p>
+
+              <div className="ut-intro-grid">
+                <div className="ut-intro-item">
+                  <div className="ut-intro-item-icon bg-blue">
+                    <FaListUl />
+                  </div>
+                  <div className="ut-intro-item-text">
+                    <span>จำนวนคำถาม</span>
+                    <h4>{questions.length} ข้อ</h4>
+                  </div>
+                </div>
+                <div className="ut-intro-item">
+                  <div className="ut-intro-item-icon bg-orange">
+                    <FaClock />
+                  </div>
+                  <div className="ut-intro-item-text">
+                    <span>เวลาจำกัด</span>
+                    <h4>15 นาที</h4>
+                  </div>
+                </div>
+                <div className="ut-intro-item">
+                  <div className="ut-intro-item-icon bg-green">
+                    <FaStar />
+                  </div>
+                  <div className="ut-intro-item-text">
+                    <span>คะแนนเต็ม</span>
+                    <h4>{questions.length} คะแนน</h4>
+                  </div>
+                </div>
+              </div>
+
+              <div className="ut-intro-footer">
+                <button className="ut-btn-start" onClick={handleStartQuiz}>
+                  <FaPlay /> เริ่มทำแบบทดสอบ
+                </button>
+              </div>
+            </div>
+          ) : showResult ? (
+            // =======================================
+            // หน้า Result สรุปผลคะแนน
+            // =======================================
+            <div className="ut-result-card fade-in">
               <FaCheckCircle className="ut-result-icon" />
               <h2>คุณทำแบบทดสอบเสร็จแล้ว!</h2>
               <p>
@@ -131,7 +195,10 @@ const UserTest = () => {
               </button>
             </div>
           ) : (
-            <div className="ut-quiz-card">
+            // =======================================
+            // หน้าทำแบบทดสอบ (Quiz)
+            // =======================================
+            <div className="ut-quiz-card fade-in">
               <div className="ut-quiz-header">
                 <h3>แบบประเมินความพร้อมสาย {role.toUpperCase()}</h3>
                 <span className="ut-progress">

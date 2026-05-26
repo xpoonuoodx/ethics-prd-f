@@ -1,121 +1,152 @@
-@import url("https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&display=swap");
 
-.ucd-container * {
+.user-portal-layout * {
   box-sizing: border-box;
-  font-family: "Prompt", sans-serif;
+  font-family: "IBM Plex Sans Thai", sans-serif;
+}
+
+.user-portal-layout {
+  display: flex;
+  min-height: 100vh;
+  background-color: #f8fafc;
+}
+
+.user-portal-content {
+  flex: 1;
+  margin-left: 260px;
+  transition: margin-left 0.3s ease;
+  display: flex;
+  flex-direction: column;
 }
 
 .ucd-container {
   padding: 40px;
-  /* max-width: 1400px;
-  margin: 0 auto; */
+  width: 100%;
+  /* max-width: 1300px; */
+  margin: 0 auto;
 }
 
+/* =========================================
+   HEADER & BACK BUTTON
+   ========================================= */
 .ucd-back-btn {
-  background: none;
+  background: transparent;
   border: none;
-  color: #6b7280;
+  color: #64748b;
   font-size: 15px;
-  font-weight: 500;
-  display: flex;
+  font-weight: 600;
+  display: inline-flex;
   align-items: center;
   gap: 8px;
   cursor: pointer;
-  margin-bottom: 20px;
   padding: 0;
-  transition: color 0.2s;
+  margin-bottom: 24px;
+  transition: color 0.2s ease;
 }
 .ucd-back-btn:hover {
-  color: #111827;
+  color: #0f172a;
 }
 
 .ucd-header {
   margin-bottom: 30px;
 }
-
 .ucd-title {
-  font-size: 26px;
+  font-size: 28px;
   font-weight: 700;
-  color: #111827;
-  margin: 0 0 10px 0;
+  color: #0f172a;
+  margin: 0 0 8px 0;
+  letter-spacing: -0.5px;
 }
-
 .ucd-subtitle {
   font-size: 15px;
-  color: #6b7280;
+  color: #64748b;
   margin: 0;
 }
 
+/* =========================================
+   CONTENT LAYOUT (VIDEO + PLAYLIST)
+   ========================================= */
 .ucd-content-layout {
   display: grid;
-  grid-template-columns: 2fr 1fr;
+  grid-template-columns: 2.5fr 1fr;
   gap: 30px;
+  align-items: flex-start;
 }
 
+/* ---------------- VIDEO SECTION ---------------- */
 .ucd-video-section {
-  background: white;
-  padding: 25px;
-  border-radius: 20px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
-}
-
-.ucd-video-player {
-  width: 100%;
-  aspect-ratio: 16 / 9;
-  background: #1f2937;
-  border-radius: 12px;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 25px;
-  overflow: hidden;
+  flex-direction: column;
 }
 
 .ucd-video-placeholder {
-  text-align: center;
-  color: white;
-  cursor: pointer;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: #1e293b;
+  color: #cbd5e1;
 }
 
 .ucd-play-icon {
   font-size: 60px;
-  color: #75ba40;
+  color: #3b82f6;
   margin-bottom: 15px;
-  transition: transform 0.2s;
 }
 
-.ucd-video-placeholder:hover .ucd-play-icon {
-  transform: scale(1.1);
+/* ข้อมูลใต้วิดีโอ */
+.ucd-current-module-info {
+  margin-top: 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+  background: #ffffff;
+  padding: 24px;
+  border-radius: 16px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
+  border: 1px solid #f1f5f9;
 }
 
 .ucd-current-module-title {
   font-size: 20px;
-  font-weight: 600;
-  color: #111827;
-  margin: 0 0 10px 0;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 8px 0;
 }
 
 .ucd-current-module-desc {
   font-size: 15px;
-  color: #4b5563;
+  color: #64748b;
   margin: 0;
   line-height: 1.6;
 }
 
+/* ---------------- PLAYLIST SECTION ---------------- */
 .ucd-playlist-section {
-  background: white;
-  padding: 25px;
-  border-radius: 20px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
+  border: 1px solid #f1f5f9;
+  position: sticky;
+  top: 40px;
+  display: flex;
+  flex-direction: column;
 }
 
 .ucd-playlist-title {
   font-size: 18px;
-  font-weight: 600;
-  color: #111827;
+  font-weight: 700;
+  color: #0f172a;
   margin: 0 0 20px 0;
-  border-bottom: 1px solid #f3f4f6;
   padding-bottom: 15px;
+  border-bottom: 1px solid #f1f5f9;
 }
 
 .ucd-modules-list {
@@ -124,60 +155,117 @@
   margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 12px;
 }
 
 .ucd-module-item {
   display: flex;
-  align-items: center;
-  gap: 15px;
-  padding: 15px;
-  background: #f9fafb;
-  border-radius: 12px;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px;
+  border-radius: 10px;
+  transition: background 0.2s ease;
   cursor: pointer;
-  transition: background 0.2s;
+  border: 1px solid transparent;
 }
 
 .ucd-module-item:hover {
-  background: #f3f4f6;
+  background: #f8fafc;
+  border-color: #e2e8f0;
 }
+
 .ucd-module-item.completed {
   background: #f0fdf4;
-  border: 1px solid #dcfce7;
+  border-color: #dcfce7;
 }
 
 .ucd-module-status {
-  font-size: 20px;
+  margin-top: 2px;
+  font-size: 16px;
 }
 .text-green {
   color: #10b981;
 }
 .text-gray {
-  color: #9ca3af;
+  color: #94a3b8;
 }
 
 .ucd-module-info h4 {
-  font-size: 14.5px;
-  font-weight: 500;
-  color: #1f2937;
   margin: 0 0 4px 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #1e293b;
+  line-height: 1.4;
 }
 
 .ucd-module-info span {
   font-size: 12px;
-  color: #6b7280;
+  color: #64748b;
 }
 
+/* ---------------- PLAYLIST FOOTER (ปุ่มแบบทดสอบ) ---------------- */
+.ucd-playlist-footer {
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 1px solid #f1f5f9;
+  display: flex;
+  justify-content: flex-end; /* จัดปุ่มไปทางขวา */
+}
+
+.ucd-btn-take-test {
+  background: #75ba40;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(117, 186, 64, 0.2);
+  white-space: nowrap;
+}
+
+.ucd-btn-take-test:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(117, 186, 64, 0.3);
+  background: #75ba40;
+}
+
+/* =========================================
+   RESPONSIVE
+   ========================================= */
 @media (max-width: 1024px) {
   .ucd-content-layout {
     grid-template-columns: 1fr;
   }
+  .ucd-playlist-section {
+    position: static;
+  }
 }
+
+@media (max-width: 899px) {
+  .user-portal-content {
+    margin-left: 0;
+  }
+}
+
 @media (max-width: 768px) {
   .ucd-container {
-    padding: 20px;
+    padding: 20px 15px;
   }
-  .ucd-title {
-    font-size: 22px;
+  .ucd-current-module-info {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .ucd-playlist-footer {
+    justify-content: center; /* ตรงกลางบนมือถือ */
+  }
+  .ucd-btn-take-test {
+    justify-content: center;
+    width: 100%; /* ปุ่มเต็มความกว้างบนมือถือ */
   }
 }

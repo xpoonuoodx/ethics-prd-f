@@ -111,7 +111,7 @@ const SidebarRegulator = () => {
             </span>
           </a>
 
-          <a
+          {/* <a
             href="/regulator/inspections"
             className={`regulator-sidebar-item ${currentPath.includes("/inspections") ? "active" : ""}`}
           >
@@ -119,13 +119,13 @@ const SidebarRegulator = () => {
             <span className={`regulator-sidebar-text ${!isOpen && "hidden"}`}>
               ติดตามผลประเมิน
             </span>
-          </a>
+          </a> */}
         </div>
 
         {/* ส่วนล่าง Sidebar */}
         <div className="regulator-sidebar-footer">
           <div className="regulator-bottom-menu">
-            <a
+            {/* <a
               href="/regulator/settings"
               className={`regulator-sidebar-item ${currentPath.includes("/settings") ? "active" : ""}`}
             >
@@ -133,7 +133,7 @@ const SidebarRegulator = () => {
               <span className={`regulator-sidebar-text ${!isOpen && "hidden"}`}>
                 ตั้งค่าหน่วยงาน
               </span>
-            </a>
+            </a> */}
             <button
               onClick={handleLogout}
               className="regulator-sidebar-item regulator-logout-btn"

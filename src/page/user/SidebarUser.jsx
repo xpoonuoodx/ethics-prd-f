@@ -102,7 +102,7 @@ const SidebarUser = () => {
             </span>
           </a>
 
-          <a
+          {/* <a
             href="/user-select-role?type=test"
             className={`su-menu-item ${
               currentPath.includes("type=test") ||
@@ -114,7 +114,7 @@ const SidebarUser = () => {
           >
             <FaClipboardCheck className="su-icon" />
             <span className={`su-text ${!isOpen && "hidden"}`}>แบบทดสอบ</span>
-          </a>
+          </a> */}
 
           <a
             href="/user-tools"
@@ -127,7 +127,7 @@ const SidebarUser = () => {
             <span className={`su-text ${!isOpen && "hidden"}`}>เครื่องมือ</span>
           </a>
 
-          <a
+          {/* <a
             href="/user-download"
             className={`su-menu-item ${
               currentPath === "/user-download" ? "active" : ""
@@ -138,13 +138,13 @@ const SidebarUser = () => {
             <span className={`su-text ${!isOpen && "hidden"}`}>
               ดาวน์โหลดเอกสาร
             </span>
-          </a>
+          </a> */}
         </nav>
 
         {/* ================= Footer ================= */}
         <div className="su-footer">
           <div className="su-bottom-menu">
-            <a
+            {/* <a
               href="/user-settings"
               className="su-menu-item"
               title="ตั้งค่าบัญชี"
@@ -153,7 +153,7 @@ const SidebarUser = () => {
               <span className={`su-text ${!isOpen && "hidden"}`}>
                 ตั้งค่าบัญชี
               </span>
-            </a>
+            </a> */}
             <button
               onClick={handleLogout}
               className="su-menu-item su-logout-btn"

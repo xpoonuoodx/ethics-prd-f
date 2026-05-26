@@ -7,7 +7,7 @@ import {
   FaUserPlus,
   FaEdit,
   FaTrash,
-  FaFolder,
+  FaProjectDiagram,
 } from "react-icons/fa";
 import Swal from "sweetalert2";
 
@@ -38,20 +38,34 @@ const RegulatorProjectManage = () => {
       status: "Completed",
     },
   ]);
+  const [search, setSearch] = useState("");
+
+  // กรองโครงการตามคำค้นหา
+  const filteredProjects = projects.filter(
+    (p) =>
+      p.name.toLowerCase().includes(search.toLowerCase()) ||
+      p.id.toLowerCase().includes(search.toLowerCase()),
+  );
 
   const handleDelete = (id) => {
     Swal.fire({
       title: "ลบโครงการ?",
-      text: "คุณต้องการลบโครงการนี้ออกจากระบบหรือไม่",
+      text: "คุณต้องการลบโครงการนี้ออกจากระบบหรือไม่?",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: "#ef4444",
+      confirmButtonColor: "#dc2626", // สีแดงแจ้งเตือน
       cancelButtonColor: "#94a3b8",
       confirmButtonText: "ลบโครงการ",
+      cancelButtonText: "ยกเลิก",
     }).then((result) => {
       if (result.isConfirmed) {
         setProjects(projects.filter((p) => p.id !== id));
-        Swal.fire("ลบสำเร็จ!", "ข้อมูลโครงการถูกลบแล้ว", "success");
+        Swal.fire({
+          title: "ลบสำเร็จ!",
+          text: "ข้อมูลโครงการถูกลบแล้ว",
+          icon: "success",
+          confirmButtonColor: "#3b82f6",
+        });
       }
     });
   };
@@ -61,25 +75,46 @@ const RegulatorProjectManage = () => {
       <SidebarRegulator />
       <div className="regulator-portal-content">
         <div className="rpm-container">
+          {/* =======================================
+              Header Section
+              ======================================= */}
           <div className="rpm-header">
-            <div>
-              <h1 className="rpm-title">จัดการโครงการ (Project Management)</h1>
-              <p className="rpm-subtitle">
-                สร้าง จัดการ และกำหนดผู้รับผิดชอบโครงการในหน่วยงาน
-              </p>
+            <div className="rpm-header-title-wrap">
+              <div className="rpm-header-icon">
+                <FaProjectDiagram />
+              </div>
+              <div>
+                <h1 className="rpm-title">จัดการโครงการ</h1>
+                <p className="rpm-subtitle">
+                  สร้าง จัดการ และติดตามความคืบหน้าโครงการในหน่วยงานของคุณ
+                </p>
+              </div>
             </div>
             <button className="rpm-btn-primary">
-              <FaPlus /> สร้างโครงการใหม่
+              <FaPlus size={14} /> สร้างโครงการใหม่
             </button>
           </div>
 
+          {/* =======================================
+              Toolbar (Search & Filters)
+              ======================================= */}
           <div className="rpm-toolbar">
             <div className="rpm-search-box">
-              <FaSearch className="rpm-icon" />
-              <input type="text" placeholder="ค้นหาชื่อโครงการ..." />
+              <FaSearch className="rpm-search-icon" />
+              <input
+                type="text"
+                placeholder="ค้นหาชื่อ หรือรหัสโครงการ..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+              />
             </div>
+            {/* พื้นที่สำหรับใส่ Filter ในอนาคต */}
+            <div className="rpm-filter-placeholder"></div>
           </div>
 
+          {/* =======================================
+              Project Table Card
+              ======================================= */}
           <div className="rpm-card">
             <div className="rpm-table-wrapper">
               <table className="rpm-table">
@@ -91,45 +126,64 @@ const RegulatorProjectManage = () => {
                     <th>สมาชิก</th>
                     <th>ความคืบหน้า</th>
                     <th>สถานะ</th>
-                    <th>จัดการ</th>
+                    <th style={{ textAlign: "center" }}>จัดการ</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {projects.map((proj) => (
+                  {filteredProjects.map((proj) => (
                     <tr key={proj.id}>
                       <td className="rpm-text-muted">{proj.id}</td>
                       <td className="rpm-font-bold">{proj.name}</td>
-                      <td>{proj.manager}</td>
-                      <td>{proj.members} คน</td>
                       <td>
-                        <div className="rpm-progress-track">
-                          <div
-                            className="rpm-progress-fill"
-                            style={{ width: `${proj.progress}%` }}
-                          ></div>
+                        <div className="rpm-user-cell">
+                          <div className="rpm-avatar">
+                            {proj.manager.charAt(0)}
+                          </div>
+                          <span>{proj.manager}</span>
+                        </div>
+                      </td>
+                      <td>
+                        <span className="rpm-member-badge">
+                          {proj.members} คน
+                        </span>
+                      </td>
+                      <td>
+                        <div className="rpm-progress-wrap">
+                          <div className="rpm-progress-track">
+                            <div
+                              className={`rpm-progress-fill ${proj.progress === 100 ? "completed" : ""}`}
+                              style={{ width: `${proj.progress}%` }}
+                            ></div>
+                          </div>
+                          <span className="rpm-progress-text">
+                            {proj.progress}%
+                          </span>
                         </div>
                       </td>
                       <td>
                         <span
                           className={`rpm-status-badge ${proj.status.toLowerCase()}`}
                         >
-                          {proj.status}
+                          <span className="rpm-status-dot"></span> {proj.status}
                         </span>
                       </td>
                       <td>
                         <div className="rpm-actions">
                           <button
                             className="rpm-btn-icon assign"
-                            title="เพิ่มสมาชิก"
+                            title="เพิ่ม/จัดการสมาชิก"
                           >
                             <FaUserPlus />
                           </button>
-                          <button className="rpm-btn-icon edit" title="แก้ไข">
+                          <button
+                            className="rpm-btn-icon edit"
+                            title="แก้ไขโครงการ"
+                          >
                             <FaEdit />
                           </button>
                           <button
                             className="rpm-btn-icon delete"
-                            title="ลบ"
+                            title="ลบโครงการ"
                             onClick={() => handleDelete(proj.id)}
                           >
                             <FaTrash />
@@ -138,6 +192,14 @@ const RegulatorProjectManage = () => {
                       </td>
                     </tr>
                   ))}
+
+                  {filteredProjects.length === 0 && (
+                    <tr>
+                      <td colSpan="7" className="rpm-empty-state">
+                        ไม่พบข้อมูลโครงการที่ค้นหา
+                      </td>
+                    </tr>
+                  )}
                 </tbody>
               </table>
             </div>
