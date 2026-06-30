@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom"; // 1. นำเข้า useNavigate
 import "./style/Login.css";
 import { FaEye, FaEyeSlash, FaArrowLeft } from "react-icons/fa";
 import logo from "../assets/logo-bde.png"; // นำเข้าโลโก้จากโฟลเดอร์ assets
@@ -6,6 +7,7 @@ import axios from "axios";
 import Swal from "sweetalert2";
 
 const Login = () => {
+  const navigate = useNavigate(); // 2. เรียกใช้งาน navigate
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -22,6 +24,10 @@ const Login = () => {
     setLoading(true);
 
     try {
+      // 3. เคลียร์ Token และ User เก่าทิ้งก่อน เพื่อป้องกัน Token ค้างกากในระบบ
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+
       const API_URL = `${import.meta.env.VITE_APP_API_ENDPOINT}/auth/login`;
 
       const response = await axios.post(API_URL, {
@@ -31,6 +37,7 @@ const Login = () => {
 
       const { token, user } = response.data;
 
+      // บันทึก Token และ User ใหม่ลงเครื่อง
       localStorage.setItem("token", token);
       localStorage.setItem("user", JSON.stringify(user));
 
@@ -46,10 +53,11 @@ const Login = () => {
         user.role === "regulator" ||
         (user.roles && user.roles.includes("regulator"))
       ) {
-        targetUrl = "/regulator-dashboard"; // เพิ่มเงื่อนไขสำหรับ regulator
+        targetUrl = "/regulator-dashboard";
       }
 
-      window.location.href = targetUrl;
+      // 4. เปลี่ยนจาก window.location.href เป็น navigate() จะทำให้หน้าเว็บลื่นไหลไม่กระตุก
+      navigate(targetUrl);
     } catch (error) {
       console.error("Login Error:", error);
       const errorMessage =

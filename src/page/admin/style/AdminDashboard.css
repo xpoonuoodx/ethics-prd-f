@@ -1,117 +1,479 @@
-@import url("https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap");
 
-.admin-portal-layout * {
+.admin-layout * {
   box-sizing: border-box;
   font-family: "Prompt", sans-serif;
 }
 
-.admin-portal-layout {
+.admin-layout {
   display: flex;
   min-height: 100vh;
-  background: linear-gradient(
-    135deg,
-    #f8f9fa 0%,
-    #e9ecef 100%
-  ); /* พื้นหลังเรียบหรู */
+  background-color: #f4f6f8; /* พื้นหลังเทาอ่อนมากๆ สไตล์ SaaS */
 }
 
-.admin-portal-content {
+.admin-main-content {
   flex: 1;
-  margin-left: 260px;
+  margin-left: 270px; /* ตรงกับความกว้าง Sidebar */
   transition: margin-left 0.3s ease;
 }
 
-.admin-portal-container {
+.admin-content-inner {
+  padding: 40px 50px;
+  width: 100%;
+  /* max-width: 1400px; */
+  margin: 0 auto;
+}
+
+/* =========================================
+   HEADER & TOP ACTIONS
+   ========================================= */
+.admin-top-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 40px;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.admin-header-text h1 {
+  font-size: 26px;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 6px 0;
+  letter-spacing: -0.5px;
+}
+
+.admin-header-text p {
+  font-size: 14px;
+  color: #64748b;
+  margin: 0;
+}
+
+.admin-action-bar {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+/* Search Pill */
+.admin-search-pill {
+  background-color: #ffffff;
+  border-radius: 50px;
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
+  border: 1px solid #e2e8f0;
+  width: 320px;
+  transition: all 0.3s ease;
+}
+
+.admin-search-pill:focus-within {
+  border-color: #cbd5e1;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.admin-search-pill .search-icon {
+  color: #94a3b8;
+  font-size: 14px;
+}
+
+.admin-search-pill input {
+  border: none;
+  background: transparent;
+  outline: none;
+  width: 100%;
+  font-size: 14px;
+  color: #1e293b;
+}
+
+.admin-search-pill input::placeholder {
+  color: #94a3b8;
+}
+
+/* Dark Button (แบบปุ่ม Submit All ในรูปเรฟ) */
+.admin-btn-dark {
+  background-color: #0f172a; /* สีดำเข้ม */
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 50px;
+  font-weight: 600;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 10px rgba(15, 23, 42, 0.2);
+  white-space: nowrap;
+}
+
+.admin-btn-dark:hover {
+  background-color: #1e293b;
+  transform: translateY(-2px);
+}
+
+/* =========================================
+   STATS GRID
+   ========================================= */
+.admin-stats-container {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  margin-bottom: 40px;
+}
+
+.admin-stat-card {
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  border: none;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.03);
+  transition: transform 0.2s ease;
+}
+
+.admin-stat-card:hover {
+  transform: translateY(-3px);
+}
+
+.admin-stat-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
-  padding: 40px 20px;
+  font-size: 20px;
+  flex-shrink: 0;
 }
 
-.admin-portal-card {
-  background: #ffffff;
-  border-radius: 16px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+.bg-emerald-light {
+  background: #d1fae5;
+}
+.text-emerald {
+  color: #059669;
+}
+
+.bg-blue-light {
+  background: #dbeafe;
+}
+.text-blue {
+  color: #2563eb;
+}
+
+.bg-purple-light {
+  background: #f3e8ff;
+}
+.text-purple {
+  color: #9333ea;
+}
+
+.bg-orange-light {
+  background: #ffedd5;
+}
+.text-orange {
+  color: #ea580c;
+}
+
+.admin-stat-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.stat-label {
+  font-size: 12px;
+  color: #64748b;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+}
+
+.stat-value {
+  font-size: 24px;
+  font-weight: 700;
+  color: #0f172a;
+  line-height: 1;
+}
+
+/* =========================================
+   TABLE SECTION (Card Rows Style)
+   ========================================= */
+.admin-list-section {
   width: 100%;
-  max-width: 550px;
-  overflow: hidden;
+}
+
+.admin-list-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 15px;
+}
+
+.admin-list-header h2 {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0;
+}
+
+.admin-list-count {
+  background: #e2e8f0;
+  color: #475569;
+  padding: 4px 10px;
+  border-radius: 50px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.admin-table-responsive {
+  overflow-x: auto;
+  padding-bottom: 20px;
+}
+
+/* การทำให้ตารางแยกเป็นบรรทัด (Card Rows) */
+.admin-card-table {
+  width: 100%;
+  border-collapse: separate; /* สำคัญ: แยกขอบเพื่อให้เกิดช่องว่าง */
+  border-spacing: 0 10px; /* เว้นระยะห่างแนวตั้งระหว่างแถว 10px */
+  min-width: 900px;
+}
+
+.admin-card-table th {
+  background: transparent;
+  color: #94a3b8;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  text-align: left;
+  padding: 0 20px 5px 20px;
+  border: none;
+}
+.admin-card-table th.text-center {
   text-align: center;
 }
 
-.admin-portal-header {
-  background-color: #75ba40; /* ธีมหลัก */
-  padding: 30px 20px 20px 20px;
-  color: white;
+/* จัดการรูปร่างของแต่ละแถว */
+.admin-table-row {
+  background: #ffffff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+  transition:
+    box-shadow 0.2s,
+    transform 0.2s;
 }
 
-.admin-portal-icon-wrapper {
-  background-color: rgba(255, 255, 255, 0.2);
-  width: 70px;
-  height: 70px;
+.admin-table-row:hover {
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+  transform: translateY(-1px);
+}
+
+.admin-card-table td {
+  padding: 16px 20px;
+  font-size: 14px;
+  vertical-align: middle;
+  border-top: 1px solid #f8fafc;
+  border-bottom: 1px solid #f8fafc;
+}
+
+/* ปิดขอบซ้าย/ขวา เพื่อให้กลมมนเหมือน Card */
+.admin-card-table td:first-child {
+  border-top-left-radius: 16px;
+  border-bottom-left-radius: 16px;
+  border-left: 1px solid #f8fafc;
+}
+
+.admin-card-table td:last-child {
+  border-top-right-radius: 16px;
+  border-bottom-right-radius: 16px;
+  border-right: 1px solid #f8fafc;
+}
+.admin-card-table td.text-center {
+  text-align: center;
+}
+
+/* ข้อมูลในคอลัมน์ */
+.col-id {
+  color: #94a3b8;
+  font-weight: 500;
+  font-size: 13px;
+}
+.col-name {
+  color: #0f172a;
+  font-weight: 600;
+}
+
+.admin-user-profile {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.admin-avatar {
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
+  background: #f1f5f9;
+  color: #475569;
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 0 auto 15px auto;
+  font-size: 13px;
+  font-weight: 700;
 }
 
-.admin-portal-icon {
-  font-size: 32px;
-  color: #ffffff;
+.admin-user-text {
+  display: flex;
+  flex-direction: column;
 }
-.admin-portal-title {
-  font-size: 24px;
+.user-name {
   font-weight: 600;
-  margin: 0;
-}
-.admin-portal-body {
-  padding: 30px 40px 40px 40px;
-}
-.admin-portal-greeting {
-  font-size: 16px;
-  color: #4b5563;
-  margin-bottom: 12px;
-}
-.admin-portal-name {
-  color: #111827;
-  font-weight: 600;
-  font-size: 18px;
-}
-.admin-portal-role-container {
-  margin-bottom: 25px;
-}
-
-.admin-portal-badge {
-  display: inline-block;
-  padding: 6px 16px;
-  background-color: #f0f9eb; /* สีเขียวอ่อนสุด */
-  color: #4a7826; /* ตัวหนังสือเขียวเข้ม */
-  border: 1px solid #c2e7b0;
-  border-radius: 20px;
+  color: #1e293b;
   font-size: 14px;
-  font-weight: 500;
+}
+.user-role {
+  font-size: 11px;
+  color: #94a3b8;
 }
 
-.admin-portal-divider {
-  border: 0;
-  border-top: 1px dashed #d1d5db;
-  margin: 0 0 25px 0;
-}
-.admin-portal-welcome {
-  color: #6b7280;
+.admin-bold-number {
+  font-weight: 600;
+  color: #0f172a;
   font-size: 15px;
-  line-height: 1.6;
-  margin-bottom: 10px;
+}
+
+/* Status Badges ตามรูปเรฟ */
+.admin-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 50px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.badge-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+
+.admin-badge.active {
+  background-color: #d1fae5;
+  color: #065f46;
+}
+.admin-badge.active .badge-dot {
+  background-color: #10b981;
+}
+
+.admin-badge.inactive {
+  background-color: #fef3c7; /* สีเหลืองอ่อนสำหรับ In Progress/Inactive */
+  color: #92400e;
+}
+.admin-badge.inactive .badge-dot {
+  background-color: #f59e0b;
+}
+
+.admin-empty-state {
+  text-align: center;
+  padding: 40px !important;
+  color: #94a3b8;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+/* =========================================
+   State: Loading & Error
+   ========================================= */
+.admin-state-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 100px 20px;
+  background: transparent;
+  color: #64748b;
+}
+.admin-spin {
+  font-size: 40px;
+  color: #0f172a;
+  margin-bottom: 20px;
+  animation: adminSpinner 1s linear infinite;
+}
+@keyframes adminSpinner {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.admin-state-container.error {
+  color: #ef4444;
+}
+.admin-btn-retry {
+  background: #ef4444;
+  color: white;
+  border: none;
+  padding: 10px 24px;
+  border-radius: 50px;
+  margin-top: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* =========================================
+   RESPONSIVE (แก้ปัญหามือถือ 100%)
+   ========================================= */
+@media (max-width: 1200px) {
+  .admin-stats-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 @media (max-width: 899px) {
-  .admin-portal-content {
+  .admin-main-content {
     margin-left: 0;
   }
 }
-@media (max-width: 480px) {
-  .admin-portal-body {
-    padding: 25px 20px 30px 20px;
+
+@media (max-width: 768px) {
+  .admin-content-inner {
+    padding: 20px 15px;
+    padding-top: 70px; /* สำคัญมาก: เว้นที่ด้านบนเพื่อหลบปุ่มเมนูมือถือ */
+  }
+
+  .admin-top-section {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .admin-action-bar {
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .admin-search-pill {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .admin-btn-dark {
+    justify-content: center;
+    width: 100%;
+  }
+
+  .admin-stats-container {
+    grid-template-columns: 1fr; /* กล่องสถิติเรียงลงมาทีละ 1 แถว */
+    gap: 15px;
   }
 }

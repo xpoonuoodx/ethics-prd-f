@@ -21,6 +21,7 @@ import RegulatorRoute from "./route/RegulatorRoute";
 
 // Admin Pages
 import AdminDashboard from "./page/admin/AdminDashboard";
+import AdminOrganize from "./page/admin/AdminOrganize";
 
 // User Pages
 import UserDashboard from "./page/user/UserDashboard";
@@ -59,6 +60,15 @@ function App() {
           element={
             <AdminRoute>
               <AdminDashboard />
+            </AdminRoute>
+          }
+        />
+
+        <Route
+          path="/admin-organize"
+          element={
+            <AdminRoute>
+              <AdminOrganize />
             </AdminRoute>
           }
         />
