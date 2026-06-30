@@ -23,7 +23,7 @@ const AdminOrganize = () => {
     try {
       setLoading(true);
       setError(null);
-      const response = await api.get("/admin/organize");
+      const response = await api.get("/admin/get-organize");
 
       if (response.data && response.data.success) {
         setOrganizations(response.data.data.organizations);
