@@ -10,7 +10,7 @@ import {
   FaSpinner,
   FaUserShield,
   FaUser,
-  FaFileAlt, // เพิ่มไอคอนสำหรับโปรเจค
+  FaFileAlt,
 } from "react-icons/fa";
 import SidebarAdmin from "./SidebarAdmin";
 import api from "../../api/Api";
@@ -21,7 +21,7 @@ const AdminViewOrganize = () => {
 
   const [organization, setOrganization] = useState(null);
   const [orgUsers, setOrgUsers] = useState([]);
-  const [orgProjects, setOrgProjects] = useState([]); // 1. เพิ่ม State สำหรับโครงการ
+  const [orgProjects, setOrgProjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -39,8 +39,8 @@ const AdminViewOrganize = () => {
 
       if (response.data && response.data.success) {
         setOrganization(response.data.data.organization);
-        // ใส่ || [] ดักไว้ เผื่อ Backend ส่งมาเป็น undefined หรือ null
         setOrgUsers(response.data.data.users || []);
+        // ดึงข้อมูล projects ที่รวมรายชื่อ members มาด้วย
         setOrgProjects(response.data.data.projects || []);
       } else {
         setError("ไม่พบข้อมูลหน่วยงานนี้ในระบบ");
@@ -189,7 +189,6 @@ const AdminViewOrganize = () => {
                   style={{ marginBottom: "30px" }}
                 >
                   <div className="admin-view-org-list-header">
-                    {/* แก้ไขการนับจำนวนบุคลากรให้ปลอดภัย */}
                     <h2>บุคลากรในสังกัด ({(orgUsers || []).length})</h2>
                   </div>
                   <div className="admin-view-org-table-responsive">
@@ -203,7 +202,6 @@ const AdminViewOrganize = () => {
                         </tr>
                       </thead>
                       <tbody>
-                        {/* แก้ไขการ loop ให้ปลอดภัย */}
                         {(orgUsers || []).map((user, index) => {
                           const roleData = getRoleBadge(user.role);
                           return (
@@ -235,7 +233,6 @@ const AdminViewOrganize = () => {
                           );
                         })}
 
-                        {/* เพิ่มการแสดงผลกรณีไม่มีบุคลากร */}
                         {(orgUsers || []).length === 0 && (
                           <tr>
                             <td
@@ -251,10 +248,9 @@ const AdminViewOrganize = () => {
                   </div>
                 </div>
 
-                {/* 3. ตารางโครงการ (ส่วนใหม่ที่เพิ่ม) */}
+                {/* 3. ตารางโครงการ */}
                 <div className="admin-view-org-list-section">
                   <div className="admin-view-org-list-header">
-                    {/* แก้ไขการนับจำนวนโครงการให้ปลอดภัย */}
                     <h2>โครงการในหน่วยงาน ({(orgProjects || []).length})</h2>
                   </div>
                   <div className="admin-view-org-table-responsive">
@@ -262,12 +258,13 @@ const AdminViewOrganize = () => {
                       <thead>
                         <tr>
                           <th>ชื่อโครงการ</th>
+                          <th style={{ textAlign: "center" }}>จำนวน (คน)</th>
+                          <th>รายชื่อผู้รับผิดชอบ</th>
                           <th>สถานะ</th>
                           <th>วันที่สร้าง</th>
                         </tr>
                       </thead>
                       <tbody>
-                        {/* แก้ไขการ loop ให้ปลอดภัย */}
                         {(orgProjects || []).map((proj) => (
                           <tr key={proj.id}>
                             <td>
@@ -276,6 +273,57 @@ const AdminViewOrganize = () => {
                                 <span className="admin-view-org-user-name">
                                   {proj.project_name}
                                 </span>
+                              </div>
+                            </td>
+                            {/* จำนวนบุคลากรในโครงการ */}
+                            <td style={{ textAlign: "center" }}>
+                              <span
+                                className="admin-view-org-role-badge"
+                                style={{
+                                  background: "#f1f5f9",
+                                  color: "#475569",
+                                }}
+                              >
+                                {proj.member_count || 0}
+                              </span>
+                            </td>
+                            {/* ป้ายชื่อรายชื่อบุคลากร */}
+                            <td>
+                              <div
+                                style={{
+                                  display: "flex",
+                                  flexWrap: "wrap",
+                                  gap: "6px",
+                                }}
+                              >
+                                {proj.members && proj.members.length > 0 ? (
+                                  proj.members.map((m, i) => (
+                                    <span
+                                      key={i}
+                                      style={{
+                                        background: "#e0e7ff",
+                                        color: "#3730a3",
+                                        padding: "4px 10px",
+                                        borderRadius: "50px",
+                                        fontSize: "11px",
+                                        fontWeight: "600",
+                                      }}
+                                    >
+                                      {m.name && m.name.trim() !== ""
+                                        ? m.name
+                                        : m.username}
+                                    </span>
+                                  ))
+                                ) : (
+                                  <span
+                                    style={{
+                                      color: "#94a3b8",
+                                      fontSize: "12px",
+                                    }}
+                                  >
+                                    - ยังไม่มีบุคลากร -
+                                  </span>
+                                )}
                               </div>
                             </td>
                             <td>
@@ -293,11 +341,10 @@ const AdminViewOrganize = () => {
                           </tr>
                         ))}
 
-                        {/* แก้ไขการเช็คไม่มีข้อมูลให้ปลอดภัย */}
                         {(orgProjects || []).length === 0 && (
                           <tr>
                             <td
-                              colSpan="3"
+                              colSpan="5"
                               className="admin-view-org-empty-state"
                             >
                               ไม่มีโครงการในหน่วยงานนี้

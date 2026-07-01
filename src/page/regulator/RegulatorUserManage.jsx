@@ -18,7 +18,7 @@ const RegulatorUserManage = () => {
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
 
-  // Modal State เพิ่ม id_card
+  // Modal State เพิ่ม user_type
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
@@ -27,6 +27,7 @@ const RegulatorUserManage = () => {
     username: "",
     password: "",
     id_card: "",
+    user_type: "", // เพิ่ม Field นี้
   });
 
   useEffect(() => {
@@ -56,7 +57,6 @@ const RegulatorUserManage = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    // หากเป็น id_card อนุญาตให้พิมพ์เฉพาะตัวเลขเท่านั้น
     if (name === "id_card") {
       const numericValue = value.replace(/\D/g, "");
       setFormData((prev) => ({ ...prev, [name]: numericValue }));
@@ -68,13 +68,14 @@ const RegulatorUserManage = () => {
   const handleAddSubmit = async (e) => {
     e.preventDefault();
 
-    // ตรวจสอบว่าข้อมูลครบถ้วนรวมถึง id_card
+    // ตรวจสอบว่าข้อมูลครบถ้วนรวมถึง id_card และ user_type
     if (
       !formData.name ||
       !formData.email ||
       !formData.username ||
       !formData.password ||
-      !formData.id_card
+      !formData.id_card ||
+      !formData.user_type
     ) {
       Swal.fire({
         icon: "warning",
@@ -112,6 +113,7 @@ const RegulatorUserManage = () => {
           username: "",
           password: "",
           id_card: "",
+          user_type: "",
         });
         fetchUsers();
       }
@@ -176,7 +178,6 @@ const RegulatorUserManage = () => {
 
       <div className="rum-main-content">
         <div className="rum-container">
-          {/* Header Section */}
           <div className="rum-header">
             <div className="rum-header-title-wrap">
               <div className="rum-header-icon">
@@ -197,7 +198,6 @@ const RegulatorUserManage = () => {
             </button>
           </div>
 
-          {/* Toolbar */}
           <div className="rum-toolbar">
             <div className="rum-search-box">
               <FaSearch className="rum-search-icon" />
@@ -210,7 +210,6 @@ const RegulatorUserManage = () => {
             </div>
           </div>
 
-          {/* Table Section */}
           <div className="rum-table-wrapper">
             {loading ? (
               <div className="rum-state-container">
@@ -222,10 +221,9 @@ const RegulatorUserManage = () => {
                 <thead>
                   <tr>
                     <th>ชื่อ - นามสกุล</th>
-                    <th>เลขประจำตัวประชาชน</th>
                     <th>อีเมล</th>
                     <th>Username</th>
-                    <th>สิทธิ์การใช้งาน</th>
+                    <th>ประเภทผู้ใช้งาน (Type)</th>
                     <th className="rum-text-center">จัดการ</th>
                   </tr>
                 </thead>
@@ -240,12 +238,11 @@ const RegulatorUserManage = () => {
                           <span className="rum-user-name">{user.name}</span>
                         </div>
                       </td>
-                      <td className="rum-text-muted">{user.id_card || "-"}</td>
                       <td className="rum-text-muted">{user.email || "-"}</td>
                       <td className="rum-text-muted">{user.username}</td>
                       <td>
                         <span className="rum-role-badge">
-                          <FaUser size={12} /> User
+                          {user.user_type || "ไม่ระบุ"}
                         </span>
                       </td>
                       <td>
@@ -264,7 +261,7 @@ const RegulatorUserManage = () => {
 
                   {filteredUsers.length === 0 && (
                     <tr>
-                      <td colSpan="6" className="rum-empty-state">
+                      <td colSpan="5" className="rum-empty-state">
                         ไม่พบข้อมูลบุคลากรในหน่วยงาน
                       </td>
                     </tr>
@@ -279,7 +276,10 @@ const RegulatorUserManage = () => {
       {/* Modal เพิ่มบุคลากร */}
       {isModalOpen && (
         <div className="rum-modal-overlay">
-          <div className="rum-modal-container">
+          <div
+            className="rum-modal-container"
+            style={{ maxHeight: "90vh", overflowY: "auto" }}
+          >
             <div className="rum-modal-header">
               <h2>เพิ่มบุคลากรใหม่</h2>
               <button
@@ -303,7 +303,6 @@ const RegulatorUserManage = () => {
                 />
               </div>
 
-              {/* เพิ่มช่องกรอก เลขประจำตัวประชาชน */}
               <div className="rum-form-group">
                 <label>เลขประจำตัวประชาชน 13 หลัก</label>
                 <input
@@ -351,6 +350,26 @@ const RegulatorUserManage = () => {
                   onChange={handleInputChange}
                   required
                 />
+              </div>
+
+              {/* เพิ่มช่อง Dropdown สำหรับให้เลือก Type */}
+              <div className="rum-form-group">
+                <label>ประเภทผู้ใช้งาน (User Type)</label>
+                <select
+                  name="user_type"
+                  value={formData.user_type}
+                  onChange={handleInputChange}
+                  required
+                >
+                  <option value="" disabled>
+                    -- เลือกประเภท --
+                  </option>
+                  <option value="regulator">Regulator (ผู้กำกับดูแล)</option>
+                  <option value="policy">Policy (ผู้วางนโยบาย)</option>
+                  <option value="researcher">Researcher (นักวิจัย)</option>
+                  <option value="developer">Developer (นักพัฒนา)</option>
+                  <option value="users">Users (ผู้ใช้งานทั่วไป)</option>
+                </select>
               </div>
 
               <div className="rum-modal-footer">
