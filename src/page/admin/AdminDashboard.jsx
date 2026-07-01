@@ -93,9 +93,9 @@ const AdminDashboard = () => {
                 />
               </div>
 
-              <button className="admin-btn-dark">
+              {/* <button className="admin-btn-dark">
                 <FaPlus /> เพิ่มหน่วยงาน
-              </button>
+              </button> */}
             </div>
           </div>
 

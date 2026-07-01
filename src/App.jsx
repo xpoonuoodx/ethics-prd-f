@@ -12,6 +12,7 @@ import Contact from "./page/Contact";
 import Login from "./page/Login";
 import Register from "./page/Register";
 import NewsDetail from "./page/NewsDetail";
+import UnderConstruction from "./page/UnderConstruction"; // หน้า Under Construction
 
 // Route Guards (สิทธิ์การเข้าถึง)
 import UserRoute from "./route/UserRoute";
@@ -22,6 +23,8 @@ import RegulatorRoute from "./route/RegulatorRoute";
 // Admin Pages
 import AdminDashboard from "./page/admin/AdminDashboard";
 import AdminOrganize from "./page/admin/AdminOrganize";
+import AdminManageUser from "./page/admin/AdminManageUser";
+import AdminViewOrganize from "./page/admin/AdminViewOrganize"; 
 
 // User Pages
 import UserDashboard from "./page/user/UserDashboard";
@@ -37,6 +40,7 @@ import UserToolsCreate from "./page/user/UserToolsCreate";
 import RegulatorDashboard from "./page/regulator/RegulatorDashboard"; // หน้าแดชบอร์ดของ Regulator
 import RegulatorUserManage from "./page/regulator/RegulatorUserManage";
 import RegulatorProjectManage from "./page/regulator/RegulatorProjectManage";
+import RegulatorViewProject from "./page/regulator/RegulatorViewProject"; 
 
 function App() {
   return (
@@ -69,6 +73,24 @@ function App() {
           element={
             <AdminRoute>
               <AdminOrganize />
+            </AdminRoute>
+          }
+        />
+
+        <Route
+          path="/admin-user"
+          element={
+            <AdminRoute>
+              <AdminManageUser />
+            </AdminRoute>
+          }
+        />
+
+        <Route
+          path="/admin-view-organize/:id"
+          element={
+            <AdminRoute>
+              <AdminViewOrganize />
             </AdminRoute>
           }
         />
@@ -177,8 +199,18 @@ function App() {
           }
         />
 
+        <Route
+          path="/regulator-view-project/:id"
+          element={
+            <RegulatorRoute>
+              <RegulatorViewProject />
+            </RegulatorRoute>
+          }
+        />
+
         {/* --- เส้นทางสำหรับหน้า Unauthorized (ถ้าไม่มีสิทธิ์เข้าถึง) --- */}
         <Route path="/unauthorized" element={<h1>403 - ไม่ได้รับอนุญาต</h1>} />
+        <Route path="*" element={<UnderConstruction />} />
       </Routes>
     </Router>
   );

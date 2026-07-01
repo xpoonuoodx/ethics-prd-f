@@ -111,8 +111,8 @@ const SidebarAdmin = () => {
           </Link>
 
           <Link
-            to="/admin/users"
-            className={`admin-sidebar-item ${isActive("/admin/users")}`}
+            to="/admin-user"
+            className={`admin-sidebar-item ${isActive("/admin-user")}`}
           >
             <FaUsers className="admin-menu-icon" />
             <span className={`admin-menu-text ${!isOpen && "hidden"}`}>

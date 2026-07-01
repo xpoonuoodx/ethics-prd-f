@@ -1,84 +1,182 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./style/RegulatorUserManage.css";
 import SidebarRegulator from "./SidebarRegulator";
 import {
   FaSearch,
   FaPlus,
-  FaEdit,
   FaTrash,
-  FaUserShield,
   FaUser,
   FaUsers,
+  FaTimes,
+  FaSpinner,
 } from "react-icons/fa";
 import Swal from "sweetalert2";
+import api from "../../api/Api";
 
 const RegulatorUserManage = () => {
-  const [users, setUsers] = useState([
-    {
-      id: 1,
-      name: "สมชาย รักงาน",
-      email: "somchai@reg.go.th",
-      role: "Admin",
-      status: "Active",
-    },
-    {
-      id: 2,
-      name: "วิชาญ ใจดี",
-      email: "wichan@reg.go.th",
-      role: "Staff",
-      status: "Active",
-    },
-    {
-      id: 3,
-      name: "มณี มีทรัพย์",
-      email: "manee@reg.go.th",
-      role: "Staff",
-      status: "Inactive",
-    },
-    {
-      id: 4,
-      name: "สมหญิง รักงาน",
-      email: "somying@reg.go.th",
-      role: "Admin",
-      status: "Active",
-    },
-  ]);
+  const [users, setUsers] = useState([]);
   const [search, setSearch] = useState("");
+  const [loading, setLoading] = useState(true);
 
-  const filteredUsers = users.filter((user) =>
-    user.name.toLowerCase().includes(search.toLowerCase()),
-  );
+  // Modal State เพิ่ม id_card
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    username: "",
+    password: "",
+    id_card: "",
+  });
 
-  const handleDelete = (id) => {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+    fetchUsers();
+  }, []);
+
+  const fetchUsers = async () => {
+    try {
+      setLoading(true);
+      const response = await api.get("/regulator/get-users");
+      if (response.data && response.data.success) {
+        setUsers(response.data.data);
+      }
+    } catch (err) {
+      console.error("Fetch Users Error:", err);
+      Swal.fire({
+        icon: "error",
+        title: "เกิดข้อผิดพลาด",
+        text: "ไม่สามารถดึงข้อมูลบุคลากรได้",
+        confirmButtonColor: "#0f172a",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    // หากเป็น id_card อนุญาตให้พิมพ์เฉพาะตัวเลขเท่านั้น
+    if (name === "id_card") {
+      const numericValue = value.replace(/\D/g, "");
+      setFormData((prev) => ({ ...prev, [name]: numericValue }));
+    } else {
+      setFormData((prev) => ({ ...prev, [name]: value }));
+    }
+  };
+
+  const handleAddSubmit = async (e) => {
+    e.preventDefault();
+
+    // ตรวจสอบว่าข้อมูลครบถ้วนรวมถึง id_card
+    if (
+      !formData.name ||
+      !formData.email ||
+      !formData.username ||
+      !formData.password ||
+      !formData.id_card
+    ) {
+      Swal.fire({
+        icon: "warning",
+        title: "ข้อมูลไม่ครบถ้วน",
+        text: "กรุณากรอกข้อมูลให้ครบทุกช่อง",
+        confirmButtonColor: "#0f172a",
+      });
+      return;
+    }
+
+    if (formData.id_card.length !== 13) {
+      Swal.fire({
+        icon: "warning",
+        title: "รูปแบบข้อมูลไม่ถูกต้อง",
+        text: "เลขประจำตัวประชาชนต้องมี 13 หลัก",
+        confirmButtonColor: "#0f172a",
+      });
+      return;
+    }
+
+    try {
+      setIsSubmitting(true);
+      const response = await api.post("/regulator/add-user", formData);
+      if (response.data && response.data.success) {
+        Swal.fire({
+          icon: "success",
+          title: "สำเร็จ",
+          text: "เพิ่มบุคลากรใหม่เรียบร้อยแล้ว",
+          confirmButtonColor: "#10b981",
+        });
+        setIsModalOpen(false);
+        setFormData({
+          name: "",
+          email: "",
+          username: "",
+          password: "",
+          id_card: "",
+        });
+        fetchUsers();
+      }
+    } catch (err) {
+      console.error("Add User Error:", err);
+      Swal.fire({
+        icon: "error",
+        title: "เกิดข้อผิดพลาด",
+        text: err.response?.data?.message || "ไม่สามารถเพิ่มข้อมูลได้",
+        confirmButtonColor: "#ef4444",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleDelete = (id, name) => {
     Swal.fire({
       title: "ยืนยันการลบ?",
-      text: "คุณจะไม่สามารถกู้คืนข้อมูลนี้ได้!",
+      text: `คุณต้องการลบบัญชีของ "${name}" ใช่หรือไม่?`,
       icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: "#dc2626", // ปรับเป็นสีแดงที่เข้ากับธีม
+      confirmButtonColor: "#dc2626",
       cancelButtonColor: "#94a3b8",
       confirmButtonText: "ลบข้อมูล",
-    }).then((result) => {
+      cancelButtonText: "ยกเลิก",
+    }).then(async (result) => {
       if (result.isConfirmed) {
-        setUsers(users.filter((u) => u.id !== id));
-        Swal.fire({
-          title: "ลบสำเร็จ!",
-          text: "ข้อมูลถูกลบออกแล้ว",
-          icon: "success",
-          confirmButtonColor: "#3b82f6",
-        });
+        try {
+          const response = await api.delete(`/regulator/delete-user/${id}`);
+          if (response.data && response.data.success) {
+            setUsers(users.filter((u) => u.id !== id));
+            Swal.fire({
+              title: "ลบสำเร็จ!",
+              text: "ข้อมูลถูกนำออกจากระบบแล้ว",
+              icon: "success",
+              confirmButtonColor: "#10b981",
+            });
+          }
+        } catch (err) {
+          Swal.fire({
+            icon: "error",
+            title: "เกิดข้อผิดพลาด",
+            text: "ไม่สามารถลบข้อมูลได้",
+            confirmButtonColor: "#0f172a",
+          });
+        }
       }
     });
   };
 
+  const filteredUsers = users.filter(
+    (user) =>
+      (user.name || "").toLowerCase().includes(search.toLowerCase()) ||
+      (user.email || "").toLowerCase().includes(search.toLowerCase()) ||
+      (user.id_card || "").includes(search),
+  );
+
   return (
-    <div className="regulator-portal-layout">
+    <div className="rum-layout">
       <SidebarRegulator />
-      <div className="regulator-portal-content">
+
+      <div className="rum-main-content">
         <div className="rum-container">
-          {/* =======================================
-              Header & Add Button
-              ======================================= */}
+          {/* Header Section */}
           <div className="rum-header">
             <div className="rum-header-title-wrap">
               <div className="rum-header-icon">
@@ -87,90 +185,75 @@ const RegulatorUserManage = () => {
               <div>
                 <h1 className="rum-title">จัดการบุคลากร</h1>
                 <p className="rum-subtitle">
-                  ดูรายชื่อและบริหารจัดการสิทธิ์ผู้ใช้งานภายในหน่วยงาน
+                  เพิ่มและบริหารจัดการสิทธิ์ผู้ใช้งานภายในหน่วยงานของคุณ
                 </p>
               </div>
             </div>
-            <button className="rum-btn-add">
-              <FaPlus size={14} /> เพิ่มบุคลากร
+            <button
+              className="rum-btn-add"
+              onClick={() => setIsModalOpen(true)}
+            >
+              <FaPlus /> เพิ่มบุคลากร
             </button>
           </div>
 
-          {/* =======================================
-              Toolbar (Search & Filter)
-              ======================================= */}
+          {/* Toolbar */}
           <div className="rum-toolbar">
             <div className="rum-search-box">
               <FaSearch className="rum-search-icon" />
               <input
                 type="text"
-                placeholder="ค้นหาชื่อบุคลากร..."
+                placeholder="ค้นหาจากชื่อ, อีเมล หรือเลขประจำตัว..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
               />
             </div>
-            <select className="rum-filter-select">
-              <option>ทุกสถานะ</option>
-              <option>Active</option>
-              <option>Inactive</option>
-            </select>
           </div>
 
-          {/* =======================================
-              Data Table
-              ======================================= */}
-          <div className="rum-card">
-            <div className="rum-table-wrapper">
-              <table className="rum-table">
+          {/* Table Section */}
+          <div className="rum-table-wrapper">
+            {loading ? (
+              <div className="rum-state-container">
+                <FaSpinner className="rum-spin" />
+                <p>กำลังโหลดข้อมูล...</p>
+              </div>
+            ) : (
+              <table className="rum-card-table">
                 <thead>
                   <tr>
                     <th>ชื่อ - นามสกุล</th>
+                    <th>เลขประจำตัวประชาชน</th>
                     <th>อีเมล</th>
-                    <th>บทบาท</th>
-                    <th>สถานะ</th>
-                    <th style={{ textAlign: "center" }}>จัดการ</th>
+                    <th>Username</th>
+                    <th>สิทธิ์การใช้งาน</th>
+                    <th className="rum-text-center">จัดการ</th>
                   </tr>
                 </thead>
                 <tbody>
                   {filteredUsers.map((user) => (
                     <tr key={user.id}>
                       <td>
-                        <div className="rum-user-cell">
+                        <div className="rum-user-profile">
                           <div className="rum-avatar">
-                            {user.name.charAt(0)}
+                            {user.name ? user.name.charAt(0) : "U"}
                           </div>
                           <span className="rum-user-name">{user.name}</span>
                         </div>
                       </td>
-                      <td className="rum-text-muted">{user.email}</td>
+                      <td className="rum-text-muted">{user.id_card || "-"}</td>
+                      <td className="rum-text-muted">{user.email || "-"}</td>
+                      <td className="rum-text-muted">{user.username}</td>
                       <td>
-                        <span
-                          className={`rum-role-badge ${user.role.toLowerCase()}`}
-                        >
-                          {user.role === "Admin" ? (
-                            <FaUserShield size={12} />
-                          ) : (
-                            <FaUser size={12} />
-                          )}
-                          {user.role}
-                        </span>
-                      </td>
-                      <td>
-                        <span
-                          className={`rum-status-badge ${user.status.toLowerCase()}`}
-                        >
-                          <span className="status-dot"></span> {user.status}
+                        <span className="rum-role-badge">
+                          <FaUser size={12} /> User
                         </span>
                       </td>
                       <td>
                         <div className="rum-actions">
-                          <button className="rum-btn-action edit" title="แก้ไข">
-                            <FaEdit />
-                          </button>
                           <button
                             className="rum-btn-action delete"
-                            title="ลบ"
-                            onClick={() => handleDelete(user.id)}
+                            title="ลบบัญชี"
+                            onClick={() => handleDelete(user.id, user.name)}
                           >
                             <FaTrash />
                           </button>
@@ -179,20 +262,117 @@ const RegulatorUserManage = () => {
                     </tr>
                   ))}
 
-                  {/* แสดงเมื่อค้นหาไม่เจอ */}
                   {filteredUsers.length === 0 && (
                     <tr>
-                      <td colSpan="5" className="rum-empty-state">
-                        ไม่พบข้อมูลบุคลากรที่ค้นหา
+                      <td colSpan="6" className="rum-empty-state">
+                        ไม่พบข้อมูลบุคลากรในหน่วยงาน
                       </td>
                     </tr>
                   )}
                 </tbody>
               </table>
-            </div>
+            )}
           </div>
         </div>
       </div>
+
+      {/* Modal เพิ่มบุคลากร */}
+      {isModalOpen && (
+        <div className="rum-modal-overlay">
+          <div className="rum-modal-container">
+            <div className="rum-modal-header">
+              <h2>เพิ่มบุคลากรใหม่</h2>
+              <button
+                className="rum-modal-close"
+                onClick={() => setIsModalOpen(false)}
+              >
+                <FaTimes />
+              </button>
+            </div>
+
+            <form onSubmit={handleAddSubmit} className="rum-modal-body">
+              <div className="rum-form-group">
+                <label>ชื่อ-นามสกุล (ภาษาไทย)</label>
+                <input
+                  type="text"
+                  name="name"
+                  placeholder="เช่น สมชาย ใจดี"
+                  value={formData.name}
+                  onChange={handleInputChange}
+                  required
+                />
+              </div>
+
+              {/* เพิ่มช่องกรอก เลขประจำตัวประชาชน */}
+              <div className="rum-form-group">
+                <label>เลขประจำตัวประชาชน 13 หลัก</label>
+                <input
+                  type="text"
+                  name="id_card"
+                  placeholder="เช่น 1234567890123"
+                  value={formData.id_card}
+                  onChange={handleInputChange}
+                  maxLength="13"
+                  required
+                />
+              </div>
+
+              <div className="rum-form-group">
+                <label>อีเมลติดต่อ</label>
+                <input
+                  type="email"
+                  name="email"
+                  placeholder="email@example.com"
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  required
+                />
+              </div>
+
+              <div className="rum-form-group">
+                <label>รหัสผู้ใช้ (Username)</label>
+                <input
+                  type="text"
+                  name="username"
+                  placeholder="ภาษาอังกฤษหรือตัวเลข"
+                  value={formData.username}
+                  onChange={handleInputChange}
+                  required
+                />
+              </div>
+
+              <div className="rum-form-group">
+                <label>รหัสผ่าน (Password)</label>
+                <input
+                  type="password"
+                  name="password"
+                  placeholder="ตั้งรหัสผ่านเริ่มต้น"
+                  value={formData.password}
+                  onChange={handleInputChange}
+                  required
+                />
+              </div>
+
+              <div className="rum-modal-footer">
+                <button
+                  type="button"
+                  className="rum-btn-cancel"
+                  onClick={() => setIsModalOpen(false)}
+                >
+                  ยกเลิก
+                </button>
+                <button
+                  type="submit"
+                  className="rum-btn-submit"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? "กำลังบันทึก..." : "บันทึกข้อมูล"}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
