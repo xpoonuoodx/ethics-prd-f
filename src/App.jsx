@@ -25,6 +25,11 @@ import AdminDashboard from "./page/admin/AdminDashboard";
 import AdminOrganize from "./page/admin/AdminOrganize";
 import AdminManageUser from "./page/admin/AdminManageUser";
 import AdminViewOrganize from "./page/admin/AdminViewOrganize"; 
+import AdminPrinciple from "./page/admin/AdminPrinciple";
+import AdminMaturity from "./page/admin/AdminMaturity";
+import AdminComponent from "./page/admin/AdminComponent";
+import AdminMapping from "./page/admin/AdminMapping"; 
+import AdminGuideline from "./page/admin/AdminGuideline"; // หน้าแนวทางการพัฒนา
 
 // User Pages
 import UserDashboard from "./page/user/UserDashboard";
@@ -91,6 +96,51 @@ function App() {
           element={
             <AdminRoute>
               <AdminViewOrganize />
+            </AdminRoute>
+          }
+        />
+
+        <Route
+          path="/admin-principle"
+          element={
+            <AdminRoute>
+              <AdminPrinciple />
+            </AdminRoute>
+          }
+        />
+
+        <Route
+          path="/admin-maturity"
+          element={
+            <AdminRoute>
+              <AdminMaturity />
+            </AdminRoute>
+          }
+        />
+
+        <Route
+          path="/admin-component"
+          element={
+            <AdminRoute>
+              <AdminComponent />
+            </AdminRoute>
+          }
+        />
+
+        <Route
+          path="/admin-mapping"
+          element={
+            <AdminRoute>
+              <AdminMapping />
+            </AdminRoute>
+          }
+        />
+
+        <Route
+          path="/admin-guideline"
+          element={
+            <AdminRoute>
+              <AdminGuideline />
             </AdminRoute>
           }
         />
