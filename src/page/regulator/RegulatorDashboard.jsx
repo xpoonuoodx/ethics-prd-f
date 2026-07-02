@@ -12,11 +12,11 @@ import {
   FaUsers,
 } from "react-icons/fa";
 import {
-  AreaChart,
-  Area,
-  XAxis,
-  YAxis,
-  CartesianGrid,
+  Radar,
+  RadarChart,
+  PolarGrid,
+  PolarAngleAxis,
+  PolarRadiusAxis,
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
@@ -25,7 +25,7 @@ import api from "../../api/Api";
 const RegulatorDashboard = () => {
   const [userData, setUserData] = useState(null);
   const [dashboardData, setDashboardData] = useState({
-    orgName: "", // เพิ่ม orgName ใน state เริ่มต้น
+    orgName: "",
     stats: {
       totalProjects: 0,
       totalUsers: 0,
@@ -38,6 +38,16 @@ const RegulatorDashboard = () => {
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  // ข้อมูล Mock สำหรับกราฟ 6 เหลี่ยม (คะแนนการประเมินภาพรวมหน่วยงาน)
+  const mockEvaluationScores = [
+    { subject: "ความโปร่งใส", score: 85, fullMark: 100 },
+    { subject: "ความเป็นธรรม", score: 78, fullMark: 100 },
+    { subject: "ความปลอดภัย", score: 92, fullMark: 100 },
+    { subject: "ความเป็นส่วนตัว", score: 88, fullMark: 100 },
+    { subject: "ความรับผิดชอบ", score: 75, fullMark: 100 },
+    { subject: "ความน่าเชื่อถือ", score: 80, fullMark: 100 },
+  ];
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -164,77 +174,60 @@ const RegulatorDashboard = () => {
 
               {/* Middle Section */}
               <div className="rgdash-middle-section">
-                {/* Chart */}
+                {/* Chart (เปลี่ยนเป็นกราฟ 6 เหลี่ยม) */}
                 <div className="rgdash-card rgdash-chart-card">
                   <div className="rgdash-card-header">
-                    <h2>Project Status Overview</h2>
+                    <h2>คะแนนประเมินจริยธรรม AI (ภาพรวมหน่วยงาน)</h2>
                   </div>
-                  <div className="rgdash-chart-body">
-                    {(dashboardData.chartData || []).length > 0 ? (
-                      <ResponsiveContainer width="100%" height={280}>
-                        <AreaChart
-                          data={dashboardData.chartData}
-                          margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
-                        >
-                          <defs>
-                            <linearGradient
-                              id="colorProjects"
-                              x1="0"
-                              y1="0"
-                              x2="0"
-                              y2="1"
-                            >
-                              <stop
-                                offset="5%"
-                                stopColor="#10b981"
-                                stopOpacity={0.3}
-                              />
-                              <stop
-                                offset="95%"
-                                stopColor="#10b981"
-                                stopOpacity={0}
-                              />
-                            </linearGradient>
-                          </defs>
-                          <CartesianGrid
-                            strokeDasharray="3 3"
-                            vertical={false}
-                            stroke="#f1f5f9"
-                          />
-                          <XAxis
-                            dataKey="name"
-                            axisLine={false}
-                            tickLine={false}
-                            tick={{ fill: "#94a3b8", fontSize: 12 }}
-                            dy={10}
-                          />
-                          <YAxis
-                            axisLine={false}
-                            tickLine={false}
-                            tick={{ fill: "#94a3b8", fontSize: 12 }}
-                          />
-                          <Tooltip
-                            contentStyle={{
-                              borderRadius: "8px",
-                              border: "1px solid #e2e8f0",
-                              boxShadow: "0 4px 6px -1px rgba(0,0,0,0.05)",
-                            }}
-                          />
-                          <Area
-                            type="monotone"
-                            dataKey="projects"
-                            stroke="#10b981"
-                            strokeWidth={2}
-                            fillOpacity={1}
-                            fill="url(#colorProjects)"
-                          />
-                        </AreaChart>
-                      </ResponsiveContainer>
-                    ) : (
-                      <div className="rgdash-empty-state">
-                        ไม่มีข้อมูลโครงการสำหรับสร้างกราฟ
-                      </div>
-                    )}
+                  <div
+                    className="rgdash-chart-body"
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    <ResponsiveContainer width="100%" height={300}>
+                      <RadarChart
+                        cx="50%"
+                        cy="50%"
+                        outerRadius="75%"
+                        data={mockEvaluationScores}
+                      >
+                        <PolarGrid stroke="#e2e8f0" />
+                        <PolarAngleAxis
+                          dataKey="subject"
+                          tick={{
+                            fill: "#64748b",
+                            fontSize: 13,
+                            fontWeight: 500,
+                          }}
+                        />
+                        <PolarRadiusAxis
+                          angle={30}
+                          domain={[0, 100]}
+                          tick={{ fill: "#94a3b8", fontSize: 11 }}
+                          tickCount={6}
+                        />
+                        <Radar
+                          name="คะแนนเฉลี่ย"
+                          dataKey="score"
+                          stroke="#10b981"
+                          strokeWidth={2}
+                          fill="#10b981"
+                          fillOpacity={0.3}
+                        />
+                        <Tooltip
+                          contentStyle={{
+                            borderRadius: "10px",
+                            border: "none",
+                            boxShadow: "0 10px 25px -5px rgba(0,0,0,0.1)",
+                            fontSize: "13px",
+                            color: "#1e293b",
+                          }}
+                        />
+                      </RadarChart>
+                    </ResponsiveContainer>
                   </div>
                 </div>
 

@@ -394,6 +394,20 @@
   outline: none;
   transition: border 0.2s;
 }
+
+.rum-form-group select {
+  width: 100%;
+  padding: 12px 15px;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  font-size: 14px;
+  color: #0f172a;
+  outline: none;
+  transition: border 0.2s;
+}
+
+
+
 .rum-form-group input:focus {
   border-color: #0f172a;
 }
