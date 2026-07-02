@@ -23,13 +23,17 @@ import RegulatorRoute from "./route/RegulatorRoute";
 // Admin Pages
 import AdminDashboard from "./page/admin/AdminDashboard";
 import AdminOrganize from "./page/admin/AdminOrganize";
+
 import AdminManageUser from "./page/admin/AdminManageUser";
-import AdminViewOrganize from "./page/admin/AdminViewOrganize"; 
+import AdminViewOrganize from "./page/admin/AdminViewOrganize";
 import AdminPrinciple from "./page/admin/AdminPrinciple";
 import AdminMaturity from "./page/admin/AdminMaturity";
 import AdminComponent from "./page/admin/AdminComponent";
-import AdminMapping from "./page/admin/AdminMapping"; 
+import AdminMapping from "./page/admin/AdminMapping";
 import AdminGuideline from "./page/admin/AdminGuideline"; // หน้าแนวทางการพัฒนา
+import AdminClassroom from "./page/admin/AdminClassroom"; // หน้าเรียนของ Admin
+import AdminAddChapter from "./page/admin/AdminAddChapter"; // หน้าเพิ่มบทเรียนของ Admin
+import AdminEditChapter from "./page/admin/AdminEditChapter"; // หน้าแก้ไขบทเรียนของ Admin
 
 // User Pages
 import UserDashboard from "./page/user/UserDashboard";
@@ -45,7 +49,7 @@ import UserToolsCreate from "./page/user/UserToolsCreate";
 import RegulatorDashboard from "./page/regulator/RegulatorDashboard"; // หน้าแดชบอร์ดของ Regulator
 import RegulatorUserManage from "./page/regulator/RegulatorUserManage";
 import RegulatorProjectManage from "./page/regulator/RegulatorProjectManage";
-import RegulatorViewProject from "./page/regulator/RegulatorViewProject"; 
+import RegulatorViewProject from "./page/regulator/RegulatorViewProject";
 
 function App() {
   return (
@@ -62,7 +66,6 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/news/:id" element={<NewsDetail />} />
-
         {/* === Admin Routes === */}
         <Route
           path="/admin-dashboard"
@@ -72,7 +75,6 @@ function App() {
             </AdminRoute>
           }
         />
-
         <Route
           path="/admin-organize"
           element={
@@ -81,7 +83,31 @@ function App() {
             </AdminRoute>
           }
         />
-
+        <Route
+          path="/admin-classroom"
+          element={
+            <AdminRoute>
+              <AdminClassroom />
+            </AdminRoute>
+          }
+        />
+       
+        <Route
+          path="/admin-classroom/add"
+          element={
+            <AdminRoute>
+              <AdminAddChapter />
+            </AdminRoute>
+          }
+        />
+        <Route
+          path="/admin-classroom/edit/:id"
+          element={
+            <AdminRoute>
+              <AdminEditChapter />
+            </AdminRoute>
+          }
+        />
         <Route
           path="/admin-user"
           element={
@@ -90,7 +116,6 @@ function App() {
             </AdminRoute>
           }
         />
-
         <Route
           path="/admin-view-organize/:id"
           element={
@@ -99,7 +124,6 @@ function App() {
             </AdminRoute>
           }
         />
-
         <Route
           path="/admin-principle"
           element={
@@ -108,7 +132,6 @@ function App() {
             </AdminRoute>
           }
         />
-
         <Route
           path="/admin-maturity"
           element={
@@ -117,7 +140,6 @@ function App() {
             </AdminRoute>
           }
         />
-
         <Route
           path="/admin-component"
           element={
@@ -126,7 +148,6 @@ function App() {
             </AdminRoute>
           }
         />
-
         <Route
           path="/admin-mapping"
           element={
@@ -135,7 +156,6 @@ function App() {
             </AdminRoute>
           }
         />
-
         <Route
           path="/admin-guideline"
           element={
@@ -144,7 +164,6 @@ function App() {
             </AdminRoute>
           }
         />
-
         <Route
           path="/regulator-dashboard"
           element={
@@ -153,7 +172,6 @@ function App() {
             </RegulatorRoute>
           }
         />
-
         {/* === User Routes === */}
         {/* หน้าหลัก User */}
         <Route
@@ -164,7 +182,6 @@ function App() {
             </UserRoute>
           }
         />
-
         {/* หน้าเลือกสายงาน (เรียน หรือ สอบ) */}
         <Route
           path="/user-select-role"
@@ -174,7 +191,6 @@ function App() {
             </UserRoute>
           }
         />
-
         {/* หน้าห้องเรียน */}
         <Route
           path="/user-classroom"
@@ -184,7 +200,6 @@ function App() {
             </UserRoute>
           }
         />
-
         {/* หน้าทำแบบทดสอบ */}
         <Route
           path="/user-test"
@@ -194,7 +209,6 @@ function App() {
             </UserRoute>
           }
         />
-
         <Route
           path="/user-classroom-detail"
           element={
@@ -203,7 +217,6 @@ function App() {
             </UserRoute>
           }
         />
-
         <Route
           path="/user-certificate"
           element={
@@ -212,7 +225,6 @@ function App() {
             </UserRoute>
           }
         />
-
         <Route
           path="/user-tools"
           element={
@@ -221,7 +233,6 @@ function App() {
             </UserRoute>
           }
         />
-
         <Route
           path="/user-tools-create"
           element={
@@ -230,7 +241,6 @@ function App() {
             </UserRoute>
           }
         />
-
         <Route
           path="/regulator-user-manage"
           element={
@@ -239,7 +249,6 @@ function App() {
             </RegulatorRoute>
           }
         />
-
         <Route
           path="/regulator-project-manage"
           element={
@@ -248,7 +257,6 @@ function App() {
             </RegulatorRoute>
           }
         />
-
         <Route
           path="/regulator-view-project/:id"
           element={
@@ -257,7 +265,6 @@ function App() {
             </RegulatorRoute>
           }
         />
-
         {/* --- เส้นทางสำหรับหน้า Unauthorized (ถ้าไม่มีสิทธิ์เข้าถึง) --- */}
         <Route path="/unauthorized" element={<h1>403 - ไม่ได้รับอนุญาต</h1>} />
         <Route path="*" element={<UnderConstruction />} />
