@@ -9,6 +9,7 @@ import {
   FaTrash,
   FaVideo,
   FaFileAlt,
+  FaBookOpen,
 } from "react-icons/fa";
 import "./style/AdminAddChapter.css"; // ไฟล์สไตล์ใหม่
 import api from "../../api/Api";
@@ -77,7 +78,7 @@ const AdminAddChapter = () => {
     setQuestions(updatedQuestions);
   };
 
-  // จำลองการบันทึกข้อมูล
+  // การบันทึกข้อมูล
   const handleSave = async (e) => {
     e.preventDefault();
 
@@ -134,7 +135,9 @@ const AdminAddChapter = () => {
   const renderVideoPreview = (url) => {
     if (!url)
       return (
-        <div className="video-placeholder">กรอกลิงก์วิดีโอเพื่อดูตัวอย่าง</div>
+        <div className="aac-video-placeholder">
+          กรอกลิงก์วิดีโอเพื่อดูตัวอย่าง
+        </div>
       );
 
     // เช็คว่าเป็นลิงก์ YouTube หรือไม่
@@ -144,7 +147,7 @@ const AdminAddChapter = () => {
     if (ytMatch && ytMatch[1]) {
       return (
         <iframe
-          className="video-preview-iframe"
+          className="aac-video-iframe"
           src={`https://www.youtube.com/embed/${ytMatch[1]}`}
           title="YouTube video preview"
           frameBorder="0"
@@ -159,7 +162,7 @@ const AdminAddChapter = () => {
     if (driveMatch && driveMatch[1]) {
       return (
         <iframe
-          className="video-preview-iframe"
+          className="aac-video-iframe"
           src={`https://drive.google.com/file/d/${driveMatch[1]}/preview`}
           title="Google Drive video preview"
           allow="autoplay"
@@ -169,7 +172,7 @@ const AdminAddChapter = () => {
 
     // ค่าเริ่มต้นสำหรับลิงก์ตรง (เช่น AWS S3 .mp4)
     return (
-      <video className="video-preview-iframe" controls>
+      <video className="aac-video-iframe" controls>
         <source src={url} />
         เบราว์เซอร์ของคุณไม่รองรับการเล่นวิดีโอนี้
       </video>
@@ -177,39 +180,52 @@ const AdminAddChapter = () => {
   };
 
   return (
-    <div className="admin-add-chapter-layout">
+    <div className="aac-layout">
       <SidebarAdmin />
 
-      <div className="admin-add-chapter-main">
-        <div className="admin-add-chapter-inner">
+      <div className="aac-main-content">
+        <div className="aac-container">
           {/* ส่วนหัว */}
-          <div className="add-chapter-header">
-            <button
-              className="btn-back"
-              onClick={() => navigate("/admin-classroom")}
-            >
-              <FaArrowLeft /> กลับ
-            </button>
-            <div className="header-title">
-              <h1>เพิ่มบทเรียนใหม่</h1>
-              <p>สร้างเนื้อหาวิดีโอและแบบทดสอบสำหรับผู้ใช้งาน</p>
+          <div className="aac-header">
+            <div className="aac-header-title-wrap">
+              <div className="aac-header-icon">
+                <FaBookOpen />
+              </div>
+              <div>
+                <h1 className="aac-title">เพิ่มบทเรียนใหม่</h1>
+                <p className="aac-subtitle">
+                  สร้างเนื้อหาวิดีโอและแบบทดสอบสำหรับผู้ใช้งานระบบ
+                </p>
+              </div>
             </div>
-            <button className="btn-save-top" onClick={handleSave}>
-              <FaSave /> บันทึกบทเรียน
-            </button>
+
+            <div className="aac-header-actions">
+              <button
+                className="aac-btn-secondary"
+                onClick={() => navigate("/admin-classroom")}
+              >
+                <FaArrowLeft /> กลับ
+              </button>
+              <button className="aac-btn-primary" onClick={handleSave}>
+                <FaSave /> บันทึกบทเรียน
+              </button>
+            </div>
           </div>
 
-          <form className="add-chapter-form">
-            {/* กล่องข้อมูลทั่วไป & วิดีโอ */}
-            <div className="form-card">
-              <h2 className="card-title">
-                <FaVideo className="title-icon" /> ข้อมูลบทเรียนและวิดีโอ
-              </h2>
+          <form className="aac-form">
+            {/* -------------------------------------
+                Card 1: ข้อมูลบทเรียนและวิดีโอ 
+            -------------------------------------- */}
+            <div className="aac-form-card">
+              <div className="aac-card-header">
+                <FaVideo className="aac-card-icon" />
+                <h2>ข้อมูลบทเรียนและวิดีโอ</h2>
+              </div>
 
-              <div className="form-group-row">
-                <div className="form-group">
+              <div className="aac-form-row">
+                <div className="aac-form-group">
                   <label>
-                    ชื่อบทเรียน <span className="required">*</span>
+                    ชื่อบทเรียน <span className="aac-required">*</span>
                   </label>
                   <input
                     type="text"
@@ -221,10 +237,10 @@ const AdminAddChapter = () => {
                 </div>
               </div>
 
-              <div className="form-group-row">
-                <div className="form-group">
+              <div className="aac-form-row aac-col-2">
+                <div className="aac-form-group">
                   <label>
-                    สำหรับกลุ่มผู้ใช้งาน <span className="required">*</span>
+                    สำหรับกลุ่มผู้ใช้งาน <span className="aac-required">*</span>
                   </label>
                   <select
                     name="targetRole"
@@ -243,7 +259,7 @@ const AdminAddChapter = () => {
                     <option value="Group 3">กลุ่มที่ 3 (User)</option>
                   </select>
                 </div>
-                <div className="form-group">
+                <div className="aac-form-group">
                   <label>สถานะการใช้งาน</label>
                   <select
                     name="status"
@@ -256,11 +272,10 @@ const AdminAddChapter = () => {
                 </div>
               </div>
 
-              {/* ... โค้ดเดิมช่องกรอกลิงก์วิดีโอ ... */}
-              <div className="form-group-row">
-                <div className="form-group">
+              <div className="aac-form-row">
+                <div className="aac-form-group">
                   <label>
-                    ลิงก์วิดีโอ (URL) <span className="required">*</span>
+                    ลิงก์วิดีโอ (URL) <span className="aac-required">*</span>
                   </label>
                   <input
                     type="text"
@@ -272,25 +287,26 @@ const AdminAddChapter = () => {
                 </div>
               </div>
 
-              {/* 👇 เพิ่มส่วนกล่องแสดงตัวอย่างวิดีโอตรงนี้ 👇 */}
-              <div className="video-preview-container">
-                <label className="preview-label">ตัวอย่างวิดีโอ:</label>
-                <div className="video-preview-wrapper">
+              <div className="aac-video-preview-container">
+                <label className="aac-preview-label">ตัวอย่างวิดีโอ:</label>
+                <div className="aac-video-preview-wrapper">
                   {renderVideoPreview(chapterData.videoUrl)}
                 </div>
               </div>
-              {/* 👆 สิ้นสุดส่วนแสดงตัวอย่างวิดีโอ 👆 */}
             </div>
 
-            {/* กล่องแบบทดสอบ */}
-            <div className="form-card">
-              <div className="card-header-flex">
-                <h2 className="card-title">
-                  <FaFileAlt className="title-icon" /> จัดการแบบทดสอบ
-                </h2>
+            {/* -------------------------------------
+                Card 2: จัดการแบบทดสอบ 
+            -------------------------------------- */}
+            <div className="aac-form-card">
+              <div className="aac-card-header-flex">
+                <div className="aac-card-header-title">
+                  <FaFileAlt className="aac-card-icon" />
+                  <h2>จัดการแบบทดสอบ</h2>
+                </div>
                 <button
                   type="button"
-                  className="btn-add-question"
+                  className="aac-btn-add-question"
                   onClick={handleAddQuestion}
                 >
                   <FaPlus /> เพิ่มข้อสอบ
@@ -298,13 +314,13 @@ const AdminAddChapter = () => {
               </div>
 
               {questions.map((q, qIndex) => (
-                <div key={q.id} className="question-box">
-                  <div className="question-box-header">
+                <div key={q.id} className="aac-question-box">
+                  <div className="aac-question-header">
                     <h3>ข้อที่ {qIndex + 1}</h3>
                     {questions.length > 1 && (
                       <button
                         type="button"
-                        className="btn-remove-question"
+                        className="aac-btn-remove"
                         onClick={() => handleRemoveQuestion(q.id)}
                       >
                         <FaTrash /> ลบข้อนี้
@@ -312,7 +328,7 @@ const AdminAddChapter = () => {
                     )}
                   </div>
 
-                  <div className="form-group">
+                  <div className="aac-form-group">
                     <label>คำถาม</label>
                     <input
                       type="text"
@@ -328,13 +344,13 @@ const AdminAddChapter = () => {
                     />
                   </div>
 
-                  <div className="options-grid">
+                  <div className="aac-options-grid">
                     {q.options.map((opt, optIndex) => (
                       <div
                         key={optIndex}
-                        className={`option-item ${q.correctAnswer === optIndex ? "is-correct" : ""}`}
+                        className={`aac-option-item ${q.correctAnswer === optIndex ? "is-correct" : ""}`}
                       >
-                        <div className="radio-container">
+                        <div className="aac-radio-container">
                           <input
                             type="radio"
                             name={`correct-${q.id}`}
@@ -370,10 +386,10 @@ const AdminAddChapter = () => {
               ))}
             </div>
 
-            <div className="bottom-actions">
+            <div className="aac-bottom-actions">
               <button
                 type="button"
-                className="btn-save-large"
+                className="aac-btn-save-large"
                 onClick={handleSave}
               >
                 <FaSave /> บันทึกข้อมูลบทเรียนทั้งหมด

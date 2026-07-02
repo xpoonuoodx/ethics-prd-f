@@ -1,328 +1,241 @@
-.admin-add-chapter-layout {
+@import url("https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap");
+
+.aac-layout * {
+  box-sizing: border-box;
+  font-family: "Prompt", sans-serif;
+}
+
+.aac-layout {
   display: flex;
   min-height: 100vh;
-  background-color: #f8fafc;
-  font-family: inherit;
+  background-color: #f4f6f8;
 }
 
-.admin-add-chapter-main {
+.aac-main-content {
   flex: 1;
-  padding: 2rem;
-  margin-left: 260px; /* เว้นที่ให้ Sidebar */
-  width: calc(100% - 260px);
+  margin-left: 260px;
+  transition: margin-left 0.3s ease;
+  display: flex;
+  flex-direction: column;
 }
 
-.admin-add-chapter-inner {
-  max-width: 900px; /* บีบความกว้างฟอร์มให้อ่านง่าย ไม่กว้างเกินไป */
+.aac-container {
+  padding: 40px 50px;
+  width: 100%;
+  /* max-width: 1000px;  */
   margin: 0 auto;
 }
 
-/* Header */
-.add-chapter-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 2rem;
-}
-
-.header-title h1 {
-  font-size: 1.5rem;
-  color: #0f172a;
-  margin: 0 0 0.25rem 0;
-  font-family: inherit;
-}
-
-.header-title p {
-  color: #64748b;
-  margin: 0;
-  font-size: 0.875rem;
-}
-
-.btn-back {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  background: white;
-  border: 1px solid #e2e8f0;
-  padding: 0.5rem 1rem;
-  border-radius: 8px;
-  cursor: pointer;
-  color: #334155;
-  font-family: inherit;
-  font-weight: 500;
-  transition: background 0.2s;
-}
-
-.btn-back:hover { background: #f1f5f9; }
-
-.btn-save-top {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  background: #0f172a;
-  color: white;
-  border: none;
-  padding: 0.6rem 1.2rem;
-  border-radius: 8px;
-  cursor: pointer;
-  font-family: inherit;
-  font-weight: 500;
-}
-.btn-save-top:hover { background: #1e293b; }
-
-/* Form Cards */
-.form-card {
-  background: white;
-  border-radius: 12px;
-  padding: 2rem;
-  margin-bottom: 1.5rem;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
-}
-
-.card-title {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 1.125rem;
-  color: #0f172a;
-  margin-top: 0;
-  margin-bottom: 1.5rem;
-  padding-bottom: 1rem;
-  border-bottom: 1px solid #f1f5f9;
-  font-family: inherit;
-}
-.title-icon { color: #3b82f6; }
-
-.card-header-flex {
+/* =========================================
+   HEADER
+   ========================================= */
+.aac-header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  border-bottom: 1px solid #f1f5f9;
-  margin-bottom: 1.5rem;
-  padding-bottom: 1rem;
-}
-.card-header-flex .card-title {
-  border-bottom: none;
-  margin-bottom: 0;
-  padding-bottom: 0;
+  align-items: flex-end;
+  margin-bottom: 30px;
 }
 
-/* Form Inputs */
-.form-group-row {
-  display: flex;
-  gap: 1.5rem;
-  margin-bottom: 1.5rem;
-}
-
-.form-group {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 1.5rem;
-}
-.form-group-row .form-group { margin-bottom: 0; }
-
-.form-group label {
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: #334155;
-  margin-bottom: 0.5rem;
-}
-
-.required { color: #ef4444; }
-
-/* ค้นหาและวางทับในส่วนของ Form Inputs */
-.form-group input[type="text"],
-.form-group select {
-  padding: 0.75rem;
-  border: 1px solid #cbd5e1;
-  border-radius: 6px;
-  font-size: 0.875rem;
-  font-family: inherit;
-  color: #334155;
-  background-color: #ffffff; /* 👈 บังคับพื้นหลังเป็นสีขาว */
-  outline: none;
-  transition: border-color 0.2s;
-  width: 100%;
-  box-sizing: border-box;
-}
-
-.form-group input[type="text"]:focus,
-.form-group select:focus {
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
-}
-
-.form-hint {
-  font-size: 0.75rem;
-  color: #64748b;
-  margin-top: 0.25rem;
-}
-
-/* Question Section */
-.btn-add-question {
+.aac-header-title-wrap {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  background: #eff6ff;
-  color: #3b82f6;
-  border: none;
-  padding: 0.5rem 1rem;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: 600;
-  font-family: inherit;
-}
-.btn-add-question:hover { background: #dbeafe; }
-
-.question-box {
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
-  padding: 1.5rem;
-  margin-bottom: 1.5rem;
+  gap: 16px;
 }
 
-.question-box-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1rem;
-}
-
-.question-box-header h3 {
-  margin: 0;
-  font-size: 1rem;
+.aac-header-icon {
+  width: 50px;
+  height: 50px;
+  background: #f1f5f9;
   color: #0f172a;
-  font-family: inherit;
-}
-
-.btn-remove-question {
-  display: flex;
-  align-items: center;
-  gap: 0.25rem;
-  background: none;
-  border: none;
-  color: #ef4444;
-  cursor: pointer;
-  font-size: 0.875rem;
-  font-family: inherit;
-}
-.btn-remove-question:hover { text-decoration: underline; }
-
-.options-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1rem;
-}
-
-.option-item {
-  background: white;
-  border: 1px solid #cbd5e1;
-  padding: 1rem;
-  border-radius: 6px;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.option-item.is-correct {
-  border: 2px solid #22c55e;
-  background: #f0fdf4;
-}
-
-.radio-container {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 0.875rem;
-  color: #334155;
-  font-weight: 600;
-}
-
-.radio-container input[type="radio"] { cursor: pointer; }
-
-/* ค้นหาและวางทับในส่วนของ Option Item (ช่องพิมพ์คำตอบ) */
-.option-item input[type="text"] {
-  padding: 0.5rem;
-  border: 1px solid #e2e8f0;
-  border-radius: 4px;
-  font-family: inherit;
-  font-size: 0.875rem;
-  color: #334155; /* 👈 บังคับสีตัวหนังสือให้เป็นสีเทาเข้ม */
-  background-color: #ffffff; /* 👈 บังคับพื้นหลังเป็นสีขาว */
-  outline: none;
-  width: 100%;
-  box-sizing: border-box;
-}
-.option-item input[type="text"]:focus { 
-  border-color: #3b82f6; 
-}
-
-/* เพิ่มเติม: บังคับให้ช่อง Placeholder มองเห็นชัดขึ้น */
-.form-group input::placeholder,
-.option-item input::placeholder {
-  color: #94a3b8;
-  opacity: 1;
-}
-
-/* Bottom Action */
-.bottom-actions {
+  border-radius: 14px;
   display: flex;
   justify-content: center;
-  margin-top: 2rem;
-  margin-bottom: 4rem;
+  align-items: center;
+  font-size: 22px;
 }
 
-.btn-save-large {
+.aac-title {
+  font-size: 26px;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 6px 0;
+  letter-spacing: -0.5px;
+}
+
+.aac-subtitle {
+  font-size: 14px;
+  color: #64748b;
+  margin: 0;
+}
+
+.aac-header-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.aac-btn-secondary {
+  background: #ffffff;
+  color: #475569;
+  padding: 10px 20px;
+  border-radius: 50px;
+  border: 1px solid #cbd5e1;
+  font-size: 14px;
+  font-weight: 600;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  background: #10b981;
-  color: white;
-  border: none;
-  padding: 1rem 2.5rem;
-  border-radius: 8px;
-  font-size: 1rem;
-  font-weight: 600;
+  gap: 8px;
   cursor: pointer;
-  font-family: inherit;
-  transition: background 0.2s;
-  box-shadow: 0 4px 6px -1px rgba(16, 185, 129, 0.2);
+  transition: all 0.2s ease;
 }
-.btn-save-large:hover { background: #059669; }
+.aac-btn-secondary:hover {
+  background: #f1f5f9;
+  color: #0f172a;
+}
+
+.aac-btn-primary {
+  background: #0f172a;
+  color: #ffffff;
+  padding: 10px 24px;
+  border-radius: 50px;
+  border: none;
+  font-size: 14px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 10px rgba(15, 23, 42, 0.2);
+}
+.aac-btn-primary:hover {
+  background: #1e293b;
+  transform: translateY(-2px);
+}
 
 /* =========================================
-   Video Preview Section
-========================================= */
-.video-preview-container {
-  margin-bottom: 1.5rem;
+   FORM CARDS
+   ========================================= */
+.aac-form-card {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 30px;
+  margin-bottom: 25px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+  border: 1px solid #e2e8f0;
+}
+
+.aac-card-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 25px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #f1f5f9;
+}
+.aac-card-header h2 {
+  font-size: 18px;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0;
+}
+.aac-card-icon {
+  color: #2563eb;
+  font-size: 20px;
+}
+
+.aac-card-header-flex {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #f1f5f9;
+}
+.aac-card-header-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.aac-card-header-title h2 {
+  font-size: 18px;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0;
+}
+
+/* =========================================
+   FORM INPUTS
+   ========================================= */
+.aac-form-row {
+  margin-bottom: 20px;
+}
+.aac-form-row.aac-col-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.aac-form-group {
+  display: flex;
+  flex-direction: column;
+}
+.aac-form-group label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #475569;
+  margin-bottom: 8px;
+}
+.aac-required {
+  color: #ef4444;
+}
+
+.aac-form-group input[type="text"],
+.aac-form-group select {
+  padding: 12px 16px;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  font-size: 14px;
+  color: #0f172a;
+  background-color: #ffffff;
+  outline: none;
+  transition: all 0.2s;
+  width: 100%;
+}
+.aac-form-group input[type="text"]:focus,
+.aac-form-group select:focus {
+  border-color: #0f172a;
+  box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.05);
+}
+.aac-form-group input::placeholder {
+  color: #94a3b8;
+}
+
+/* =========================================
+   VIDEO PREVIEW
+   ========================================= */
+.aac-video-preview-container {
+  margin-top: 10px;
   background: #f8fafc;
   border: 1px dashed #cbd5e1;
-  border-radius: 8px;
-  padding: 1rem;
+  border-radius: 12px;
+  padding: 15px;
 }
-
-.preview-label {
+.aac-preview-label {
   display: block;
-  font-size: 0.875rem;
+  font-size: 13px;
   font-weight: 600;
-  color: #334155;
-  margin-bottom: 0.75rem;
-  font-family: inherit;
+  color: #64748b;
+  margin-bottom: 10px;
 }
-
-/* เทคนิคทำกล่อง 16:9 Responsive */
-.video-preview-wrapper {
+.aac-video-preview-wrapper {
   position: relative;
-  padding-bottom: 56.25%; /* อัตราส่วน 16:9 (9 / 16 = 0.5625) */
+  padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
   height: 0;
   overflow: hidden;
   border-radius: 8px;
-  background: #0f172a; /* พื้นหลังสีดำเวลารอโหลด */
+  background: #0f172a;
 }
-
-.video-preview-iframe {
+.aac-video-iframe {
   position: absolute;
   top: 0;
   left: 0;
@@ -330,8 +243,7 @@
   height: 100%;
   border: none;
 }
-
-.video-placeholder {
+.aac-video-placeholder {
   position: absolute;
   top: 0;
   left: 0;
@@ -341,6 +253,174 @@
   align-items: center;
   justify-content: center;
   color: #94a3b8;
-  font-size: 0.875rem;
-  font-family: inherit;
+  font-size: 14px;
+}
+
+/* =========================================
+   QUESTIONS SECTION
+   ========================================= */
+.aac-btn-add-question {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #eff6ff;
+  color: #2563eb;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 13px;
+  transition: background 0.2s;
+}
+.aac-btn-add-question:hover {
+  background: #dbeafe;
+}
+
+.aac-question-box {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 25px;
+  margin-bottom: 20px;
+}
+.aac-question-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+.aac-question-header h3 {
+  margin: 0;
+  font-size: 16px;
+  color: #0f172a;
+  font-weight: 700;
+}
+.aac-btn-remove {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: #fef2f2;
+  color: #ef4444;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  transition: background 0.2s;
+}
+.aac-btn-remove:hover {
+  background: #fee2e2;
+}
+
+/* Options Grid */
+.aac-options-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+  margin-top: 20px;
+}
+.aac-option-item {
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  padding: 15px;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transition: all 0.2s;
+}
+.aac-option-item.is-correct {
+  border: 2px solid #10b981;
+  background: #ecfdf5;
+}
+
+.aac-radio-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: #334155;
+  font-weight: 600;
+}
+.aac-radio-container input[type="radio"] {
+  cursor: pointer;
+}
+
+.aac-option-item input[type="text"] {
+  padding: 10px 12px;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  font-size: 13px;
+  color: #0f172a;
+  outline: none;
+  width: 100%;
+}
+.aac-option-item input[type="text"]:focus {
+  border-color: #0f172a;
+}
+
+/* =========================================
+   BOTTOM ACTIONS
+   ========================================= */
+.aac-bottom-actions {
+  display: flex;
+  justify-content: flex-end; /* เลื่อนปุ่มไปทางขวา */
+  margin-top: 30px;
+  margin-bottom: 50px;
+}
+
+.aac-btn-save-large {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #10b981; /* สีเขียวสำหรับปุ่มสำเร็จ */
+  color: #ffffff;
+  border: none;
+  padding: 14px 30px;
+  border-radius: 50px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 10px rgba(16, 185, 129, 0.2);
+}
+.aac-btn-save-large:hover {
+  background: #059669;
+  transform: translateY(-2px);
+}
+
+/* =========================================
+   RESPONSIVE
+   ========================================= */
+@media (max-width: 899px) {
+  .aac-main-content {
+    margin-left: 0;
+  }
+}
+@media (max-width: 768px) {
+  .aac-container {
+    padding: 80px 15px 30px 15px;
+  }
+  .aac-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+  }
+  .aac-header-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+  .aac-form-row.aac-col-2 {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+  .aac-options-grid {
+    grid-template-columns: 1fr;
+  }
+  .aac-btn-save-large {
+    width: 100%;
+    justify-content: center;
+  }
 }

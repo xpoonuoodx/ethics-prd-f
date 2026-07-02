@@ -10,6 +10,7 @@ import {
   FaVideo,
   FaFileAlt,
   FaSpinner,
+  FaEdit,
 } from "react-icons/fa";
 import "./style/AdminEditChapter.css"; // ไฟล์สไตล์
 import api from "../../api/Api"; // เช็ค Path ให้ตรงกับโครงสร้างโปรเจคของคุณ
@@ -120,7 +121,6 @@ const AdminEditChapter = () => {
   };
 
   // ส่งข้อมูลที่แก้ไขแล้วไปบันทึก
-  // ส่งข้อมูลที่แก้ไขแล้วไปบันทึก
   const handleSave = async (e) => {
     e.preventDefault();
     if (!chapterData.title || !chapterData.videoUrl || questions.length === 0) {
@@ -172,7 +172,9 @@ const AdminEditChapter = () => {
   const renderVideoPreview = (url) => {
     if (!url)
       return (
-        <div className="video-placeholder">กรอกลิงก์วิดีโอเพื่อดูตัวอย่าง</div>
+        <div className="aec-video-placeholder">
+          กรอกลิงก์วิดีโอเพื่อดูตัวอย่าง
+        </div>
       );
 
     // เช็คว่าเป็นลิงก์ YouTube หรือไม่
@@ -182,7 +184,7 @@ const AdminEditChapter = () => {
     if (ytMatch && ytMatch[1]) {
       return (
         <iframe
-          className="video-preview-iframe"
+          className="aec-video-iframe"
           src={`https://www.youtube.com/embed/${ytMatch[1]}`}
           title="YouTube video preview"
           frameBorder="0"
@@ -197,7 +199,7 @@ const AdminEditChapter = () => {
     if (driveMatch && driveMatch[1]) {
       return (
         <iframe
-          className="video-preview-iframe"
+          className="aec-video-iframe"
           src={`https://drive.google.com/file/d/${driveMatch[1]}/preview`}
           title="Google Drive video preview"
           allow="autoplay"
@@ -207,7 +209,7 @@ const AdminEditChapter = () => {
 
     // ค่าเริ่มต้นสำหรับลิงก์ตรง (เช่น AWS S3 .mp4)
     return (
-      <video className="video-preview-iframe" controls>
+      <video className="aec-video-iframe" controls>
         <source src={url} />
         เบราว์เซอร์ของคุณไม่รองรับการเล่นวิดีโอนี้
       </video>
@@ -215,58 +217,74 @@ const AdminEditChapter = () => {
   };
 
   return (
-    <div className="admin-edit-chapter-layout">
+    <div className="aec-layout">
       <SidebarAdmin />
 
-      <div className="admin-edit-chapter-main">
-        <div className="admin-edit-chapter-inner">
-          <div className="edit-chapter-header">
-            <button
-              className="btn-back"
-              onClick={() => navigate("/admin-classroom")}
-            >
-              <FaArrowLeft /> กลับ
-            </button>
-            <div className="header-title">
-              <h1>แก้ไขบทเรียน</h1>
-              <p>แก้ไขเนื้อหาวิดีโอและแบบทดสอบ รหัส: {id}</p>
+      <div className="aec-main-content">
+        <div className="aec-container">
+          {/* ส่วนหัว */}
+          <div className="aec-header">
+            <div className="aec-header-title-wrap">
+              <div className="aec-header-icon">
+                <FaEdit />
+              </div>
+              <div>
+                <h1 className="aec-title">แก้ไขบทเรียน</h1>
+                <p className="aec-subtitle">
+                  แก้ไขเนื้อหาวิดีโอและแบบทดสอบ (รหัส: {id})
+                </p>
+              </div>
             </div>
-            <button className="btn-save-top" onClick={handleSave}>
-              <FaSave /> บันทึกการแก้ไข
-            </button>
+
+            <div className="aec-header-actions">
+              <button
+                className="aec-btn-secondary"
+                onClick={() => navigate("/admin-classroom")}
+              >
+                <FaArrowLeft /> กลับ
+              </button>
+              <button className="aec-btn-primary" onClick={handleSave}>
+                <FaSave /> บันทึกการแก้ไข
+              </button>
+            </div>
           </div>
 
           {loading ? (
-            <div className="edit-loading-state">
-              <FaSpinner className="spin-icon" />
+            <div className="aec-state-container">
+              <FaSpinner className="aec-spin" />
               <p>กำลังโหลดข้อมูลบทเรียน...</p>
             </div>
           ) : (
-            <form className="edit-chapter-form">
-              {/* ข้อมูลบทเรียนและวิดีโอ */}
-              <div className="form-card">
-                <h2 className="card-title">
-                  <FaVideo className="title-icon" /> ข้อมูลบทเรียนและวิดีโอ
-                </h2>
+            <form className="aec-form">
+              {/* -------------------------------------
+                  Card 1: ข้อมูลบทเรียนและวิดีโอ 
+              -------------------------------------- */}
+              <div className="aec-form-card">
+                <div className="aec-card-header">
+                  <FaVideo className="aec-card-icon" />
+                  <h2>ข้อมูลบทเรียนและวิดีโอ</h2>
+                </div>
 
-                <div className="form-group-row">
-                  <div className="form-group">
+                <div className="aec-form-row">
+                  <div className="aec-form-group">
                     <label>
-                      ชื่อบทเรียน <span className="required">*</span>
+                      ชื่อบทเรียน <span className="aec-required">*</span>
                     </label>
                     <input
                       type="text"
                       name="title"
                       value={chapterData.title}
                       onChange={handleChangeInfo}
+                      placeholder="เช่น บทที่ 1: จริยธรรม AI เบื้องต้น"
                     />
                   </div>
                 </div>
 
-                <div className="form-group-row">
-                  <div className="form-group">
+                <div className="aec-form-row aac-col-2">
+                  <div className="aec-form-group">
                     <label>
-                      สำหรับกลุ่มผู้ใช้งาน <span className="required">*</span>
+                      สำหรับกลุ่มผู้ใช้งาน{" "}
+                      <span className="aec-required">*</span>
                     </label>
                     <select
                       name="targetRole"
@@ -285,7 +303,7 @@ const AdminEditChapter = () => {
                       <option value="Group 3">กลุ่มที่ 3 (User)</option>
                     </select>
                   </div>
-                  <div className="form-group">
+                  <div className="aec-form-group">
                     <label>สถานะการใช้งาน</label>
                     <select
                       name="status"
@@ -298,11 +316,10 @@ const AdminEditChapter = () => {
                   </div>
                 </div>
 
-                {/* ... โค้ดเดิมช่องกรอกลิงก์วิดีโอ ... */}
-                <div className="form-group-row">
-                  <div className="form-group">
+                <div className="aec-form-row">
+                  <div className="aec-form-group">
                     <label>
-                      ลิงก์วิดีโอ (URL) <span className="required">*</span>
+                      ลิงก์วิดีโอ (URL) <span className="aec-required">*</span>
                     </label>
                     <input
                       type="text"
@@ -314,25 +331,26 @@ const AdminEditChapter = () => {
                   </div>
                 </div>
 
-                {/* 👇 เพิ่มส่วนกล่องแสดงตัวอย่างวิดีโอตรงนี้ 👇 */}
-                <div className="video-preview-container">
-                  <label className="preview-label">ตัวอย่างวิดีโอ:</label>
-                  <div className="video-preview-wrapper">
+                <div className="aec-video-preview-container">
+                  <label className="aec-preview-label">ตัวอย่างวิดีโอ:</label>
+                  <div className="aec-video-preview-wrapper">
                     {renderVideoPreview(chapterData.videoUrl)}
                   </div>
                 </div>
-                {/* 👆 สิ้นสุดส่วนแสดงตัวอย่างวิดีโอ 👆 */}
               </div>
 
-              {/* จัดการแบบทดสอบ */}
-              <div className="form-card">
-                <div className="card-header-flex">
-                  <h2 className="card-title">
-                    <FaFileAlt className="title-icon" /> จัดการแบบทดสอบ
-                  </h2>
+              {/* -------------------------------------
+                  Card 2: จัดการแบบทดสอบ 
+              -------------------------------------- */}
+              <div className="aec-form-card">
+                <div className="aec-card-header-flex">
+                  <div className="aec-card-header-title">
+                    <FaFileAlt className="aec-card-icon" />
+                    <h2>จัดการแบบทดสอบ</h2>
+                  </div>
                   <button
                     type="button"
-                    className="btn-add-question"
+                    className="aec-btn-add-question"
                     onClick={handleAddQuestion}
                   >
                     <FaPlus /> เพิ่มข้อสอบ
@@ -340,13 +358,13 @@ const AdminEditChapter = () => {
                 </div>
 
                 {questions.map((q, qIndex) => (
-                  <div key={q.id} className="question-box">
-                    <div className="question-box-header">
+                  <div key={q.id} className="aec-question-box">
+                    <div className="aec-question-header">
                       <h3>ข้อที่ {qIndex + 1}</h3>
                       {questions.length > 1 && (
                         <button
                           type="button"
-                          className="btn-remove-question"
+                          className="aec-btn-remove"
                           onClick={() => handleRemoveQuestion(q.id)}
                         >
                           <FaTrash /> ลบข้อนี้
@@ -354,7 +372,7 @@ const AdminEditChapter = () => {
                       )}
                     </div>
 
-                    <div className="form-group">
+                    <div className="aec-form-group">
                       <label>คำถาม</label>
                       <input
                         type="text"
@@ -366,16 +384,17 @@ const AdminEditChapter = () => {
                             e.target.value,
                           )
                         }
+                        placeholder="พิมพ์คำถามที่นี่..."
                       />
                     </div>
 
-                    <div className="options-grid">
+                    <div className="aec-options-grid">
                       {q.options.map((opt, optIndex) => (
                         <div
                           key={optIndex}
-                          className={`option-item ${q.correctAnswer === optIndex ? "is-correct" : ""}`}
+                          className={`aec-option-item ${q.correctAnswer === optIndex ? "is-correct" : ""}`}
                         >
-                          <div className="radio-container">
+                          <div className="aec-radio-container">
                             <input
                               type="radio"
                               name={`correct-${q.id}`}
@@ -402,6 +421,7 @@ const AdminEditChapter = () => {
                                 optIndex,
                               )
                             }
+                            placeholder={`คำตอบตัวเลือกที่ ${optIndex + 1}`}
                           />
                         </div>
                       ))}
@@ -410,10 +430,10 @@ const AdminEditChapter = () => {
                 ))}
               </div>
 
-              <div className="bottom-actions">
+              <div className="aec-bottom-actions">
                 <button
                   type="button"
-                  className="btn-save-large"
+                  className="aec-btn-save-large"
                   onClick={handleSave}
                 >
                   <FaSave /> บันทึกการแก้ไขข้อมูล

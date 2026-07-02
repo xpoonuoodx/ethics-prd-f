@@ -9,6 +9,7 @@ import {
   FaTrash,
   FaPlayCircle,
   FaFileAlt,
+  FaChalkboardTeacher,
 } from "react-icons/fa";
 import SidebarAdmin from "./SidebarAdmin";
 import Swal from "sweetalert2";
@@ -26,7 +27,7 @@ const AdminClassroom = () => {
       setLoading(true);
       setError(null);
 
-      // ยิง API ไปที่หลังบ้าน (แก้ path ให้ตรงกับที่คุณตั้งไว้ใน Backend)
+      // ยิง API ไปที่หลังบ้าน
       const response = await api.get("/admin/classroom");
 
       if (response.data && response.data.success) {
@@ -50,14 +51,13 @@ const AdminClassroom = () => {
     fetchChapters();
   }, []);
 
-  // 1. แก้ไขฟังก์ชัน handleDelete
   const handleDelete = (rawId, title) => {
     Swal.fire({
       title: "ยืนยันการลบบทเรียน?",
       text: `คุณต้องการลบ "${title}" ใช่หรือไม่? (วิดีโอและข้อสอบในบทนี้จะถูกลบทั้งหมด)`,
       icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: "#0f172a",
+      confirmButtonColor: "#dc2626", // เปลี่ยนให้เข้าตีม
       cancelButtonColor: "#94a3b8",
       confirmButtonText: "ยืนยันลบข้อมูล",
       cancelButtonText: "ยกเลิก",
@@ -68,7 +68,7 @@ const AdminClassroom = () => {
           const response = await api.delete(`/admin/classroom/delete/${rawId}`);
 
           if (response.data && response.data.success) {
-            // ถ้ายิงผ่าน ให้ลบข้อมูลออกจากหน้าจอ (กรอง rawId ออกไป)
+            // ถ้ายิงผ่าน ให้ลบข้อมูลออกจากหน้าจอ
             setChapters(chapters.filter((ch) => ch.rawId !== rawId));
 
             Swal.fire({
@@ -101,143 +101,134 @@ const AdminClassroom = () => {
   );
 
   return (
-    <div className="admin-classroom-layout">
+    <div className="acl-layout">
       <SidebarAdmin />
 
-      <div className="admin-classroom-main-content">
-        <div className="admin-classroom-content-inner">
-          <div className="admin-classroom-top-section">
-            <div className="admin-classroom-header-text">
-              <h1>จัดการระบบคลาสรูม</h1>
-              <p>
-                เพิ่ม แก้ไข ลบบทเรียน (1 บทเรียนประกอบด้วยวิดีโอและแบบทดสอบ)
-                สำหรับผู้ใช้งานในระบบ
-              </p>
-            </div>
-
-            <div className="admin-classroom-action-bar">
-              <div className="admin-classroom-search-pill">
-                <FaSearch className="admin-classroom-search-icon" />
-                <input
-                  type="text"
-                  placeholder="ค้นหารหัส, ชื่อบทเรียน, บทบาท..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                />
+      <div className="acl-main-content">
+        <div className="acl-container">
+          <div className="acl-header">
+            <div className="acl-header-title-wrap">
+              <div className="acl-header-icon">
+                <FaChalkboardTeacher />
               </div>
-
-              <button
-                className="admin-classroom-btn-dark"
-                onClick={() => navigate("/admin-classroom/add")}
-              >
-                <FaPlus /> เพิ่มบทเรียนใหม่
-              </button>
+              <div>
+                <h1 className="acl-title">จัดการระบบคลาสรูม</h1>
+                <p className="acl-subtitle">
+                  เพิ่ม แก้ไข ลบบทเรียน (วิดีโอและแบบทดสอบ)
+                  สำหรับผู้ใช้งานในระบบ
+                </p>
+              </div>
             </div>
+            <button
+              className="acl-btn-primary"
+              onClick={() => navigate("/admin-classroom/add")}
+            >
+              <FaPlus /> เพิ่มบทเรียนใหม่
+            </button>
           </div>
 
-          {loading ? (
-            <div className="admin-classroom-state-container">
-              <FaSpinner className="admin-classroom-spin" />
-              <p>กำลังโหลดข้อมูลบทเรียน...</p>
+          <div className="acl-toolbar">
+            <div className="acl-search-box">
+              <FaSearch className="acl-search-icon" />
+              <input
+                type="text"
+                placeholder="ค้นหารหัส, ชื่อบทเรียน หรือบทบาทผู้ใช้..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
             </div>
-          ) : error ? (
-            <div className="admin-classroom-state-container admin-classroom-error">
-              <p>{error}</p>
-              <button
-                onClick={fetchChapters}
-                className="admin-classroom-btn-retry"
-              >
-                ลองใหม่อีกครั้ง
-              </button>
-            </div>
-          ) : (
-            <div className="admin-classroom-list-section">
-              <div className="admin-classroom-list-header">
-                <h2>รายการบทเรียนทั้งหมด</h2>
-                <span className="admin-classroom-list-count">
-                  {filteredChapters.length} บทเรียน
-                </span>
-              </div>
+            {/* สามารถใส่ตัวกรอง Dropdown อื่นๆ เพิ่มตรงนี้ได้ในอนาคต */}
+          </div>
 
-              <div className="admin-classroom-table-responsive">
-                <table className="admin-classroom-card-table">
-                  <thead>
-                    <tr>
-                      <th>รหัสบทเรียน</th>
-                      <th>ชื่อบทเรียน</th>
-                      <th>ส่วนประกอบ</th>
-                      <th>สำหรับผู้ใช้</th>
-                      <th>สถานะ</th>
-                      <th className="admin-classroom-text-center">จัดการ</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {filteredChapters.map((ch, index) => (
-                      <tr key={index} className="admin-classroom-table-row">
-                        <td className="admin-classroom-col-id">{ch.id}</td>
-                        <td className="admin-classroom-col-name">{ch.title}</td>
-                        <td>
-                          {/* นำ Badge ทั้งสองมาแสดงรวมกันในคอลัมน์เดียว */}
-                          <div className="admin-classroom-components-group">
-                            <span className="admin-classroom-type-badge type-video">
-                              <FaPlayCircle /> วิดีโอ
-                            </span>
-                            <span className="admin-classroom-type-badge type-quiz">
-                              <FaFileAlt /> ข้อสอบ
-                            </span>
-                          </div>
-                        </td>
-                        <td>
-                          <span className="admin-classroom-role-text">
-                            {ch.targetRole}
+          <div className="acl-table-wrapper">
+            {loading ? (
+              <div className="acl-state-container">
+                <FaSpinner className="acl-spin" />
+                <p>กำลังโหลดข้อมูลบทเรียน...</p>
+              </div>
+            ) : error ? (
+              <div className="acl-state-container">
+                <p className="acl-error-text">{error}</p>
+                <button onClick={fetchChapters} className="acl-btn-retry">
+                  ลองใหม่อีกครั้ง
+                </button>
+              </div>
+            ) : (
+              <table className="acl-card-table">
+                <thead>
+                  <tr>
+                    <th style={{ width: "15%" }}>รหัสบทเรียน</th>
+                    <th style={{ width: "30%" }}>ชื่อบทเรียน</th>
+                    <th style={{ width: "15%" }}>ส่วนประกอบ</th>
+                    <th style={{ width: "15%" }}>สำหรับผู้ใช้</th>
+                    <th style={{ width: "15%" }}>สถานะ</th>
+                    <th className="acl-text-center" style={{ width: "10%" }}>
+                      จัดการ
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredChapters.map((ch, index) => (
+                    <tr key={index}>
+                      <td className="acl-font-bold acl-text-muted">{ch.id}</td>
+                      <td className="acl-font-medium">{ch.title}</td>
+                      <td>
+                        <div className="acl-components-group">
+                          <span className="acl-badge acl-badge-video">
+                            <FaPlayCircle /> วิดีโอ
                           </span>
-                        </td>
-                        <td>
-                          <span
-                            className={`admin-classroom-badge admin-classroom-status-${ch.status.toLowerCase()}`}
+                          <span className="acl-badge acl-badge-quiz">
+                            <FaFileAlt /> ข้อสอบ
+                          </span>
+                        </div>
+                      </td>
+                      <td>
+                        <span className="acl-role-badge">{ch.targetRole}</span>
+                      </td>
+                      <td>
+                        <span
+                          className={`acl-status-tag ${
+                            ch.status === "Active" ? "active" : "inactive"
+                          }`}
+                        >
+                          <span className="acl-status-dot"></span>
+                          {ch.status === "Active" ? "เปิดใช้งาน" : "ปิดใช้งาน"}
+                        </span>
+                      </td>
+                      <td>
+                        <div className="acl-actions">
+                          <button
+                            className="acl-btn-action edit"
+                            title="แก้ไขบทเรียน"
+                            onClick={() =>
+                              navigate(`/admin-classroom/edit/${ch.rawId}`)
+                            }
                           >
-                            <span className="admin-classroom-badge-dot"></span>
-                            {ch.status === "Active"
-                              ? "เปิดใช้งาน"
-                              : "ปิดใช้งาน"}
-                          </span>
-                        </td>
-                        <td>
-                          {/* แก้ไขปุ่ม Action ทั้งสองปุ่ม ให้ส่ง ch.rawId ไปแทน ch.id */}
-                          <div className="admin-classroom-action-buttons">
-                            <button
-                              className="admin-classroom-btn-action-icon admin-classroom-edit"
-                              title="แก้ไขบทเรียน"
-                              onClick={() =>
-                                navigate(`/admin-classroom/edit/${ch.rawId}`)
-                              }
-                            >
-                              <FaEdit />
-                            </button>
-                            <button
-                              className="admin-classroom-btn-action-icon admin-classroom-delete"
-                              title="ลบบทเรียน"
-                              onClick={() => handleDelete(ch.rawId, ch.title)}
-                            >
-                              <FaTrash />
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    ))}
+                            <FaEdit />
+                          </button>
+                          <button
+                            className="acl-btn-action delete"
+                            title="ลบบทเรียน"
+                            onClick={() => handleDelete(ch.rawId, ch.title)}
+                          >
+                            <FaTrash />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
 
-                    {filteredChapters.length === 0 && (
-                      <tr>
-                        <td colSpan="6" className="admin-classroom-empty-state">
-                          ไม่พบข้อมูลบทเรียนในระบบ
-                        </td>
-                      </tr>
-                    )}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          )}
+                  {filteredChapters.length === 0 && (
+                    <tr>
+                      <td colSpan="6" className="acl-empty-state">
+                        ไม่พบข้อมูลบทเรียนในระบบ
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            )}
+          </div>
         </div>
       </div>
     </div>
