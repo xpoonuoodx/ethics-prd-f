@@ -22,6 +22,9 @@ import RegulatorRoute from "./route/RegulatorRoute";
 // Admin Pages
 import AdminDashboard from "./page/admin/AdminDashboard";
 import AdminOrganize from "./page/admin/AdminOrganize";
+import AdminClassroom from "./page/admin/AdminClassroom"; // หน้าเรียนของ Admin
+import AdminAddChapter from "./page/admin/AdminAddChapter"; // หน้าเพิ่มบทเรียนของ Admin
+import AdminEditChapter from "./page/admin/AdminEditChapter"; // หน้าแก้ไขบทเรียนของ Admin
 
 // User Pages
 import UserDashboard from "./page/user/UserDashboard";
@@ -53,7 +56,6 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/news/:id" element={<NewsDetail />} />
-
         {/* === Admin Routes === */}
         <Route
           path="/admin-dashboard"
@@ -63,7 +65,6 @@ function App() {
             </AdminRoute>
           }
         />
-
         <Route
           path="/admin-organize"
           element={
@@ -72,7 +73,31 @@ function App() {
             </AdminRoute>
           }
         />
-
+        <Route
+          path="/admin-classroom"
+          element={
+            <AdminRoute>
+              <AdminClassroom />
+            </AdminRoute>
+          }
+        />
+        // แทรก Route นี้เพิ่มเข้าไป
+        <Route
+          path="/admin-classroom/add"
+          element={
+            <AdminRoute>
+              <AdminAddChapter />
+            </AdminRoute>
+          }
+        />
+        <Route
+          path="/admin-classroom/edit/:id"
+          element={
+            <AdminRoute>
+              <AdminEditChapter />
+            </AdminRoute>
+          }
+        />
         <Route
           path="/regulator-dashboard"
           element={
@@ -81,7 +106,6 @@ function App() {
             </RegulatorRoute>
           }
         />
-
         {/* === User Routes === */}
         {/* หน้าหลัก User */}
         <Route
@@ -92,7 +116,6 @@ function App() {
             </UserRoute>
           }
         />
-
         {/* หน้าเลือกสายงาน (เรียน หรือ สอบ) */}
         <Route
           path="/user-select-role"
@@ -102,7 +125,6 @@ function App() {
             </UserRoute>
           }
         />
-
         {/* หน้าห้องเรียน */}
         <Route
           path="/user-classroom"
@@ -112,7 +134,6 @@ function App() {
             </UserRoute>
           }
         />
-
         {/* หน้าทำแบบทดสอบ */}
         <Route
           path="/user-test"
@@ -122,7 +143,6 @@ function App() {
             </UserRoute>
           }
         />
-
         <Route
           path="/user-classroom-detail"
           element={
@@ -131,7 +151,6 @@ function App() {
             </UserRoute>
           }
         />
-
         <Route
           path="/user-certificate"
           element={
@@ -140,7 +159,6 @@ function App() {
             </UserRoute>
           }
         />
-
         <Route
           path="/user-tools"
           element={
@@ -149,7 +167,6 @@ function App() {
             </UserRoute>
           }
         />
-
         <Route
           path="/user-tools-create"
           element={
@@ -158,7 +175,6 @@ function App() {
             </UserRoute>
           }
         />
-
         <Route
           path="/regulator-user-manage"
           element={
@@ -167,7 +183,6 @@ function App() {
             </RegulatorRoute>
           }
         />
-
         <Route
           path="/regulator-project-manage"
           element={
@@ -176,7 +191,6 @@ function App() {
             </RegulatorRoute>
           }
         />
-
         {/* --- เส้นทางสำหรับหน้า Unauthorized (ถ้าไม่มีสิทธิ์เข้าถึง) --- */}
         <Route path="/unauthorized" element={<h1>403 - ไม่ได้รับอนุญาต</h1>} />
       </Routes>

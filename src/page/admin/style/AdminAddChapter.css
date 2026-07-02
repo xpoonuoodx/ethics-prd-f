@@ -1,0 +1,293 @@
+.admin-add-chapter-layout {
+  display: flex;
+  min-height: 100vh;
+  background-color: #f8fafc;
+  font-family: inherit;
+}
+
+.admin-add-chapter-main {
+  flex: 1;
+  padding: 2rem;
+  margin-left: 260px; /* เว้นที่ให้ Sidebar */
+  width: calc(100% - 260px);
+}
+
+.admin-add-chapter-inner {
+  max-width: 900px; /* บีบความกว้างฟอร์มให้อ่านง่าย ไม่กว้างเกินไป */
+  margin: 0 auto;
+}
+
+/* Header */
+.add-chapter-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+}
+
+.header-title h1 {
+  font-size: 1.5rem;
+  color: #0f172a;
+  margin: 0 0 0.25rem 0;
+  font-family: inherit;
+}
+
+.header-title p {
+  color: #64748b;
+  margin: 0;
+  font-size: 0.875rem;
+}
+
+.btn-back {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: white;
+  border: 1px solid #e2e8f0;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  color: #334155;
+  font-family: inherit;
+  font-weight: 500;
+  transition: background 0.2s;
+}
+
+.btn-back:hover { background: #f1f5f9; }
+
+.btn-save-top {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #0f172a;
+  color: white;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: inherit;
+  font-weight: 500;
+}
+.btn-save-top:hover { background: #1e293b; }
+
+/* Form Cards */
+.form-card {
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+}
+
+.card-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.125rem;
+  color: #0f172a;
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #f1f5f9;
+  font-family: inherit;
+}
+.title-icon { color: #3b82f6; }
+
+.card-header-flex {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #f1f5f9;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+}
+.card-header-flex .card-title {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+/* Form Inputs */
+.form-group-row {
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.form-group {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1.5rem;
+}
+.form-group-row .form-group { margin-bottom: 0; }
+
+.form-group label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #334155;
+  margin-bottom: 0.5rem;
+}
+
+.required { color: #ef4444; }
+
+/* ค้นหาและวางทับในส่วนของ Form Inputs */
+.form-group input[type="text"],
+.form-group select {
+  padding: 0.75rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-family: inherit;
+  color: #334155;
+  background-color: #ffffff; /* 👈 บังคับพื้นหลังเป็นสีขาว */
+  outline: none;
+  transition: border-color 0.2s;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.form-group input[type="text"]:focus,
+.form-group select:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+}
+
+.form-hint {
+  font-size: 0.75rem;
+  color: #64748b;
+  margin-top: 0.25rem;
+}
+
+/* Question Section */
+.btn-add-question {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #eff6ff;
+  color: #3b82f6;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  font-family: inherit;
+}
+.btn-add-question:hover { background: #dbeafe; }
+
+.question-box {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.question-box-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.question-box-header h3 {
+  margin: 0;
+  font-size: 1rem;
+  color: #0f172a;
+  font-family: inherit;
+}
+
+.btn-remove-question {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  background: none;
+  border: none;
+  color: #ef4444;
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-family: inherit;
+}
+.btn-remove-question:hover { text-decoration: underline; }
+
+.options-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.option-item {
+  background: white;
+  border: 1px solid #cbd5e1;
+  padding: 1rem;
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.option-item.is-correct {
+  border: 2px solid #22c55e;
+  background: #f0fdf4;
+}
+
+.radio-container {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  color: #334155;
+  font-weight: 600;
+}
+
+.radio-container input[type="radio"] { cursor: pointer; }
+
+/* ค้นหาและวางทับในส่วนของ Option Item (ช่องพิมพ์คำตอบ) */
+.option-item input[type="text"] {
+  padding: 0.5rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: 0.875rem;
+  color: #334155; /* 👈 บังคับสีตัวหนังสือให้เป็นสีเทาเข้ม */
+  background-color: #ffffff; /* 👈 บังคับพื้นหลังเป็นสีขาว */
+  outline: none;
+  width: 100%;
+  box-sizing: border-box;
+}
+.option-item input[type="text"]:focus { 
+  border-color: #3b82f6; 
+}
+
+/* เพิ่มเติม: บังคับให้ช่อง Placeholder มองเห็นชัดขึ้น */
+.form-group input::placeholder,
+.option-item input::placeholder {
+  color: #94a3b8;
+  opacity: 1;
+}
+
+/* Bottom Action */
+.bottom-actions {
+  display: flex;
+  justify-content: center;
+  margin-top: 2rem;
+  margin-bottom: 4rem;
+}
+
+.btn-save-large {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #10b981;
+  color: white;
+  border: none;
+  padding: 1rem 2.5rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.2s;
+  box-shadow: 0 4px 6px -1px rgba(16, 185, 129, 0.2);
+}
+.btn-save-large:hover { background: #059669; }

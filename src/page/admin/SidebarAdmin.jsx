@@ -14,6 +14,7 @@ import {
   FaBars,
   FaTimes,
   FaUserCircle,
+  FaAtlas,
 } from "react-icons/fa";
 
 const SidebarAdmin = () => {
@@ -141,6 +142,20 @@ const SidebarAdmin = () => {
             <FaFileAlt className="admin-menu-icon" />
             <span className={`admin-menu-text ${!isOpen && "hidden"}`}>
               รายงานสรุป
+            </span>
+          </Link>
+
+          <div className={`admin-sidebar-category ${!isOpen && "hidden"}`}>
+            สื่อการเรียนการสอน
+          </div>
+
+          <Link
+            to="/admin-classroom"
+            className={`admin-sidebar-item ${isActive("/admin-classroom")}`}
+          >
+            <FaAtlas className="admin-menu-icon" />
+            <span className={`admin-menu-text ${!isOpen && "hidden"}`}>
+              จัดการสื่อการเรียนรู้
             </span>
           </Link>
         </div>
