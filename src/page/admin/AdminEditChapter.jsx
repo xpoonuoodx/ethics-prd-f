@@ -12,6 +12,7 @@ import {
   FaSpinner,
 } from "react-icons/fa";
 import "./style/AdminEditChapter.css"; // ไฟล์สไตล์
+import api from "../../api/Api"; // เช็ค Path ให้ตรงกับโครงสร้างโปรเจคของคุณ
 
 const AdminEditChapter = () => {
   const navigate = useNavigate();
@@ -35,47 +36,44 @@ const AdminEditChapter = () => {
     fetchChapterData();
   }, [id]);
 
-  // จำลองการดึงข้อมูลบทเรียนเดิมจาก Backend เพื่อมาแสดงในฟอร์ม
+  // ดึงข้อมูลเดิมจาก Database
   const fetchChapterData = async () => {
     try {
       setLoading(true);
-      await new Promise((resolve) => setTimeout(resolve, 800)); // หน่วงเวลาให้เห็น Loading
+      // ยิง API ไปขอดึงข้อมูลบทเรียนตาม ID
+      const response = await api.get(`/admin/classroom/${id}`);
 
-      // Mock Data: สมมติว่านี่คือข้อมูลที่ดึงมาจาก Database ตาม id
-      setChapterData({
-        title: `บทที่ 1: จริยธรรม AI เบื้องต้น (รหัส ${id})`,
-        targetRole: "",
-        status: "Active",
-        videoUrl: "https://www.youtube.com/watch?v=mockvideo",
-      });
+      if (response.data && response.data.success) {
+        const { title, targetRole, status, videoUrl, questions } =
+          response.data.data;
 
-      setQuestions([
-        {
-          id: 1,
-          questionText: "AI ย่อมาจากอะไร?",
-          options: [
-            "Artificial Intelligence",
-            "Automated Information",
-            "Advanced Interface",
-            "Animal Instinct",
-          ],
-          correctAnswer: 0,
-        },
-        {
-          id: 2,
-          questionText: "ข้อใดคือความเสี่ยงของ AI?",
-          options: [
-            "การทำงานเร็วขึ้น",
-            "ความลำเอียงของข้อมูล (Bias)",
-            "ช่วยลดต้นทุน",
-            "ถูกทุกข้อ",
-          ],
-          correctAnswer: 1,
-        },
-      ]);
+        // นำข้อมูลไปใส่ใน State
+        setChapterData({ title, targetRole, status, videoUrl });
+
+        if (questions && questions.length > 0) {
+          setQuestions(questions);
+        } else {
+          // ถ้าบังเอิญไม่มีข้อสอบเลย ให้สร้างกล่องว่างไว้ 1 ข้อ
+          setQuestions([
+            {
+              id: 1,
+              questionText: "",
+              options: ["", "", "", ""],
+              correctAnswer: 0,
+            },
+          ]);
+        }
+      }
     } catch (error) {
       console.error("Error fetching chapter data:", error);
-      Swal.fire("ข้อผิดพลาด", "ไม่สามารถดึงข้อมูลบทเรียนได้", "error");
+      Swal.fire({
+        title: "ข้อผิดพลาด",
+        text: error.response?.data?.message || "ไม่สามารถดึงข้อมูลบทเรียนได้",
+        icon: "error",
+        confirmButtonColor: "#ef4444",
+      }).then(() => {
+        navigate("/admin-classroom"); // ถ้าโหลดพังให้เด้งกลับหน้าตาราง
+      });
     } finally {
       setLoading(false);
     }
@@ -121,7 +119,9 @@ const AdminEditChapter = () => {
     setQuestions(updatedQuestions);
   };
 
-  const handleSave = (e) => {
+  // ส่งข้อมูลที่แก้ไขแล้วไปบันทึก
+  // ส่งข้อมูลที่แก้ไขแล้วไปบันทึก
+  const handleSave = async (e) => {
     e.preventDefault();
     if (!chapterData.title || !chapterData.videoUrl || questions.length === 0) {
       Swal.fire({
@@ -133,17 +133,85 @@ const AdminEditChapter = () => {
       return;
     }
 
-    // เมื่อบันทึกการแก้ไขสำเร็จ
-    Swal.fire({
-      title: "อัปเดตข้อมูลสำเร็จ!",
-      text: "ระบบได้บันทึกการแก้ไขบทเรียนเรียบร้อยแล้ว",
-      icon: "success",
-      confirmButtonColor: "#10b981",
-      timer: 2000,
-      showConfirmButton: false,
-    }).then(() => {
-      navigate("/admin-classroom");
-    });
+    try {
+      const payload = {
+        title: chapterData.title,
+        targetRole: chapterData.targetRole,
+        status: chapterData.status,
+        videoUrl: chapterData.videoUrl,
+        questions: questions,
+      };
+
+      // ยิง API แบบ PUT เพื่อสั่งอัปเดต
+      const response = await api.put(`/admin/classroom/edit/${id}`, payload);
+
+      if (response.data && response.data.success) {
+        Swal.fire({
+          title: "อัปเดตข้อมูลสำเร็จ!",
+          text: "ระบบได้บันทึกการแก้ไขบทเรียนเรียบร้อยแล้ว",
+          icon: "success",
+          confirmButtonColor: "#10b981",
+          timer: 2000,
+          showConfirmButton: false,
+        }).then(() => {
+          navigate("/admin-classroom"); // กลับไปหน้าตาราง
+        });
+      }
+    } catch (error) {
+      console.error("Edit Chapter Error:", error);
+      Swal.fire({
+        title: "เกิดข้อผิดพลาด",
+        text: error.response?.data?.message || "ไม่สามารถอัปเดตข้อมูลได้",
+        icon: "error",
+        confirmButtonColor: "#ef4444",
+      });
+    }
+  };
+
+  // ฟังก์ชันสำหรับแสดงตัวอย่างวิดีโอรองรับ YouTube, Google Drive และ ลิงก์ตรง (.mp4)
+  const renderVideoPreview = (url) => {
+    if (!url)
+      return (
+        <div className="video-placeholder">กรอกลิงก์วิดีโอเพื่อดูตัวอย่าง</div>
+      );
+
+    // เช็คว่าเป็นลิงก์ YouTube หรือไม่
+    const ytMatch = url.match(
+      /(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((\w|-){11})/,
+    );
+    if (ytMatch && ytMatch[1]) {
+      return (
+        <iframe
+          className="video-preview-iframe"
+          src={`https://www.youtube.com/embed/${ytMatch[1]}`}
+          title="YouTube video preview"
+          frameBorder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowFullScreen
+        ></iframe>
+      );
+    }
+
+    // เช็คว่าเป็นลิงก์ Google Drive หรือไม่
+    const driveMatch = url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
+    if (driveMatch && driveMatch[1]) {
+      return (
+        <iframe
+          className="video-preview-iframe"
+          src={`https://drive.google.com/file/d/${driveMatch[1]}/preview`}
+          title="Google Drive video preview"
+          allow="autoplay"
+        ></iframe>
+      );
+    }
+
+    // ค่าเริ่มต้นสำหรับลิงก์ตรง (เช่น AWS S3 .mp4)
+    return (
+      <video className="video-preview-iframe" controls>
+        <source src={url} />
+        เบราว์เซอร์ของคุณไม่รองรับการเล่นวิดีโอนี้
+      </video>
+    );
   };
 
   return (
@@ -230,6 +298,7 @@ const AdminEditChapter = () => {
                   </div>
                 </div>
 
+                {/* ... โค้ดเดิมช่องกรอกลิงก์วิดีโอ ... */}
                 <div className="form-group-row">
                   <div className="form-group">
                     <label>
@@ -240,9 +309,19 @@ const AdminEditChapter = () => {
                       name="videoUrl"
                       value={chapterData.videoUrl}
                       onChange={handleChangeInfo}
+                      placeholder="เช่น ลิงก์ YouTube, Google Drive, AWS S3 (.mp4)"
                     />
                   </div>
                 </div>
+
+                {/* 👇 เพิ่มส่วนกล่องแสดงตัวอย่างวิดีโอตรงนี้ 👇 */}
+                <div className="video-preview-container">
+                  <label className="preview-label">ตัวอย่างวิดีโอ:</label>
+                  <div className="video-preview-wrapper">
+                    {renderVideoPreview(chapterData.videoUrl)}
+                  </div>
+                </div>
+                {/* 👆 สิ้นสุดส่วนแสดงตัวอย่างวิดีโอ 👆 */}
               </div>
 
               {/* จัดการแบบทดสอบ */}

@@ -37,7 +37,8 @@ const AdminClassroom = () => {
     } catch (err) {
       console.error("Fetch Chapters Error:", err);
       setError(
-        err.response?.data?.message || "เกิดข้อผิดพลาดในการเชื่อมต่อเซิร์ฟเวอร์"
+        err.response?.data?.message ||
+          "เกิดข้อผิดพลาดในการเชื่อมต่อเซิร์ฟเวอร์",
       );
     } finally {
       setLoading(false);
@@ -49,7 +50,8 @@ const AdminClassroom = () => {
     fetchChapters();
   }, []);
 
-  const handleDelete = (id, title) => {
+  // 1. แก้ไขฟังก์ชัน handleDelete
+  const handleDelete = (rawId, title) => {
     Swal.fire({
       title: "ยืนยันการลบบทเรียน?",
       text: `คุณต้องการลบ "${title}" ใช่หรือไม่? (วิดีโอและข้อสอบในบทนี้จะถูกลบทั้งหมด)`,
@@ -59,15 +61,34 @@ const AdminClassroom = () => {
       cancelButtonColor: "#94a3b8",
       confirmButtonText: "ยืนยันลบข้อมูล",
       cancelButtonText: "ยกเลิก",
-    }).then((result) => {
+    }).then(async (result) => {
       if (result.isConfirmed) {
-        setChapters(chapters.filter((ch) => ch.id !== id));
-        Swal.fire({
-          title: "ลบข้อมูลสำเร็จ",
-          text: "บทเรียนถูกนำออกจากระบบแล้ว",
-          icon: "success",
-          confirmButtonColor: "#10b981",
-        });
+        try {
+          // ยิง API สั่งลบข้อมูล
+          const response = await api.delete(`/admin/classroom/delete/${rawId}`);
+
+          if (response.data && response.data.success) {
+            // ถ้ายิงผ่าน ให้ลบข้อมูลออกจากหน้าจอ (กรอง rawId ออกไป)
+            setChapters(chapters.filter((ch) => ch.rawId !== rawId));
+
+            Swal.fire({
+              title: "ลบข้อมูลสำเร็จ",
+              text: "บทเรียนถูกนำออกจากระบบแล้ว",
+              icon: "success",
+              confirmButtonColor: "#10b981",
+            });
+          }
+        } catch (error) {
+          console.error("Delete Chapter Error:", error);
+          Swal.fire({
+            title: "เกิดข้อผิดพลาด",
+            text:
+              error.response?.data?.message ||
+              "ไม่สามารถลบข้อมูลได้ กรุณาลองใหม่อีกครั้ง",
+            icon: "error",
+            confirmButtonColor: "#ef4444",
+          });
+        }
       }
     });
   };
@@ -182,12 +203,13 @@ const AdminClassroom = () => {
                           </span>
                         </td>
                         <td>
+                          {/* แก้ไขปุ่ม Action ทั้งสองปุ่ม ให้ส่ง ch.rawId ไปแทน ch.id */}
                           <div className="admin-classroom-action-buttons">
                             <button
                               className="admin-classroom-btn-action-icon admin-classroom-edit"
                               title="แก้ไขบทเรียน"
                               onClick={() =>
-                                navigate(`/admin-classroom/edit/${ch.id}`)
+                                navigate(`/admin-classroom/edit/${ch.rawId}`)
                               }
                             >
                               <FaEdit />
@@ -195,7 +217,7 @@ const AdminClassroom = () => {
                             <button
                               className="admin-classroom-btn-action-icon admin-classroom-delete"
                               title="ลบบทเรียน"
-                              onClick={() => handleDelete(ch.id, ch.title)}
+                              onClick={() => handleDelete(ch.rawId, ch.title)}
                             >
                               <FaTrash />
                             </button>

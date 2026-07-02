@@ -80,14 +80,14 @@ const AdminAddChapter = () => {
   // จำลองการบันทึกข้อมูล
   const handleSave = async (e) => {
     e.preventDefault();
-    
+
     // ตรวจสอบว่ากรอกข้อมูลครบไหม
     if (!chapterData.title || !chapterData.videoUrl || questions.length === 0) {
       Swal.fire({
         title: "ข้อมูลไม่ครบถ้วน",
         text: "กรุณากรอกชื่อบทเรียน ลิงก์วิดีโอ และแบบทดสอบอย่างน้อย 1 ข้อ",
         icon: "warning",
-        confirmButtonColor: "#0f172a"
+        confirmButtonColor: "#0f172a",
       });
       return;
     }
@@ -99,7 +99,7 @@ const AdminAddChapter = () => {
         targetRole: chapterData.targetRole,
         status: chapterData.status,
         videoUrl: chapterData.videoUrl,
-        questions: questions
+        questions: questions,
       };
 
       // ยิง API บันทึกข้อมูล
@@ -112,7 +112,7 @@ const AdminAddChapter = () => {
           icon: "success",
           confirmButtonColor: "#10b981",
           timer: 2000,
-          showConfirmButton: false
+          showConfirmButton: false,
         }).then(() => {
           navigate("/admin-classroom"); // กลับไปหน้าตาราง
         });
@@ -121,11 +121,59 @@ const AdminAddChapter = () => {
       console.error("Save Chapter Error:", error);
       Swal.fire({
         title: "เกิดข้อผิดพลาด",
-        text: error.response?.data?.message || "ไม่สามารถบันทึกข้อมูลได้ กรุณาลองใหม่อีกครั้ง",
+        text:
+          error.response?.data?.message ||
+          "ไม่สามารถบันทึกข้อมูลได้ กรุณาลองใหม่อีกครั้ง",
         icon: "error",
-        confirmButtonColor: "#ef4444"
+        confirmButtonColor: "#ef4444",
       });
     }
+  };
+
+  // ฟังก์ชันสำหรับแสดงตัวอย่างวิดีโอรองรับ YouTube, Google Drive และ ลิงก์ตรง (.mp4)
+  const renderVideoPreview = (url) => {
+    if (!url)
+      return (
+        <div className="video-placeholder">กรอกลิงก์วิดีโอเพื่อดูตัวอย่าง</div>
+      );
+
+    // เช็คว่าเป็นลิงก์ YouTube หรือไม่
+    const ytMatch = url.match(
+      /(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((\w|-){11})/,
+    );
+    if (ytMatch && ytMatch[1]) {
+      return (
+        <iframe
+          className="video-preview-iframe"
+          src={`https://www.youtube.com/embed/${ytMatch[1]}`}
+          title="YouTube video preview"
+          frameBorder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowFullScreen
+        ></iframe>
+      );
+    }
+
+    // เช็คว่าเป็นลิงก์ Google Drive หรือไม่
+    const driveMatch = url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
+    if (driveMatch && driveMatch[1]) {
+      return (
+        <iframe
+          className="video-preview-iframe"
+          src={`https://drive.google.com/file/d/${driveMatch[1]}/preview`}
+          title="Google Drive video preview"
+          allow="autoplay"
+        ></iframe>
+      );
+    }
+
+    // ค่าเริ่มต้นสำหรับลิงก์ตรง (เช่น AWS S3 .mp4)
+    return (
+      <video className="video-preview-iframe" controls>
+        <source src={url} />
+        เบราว์เซอร์ของคุณไม่รองรับการเล่นวิดีโอนี้
+      </video>
+    );
   };
 
   return (
@@ -208,25 +256,30 @@ const AdminAddChapter = () => {
                 </div>
               </div>
 
+              {/* ... โค้ดเดิมช่องกรอกลิงก์วิดีโอ ... */}
               <div className="form-group-row">
                 <div className="form-group">
                   <label>
                     ลิงก์วิดีโอ (URL) <span className="required">*</span>
                   </label>
-                  {/* แนะนำให้ใช้ URL เพราะดีพลอยบน Vercel ไม่เหมาะกับการอัปโหลดไฟล์วิดีโอขนาดใหญ่โดยตรง */}
                   <input
                     type="text"
                     name="videoUrl"
                     value={chapterData.videoUrl}
                     onChange={handleChangeInfo}
-                    placeholder="เช่น ลิงก์ YouTube, Google Drive, AWS S3"
+                    placeholder="เช่น ลิงก์ YouTube, Google Drive, AWS S3 (.mp4)"
                   />
-                  <small className="form-hint">
-                    ระบุ URL ของวิดีโอที่ฝากไว้บน Cloud Storage
-                    หรือแพลตฟอร์มวิดีโอ
-                  </small>
                 </div>
               </div>
+
+              {/* 👇 เพิ่มส่วนกล่องแสดงตัวอย่างวิดีโอตรงนี้ 👇 */}
+              <div className="video-preview-container">
+                <label className="preview-label">ตัวอย่างวิดีโอ:</label>
+                <div className="video-preview-wrapper">
+                  {renderVideoPreview(chapterData.videoUrl)}
+                </div>
+              </div>
+              {/* 👆 สิ้นสุดส่วนแสดงตัวอย่างวิดีโอ 👆 */}
             </div>
 
             {/* กล่องแบบทดสอบ */}

@@ -291,3 +291,56 @@
   box-shadow: 0 4px 6px -1px rgba(16, 185, 129, 0.2);
 }
 .btn-save-large:hover { background: #059669; }
+
+/* =========================================
+   Video Preview Section
+========================================= */
+.video-preview-container {
+  margin-bottom: 1.5rem;
+  background: #f8fafc;
+  border: 1px dashed #cbd5e1;
+  border-radius: 8px;
+  padding: 1rem;
+}
+
+.preview-label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #334155;
+  margin-bottom: 0.75rem;
+  font-family: inherit;
+}
+
+/* เทคนิคทำกล่อง 16:9 Responsive */
+.video-preview-wrapper {
+  position: relative;
+  padding-bottom: 56.25%; /* อัตราส่วน 16:9 (9 / 16 = 0.5625) */
+  height: 0;
+  overflow: hidden;
+  border-radius: 8px;
+  background: #0f172a; /* พื้นหลังสีดำเวลารอโหลด */
+}
+
+.video-preview-iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+.video-placeholder {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #94a3b8;
+  font-size: 0.875rem;
+  font-family: inherit;
+}
