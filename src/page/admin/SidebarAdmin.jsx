@@ -18,6 +18,8 @@ import {
   FaChevronDown, // ไอคอนลูกศรชี้ลง
   FaChevronRight, // ไอคอนลูกศรชี้ขวา
   FaAtlas,
+  FaCertificate,
+  FaPalette,
 } from "react-icons/fa";
 
 const SidebarAdmin = () => {
@@ -237,7 +239,7 @@ const SidebarAdmin = () => {
           </div>
           {/* ===================================== */}
 
-          <div className={`admin-sidebar-category ${!isOpen && "hidden"}`}>
+          {/* <div className={`admin-sidebar-category ${!isOpen && "hidden"}`}>
             ระบบส่วนหลัง
           </div>
 
@@ -249,7 +251,7 @@ const SidebarAdmin = () => {
             <span className={`admin-menu-text ${!isOpen && "hidden"}`}>
               รายงานสรุป
             </span>
-          </Link>
+          </Link> */}
 
           <div className={`admin-sidebar-category ${!isOpen && "hidden"}`}>
             สื่อการเรียนการสอน
@@ -263,6 +265,30 @@ const SidebarAdmin = () => {
             <span className={`admin-menu-text ${!isOpen && "hidden"}`}>
               จัดการสื่อการเรียนรู้
             </span>
+          </Link>
+
+          <div className={`admin-sidebar-category ${!isOpen && "hidden"}`}>
+            ใบประกาศ
+          </div>
+
+          <Link
+            to="/admin-certificate"
+            className={`admin-sidebar-item ${isActive("/admin-certificate")}`}
+          >
+            <FaCertificate
+              className="admin-menu-icon"
+            />
+            <span className="admin-menu-text">ผู้ได้รับใบประกาศฯ</span>
+          </Link>
+
+          <Link
+            to="/admin-manage-certificate"
+            className={`admin-sidebar-item ${isActive("/admin-manage-certificate")}`}
+          >
+            <FaPalette
+              className="admin-menu-icon"
+            />
+            <span className="admin-menu-text">ตั้งค่าแม่แบบใบประกาศ</span>
           </Link>
         </div>
 

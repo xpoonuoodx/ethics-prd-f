@@ -12,24 +12,23 @@ import {
   FaSpinner,
   FaEdit,
 } from "react-icons/fa";
-import "./style/AdminEditChapter.css"; // ไฟล์สไตล์
-import api from "../../api/Api"; // เช็ค Path ให้ตรงกับโครงสร้างโปรเจคของคุณ
+import "./style/AdminEditChapter.css";
+import api from "../../api/Api";
 
 const AdminEditChapter = () => {
   const navigate = useNavigate();
-  const { id } = useParams(); // รับค่า id จาก URL
+  const { id } = useParams();
 
   const [loading, setLoading] = useState(true);
 
-  // State สำหรับข้อมูลทั่วไปและวิดีโอ
   const [chapterData, setChapterData] = useState({
     title: "",
     targetRole: "บทบาทที่ 1",
     status: "Active",
     videoUrl: "",
+    passingPercentage: "80", // เพิ่มสถานะเกณฑ์ผ่าน
   });
 
-  // State สำหรับแบบทดสอบ
   const [questions, setQuestions] = useState([]);
 
   useEffect(() => {
@@ -37,24 +36,33 @@ const AdminEditChapter = () => {
     fetchChapterData();
   }, [id]);
 
-  // ดึงข้อมูลเดิมจาก Database
   const fetchChapterData = async () => {
     try {
       setLoading(true);
-      // ยิง API ไปขอดึงข้อมูลบทเรียนตาม ID
       const response = await api.get(`/admin/classroom/${id}`);
 
       if (response.data && response.data.success) {
-        const { title, targetRole, status, videoUrl, questions } =
-          response.data.data;
+        const {
+          title,
+          targetRole,
+          status,
+          videoUrl,
+          questions,
+          passingPercentage,
+        } = response.data.data;
 
-        // นำข้อมูลไปใส่ใน State
-        setChapterData({ title, targetRole, status, videoUrl });
+        // นำค่าเกณฑ์ผ่านมาเก็บใน state ดักจับด้วย
+        setChapterData({
+          title,
+          targetRole,
+          status,
+          videoUrl,
+          passingPercentage: passingPercentage?.toString() || "80",
+        });
 
         if (questions && questions.length > 0) {
           setQuestions(questions);
         } else {
-          // ถ้าบังเอิญไม่มีข้อสอบเลย ให้สร้างกล่องว่างไว้ 1 ข้อ
           setQuestions([
             {
               id: 1,
@@ -73,7 +81,7 @@ const AdminEditChapter = () => {
         icon: "error",
         confirmButtonColor: "#ef4444",
       }).then(() => {
-        navigate("/admin-classroom"); // ถ้าโหลดพังให้เด้งกลับหน้าตาราง
+        navigate("/admin-classroom");
       });
     } finally {
       setLoading(false);
@@ -105,28 +113,30 @@ const AdminEditChapter = () => {
   const handleQuestionChange = (id, field, value, optionIndex = null) => {
     const updatedQuestions = questions.map((q) => {
       if (q.id === id) {
-        if (field === "questionText") {
-          return { ...q, questionText: value };
-        } else if (field === "options") {
+        if (field === "questionText") return { ...q, questionText: value };
+        else if (field === "options") {
           const newOptions = [...q.options];
           newOptions[optionIndex] = value;
           return { ...q, options: newOptions };
-        } else if (field === "correctAnswer") {
+        } else if (field === "correctAnswer")
           return { ...q, correctAnswer: parseInt(value) };
-        }
       }
       return q;
     });
     setQuestions(updatedQuestions);
   };
 
-  // ส่งข้อมูลที่แก้ไขแล้วไปบันทึก
   const handleSave = async (e) => {
     e.preventDefault();
-    if (!chapterData.title || !chapterData.videoUrl || questions.length === 0) {
+    if (
+      !chapterData.title ||
+      !chapterData.videoUrl ||
+      questions.length === 0 ||
+      !chapterData.passingPercentage
+    ) {
       Swal.fire({
         title: "ข้อมูลไม่ครบถ้วน",
-        text: "กรุณากรอกชื่อบทเรียน ลิงก์วิดีโอ และแบบทดสอบอย่างน้อย 1 ข้อ",
+        text: "กรุณากรอกชื่อบทเรียน เกณฑ์คะแนนสอบผ่าน ลิงก์วิดีโอ และแบบทดสอบอย่างน้อย 1 ข้อ",
         icon: "warning",
         confirmButtonColor: "#0f172a",
       });
@@ -139,10 +149,10 @@ const AdminEditChapter = () => {
         targetRole: chapterData.targetRole,
         status: chapterData.status,
         videoUrl: chapterData.videoUrl,
+        passingPercentage: parseInt(chapterData.passingPercentage), // ส่งข้อมูลผ่าน PUT API
         questions: questions,
       };
 
-      // ยิง API แบบ PUT เพื่อสั่งอัปเดต
       const response = await api.put(`/admin/classroom/edit/${id}`, payload);
 
       if (response.data && response.data.success) {
@@ -154,7 +164,7 @@ const AdminEditChapter = () => {
           timer: 2000,
           showConfirmButton: false,
         }).then(() => {
-          navigate("/admin-classroom"); // กลับไปหน้าตาราง
+          navigate("/admin-classroom");
         });
       }
     } catch (error) {
@@ -168,7 +178,6 @@ const AdminEditChapter = () => {
     }
   };
 
-  // ฟังก์ชันสำหรับแสดงตัวอย่างวิดีโอรองรับ YouTube, Google Drive และ ลิงก์ตรง (.mp4)
   const renderVideoPreview = (url) => {
     if (!url)
       return (
@@ -176,8 +185,6 @@ const AdminEditChapter = () => {
           กรอกลิงก์วิดีโอเพื่อดูตัวอย่าง
         </div>
       );
-
-    // เช็คว่าเป็นลิงก์ YouTube หรือไม่
     const ytMatch = url.match(
       /(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((\w|-){11})/,
     );
@@ -188,13 +195,10 @@ const AdminEditChapter = () => {
           src={`https://www.youtube.com/embed/${ytMatch[1]}`}
           title="YouTube video preview"
           frameBorder="0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowFullScreen
         ></iframe>
       );
     }
-
-    // เช็คว่าเป็นลิงก์ Google Drive หรือไม่
     const driveMatch = url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
     if (driveMatch && driveMatch[1]) {
       return (
@@ -206,8 +210,6 @@ const AdminEditChapter = () => {
         ></iframe>
       );
     }
-
-    // ค่าเริ่มต้นสำหรับลิงก์ตรง (เช่น AWS S3 .mp4)
     return (
       <video className="aec-video-iframe" controls>
         <source src={url} />
@@ -219,10 +221,8 @@ const AdminEditChapter = () => {
   return (
     <div className="aec-layout">
       <SidebarAdmin />
-
       <div className="aec-main-content">
         <div className="aec-container">
-          {/* ส่วนหัว */}
           <div className="aec-header">
             <div className="aec-header-title-wrap">
               <div className="aec-header-icon">
@@ -235,7 +235,6 @@ const AdminEditChapter = () => {
                 </p>
               </div>
             </div>
-
             <div className="aec-header-actions">
               <button
                 className="aec-btn-secondary"
@@ -256,9 +255,6 @@ const AdminEditChapter = () => {
             </div>
           ) : (
             <form className="aec-form">
-              {/* -------------------------------------
-                  Card 1: ข้อมูลบทเรียนและวิดีโอ 
-              -------------------------------------- */}
               <div className="aec-form-card">
                 <div className="aec-card-header">
                   <FaVideo className="aec-card-icon" />
@@ -275,7 +271,6 @@ const AdminEditChapter = () => {
                       name="title"
                       value={chapterData.title}
                       onChange={handleChangeInfo}
-                      placeholder="เช่น บทที่ 1: จริยธรรม AI เบื้องต้น"
                     />
                   </div>
                 </div>
@@ -316,6 +311,28 @@ const AdminEditChapter = () => {
                   </div>
                 </div>
 
+                {/* อัปเดตช่องแก้ไขเกณฑ์ผ่านการสอบ */}
+                <div className="aec-form-row aac-col-2">
+                  <div className="aec-form-group">
+                    <label>
+                      เกณฑ์คะแนนสอบผ่านขั้นต่ำ (%){" "}
+                      <span className="aec-required">*</span>
+                    </label>
+                    <select
+                      name="passingPercentage"
+                      value={chapterData.passingPercentage}
+                      onChange={handleChangeInfo}
+                    >
+                      <option value="50">50%</option>
+                      <option value="60">60%</option>
+                      <option value="70">70%</option>
+                      <option value="80">80%</option>
+                      <option value="90">90%</option>
+                      <option value="100">100%</option>
+                    </select>
+                  </div>
+                </div>
+
                 <div className="aec-form-row">
                   <div className="aec-form-group">
                     <label>
@@ -326,7 +343,6 @@ const AdminEditChapter = () => {
                       name="videoUrl"
                       value={chapterData.videoUrl}
                       onChange={handleChangeInfo}
-                      placeholder="เช่น ลิงก์ YouTube, Google Drive, AWS S3 (.mp4)"
                     />
                   </div>
                 </div>
@@ -339,9 +355,6 @@ const AdminEditChapter = () => {
                 </div>
               </div>
 
-              {/* -------------------------------------
-                  Card 2: จัดการแบบทดสอบ 
-              -------------------------------------- */}
               <div className="aec-form-card">
                 <div className="aec-card-header-flex">
                   <div className="aec-card-header-title">
@@ -353,6 +366,7 @@ const AdminEditChapter = () => {
                     className="aec-btn-add-question"
                     onClick={handleAddQuestion}
                   >
+                    {" "}
                     <FaPlus /> เพิ่มข้อสอบ
                   </button>
                 </div>
@@ -384,7 +398,6 @@ const AdminEditChapter = () => {
                             e.target.value,
                           )
                         }
-                        placeholder="พิมพ์คำถามที่นี่..."
                       />
                     </div>
 
@@ -421,7 +434,6 @@ const AdminEditChapter = () => {
                                 optIndex,
                               )
                             }
-                            placeholder={`คำตอบตัวเลือกที่ ${optIndex + 1}`}
                           />
                         </div>
                       ))}
