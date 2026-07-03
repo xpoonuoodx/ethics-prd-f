@@ -11,6 +11,7 @@ import {
   FaBars,
   FaTimes,
   FaGripLinesVertical,
+  FaCertificate,
 } from "react-icons/fa";
 
 const SidebarUser = () => {
@@ -125,6 +126,17 @@ const SidebarUser = () => {
           >
             <FaTools className="su-icon" />
             <span className={`su-text ${!isOpen && "hidden"}`}>เครื่องมือ</span>
+          </a>
+
+          <a
+            href="/user-certificate"
+            className={`su-menu-item ${
+              currentPath === "/user-certificate" ? "active" : ""
+            }`}
+            title="ใบประกาศนียบัตร"
+          >
+            <FaCertificate className="su-icon" />
+            <span className={`su-text ${!isOpen && "hidden"}`}>ใบประกาศนียบัตร</span>
           </a>
 
           {/* <a

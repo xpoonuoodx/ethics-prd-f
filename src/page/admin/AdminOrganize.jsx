@@ -119,27 +119,44 @@ const AdminOrganize = () => {
     }
   };
 
-  const handleDelete = (id, name) => {
-    Swal.fire({
+  const handleDelete = async (id, name) => {
+    const result = await Swal.fire({
       title: "ยืนยันการลบหน่วยงาน?",
       text: `คุณต้องการลบหน่วยงาน "${name}" ใช่หรือไม่ ข้อมูลที่เกี่ยวข้องจะถูกลบทั้งหมด`,
       icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: "#0f172a",
+      confirmButtonColor: "#ef4444",
       cancelButtonColor: "#94a3b8",
       confirmButtonText: "ยืนยันลบข้อมูล",
       cancelButtonText: "ยกเลิก",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        setOrganizations(organizations.filter((org) => org.id !== id));
+    });
+
+    if (result.isConfirmed) {
+      try {
+        // 💡 ยิง API ไปที่หลังบ้าน
+        const response = await api.delete(`/admin/delete-organize/${id}`);
+
+        if (response.data && response.data.success) {
+          // อัปเดต State เฉพาะเมื่อลบในฐานข้อมูลสำเร็จแล้ว
+          setOrganizations(organizations.filter((org) => org.id !== id));
+
+          Swal.fire({
+            title: "ลบข้อมูลสำเร็จ",
+            text: "ข้อมูลหน่วยงานถูกนำออกจากระบบแล้ว",
+            icon: "success",
+            confirmButtonColor: "#10b981",
+          });
+        }
+      } catch (error) {
+        console.error("Delete Error:", error);
         Swal.fire({
-          title: "ลบข้อมูลสำเร็จ",
-          text: "ข้อมูลหน่วยงานถูกนำออกจากระบบแล้ว",
-          icon: "success",
-          confirmButtonColor: "#10b981",
+          title: "เกิดข้อผิดพลาด",
+          text: error.response?.data?.message || "ไม่สามารถลบข้อมูลได้",
+          icon: "error",
+          confirmButtonColor: "#ef4444",
         });
       }
-    });
+    }
   };
 
   const filteredOrganizations = organizations.filter((org) => {

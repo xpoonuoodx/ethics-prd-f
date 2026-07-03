@@ -47,6 +47,7 @@ import UserTools from "./page/user/UserTools"; // หน้าเครื่อ
 import UserToolsCreate from "./page/user/UserToolsCreate";
 import UserTestDetail from "./page/user/UserTestDetail";
 import UserToolsResult from "./page/user/UserToolsResult";
+import UserResult from "./page/user/UserResult"; // หน้าแสดงผลการสอบ
 
 //Ragulator Pages
 import RegulatorDashboard from "./page/regulator/RegulatorDashboard"; // หน้าแดชบอร์ดของ Regulator
@@ -282,6 +283,15 @@ function App() {
             </UserRoute>
           }
         />
+
+        <Route
+          path="/user-result"
+          element={
+            <UserRoute>
+              <UserResult />
+            </UserRoute>
+          }
+        />  
         {/* --- เส้นทางสำหรับ Regulator --- */}
 
         <Route

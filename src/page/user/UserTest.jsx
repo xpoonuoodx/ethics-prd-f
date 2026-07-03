@@ -75,7 +75,7 @@ const UserTest = () => {
           <div className="utest-card">
             <div className="utest-card-header">
               <h3>
-                <FaFileAlt className="utest-text-blue" /> รายการแบบทดสอบทั้งหมด
+                <FaFileAlt className="utest-text-blue" /> รายการแบบทดสอบหลักสูตรทั้งหมด
               </h3>
             </div>
 

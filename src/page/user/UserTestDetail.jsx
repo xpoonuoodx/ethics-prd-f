@@ -90,7 +90,13 @@ const UserTestDetail = () => {
       const response = await api.post(`/user/test-submit`, payload);
       if (response.data && response.data.success) {
         setResultData(response.data.data);
-        setStep("result");
+        // setStep("result");
+        navigate("/user-result", {
+          state: {
+            resultData: response.data.data,
+            chapterInfo: chapterInfo,
+          },
+        });
       }
     } catch (error) {
       console.error("Submit Test Error:", error);
