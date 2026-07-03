@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import SidebarUser from "./SidebarUser";
 import {
   FaArrowLeft,
@@ -7,239 +7,153 @@ import {
   FaClipboardList,
   FaChartBar,
   FaCheckCircle,
-  FaLock,
+  FaSpinner,
+  FaBookOpen,
 } from "react-icons/fa";
+import api from "../../api/Api";
 import "./style/UserClassroom.css";
 
 const UserClassroom = () => {
-  const location = useLocation();
   const navigate = useNavigate();
-  const queryParams = new URLSearchParams(location.search);
-  const role = queryParams.get("role") || "user";
+  const [loading, setLoading] = useState(true);
 
-  const [courseData, setCourseData] = useState({});
+  const [courseData, setCourseData] = useState({
+    courseTitle: "กำลังโหลดข้อมูล...",
+    courseDesc: "",
+    chapters: [],
+  });
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    // กำหนดเนื้อหาแบบจำลองตาม Role โดยแบ่งตาม "ตัวชี้วัด"
-    if (role === "regulator") {
-      setCourseData({
-        title: "หลักสูตรสำหรับผู้วางนโยบาย (Regulator)",
-        desc: "เรียนรู้แนวทางการกำกับดูแลและการสร้างนโยบาย AI ที่สอดคล้องกับหลักจริยธรรมระดับชาติ",
-        indicators: [
-          {
-            id: "ind-1",
-            title: "ตัวชี้วัดที่ 1: ความโปร่งใสและตรวจสอบได้",
-            lessons: [
-              {
-                id: 101,
-                title: "พื้นฐานนโยบาย AI และการกำกับดูแล",
-                status: "completed",
-                score: "9/10",
-              },
-              {
-                id: 102,
-                title: "กฎหมายและข้อบังคับที่เกี่ยวข้อง (PDPA & AI Act)",
-                status: "pending",
-                score: null,
-              },
-              {
-                id: 102,
-                title: "กฎหมายและข้อบังคับที่เกี่ยวข้อง (PDPA & AI Act)",
-                status: "pending",
-                score: null,
-              },
-              {
-                id: 102,
-                title: "กฎหมายและข้อบังคับที่เกี่ยวข้อง (PDPA & AI Act)",
-                status: "pending",
-                score: null,
-              },
-              {
-                id: 102,
-                title: "กฎหมายและข้อบังคับที่เกี่ยวข้อง (PDPA & AI Act)",
-                status: "pending",
-                score: null,
-              },
-              
-            ],
-          },
-          {
-            id: "ind-2",
-            title: "ตัวชี้วัดที่ 2: ความเป็นธรรมและลดความลำเอียง",
-            lessons: [
-              {
-                id: 103,
-                title: "กรณีศึกษา: การบังคับใช้นโยบายระดับสากล",
-                status: "locked",
-                score: null,
-              },
-            ],
-          },
-        ],
-      });
-    } else if (role === "provider") {
-      setCourseData({
-        title: "หลักสูตรสำหรับนักพัฒนา (Provider)",
-        desc: "เรียนรู้การออกแบบและพัฒนาโมเดล AI ที่มีความโปร่งใส อธิบายได้ และลดความลำเอียง",
-        indicators: [
-          {
-            id: "ind-1",
-            title: "ตัวชี้วัดที่ 1: การออกแบบ AI อย่างรับผิดชอบ",
-            lessons: [
-              {
-                id: 201,
-                title: "จริยธรรมสำหรับนักพัฒนา AI เบื้องต้น",
-                status: "completed",
-                score: "10/10",
-              },
-              {
-                id: 202,
-                title: "การตรวจสอบและลดความลำเอียงในชุดข้อมูล",
-                status: "pending",
-                score: null,
-              },
-            ],
-          },
-          {
-            id: "ind-2",
-            title: "ตัวชี้วัดที่ 2: ความปลอดภัยและความมั่นคง",
-            lessons: [
-              {
-                id: 203,
-                title: "การป้องกัน Model Extraction และ Data Poisoning",
-                status: "locked",
-                score: null,
-              },
-            ],
-          },
-        ],
-      });
-    } else {
-      setCourseData({
-        title: "หลักสูตรสำหรับผู้ใช้งานทั่วไป (User)",
-        desc: "สร้างความตระหนักรู้และเข้าใจผลกระทบของการใช้งาน AI ในชีวิตประจำวัน",
-        indicators: [
-          {
-            id: "ind-1",
-            title: "ตัวชี้วัดที่ 1: การรู้เท่าทันเทคโนโลยี AI",
-            lessons: [
-              {
-                id: 301,
-                title: "ทำความรู้จัก AI และผลกระทบในชีวิตประจำวัน",
-                status: "completed",
-                score: "8/10",
-              },
-              {
-                id: 302,
-                title: "การใช้งาน AI สร้างเนื้อหา (Generative AI) อย่างปลอดภัย",
-                status: "pending",
-                score: null,
-              },
-            ],
-          },
-          {
-            id: "ind-2",
-            title: "ตัวชี้วัดที่ 2: การปกป้องข้อมูลส่วนบุคคล",
-            lessons: [
-              {
-                id: 303,
-                title: "การให้ข้อมูลส่วนตัวกับระบบ AI และความเสี่ยง",
-                status: "locked",
-                score: null,
-              },
-            ],
-          },
-        ],
-      });
+    fetchClassroomData();
+  }, []);
+
+  const fetchClassroomData = async () => {
+    try {
+      setLoading(true);
+      const storedUser = JSON.parse(localStorage.getItem("user"));
+      const userId = storedUser?.id || storedUser?.user_id;
+
+      if (!userId) {
+        console.warn("ไม่พบ User ID");
+        setLoading(false);
+        return;
+      }
+
+      const response = await api.get(`/user/classroom/${userId}`);
+      if (response.data && response.data.success) {
+        setCourseData(response.data.data);
+      }
+    } catch (error) {
+      console.error("Fetch Classroom Error:", error);
+    } finally {
+      setLoading(false);
     }
-  }, [role]);
-
-  // ฟังก์ชันนำทางไปหน้าเรียนวิดีโอ
-  const handleStartLearn = (lessonId) => {
-    navigate(`/user-classroom-detail?role=${role}&lesson=${lessonId}`);
   };
 
-  // ฟังก์ชันนำทางไปหน้าทำแบบทดสอบ (ส่งไป UserTest)
-  const handleStartTest = (lessonId) => {
-    navigate(`/user-test?role=${role}&lesson=${lessonId}`);
+  const handleStartLearn = (chapterId) => {
+    navigate(`/user-classroom-detail?lesson=${chapterId}`);
   };
+
+  const handleStartTest = (chapterId) => {
+    navigate(`/user-test?lesson=${chapterId}`);
+  };
+
+  if (loading) {
+    return (
+      <div className="user-portal-layout">
+        <SidebarUser />
+        <div className="user-portal-content flex-center">
+          <FaSpinner className="ucl-spin-icon" />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="user-portal-layout">
       <SidebarUser />
-      <div className="user-portal-content">
-        <div className="ucl-container">
-          <button
-            className="ucl-back-btn"
-            onClick={() => navigate("/user-select-role?type=learn")}
-          >
-            <FaArrowLeft /> เปลี่ยนสายงาน
-          </button>
 
+      <div className="user-portal-content">
+        <div className="ucl-admin-container">
           <div className="ucl-header">
-            <h1 className="ucl-title">{courseData.title}</h1>
-            <p className="ucl-subtitle">{courseData.desc}</p>
+            <button
+              className="ucl-back-btn"
+              onClick={() => navigate("/user-dashboard")}
+            >
+              <FaArrowLeft /> กลับสู่แดชบอร์ด
+            </button>
+            <h1 className="ucl-title">{courseData.courseTitle}</h1>
+            <p className="ucl-subtitle">{courseData.courseDesc}</p>
           </div>
 
-          <div className="ucl-indicators-list">
-            {courseData.indicators?.map((indicator) => (
-              <div key={indicator.id} className="ucl-indicator-card">
-                <h2 className="ucl-indicator-title">{indicator.title}</h2>
+          <div className="ucl-card">
+            <div className="ucl-card-header">
+              <h3>
+                <FaBookOpen className="text-blue" />{" "}
+                รายวิชาและสื่อการเรียนรู้ทั้งหมด
+              </h3>
+            </div>
 
-                <div className="ucl-lessons-wrapper">
-                  {indicator.lessons.map((lesson) => (
-                    <div
-                      key={lesson.id}
-                      className={`ucl-lesson-row ${lesson.status}`}
-                    >
-                      <div className="ucl-lesson-info">
-                        <div className="ucl-lesson-icon">
-                          {lesson.status === "completed" && (
-                            <FaCheckCircle className="text-green" />
-                          )}
-                          {lesson.status === "pending" && (
-                            <FaPlay className="text-blue" />
-                          )}
-                          {lesson.status === "locked" && (
-                            <FaLock className="text-gray" />
-                          )}
+            <div className="ucl-card-body">
+              <div className="ucl-lessons-wrapper">
+                {courseData.chapters.length > 0 ? (
+                  courseData.chapters.map((lesson, index) => {
+                    const isCompleted = lesson.isPassed;
+                    return (
+                      <div key={lesson.chapterId} className="ucl-lesson-row">
+                        <div className="ucl-lesson-info">
+                          <div
+                            className={`ucl-lesson-icon-box ${isCompleted ? "bg-green-light text-green" : "bg-blue-light text-blue"}`}
+                          >
+                            {isCompleted ? <FaCheckCircle /> : <FaPlay />}
+                          </div>
+                          <div className="ucl-lesson-details">
+                            <span className="ucl-lesson-index">
+                              บทที่ {index + 1}
+                            </span>
+                            <h3 className="ucl-lesson-name">
+                              {lesson.chapterTitle}
+                            </h3>
+                          </div>
                         </div>
-                        <h3 className="ucl-lesson-name">{lesson.title}</h3>
+
+                        <div className="ucl-lesson-actions">
+                          <button
+                            className="ucl-btn-primary"
+                            onClick={() => handleStartLearn(lesson.chapterId)}
+                          >
+                            <FaPlay />{" "}
+                            {isCompleted ? "ทบทวนบทเรียน" : "เริ่มเรียน"}
+                          </button>
+
+                          <button
+                            className="ucl-btn-success"
+                            onClick={() => handleStartTest(lesson.chapterId)}
+                          >
+                            <FaClipboardList /> ทำแบบทดสอบ
+                          </button>
+
+                          <button
+                            className="ucl-btn-outline"
+                            disabled={lesson.userScore === null}
+                          >
+                            <FaChartBar />{" "}
+                            {lesson.userScore !== null
+                              ? `คะแนน: ${lesson.userScore}/${lesson.totalQuestions}`
+                              : "ยังไม่มีคะแนน"}
+                          </button>
+                        </div>
                       </div>
-
-                      <div className="ucl-lesson-actions">
-                        <button
-                          className="ucl-btn-action learn"
-                          disabled={lesson.status === "locked"}
-                          onClick={() => handleStartLearn(lesson.id)}
-                        >
-                          <FaPlay /> เริ่มเรียน
-                        </button>
-
-                        <button
-                          className="ucl-btn-action test"
-                          disabled={lesson.status === "locked"}
-                          onClick={() => handleStartTest(lesson.id)}
-                        >
-                          <FaClipboardList /> ทำแบบทดสอบ
-                        </button>
-
-                        <button
-                          className="ucl-btn-action score"
-                          disabled={!lesson.score}
-                        >
-                          <FaChartBar />{" "}
-                          {lesson.score
-                            ? `ผลคะแนน ${lesson.score}`
-                            : "ยังไม่มีคะแนน"}
-                        </button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
+                    );
+                  })
+                ) : (
+                  <div className="ucl-empty-state">
+                    ขณะนี้ยังไม่มีสื่อการเรียนรู้สำหรับกลุ่มของคุณ
+                  </div>
+                )}
               </div>
-            ))}
+            </div>
           </div>
         </div>
       </div>

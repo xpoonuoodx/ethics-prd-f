@@ -4,281 +4,179 @@ import "./style/UserTools.css";
 import SidebarUser from "./SidebarUser";
 import {
   FaPlus,
-  FaPlayCircle,
   FaTrash,
-  FaChevronUp,
-  FaChevronDown,
-  FaTimes,
-  FaCalendarAlt,
-  FaChartPie,
+  FaEye,
+  FaSpinner,
   FaLayerGroup,
 } from "react-icons/fa";
+import api from "../../api/Api";
 import Swal from "sweetalert2";
 
 const UserTools = () => {
   const navigate = useNavigate();
-  const [showVideoModal, setShowVideoModal] = useState(false);
-  const [expandedIds, setExpandedIds] = useState([1]); // เก็บ ID ของการ์ดที่ถูกกางออก
+  const [loading, setLoading] = useState(true);
+  const [tools, setTools] = useState([]);
 
   useEffect(() => {
     window.scrollTo(0, 0);
+    fetchToolsHistory();
   }, []);
 
-  // ----------------------------------------
-  // ข้อมูลจำลอง (Mock Data)
-  // ----------------------------------------
-  const [tools, setTools] = useState([
-    {
-      id: 1,
-      createdAt: "22/04/2026",
-      maturityLevel: "ระดับ 3",
-      progress: "0/9",
-      roleTitle: "องค์ประกอบที่ 1 : Regulator/Policy",
-      roleDesc: "Evaluate, Regulate and Monitor (ERM)",
-      principleTitle: "หลักการทางจริยธรรมปัญญาประดิษฐ์",
-      principleDesc:
-        "ความสามารถในการแข่งขันและการพัฒนาอย่างยั่งยืน\n(Competitiveness and Sustainability Development)",
-      subItem:
-        "องค์ประกอบที่ 1 : Regulator/Policy Evaluate, Regulate and Monitor (ERM)",
-    },
-    {
-      id: 2,
-      createdAt: "15/03/2026",
-      maturityLevel: "ระดับ 2",
-      progress: "4/9",
-      roleTitle: "องค์ประกอบที่ 2 : Service Provider",
-      roleDesc: "Plan, Development, Operation, Measurement (PDOM)",
-      principleTitle: "หลักการทางจริยธรรมปัญญาประดิษฐ์",
-      principleDesc:
-        "ความโปร่งใสและความสามารถในการอธิบายได้\n(Transparency and Explainability)",
-      subItem:
-        "องค์ประกอบที่ 2 : Service Provider Plan, Development, Operation...",
-    },
-    {
-      id: 3,
-      createdAt: "15/03/2026",
-      maturityLevel: "ระดับ 2",
-      progress: "4/9",
-      roleTitle: "องค์ประกอบที่ 2 : Service Provider",
-      roleDesc: "Plan, Development, Operation, Measurement (PDOM)",
-      principleTitle: "หลักการทางจริยธรรมปัญญาประดิษฐ์",
-      principleDesc:
-        "ความโปร่งใสและความสามารถในการอธิบายได้\n(Transparency and Explainability)",
-      subItem:
-        "องค์ประกอบที่ 2 : Service Provider Plan, Development, Operation...",
-    },
-    {
-      id: 4,
-      createdAt: "15/03/2026",
-      maturityLevel: "ระดับ 2",
-      progress: "4/9",
-      roleTitle: "องค์ประกอบที่ 2 : Service Provider",
-      roleDesc: "Plan, Development, Operation, Measurement (PDOM)",
-      principleTitle: "หลักการทางจริยธรรมปัญญาประดิษฐ์",
-      principleDesc:
-        "ความโปร่งใสและความสามารถในการอธิบายได้\n(Transparency and Explainability)",
-      subItem:
-        "องค์ประกอบที่ 2 : Service Provider Plan, Development, Operation...",
-    },
-  ]);
+  const fetchToolsHistory = async () => {
+    try {
+      setLoading(true);
+      const storedUser = JSON.parse(localStorage.getItem("user"));
+      const userId = storedUser?.id || storedUser?.user_id;
+      if (!userId) return;
 
-  // ฟังก์ชันยืด-หดการ์ด
-  const toggleExpand = (id) => {
-    if (expandedIds.includes(id)) {
-      setExpandedIds(expandedIds.filter((item) => item !== id));
-    } else {
-      setExpandedIds([...expandedIds, id]);
+      const response = await api.get(`/user/tool-history-list/${userId}`);
+      if (response.data && response.data.success) {
+        setTools(response.data.data);
+      }
+    } catch (error) {
+      console.error("Fetch Tools History Error:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
-  // ฟังก์ชันลบเครื่องมือ
   const handleDelete = (id) => {
     Swal.fire({
-      title: "ยืนยันการลบ?",
-      text: "คุณต้องการลบเครื่องมือประเมินนี้ใช่หรือไม่?",
+      title: "ยืนยันการลบข้อมูล?",
+      text: "รายการนี้จะถูกลบออกจากระบบอย่างถาวร",
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#ef4444",
       cancelButtonColor: "#94a3b8",
-      confirmButtonText: "ลบเครื่องมือ",
+      confirmButtonText: "ลบข้อมูล",
       cancelButtonText: "ยกเลิก",
-    }).then((result) => {
+    }).then(async (result) => {
       if (result.isConfirmed) {
-        setTools(tools.filter((t) => t.id !== id));
-        Swal.fire({
-          title: "ลบสำเร็จ!",
-          text: "ข้อมูลเครื่องมือถูกลบแล้ว",
-          icon: "success",
-          confirmButtonColor: "#3b82f6",
-        });
+        try {
+          const response = await api.delete(`/user/tool-history-delete/${id}`);
+          if (response.data && response.data.success) {
+            setTools(tools.filter((t) => t.id !== id));
+            Swal.fire("ลบสำเร็จ", "ข้อมูลถูกลบออกจากระบบแล้ว", "success");
+          }
+        } catch (error) {
+          Swal.fire("ผิดพลาด", "ไม่สามารถลบข้อมูลได้", "error");
+        }
       }
     });
   };
 
+  const handleView = (toolData) => {
+    navigate("/user-tools-result", {
+      state: { resultData: toolData, isHistory: true },
+    });
+  };
+
+  if (loading) {
+    return (
+      <div className="user-portal-layout">
+        <SidebarUser />
+        <div className="user-portal-content flex-center">
+          <FaSpinner className="ut-spin-icon" />
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="user-portal-layout">
-      {/* วาง Sidebar ไว้ด้านซ้าย */}
       <SidebarUser />
-
-      {/* ส่วนเนื้อหาหลักด้านขวา */}
       <div className="user-portal-content">
-        <div className="ut-v2-container">
-          {/* =======================================
-              ส่วนหัว (Header & Actions) ดีไซน์ใหม่
-              ======================================= */}
-          <div className="ut-v2-header-section">
-            <div className="ut-v2-title-box">
-              <h1 className="ut-v2-title">เครื่องมือของฉัน</h1>
-              <p className="ut-v2-subtitle">
-                ประวัติและการจัดการเครื่องมือประเมินความพร้อม AI
-                สำหรับโครงการของคุณ
+        <div className="ut-minimal-container">
+          <div className="ut-minimal-header">
+            <div>
+              <h1 className="ut-title">จัดการเครื่องมือประเมิน</h1>
+              <p className="ut-subtitle">
+                ภาพรวมและประวัติการประเมินความพร้อม AI ของคุณ
               </p>
             </div>
-            <div className="ut-v2-actions-box">
-              <button
-                className="ut-v2-btn-video"
-                onClick={() => setShowVideoModal(true)}
-              >
-                <FaPlayCircle size={18} /> วิธีการสร้าง
-              </button>
-              <button
-                className="ut-v2-btn-create"
-                onClick={() => navigate("/user-tools-create")}
-              >
-                <FaPlus size={14} /> สร้างเครื่องมือ
-              </button>
+            <button
+              className="ut-btn-primary"
+              onClick={() => navigate("/user-tools-create")}
+            >
+              <FaPlus /> สร้างเครื่องมือใหม่
+            </button>
+          </div>
+
+          {/* สถิติ 3 กล่องบน */}
+          <div className="ut-stats-row">
+            <div className="ut-stat-card">
+              <div className="ut-stat-icon bg-blue-light text-blue">
+                <FaLayerGroup />
+              </div>
+              <div className="ut-stat-info">
+                <span>ประวัติทั้งหมด</span>
+                <h3>{tools.length}</h3>
+              </div>
             </div>
           </div>
 
-          {/* =======================================
-              รายการเครื่องมือ (Grid Layout)
-              ======================================= */}
-          <div className="ut-v2-grid-wrapper">
-            {tools.map((tool) => {
-              const isExpanded = expandedIds.includes(tool.id);
+          <div className="ut-list-section">
+            <div className="ut-list-header-row">
+              <h3>
+                รายการประเมินในระบบ{" "}
+                <span className="ut-badge-count">{tools.length} รายการ</span>
+              </h3>
+            </div>
 
-              return (
-                <div
-                  key={tool.id}
-                  className={`ut-v2-card ${isExpanded ? "expanded" : ""}`}
-                >
-                  {/* Badges (แทนที่ Header สีทึบ) */}
-                  <div className="ut-v2-card-badges">
-                    <span className="ut-v2-badge date">
-                      <FaCalendarAlt /> {tool.createdAt}
-                    </span>
-                    <span className="ut-v2-badge level">
-                      <FaLayerGroup /> {tool.maturityLevel}
-                    </span>
-                    <span className="ut-v2-badge progress">
-                      <FaChartPie /> {tool.progress}
-                    </span>
-                  </div>
+            {/* Header Columns */}
+            <div className="ut-list-cols">
+              <span className="col-id">รหัสอ้างอิง</span>
+              <span className="col-role">สายงานผู้ประเมิน</span>
+              <span className="col-level">ระดับเป้าหมาย</span>
+              <span className="col-date">วันที่ประเมิน</span>
+              <span className="col-action text-center">จัดการ</span>
+            </div>
 
-                  {/* Main Info */}
-                  <div className="ut-v2-card-main">
-                    <p className="ut-v2-role-label">บทบาทการประเมิน</p>
-                    <h3 className="ut-v2-role-title">{tool.roleTitle}</h3>
-                    <p className="ut-v2-role-desc">{tool.roleDesc}</p>
-                  </div>
-
-                  {/* Expanded Content */}
-                  {isExpanded && (
-                    <div className="ut-v2-card-details fade-in-down">
-                      <div className="ut-v2-divider"></div>
-                      <div className="ut-v2-principle-box">
-                        <p className="ut-v2-principle-label">
-                          หลักการทางจริยธรรม
-                        </p>
-                        <h4 className="ut-v2-principle-title">
-                          {tool.principleTitle}
-                        </h4>
-                        <p className="ut-v2-principle-desc whitespace-pre-line">
-                          {tool.principleDesc}
-                        </p>
-                      </div>
-                      <div className="ut-v2-subitem-box">{tool.subItem}</div>
+            {/* List Rows */}
+            <div className="ut-list-wrapper">
+              {tools.length > 0 ? (
+                tools.map((tool) => (
+                  <div className="ut-list-row" key={tool.id}>
+                    <div className="col-id font-bold text-dark">
+                      DOC-{tool.id}
                     </div>
-                  )}
-
-                  {/* Actions (ปุ่มยืดหด และลบ) */}
-                  <div className="ut-v2-card-footer">
-                    <button
-                      className="ut-v2-btn-toggle"
-                      onClick={() => toggleExpand(tool.id)}
-                    >
-                      {isExpanded ? (
-                        <>
-                          ซ่อนรายละเอียด <FaChevronUp />
-                        </>
-                      ) : (
-                        <>
-                          ดูรายละเอียด <FaChevronDown />
-                        </>
-                      )}
-                    </button>
-
-                    <button
-                      className="ut-v2-btn-delete"
-                      onClick={() => handleDelete(tool.id)}
-                      title="ลบข้อมูล"
-                    >
-                      <FaTrash />
-                    </button>
+                    <div className="col-role">
+                      {tool.userType?.toUpperCase()}
+                    </div>
+                    <div className="col-level">
+                      <span className="ut-status-pill">
+                        <div className="dot bg-green"></div>{" "}
+                        {tool.maturity?.level_name || "ไม่ระบุ"}
+                      </span>
+                    </div>
+                    <div className="col-date text-muted">{tool.date}</div>
+                    <div className="col-action ut-action-group">
+                      <button
+                        className="ut-btn-icon view"
+                        onClick={() => handleView(tool)}
+                        title="ดูข้อมูล"
+                      >
+                        <FaEye />
+                      </button>
+                      <button
+                        className="ut-btn-icon delete"
+                        onClick={() => handleDelete(tool.id)}
+                        title="ลบ"
+                      >
+                        <FaTrash />
+                      </button>
+                    </div>
                   </div>
+                ))
+              ) : (
+                <div className="ut-empty-row">
+                  ไม่มีประวัติการสร้างเครื่องมือในระบบ
                 </div>
-              );
-            })}
-
-            {tools.length === 0 && (
-              <div className="ut-v2-empty-state">
-                <div className="ut-v2-empty-icon">
-                  <FaLayerGroup />
-                </div>
-                <h3>ยังไม่มีเครื่องมือประเมิน</h3>
-                <p>คลิกที่ปุ่ม "สร้างเครื่องมือ" ด้านบนเพื่อเริ่มต้น</p>
-              </div>
-            )}
+              )}
+            </div>
           </div>
         </div>
       </div>
-
-      {/* =======================================
-          Video Modal (ป๊อปอัปดูวิธีการสร้าง)
-          ======================================= */}
-      {showVideoModal && (
-        <div
-          className="ut-modal-overlay"
-          onClick={() => setShowVideoModal(false)}
-        >
-          <div
-            className="ut-modal-content"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="ut-modal-header">
-              <h3>วิธีการสร้างเครื่องมือประเมิน</h3>
-              <button
-                className="ut-modal-close"
-                onClick={() => setShowVideoModal(false)}
-              >
-                <FaTimes />
-              </button>
-            </div>
-            <div className="ut-modal-body">
-              {/* ใช้ iframe YouTube จำลองวิดีโอ */}
-              <div className="ut-video-wrapper">
-                <iframe
-                  src="https://www.youtube.com/embed/mqLhEpib-Yg?rel=0"
-                  title="Tutorial Video"
-                  frameBorder="0"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                ></iframe>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 };

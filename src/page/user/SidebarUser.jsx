@@ -65,12 +65,12 @@ const SidebarUser = () => {
             <div className="su-brand-icon-wrapper">
               <span className="su-brand-sparkle">❈</span>
             </div>
-            <h2 className="su-brand-title">BDE THE ETHIC AI PL</h2>
+            <h2 className="su-brand-title">BDE AI ETHIC</h2>
           </div>
 
-          <button className="su-desktop-toggle" onClick={toggleSidebar}>
+          {/* <button className="su-desktop-toggle" onClick={toggleSidebar}>
             <FaGripLinesVertical />
-          </button>
+          </button> */}
         </div>
 
         {/* ================= Main Menu ================= */}
@@ -87,7 +87,7 @@ const SidebarUser = () => {
           </a>
 
           <a
-            href="/user-select-role?type=learn"
+            href="/user-classroom"
             className={`su-menu-item ${
               currentPath.includes("type=learn") ||
               currentPath.includes("classroom")
@@ -102,8 +102,8 @@ const SidebarUser = () => {
             </span>
           </a>
 
-          {/* <a
-            href="/user-select-role?type=test"
+          <a
+            href="/user-test"
             className={`su-menu-item ${
               currentPath.includes("type=test") ||
               currentPath.includes("user-test")
@@ -114,7 +114,7 @@ const SidebarUser = () => {
           >
             <FaClipboardCheck className="su-icon" />
             <span className={`su-text ${!isOpen && "hidden"}`}>แบบทดสอบ</span>
-          </a> */}
+          </a>
 
           <a
             href="/user-tools"

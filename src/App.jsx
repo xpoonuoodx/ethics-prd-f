@@ -45,6 +45,8 @@ import UserClassroomDetail from "./page/user/UserClassroomDetail"; // หน้�
 import UserCertificate from "./page/user/UserCertificate"; // หน้าใบประกาศนียบัตร
 import UserTools from "./page/user/UserTools"; // หน้าเครื่องมือการเรียนรู้
 import UserToolsCreate from "./page/user/UserToolsCreate";
+import UserTestDetail from "./page/user/UserTestDetail";
+import UserToolsResult from "./page/user/UserToolsResult";
 
 //Ragulator Pages
 import RegulatorDashboard from "./page/regulator/RegulatorDashboard"; // หน้าแดชบอร์ดของ Regulator
@@ -229,6 +231,16 @@ function App() {
             </UserRoute>
           }
         />
+
+        <Route
+          path="/user-test-detail"
+          element={
+            <UserRoute>
+              <UserTestDetail />
+            </UserRoute>
+          }
+        />
+
         <Route
           path="/user-classroom-detail"
           element={
@@ -261,6 +273,17 @@ function App() {
             </UserRoute>
           }
         />
+
+        <Route
+          path="/user-tools-result"
+          element={
+            <UserRoute>
+              <UserToolsResult />
+            </UserRoute>
+          }
+        />
+        {/* --- เส้นทางสำหรับ Regulator --- */}
+
         <Route
           path="/regulator-user-manage"
           element={
