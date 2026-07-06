@@ -151,11 +151,11 @@ const Login = () => {
               </div>
             </div>
 
-            <div className="premium-form-options">
+            {/* <div className="premium-form-options">
               <a href="/forgot-password" className="premium-forgot-pass">
                 ลืมรหัสผ่านใช่หรือไม่?
               </a>
-            </div>
+            </div> */}
 
             <button
               type="submit"
