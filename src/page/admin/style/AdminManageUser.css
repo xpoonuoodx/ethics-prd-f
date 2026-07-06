@@ -20,7 +20,6 @@
 .admin-manage-user-content-inner {
   padding: 40px 50px;
   width: 100%;
-  /* max-width: 1400px; */
   margin: 0 auto;
 }
 
@@ -346,6 +345,9 @@
   cursor: pointer;
 }
 
+/* =========================================
+   FORM MODAL (ADD USER)
+   ========================================= */
 .admin-manage-user-modal-overlay {
   position: fixed;
   inset: 0;
@@ -419,7 +421,7 @@
   gap: 15px;
 }
 
-.half-width {
+.admin-manage-user-half-width {
   flex: 1;
 }
 
@@ -495,6 +497,161 @@
   cursor: not-allowed;
 }
 
+/* =========================================
+   CUSTOM ALERT MODAL (POPUP)
+   ========================================= */
+.admin-manage-user-alert-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(4px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 99999;
+  animation: adminManageUserFadeInModal 0.2s ease-out forwards;
+}
+
+.admin-manage-user-alert-content {
+  background-color: #ffffff;
+  width: 90%;
+  max-width: 400px;
+  border-radius: 20px;
+  padding: 40px 30px;
+  position: relative;
+  text-align: center;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  animation: adminManageUserSlideUpModal 0.3s ease-out forwards;
+}
+
+.admin-manage-user-alert-close {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: none;
+  border: none;
+  font-size: 18px;
+  color: #94a3b8;
+  cursor: pointer;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  transition: all 0.2s;
+}
+
+.admin-manage-user-alert-close:hover {
+  background-color: #f1f5f9;
+  color: #0f172a;
+}
+
+.admin-manage-user-alert-icon-wrapper {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 32px;
+  margin: 0 auto 20px auto;
+}
+
+.admin-manage-user-alert-icon-wrapper.success {
+  background-color: #d1fae5;
+  color: #10b981;
+}
+.admin-manage-user-alert-icon-wrapper.error {
+  background-color: #fee2e2;
+  color: #ef4444;
+}
+.admin-manage-user-alert-icon-wrapper.warning {
+  background-color: #fef3c7;
+  color: #f59e0b;
+}
+.admin-manage-user-alert-icon-wrapper.info {
+  background-color: #f1f5f9;
+  color: #3b82f6;
+}
+
+.admin-manage-user-alert-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 12px 0;
+}
+
+.admin-manage-user-alert-desc {
+  font-size: 15px;
+  color: #64748b;
+  line-height: 1.6;
+  margin: 0 0 30px 0;
+}
+
+.admin-manage-user-alert-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.admin-manage-user-alert-btn {
+  border: none;
+  padding: 12px 0;
+  width: 100%;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  color: white;
+  transition: 0.2s;
+}
+
+.admin-manage-user-alert-btn.success {
+  background-color: #10b981;
+}
+.admin-manage-user-alert-btn.error {
+  background-color: #ef4444;
+}
+.admin-manage-user-alert-btn.warning {
+  background-color: #f59e0b;
+}
+.admin-manage-user-alert-btn.info {
+  background-color: #3b82f6;
+}
+.admin-manage-user-alert-btn.cancel {
+  background-color: #94a3b8;
+  color: #ffffff;
+}
+
+.admin-manage-user-alert-btn:hover {
+  filter: brightness(0.9);
+}
+
+@keyframes adminManageUserFadeInModal {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes adminManageUserSlideUpModal {
+  from {
+    transform: translateY(20px) scale(0.95);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+}
+
+/* Responsive */
 @media (max-width: 899px) {
   .admin-manage-user-main-content {
     margin-left: 0;

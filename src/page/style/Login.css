@@ -305,3 +305,124 @@
     height: 35px;
   }
 }
+
+/* ==================================================
+   Custom Modal (Popup) Styles
+   ================================================== */
+.custom-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(15, 23, 42, 0.6); /* พื้นหลังสีดำโปร่งแสง */
+  backdrop-filter: blur(4px); /* ทำพื้นหลังเบลอให้ดูหรูขึ้น */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  animation: fadeInModal 0.2s ease-out forwards;
+}
+
+.custom-modal-content {
+  background-color: #ffffff;
+  width: 90%;
+  max-width: 420px;
+  border-radius: 20px;
+  padding: 40px 30px;
+  position: relative;
+  text-align: center;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  animation: slideUpModal 0.3s ease-out forwards;
+}
+
+.custom-modal-close {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: none;
+  border: none;
+  font-size: 18px;
+  color: #94a3b8;
+  cursor: pointer;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  transition: all 0.2s;
+}
+
+.custom-modal-close:hover {
+  background-color: #f1f5f9;
+  color: #0f172a;
+}
+
+.custom-modal-icon-wrapper {
+  width: 64px;
+  height: 64px;
+  background-color: #f1f5f9;
+  color: #1e293b;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 28px;
+  margin: 0 auto 20px auto;
+}
+
+.custom-modal-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 12px 0;
+  font-family: "Prompt", sans-serif;
+}
+
+.custom-modal-desc {
+  font-size: 15px;
+  color: #64748b;
+  line-height: 1.6;
+  margin: 0 0 30px 0;
+  font-family: "Prompt", sans-serif;
+}
+
+.custom-modal-btn {
+  background-color: #1e293b;
+  color: #ffffff;
+  border: none;
+  padding: 12px 0;
+  width: 100%;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  font-family: "Prompt", sans-serif;
+}
+
+.custom-modal-btn:hover {
+  background-color: #0f172a;
+}
+
+/* Animations */
+@keyframes fadeInModal {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUpModal {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}

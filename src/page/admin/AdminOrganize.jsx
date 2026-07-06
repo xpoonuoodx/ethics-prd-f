@@ -373,7 +373,7 @@ const AdminOrganize = () => {
                 />
               </div>
 
-              <div className="admin-organize-form-group">
+              {/* <div className="admin-organize-form-group">
                 <label>ชื่อผู้กำกับดูแล (Regulator)</label>
                 <input
                   type="text"
@@ -389,7 +389,7 @@ const AdminOrganize = () => {
                     <option key={idx} value={reg.name} />
                   ))}
                 </datalist>
-              </div>
+              </div> */}
 
               <div className="admin-organize-form-group">
                 <label>สถานะเริ่มต้น</label>

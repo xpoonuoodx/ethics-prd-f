@@ -10,10 +10,13 @@ import {
   FaUserShield,
   FaUser,
   FaUserTie,
+  FaCheckCircle,
+  FaTimesCircle,
+  FaExclamationTriangle,
+  FaInfoCircle,
 } from "react-icons/fa";
 import SidebarAdmin from "./SidebarAdmin";
 import api from "../../api/Api";
-import Swal from "sweetalert2";
 
 const AdminManageUser = () => {
   const [users, setUsers] = useState([]);
@@ -25,7 +28,33 @@ const AdminManageUser = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // เพิ่ม email และ id_card ใน State ของฟอร์ม
+  // ==========================================
+  // Custom Alert Modal State (แทนที่ Swal)
+  // ==========================================
+  const [alertModal, setAlertModal] = useState({
+    isOpen: false,
+    type: "info",
+    title: "",
+    desc: "",
+    showCancel: false,
+    onConfirm: null,
+  });
+
+  const openAlert = (
+    type,
+    title,
+    desc,
+    showCancel = false,
+    onConfirm = null,
+  ) => {
+    setAlertModal({ isOpen: true, type, title, desc, showCancel, onConfirm });
+  };
+
+  const closeAlert = () => {
+    setAlertModal((prev) => ({ ...prev, isOpen: false }));
+  };
+
+  // State ของฟอร์ม
   const [formData, setFormData] = useState({
     username: "",
     password: "",
@@ -94,12 +123,11 @@ const AdminManageUser = () => {
       !formData.email ||
       !formData.id_card
     ) {
-      Swal.fire({
-        title: "ข้อมูลไม่ครบถ้วน",
-        text: "กรุณากรอกข้อมูลสำคัญให้ครบทุกช่อง",
-        icon: "warning",
-        confirmButtonColor: "#0f172a",
-      });
+      openAlert(
+        "warning",
+        "ข้อมูลไม่ครบถ้วน",
+        "กรุณากรอกข้อมูลสำคัญให้ครบทุกช่อง",
+      );
       return;
     }
 
@@ -108,12 +136,6 @@ const AdminManageUser = () => {
       const response = await api.post("/admin/add-user", formData);
 
       if (response.data && response.data.success) {
-        Swal.fire({
-          title: "สำเร็จ",
-          text: "เพิ่มผู้ใช้งานใหม่เรียบร้อยแล้ว",
-          icon: "success",
-          confirmButtonColor: "#10b981",
-        });
         setIsModalOpen(false);
         setFormData({
           username: "",
@@ -124,42 +146,49 @@ const AdminManageUser = () => {
           role: "user",
           org_id: "",
         });
+        openAlert("success", "สำเร็จ", "เพิ่มผู้ใช้งานใหม่เรียบร้อยแล้ว");
         fetchUsers();
       }
     } catch (err) {
       console.error("Add User Error:", err);
-      Swal.fire({
-        title: "เกิดข้อผิดพลาด",
-        text: err.response?.data?.message || "ไม่สามารถเพิ่มผู้ใช้งานได้",
-        icon: "error",
-        confirmButtonColor: "#ef4444",
-      });
+      openAlert(
+        "error",
+        "เกิดข้อผิดพลาด",
+        err.response?.data?.message || "ไม่สามารถเพิ่มผู้ใช้งานได้",
+      );
     } finally {
       setIsSubmitting(false);
     }
   };
 
   const handleDelete = (id, name) => {
-    Swal.fire({
-      title: "ยืนยันการลบบัญชี?",
-      text: `คุณต้องการลบบัญชีผู้ใช้ "${name}" ใช่หรือไม่ ข้อมูลจะไม่สามารถกู้คืนได้`,
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#0f172a",
-      cancelButtonColor: "#94a3b8",
-      confirmButtonText: "ยืนยันลบข้อมูล",
-      cancelButtonText: "ยกเลิก",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        setUsers(users.filter((user) => user.id !== id));
-        Swal.fire({
-          title: "ลบข้อมูลสำเร็จ",
-          text: "บัญชีผู้ใช้ถูกนำออกจากระบบแล้ว",
-          icon: "success",
-          confirmButtonColor: "#10b981",
-        });
-      }
-    });
+    openAlert(
+      "warning",
+      "ยืนยันการลบบัญชี?",
+      `คุณต้องการลบบัญชีผู้ใช้ "${name}" ใช่หรือไม่ ข้อมูลจะไม่สามารถกู้คืนได้`,
+      true,
+      async () => {
+        closeAlert();
+        try {
+          const response = await api.delete(`/admin/delete-user/${id}`);
+          if (response.data && response.data.success) {
+            openAlert(
+              "success",
+              "ลบข้อมูลสำเร็จ",
+              "บัญชีผู้ใช้ถูกนำออกจากระบบแล้ว",
+            );
+            fetchUsers();
+          }
+        } catch (err) {
+          console.error("Delete User Error:", err);
+          openAlert(
+            "error",
+            "เกิดข้อผิดพลาด",
+            err.response?.data?.message || "ไม่สามารถลบข้อมูลได้",
+          );
+        }
+      },
+    );
   };
 
   const getRoleBadge = (role) => {
@@ -337,6 +366,7 @@ const AdminManageUser = () => {
         </div>
       </div>
 
+      {/* Modal สำหรับการเพิ่มผู้ใช้งาน */}
       {isModalOpen && (
         <div className="admin-manage-user-modal-overlay">
           <div className="admin-manage-user-modal-container">
@@ -366,9 +396,8 @@ const AdminManageUser = () => {
                 />
               </div>
 
-              {/* เพิ่มข้อมูลอีเมลและรหัสประชาชน แบ่งครึ่งจอเพื่อความสวยงาม */}
               <div className="admin-manage-user-form-row">
-                <div className="admin-manage-user-form-group half-width">
+                <div className="admin-manage-user-form-group admin-manage-user-half-width">
                   <label>อีเมล (Email)</label>
                   <input
                     type="email"
@@ -379,7 +408,7 @@ const AdminManageUser = () => {
                     required
                   />
                 </div>
-                <div className="admin-manage-user-form-group half-width">
+                <div className="admin-manage-user-form-group admin-manage-user-half-width">
                   <label>รหัสประจำตัวประชาชน</label>
                   <input
                     type="text"
@@ -394,7 +423,7 @@ const AdminManageUser = () => {
               </div>
 
               <div className="admin-manage-user-form-row">
-                <div className="admin-manage-user-form-group half-width">
+                <div className="admin-manage-user-form-group admin-manage-user-half-width">
                   <label>ชื่อผู้ใช้งาน (Username)</label>
                   <input
                     type="text"
@@ -405,7 +434,7 @@ const AdminManageUser = () => {
                     required
                   />
                 </div>
-                <div className="admin-manage-user-form-group half-width">
+                <div className="admin-manage-user-form-group admin-manage-user-half-width">
                   <label>รหัสผ่าน (Password)</label>
                   <input
                     type="password"
@@ -444,7 +473,8 @@ const AdminManageUser = () => {
                     <option value="">-- ไม่ระบุสังกัด --</option>
                     {organizations.map((org, idx) => (
                       <option key={idx} value={org.id}>
-                        {org.name} ({org.id})
+                        {/* แก้ไขให้ดึง org.org_name ตามชื่อคอลัมน์ใน DB (ถ้าไม่มีใช้ org.name รองรับไว้) */}
+                        {org.org_name || org.name} ({org.org_code || org.id})
                       </option>
                     ))}
                   </select>
@@ -468,6 +498,62 @@ const AdminManageUser = () => {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* ==========================================
+          Custom Alert Modal Popup 
+          ========================================== */}
+      {alertModal.isOpen && (
+        <div className="admin-manage-user-alert-overlay" onClick={closeAlert}>
+          <div
+            className="admin-manage-user-alert-content"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              className="admin-manage-user-alert-close"
+              onClick={closeAlert}
+            >
+              <FaTimes />
+            </button>
+
+            <div
+              className={`admin-manage-user-alert-icon-wrapper ${alertModal.type}`}
+            >
+              {alertModal.type === "success" && <FaCheckCircle />}
+              {alertModal.type === "error" && <FaTimesCircle />}
+              {alertModal.type === "warning" && <FaExclamationTriangle />}
+              {alertModal.type === "info" && <FaInfoCircle />}
+            </div>
+
+            <h3 className="admin-manage-user-alert-title">
+              {alertModal.title}
+            </h3>
+            <p className="admin-manage-user-alert-desc">{alertModal.desc}</p>
+
+            <div className="admin-manage-user-alert-actions">
+              {alertModal.showCancel && (
+                <button
+                  className="admin-manage-user-alert-btn cancel"
+                  onClick={closeAlert}
+                >
+                  ยกเลิก
+                </button>
+              )}
+              <button
+                className={`admin-manage-user-alert-btn ${alertModal.type}`}
+                onClick={() => {
+                  if (alertModal.onConfirm) {
+                    alertModal.onConfirm();
+                  } else {
+                    closeAlert();
+                  }
+                }}
+              >
+                {alertModal.showCancel ? "ยืนยันการลบ" : "ตกลง"}
+              </button>
+            </div>
           </div>
         </div>
       )}

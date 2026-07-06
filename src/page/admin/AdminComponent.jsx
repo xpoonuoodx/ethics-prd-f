@@ -9,19 +9,49 @@ import {
   FaCube,
   FaTimes,
   FaSpinner,
+  FaCheckCircle,
+  FaTimesCircle,
+  FaExclamationTriangle,
+  FaInfoCircle,
 } from "react-icons/fa";
-import Swal from "sweetalert2";
 import api from "../../api/Api";
 
 const AdminComponent = () => {
   const [components, setComponents] = useState([]);
   const [search, setSearch] = useState("");
+  const [filterRole, setFilterRole] = useState("all");
   const [loading, setLoading] = useState(true);
 
-  // Modal States
+  // Modal States สำหรับ เพิ่ม/แก้ไข
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // ==========================================
+  // Custom Alert Modal State (แทนที่ Swal)
+  // ==========================================
+  const [alertModal, setAlertModal] = useState({
+    isOpen: false,
+    type: "info", // "success", "error", "warning", "info"
+    title: "",
+    desc: "",
+    showCancel: false,
+    onConfirm: null,
+  });
+
+  const openAlert = (
+    type,
+    title,
+    desc,
+    showCancel = false,
+    onConfirm = null,
+  ) => {
+    setAlertModal({ isOpen: true, type, title, desc, showCancel, onConfirm });
+  };
+
+  const closeAlert = () => {
+    setAlertModal((prev) => ({ ...prev, isOpen: false }));
+  };
 
   const [formData, setFormData] = useState({
     id: "",
@@ -81,12 +111,11 @@ const AdminComponent = () => {
       !formData.title ||
       formData.max_maturity_level === ""
     ) {
-      Swal.fire({
-        icon: "warning",
-        title: "ข้อมูลไม่ครบถ้วน",
-        text: "กรุณากรอกข้อมูลให้ครบถ้วนทุกช่อง",
-        confirmButtonColor: "#0f172a",
-      });
+      openAlert(
+        "warning",
+        "ข้อมูลไม่ครบถ้วน",
+        "กรุณากรอกข้อมูลให้ครบถ้วนทุกช่อง",
+      );
       return;
     }
 
@@ -104,72 +133,72 @@ const AdminComponent = () => {
       }
 
       if (response.data && response.data.success) {
-        Swal.fire({
-          icon: "success",
-          title: "สำเร็จ",
-          text: isEditing
+        setIsModalOpen(false);
+        openAlert(
+          "success",
+          "สำเร็จ",
+          isEditing
             ? "แก้ไขข้อมูลหัวข้อสำเร็จ"
             : "สร้างหัวข้อการประเมินใหม่สำเร็จ",
-          confirmButtonColor: "#10b981",
-        });
-        setIsModalOpen(false);
+        );
         fetchComponents();
       }
     } catch (err) {
       console.error("Submit Component Error:", err);
-      Swal.fire({
-        icon: "error",
-        title: "เกิดข้อผิดพลาด",
-        text: err.response?.data?.message || "ไม่สามารถบันทึกข้อมูลได้",
-        confirmButtonColor: "#ef4444",
-      });
+      openAlert(
+        "error",
+        "เกิดข้อผิดพลาด",
+        err.response?.data?.message || "ไม่สามารถบันทึกข้อมูลได้",
+      );
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const handleDelete = (id, title) => {
-    Swal.fire({
-      title: "ยืนยันการลบ?",
-      text: `คุณต้องการลบหัวข้อ "${id} - ${title}" ใช่หรือไม่? ข้อมูลการประเมินที่เชื่อมโยงอยู่จะได้รับผลกระทบ`,
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#dc2626",
-      cancelButtonColor: "#94a3b8",
-      confirmButtonText: "ลบข้อมูล",
-      cancelButtonText: "ยกเลิก",
-    }).then(async (result) => {
-      if (result.isConfirmed) {
+  const handleDelete = (comp) => {
+    openAlert(
+      "warning",
+      "ยืนยันการลบ?",
+      `คุณต้องการลบหัวข้อ "${comp.id} - ${comp.title}" ใช่หรือไม่? ข้อมูลที่เชื่อมโยงอยู่จะได้รับผลกระทบ`,
+      true,
+      async () => {
+        closeAlert();
         try {
-          const response = await api.delete(`/admin/delete-component/${id}`);
+          const response = await api.delete(
+            `/admin/delete-component/${comp.id}`,
+          );
           if (response.data && response.data.success) {
-            Swal.fire({
-              title: "ลบสำเร็จ!",
-              text: "ลบหัวข้อการประเมินออกจากระบบเรียบร้อย",
-              icon: "success",
-              confirmButtonColor: "#10b981",
-            });
+            openAlert(
+              "success",
+              "ลบสำเร็จ!",
+              "ลบหัวข้อการประเมินออกจากระบบเรียบร้อย",
+            );
             fetchComponents();
           }
         } catch (err) {
           console.error("Delete Component Error:", err);
-          Swal.fire({
-            icon: "error",
-            title: "เกิดข้อผิดพลาด",
-            text: err.response?.data?.message || "ไม่สามารถลบข้อมูลได้",
-            confirmButtonColor: "#0f172a",
-          });
+          openAlert(
+            "error",
+            "เกิดข้อผิดพลาด",
+            err.response?.data?.message || "ไม่สามารถลบข้อมูลได้",
+          );
         }
-      }
-    });
+      },
+    );
   };
 
-  const filteredComponents = components.filter(
-    (c) =>
+  // กรองข้อมูลด้วยช่อง Search และ Dropdown Role
+  const filteredComponents = components.filter((c) => {
+    const matchSearch =
       (c.title || "").toLowerCase().includes(search.toLowerCase()) ||
-      (c.id || "").toLowerCase().includes(search.toLowerCase()) ||
-      (c.role || "").toLowerCase().includes(search.toLowerCase()),
-  );
+      (c.id || "").toLowerCase().includes(search.toLowerCase());
+
+    const matchRole =
+      filterRole === "all" ||
+      (c.role || "").toLowerCase() === filterRole.toLowerCase();
+
+    return matchSearch && matchRole;
+  });
 
   return (
     <div className="ac-layout">
@@ -197,12 +226,29 @@ const AdminComponent = () => {
             </button>
           </div>
 
-          <div className="ac-toolbar">
+          {/* Toolbar: กรองข้อมูล และ ค้นหา */}
+          <div className="ac-toolbar-wrap">
+            <div className="ac-filter-box">
+              <select
+                className="ac-filter-select"
+                value={filterRole}
+                onChange={(e) => setFilterRole(e.target.value)}
+              >
+                <option value="all">ทุกประเภทผู้ใช้ (ทั้งหมด)</option>
+                <option value="regulator">Regulator</option>
+                <option value="policy">Policy</option>
+                <option value="researcher">Researcher</option>
+                <option value="developer">Developer</option>
+                <option value="service provider">Service Provider</option>
+                <option value="users">Users</option>
+              </select>
+            </div>
+
             <div className="ac-search-box">
               <FaSearch className="ac-search-icon" />
               <input
                 type="text"
-                placeholder="ค้นหาด้วยรหัส, ชื่อหัวข้อ หรือประเภทผู้ใช้..."
+                placeholder="ค้นหาด้วยรหัส หรือ ชื่อหัวข้อประเมิน..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
               />
@@ -233,8 +279,8 @@ const AdminComponent = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredComponents.map((comp) => (
-                    <tr key={comp.id}>
+                  {filteredComponents.map((comp, index) => (
+                    <tr key={`${comp.id}-${index}`}>
                       <td className="ac-font-bold ac-text-muted">{comp.id}</td>
                       <td>
                         <span className="ac-role-badge">{comp.role}</span>
@@ -257,7 +303,7 @@ const AdminComponent = () => {
                           <button
                             className="ac-btn-action delete"
                             title="ลบข้อมูล"
-                            onClick={() => handleDelete(comp.id, comp.title)}
+                            onClick={() => handleDelete(comp)}
                           >
                             <FaTrash />
                           </button>
@@ -280,7 +326,9 @@ const AdminComponent = () => {
         </div>
       </div>
 
-      {/* Modal เพิ่ม/แก้ไข ข้อมูล */}
+      {/* ==========================================
+          Modal เพิ่ม/แก้ไข ข้อมูล 
+          ========================================== */}
       {isModalOpen && (
         <div className="ac-modal-overlay">
           <div className="ac-modal-container">
@@ -332,6 +380,9 @@ const AdminComponent = () => {
                   <option value="policy">Policy (ผู้วางนโยบาย)</option>
                   <option value="researcher">Researcher (นักวิจัย)</option>
                   <option value="developer">Developer (นักพัฒนา)</option>
+                  <option value="service provider">
+                    Service Provider (ผู้ให้บริการ)
+                  </option>
                   <option value="users">Users (ผู้ใช้งานทั่วไป)</option>
                 </select>
               </div>
@@ -385,6 +436,52 @@ const AdminComponent = () => {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* ==========================================
+          Custom Alert Modal Popup (แทน Swal)
+          ========================================== */}
+      {alertModal.isOpen && (
+        <div className="ac-alert-overlay" onClick={closeAlert}>
+          <div
+            className="ac-alert-content"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button className="ac-alert-close" onClick={closeAlert}>
+              <FaTimes />
+            </button>
+
+            <div className={`ac-alert-icon-wrapper ${alertModal.type}`}>
+              {alertModal.type === "success" && <FaCheckCircle />}
+              {alertModal.type === "error" && <FaTimesCircle />}
+              {alertModal.type === "warning" && <FaExclamationTriangle />}
+              {alertModal.type === "info" && <FaInfoCircle />}
+            </div>
+
+            <h3 className="ac-alert-title">{alertModal.title}</h3>
+            <p className="ac-alert-desc">{alertModal.desc}</p>
+
+            <div className="ac-alert-actions">
+              {alertModal.showCancel && (
+                <button className="ac-alert-btn cancel" onClick={closeAlert}>
+                  ยกเลิก
+                </button>
+              )}
+              <button
+                className={`ac-alert-btn ${alertModal.type}`}
+                onClick={() => {
+                  if (alertModal.onConfirm) {
+                    alertModal.onConfirm();
+                  } else {
+                    closeAlert();
+                  }
+                }}
+              >
+                {alertModal.showCancel ? "ยืนยันการลบ" : "ตกลง"}
+              </button>
+            </div>
           </div>
         </div>
       )}

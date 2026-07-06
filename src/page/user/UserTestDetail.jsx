@@ -3,13 +3,11 @@ import { useLocation, useNavigate } from "react-router-dom";
 import SidebarUser from "./SidebarUser";
 import {
   FaArrowLeft,
-  FaCheckCircle,
   FaClipboardList,
   FaClock,
   FaListUl,
   FaStar,
   FaPlay,
-  FaTimesCircle,
   FaSpinner,
 } from "react-icons/fa";
 import api from "../../api/Api";
@@ -25,12 +23,10 @@ const UserTestDetail = () => {
   const [chapterInfo, setChapterInfo] = useState({});
   const [questions, setQuestions] = useState([]);
 
-  // Step Management
-  const [step, setStep] = useState("intro"); // intro, quiz, result
+  const [step, setStep] = useState("intro");
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [score, setScore] = useState(0);
-  const [resultData, setResultData] = useState(null);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -56,10 +52,16 @@ const UserTestDetail = () => {
     }
   };
 
-  const handleStartQuiz = () => setStep("quiz");
+  const handleStartQuiz = () => {
+    setStep("quiz");
+    setScore(0);
+    setCurrentQuestion(0);
+    setSelectedAnswer(null);
+  };
 
   const handleNext = async () => {
     let currentScore = score;
+    // ตรวจคำตอบว่าตรงกับ answer (index ที่ถูกหลังจากสลับช้อยส์) หรือไม่
     if (selectedAnswer === questions[currentQuestion].answer) {
       currentScore += 1;
       setScore(currentScore);
@@ -89,8 +91,7 @@ const UserTestDetail = () => {
 
       const response = await api.post(`/user/test-submit`, payload);
       if (response.data && response.data.success) {
-        setResultData(response.data.data);
-        // setStep("result");
+        // นำทางไปหน้าสรุปผล (UserResult) เพื่อโชว์เซอติฟิเคท
         navigate("/user-result", {
           state: {
             resultData: response.data.data,
@@ -101,12 +102,11 @@ const UserTestDetail = () => {
     } catch (error) {
       console.error("Submit Test Error:", error);
       alert("เกิดข้อผิดพลาดในการบันทึกผลสอบ");
-    } finally {
       setLoading(false);
     }
   };
 
-  if (loading && step !== "result") {
+  if (loading) {
     return (
       <div className="user-portal-layout">
         <SidebarUser />
@@ -127,13 +127,10 @@ const UserTestDetail = () => {
               className="utd-back-btn"
               onClick={() => navigate("/user-test")}
             >
-              <FaArrowLeft /> ย้อนกลับ
+              <FaArrowLeft /> ย้อนกลับหน้ารายการ
             </button>
           )}
 
-          {/* =======================================
-              STEP 1: หน้า Intro
-              ======================================= */}
           {step === "intro" && (
             <div className="utd-card fade-in center-content">
               <div className="utd-icon-box bg-blue-light text-blue">
@@ -185,9 +182,6 @@ const UserTestDetail = () => {
             </div>
           )}
 
-          {/* =======================================
-              STEP 2: หน้าทำแบบทดสอบ
-              ======================================= */}
           {step === "quiz" && questions.length > 0 && (
             <div className="utd-card fade-in">
               <div className="utd-quiz-header">
@@ -226,53 +220,8 @@ const UserTestDetail = () => {
                   disabled={selectedAnswer === null}
                 >
                   {currentQuestion + 1 === questions.length
-                    ? "ส่งคำตอบ"
+                    ? "ส่งคำตอบและบันทึกคะแนน"
                     : "ข้อต่อไป"}
-                </button>
-              </div>
-            </div>
-          )}
-
-          {/* =======================================
-              STEP 3: หน้าสรุปผลสอบ
-              ======================================= */}
-          {step === "result" && resultData && (
-            <div className="utd-card fade-in center-content">
-              {resultData.isPassed ? (
-                <FaCheckCircle className="utd-result-icon text-green" />
-              ) : (
-                <FaTimesCircle className="utd-result-icon text-red" />
-              )}
-
-              <h2 className="utd-title">
-                {resultData.isPassed
-                  ? "ยินดีด้วย! คุณสอบผ่าน"
-                  : "เสียใจด้วย คุณยังทำคะแนนไม่ถึงเกณฑ์"}
-              </h2>
-
-              <div className="utd-result-score-box">
-                <p>คะแนนที่ทำได้</p>
-                <h3>
-                  {resultData.score} <span>/ {resultData.totalQuestions}</span>
-                </h3>
-                <p className="small">
-                  คิดเป็น {resultData.scorePercentage.toFixed(0)}% (เกณฑ์ผ่าน{" "}
-                  {chapterInfo.passing_percentage}%)
-                </p>
-              </div>
-
-              <div className="utd-result-actions">
-                <button
-                  className="utd-btn-outline"
-                  onClick={() => window.location.reload()}
-                >
-                  ทำแบบทดสอบอีกครั้ง
-                </button>
-                <button
-                  className="utd-btn-primary"
-                  onClick={() => navigate("/user-test")}
-                >
-                  กลับหน้ารายการแบบทดสอบ
                 </button>
               </div>
             </div>
