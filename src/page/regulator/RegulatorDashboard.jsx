@@ -238,14 +238,14 @@ const RegulatorDashboard = () => {
                       <h2>Team Members</h2>
                       <span className="rgdash-subtitle">บุคลากรในหน่วยงาน</span>
                     </div>
-                    <button
+                    {/* <button
                       className="rgdash-btn-outline-primary"
                       onClick={() => {
-                        /* Navigate to add user */
+                       
                       }}
                     >
                       <FaUserPlus /> Add
-                    </button>
+                    </button> */}
                   </div>
                   <div className="rgdash-list-body">
                     {(dashboardData.recentUsers || []).length > 0 ? (
@@ -265,11 +265,11 @@ const RegulatorDashboard = () => {
                                 </span>
                               </div>
                             </div>
-                            <div className="rgdash-item-right">
+                            {/* <div className="rgdash-item-right">
                               <span className="rgdash-role-text">
                                 {user.role}
                               </span>
-                            </div>
+                            </div> */}
                           </div>
                         ))}
                       </div>
@@ -308,7 +308,7 @@ const RegulatorDashboard = () => {
                         <th>Manager</th>
                         <th>Progress</th>
                         <th>Created Date</th>
-                        <th>Status</th>
+                        {/* <th>Status</th> */}
                       </tr>
                     </thead>
                     <tbody>
@@ -331,13 +331,13 @@ const RegulatorDashboard = () => {
                                 "th-TH",
                               )}
                             </td>
-                            <td>
+                            {/* <td>
                               <span
                                 className={`rgdash-badge ${getStatusColor(proj.status)}`}
                               >
                                 {proj.status}
                               </span>
-                            </td>
+                            </td> */}
                           </tr>
                         ))
                       ) : (

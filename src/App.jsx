@@ -55,6 +55,7 @@ import RegulatorDashboard from "./page/regulator/RegulatorDashboard"; // หน�
 import RegulatorUserManage from "./page/regulator/RegulatorUserManage";
 import RegulatorProjectManage from "./page/regulator/RegulatorProjectManage";
 import RegulatorViewProject from "./page/regulator/RegulatorViewProject";
+import RegulatorViewUser from "./page/regulator/RegulatorViewUser";
 
 function App() {
   return (
@@ -195,9 +196,7 @@ function App() {
               <AdminUserDetail />
             </AdminRoute>
           }
-        />  
-
-
+        />
 
         {/* === Regulator Routes === */}
         <Route
@@ -304,7 +303,7 @@ function App() {
               <UserResult />
             </UserRoute>
           }
-        />  
+        />
         {/* --- เส้นทางสำหรับ Regulator --- */}
 
         <Route
@@ -331,6 +330,16 @@ function App() {
             </RegulatorRoute>
           }
         />
+
+        <Route
+          path="/regulator-view-user/:id"
+          element={
+            <RegulatorRoute>
+              <RegulatorViewUser />
+            </RegulatorRoute>
+          }
+        />
+
         {/* --- เส้นทางสำหรับหน้า Unauthorized (ถ้าไม่มีสิทธิ์เข้าถึง) --- */}
         <Route path="/unauthorized" element={<h1>403 - ไม่ได้รับอนุญาต</h1>} />
         <Route path="*" element={<UnderConstruction />} />

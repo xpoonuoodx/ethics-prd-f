@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom"; // เพิ่ม useNavigate
 import "./style/RegulatorUserManage.css";
 import SidebarRegulator from "./SidebarRegulator";
 import {
@@ -9,11 +10,13 @@ import {
   FaUsers,
   FaTimes,
   FaSpinner,
+  FaEye, // เพิ่มไอคอนตา
 } from "react-icons/fa";
 import Swal from "sweetalert2";
 import api from "../../api/Api";
 
 const RegulatorUserManage = () => {
+  const navigate = useNavigate(); // เรียกใช้งาน navigate
   const [users, setUsers] = useState([]);
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
@@ -27,7 +30,7 @@ const RegulatorUserManage = () => {
     username: "",
     password: "",
     id_card: "",
-    user_type: "", // เพิ่ม Field นี้
+    user_type: "",
   });
 
   useEffect(() => {
@@ -68,7 +71,6 @@ const RegulatorUserManage = () => {
   const handleAddSubmit = async (e) => {
     e.preventDefault();
 
-    // ตรวจสอบว่าข้อมูลครบถ้วนรวมถึง id_card และ user_type
     if (
       !formData.name ||
       !formData.email ||
@@ -247,6 +249,16 @@ const RegulatorUserManage = () => {
                       </td>
                       <td>
                         <div className="rum-actions">
+                          {/* เพิ่มปุ่มดูรายละเอียด */}
+                          <button
+                            className="rum-btn-action view"
+                            title="ดูรายละเอียด"
+                            onClick={() =>
+                              navigate(`/regulator-view-user/${user.id}`)
+                            }
+                          >
+                            <FaEye />
+                          </button>
                           <button
                             className="rum-btn-action delete"
                             title="ลบบัญชี"
@@ -352,7 +364,6 @@ const RegulatorUserManage = () => {
                 />
               </div>
 
-              {/* เพิ่มช่อง Dropdown สำหรับให้เลือก Type */}
               <div className="rum-form-group">
                 <label>ประเภทผู้ใช้งาน (User Type)</label>
                 <select
@@ -368,6 +379,9 @@ const RegulatorUserManage = () => {
                   <option value="policy">Policy (ผู้วางนโยบาย)</option>
                   <option value="researcher">Researcher (นักวิจัย)</option>
                   <option value="developer">Developer (นักพัฒนา)</option>
+                  <option value="service provider">
+                    Service Provider (ผู้ให้บริการ)
+                  </option>
                   <option value="users">Users (ผู้ใช้งานทั่วไป)</option>
                 </select>
               </div>

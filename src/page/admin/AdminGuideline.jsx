@@ -9,19 +9,49 @@ import {
   FaTrash,
   FaSpinner,
   FaTimes,
+  FaCheckCircle,
+  FaTimesCircle,
+  FaExclamationTriangle,
+  FaInfoCircle,
 } from "react-icons/fa";
-import Swal from "sweetalert2";
 import api from "../../api/Api";
 
 const AdminGuideline = () => {
   const [guidelines, setGuidelines] = useState([]);
   const [search, setSearch] = useState("");
+  const [filterType, setFilterType] = useState("all"); // เพิ่ม State สำหรับ Dropdown Filter
   const [loading, setLoading] = useState(true);
 
   // Modal States
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // ==========================================
+  // Custom Alert Modal State (แทนที่ Swal)
+  // ==========================================
+  const [alertModal, setAlertModal] = useState({
+    isOpen: false,
+    type: "info",
+    title: "",
+    desc: "",
+    showCancel: false,
+    onConfirm: null,
+  });
+
+  const openAlert = (
+    type,
+    title,
+    desc,
+    showCancel = false,
+    onConfirm = null,
+  ) => {
+    setAlertModal({ isOpen: true, type, title, desc, showCancel, onConfirm });
+  };
+
+  const closeAlert = () => {
+    setAlertModal((prev) => ({ ...prev, isOpen: false }));
+  };
 
   const [formData, setFormData] = useState({
     id: "",
@@ -96,18 +126,16 @@ const AdminGuideline = () => {
     e.preventDefault();
 
     if (!formData.user_type || formData.level_id === "") {
-      Swal.fire({
-        icon: "warning",
-        title: "ข้อมูลไม่ครบถ้วน",
-        text: "กรุณาระบุประเภทผู้ใช้งานและระดับความพร้อม",
-        confirmButtonColor: "#0f172a",
-      });
+      openAlert(
+        "warning",
+        "ข้อมูลไม่ครบถ้วน",
+        "กรุณาระบุประเภทผู้ใช้งานและระดับความพร้อม",
+      );
       return;
     }
 
     try {
       setIsSubmitting(true);
-      // ใช้ API เดิมที่เป็น Upsert ได้เลย
       const response = await api.post("/admin/save-guideline", {
         user_type: formData.user_type,
         level_id: parseInt(formData.level_id),
@@ -120,62 +148,62 @@ const AdminGuideline = () => {
       });
 
       if (response.data && response.data.success) {
-        Swal.fire({
-          icon: "success",
-          title: "สำเร็จ",
-          text: isEditing
+        openAlert(
+          "success",
+          "สำเร็จ",
+          isEditing
             ? "อัปเดตข้อมูลเรียบร้อยแล้ว"
             : "เพิ่มแนวทางการพัฒนาใหม่สำเร็จ",
-          confirmButtonColor: "#10b981",
-        });
+        );
         setIsModalOpen(false);
         fetchAllGuidelines();
       }
     } catch (err) {
       console.error("Save Guideline Error:", err);
-      Swal.fire({
-        icon: "error",
-        title: "เกิดข้อผิดพลาด",
-        text: err.response?.data?.message || "ไม่สามารถบันทึกข้อมูลได้",
-        confirmButtonColor: "#ef4444",
-      });
+      openAlert(
+        "error",
+        "เกิดข้อผิดพลาด",
+        err.response?.data?.message || "ไม่สามารถบันทึกข้อมูลได้",
+      );
     } finally {
       setIsSubmitting(false);
     }
   };
 
   const handleDelete = (id, type, level) => {
-    Swal.fire({
-      title: "ยืนยันการลบ?",
-      text: `คุณต้องการลบข้อมูลของ ${type} (Level ${level}) ใช่หรือไม่?`,
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#dc2626",
-      cancelButtonColor: "#94a3b8",
-      confirmButtonText: "ลบข้อมูล",
-      cancelButtonText: "ยกเลิก",
-    }).then(async (result) => {
-      if (result.isConfirmed) {
+    openAlert(
+      "warning",
+      "ยืนยันการลบ?",
+      `คุณต้องการลบข้อมูลของ ${type} (Level ${level}) ใช่หรือไม่?`,
+      true,
+      async () => {
+        closeAlert();
         try {
           const response = await api.delete(`/admin/delete-guideline/${id}`);
           if (response.data && response.data.success) {
-            Swal.fire("ลบสำเร็จ!", "ข้อมูลถูกนำออกจากระบบแล้ว", "success");
+            openAlert("success", "ลบสำเร็จ!", "ข้อมูลถูกนำออกจากระบบแล้ว");
             fetchAllGuidelines();
           }
         } catch (err) {
           console.error("Delete Error:", err);
-          Swal.fire("ผิดพลาด", "ไม่สามารถลบข้อมูลได้", "error");
+          openAlert("error", "ผิดพลาด", "ไม่สามารถลบข้อมูลได้");
         }
-      }
-    });
+      },
+    );
   };
 
-  // กรองข้อมูลตาม Search
-  const filteredGuidelines = guidelines.filter(
-    (g) =>
+  // กรองข้อมูลด้วยช่อง Search และ Dropdown Type
+  const filteredGuidelines = guidelines.filter((g) => {
+    const matchSearch =
       (g.user_type || "").toLowerCase().includes(search.toLowerCase()) ||
-      (g.analysis || "").toLowerCase().includes(search.toLowerCase()),
-  );
+      (g.analysis || "").toLowerCase().includes(search.toLowerCase());
+
+    const matchType =
+      filterType === "all" ||
+      (g.user_type || "").toLowerCase() === filterType.toLowerCase();
+
+    return matchSearch && matchType;
+  });
 
   return (
     <div className="ag-layout">
@@ -201,12 +229,29 @@ const AdminGuideline = () => {
             </button>
           </div>
 
-          <div className="ag-toolbar">
+          {/* ส่วนของ Toolbar ที่เพิ่ม Dropdown เข้ามา */}
+          <div className="ag-toolbar-wrap">
+            <div className="ag-filter-box">
+              <select
+                className="ag-filter-select"
+                value={filterType}
+                onChange={(e) => setFilterType(e.target.value)}
+              >
+                <option value="all">ทุกประเภทผู้ใช้ (ทั้งหมด)</option>
+                <option value="regulator">Regulator</option>
+                <option value="policy">Policy</option>
+                <option value="researcher">Researcher</option>
+                <option value="developer">Developer</option>
+                <option value="service provider">Service Provider</option>
+                <option value="users">Users</option>
+              </select>
+            </div>
+
             <div className="ag-search-box">
               <FaSearch className="ag-search-icon" />
               <input
                 type="text"
-                placeholder="ค้นหาบทบาท หรือข้อความวิเคราะห์..."
+                placeholder="ค้นหาข้อความวิเคราะห์..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
               />
@@ -277,7 +322,7 @@ const AdminGuideline = () => {
                   {filteredGuidelines.length === 0 && (
                     <tr>
                       <td colSpan="4" className="ag-empty-state">
-                        ยังไม่มีข้อมูลแนวทางการพัฒนาในระบบ
+                        ไม่พบข้อมูลแนวทางการพัฒนาในระบบ
                       </td>
                     </tr>
                   )}
@@ -322,6 +367,9 @@ const AdminGuideline = () => {
                     <option value="policy">Policy (ผู้วางนโยบาย)</option>
                     <option value="researcher">Researcher (นักวิจัย)</option>
                     <option value="developer">Developer (นักพัฒนา)</option>
+                    <option value="provider">
+                      Service Provider (ผู้ให้บริการ)
+                    </option>
                     <option value="users">Users (ผู้ใช้งานทั่วไป)</option>
                   </select>
                 </div>
@@ -436,6 +484,52 @@ const AdminGuideline = () => {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* ==========================================
+          Custom Alert Modal Popup 
+          ========================================== */}
+      {alertModal.isOpen && (
+        <div className="ag-alert-overlay" onClick={closeAlert}>
+          <div
+            className="ag-alert-content"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button className="ag-alert-close" onClick={closeAlert}>
+              <FaTimes />
+            </button>
+
+            <div className={`ag-alert-icon-wrapper ${alertModal.type}`}>
+              {alertModal.type === "success" && <FaCheckCircle />}
+              {alertModal.type === "error" && <FaTimesCircle />}
+              {alertModal.type === "warning" && <FaExclamationTriangle />}
+              {alertModal.type === "info" && <FaInfoCircle />}
+            </div>
+
+            <h3 className="ag-alert-title">{alertModal.title}</h3>
+            <p className="ag-alert-desc">{alertModal.desc}</p>
+
+            <div className="ag-alert-actions">
+              {alertModal.showCancel && (
+                <button className="ag-alert-btn cancel" onClick={closeAlert}>
+                  ยกเลิก
+                </button>
+              )}
+              <button
+                className={`ag-alert-btn ${alertModal.type}`}
+                onClick={() => {
+                  if (alertModal.onConfirm) {
+                    alertModal.onConfirm();
+                  } else {
+                    closeAlert();
+                  }
+                }}
+              >
+                {alertModal.showCancel ? "ยืนยันการลบ" : "ตกลง"}
+              </button>
+            </div>
           </div>
         </div>
       )}

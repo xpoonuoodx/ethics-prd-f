@@ -73,44 +73,67 @@ const UserDashboard = () => {
   };
 
   const getRoleCategory = (type) => {
-    if (!type) return "user";
+    if (!type) return "users";
     const t = type.toLowerCase();
-    if (t.includes("regulator") || t.includes("policy")) return "regulator";
-    if (
-      t.includes("provider") ||
-      t.includes("developer") ||
-      t.includes("researcher")
-    )
-      return "provider";
-    return "user";
+    if (t.includes("regulator")) return "regulator";
+    if (t.includes("policy")) return "policy";
+    if (t.includes("researcher")) return "researcher";
+    if (t.includes("developer")) return "developer";
+    if (t.includes("provider")) return "provider";
+
+    return "users";
   };
 
   const roleCategory = getRoleCategory(dashboardData.userType);
 
   const roleConfig = {
     regulator: {
-      title: "Regulator / Policy Maker",
+      title: "Regulator",
       desc: "Evaluate, Regulate and Monitor (ERM) - หลักสูตรเจาะลึกสำหรับการกำกับดูแล การประเมินความเสี่ยง และการวางนโยบายที่เกี่ยวข้องกับ AI",
       img: "https://images.unsplash.com/photo-1589829085413-56de8ae18c73?q=80&w=800&auto=format&fit=crop",
       badge: "ผู้กำกับดูแลและนโยบาย",
       color: "#3b82f6",
       path: "regulator",
     },
+    policy: {
+      title: "Policy Maker",
+      desc: "Evaluate, Regulate and Monitor (ERM) - หลักสูตรเจาะลึกสำหรับการกำกับดูแล การประเมินความเสี่ยง และการวางนโยบายที่เกี่ยวข้องกับ AI",
+      img: "https://images.unsplash.com/photo-1589829085413-56de8ae18c73?q=80&w=800&auto=format&fit=crop",
+      badge: "ผู้กำกับดูแลและนโยบาย",
+      color: "#3b82f6",
+      path: "policy",
+    },
+    researcher: {
+      title: "Researcher",
+      desc: "Research and Development (R&D) - หลักสูตรสำหรับนักวิจัยเพื่อพัฒนาและวิเคราะห์ระบบ AI อย่างมีประสิทธิภาพ",
+      img: "https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?q=80&w=800&auto=format&fit=crop",
+      badge: "นักวิจัย",
+      color: "#8b5cf6",
+      path: "researcher",
+    },
+    developer: {
+      title: "Developer",
+      desc: "Plan, Development, Operation, Measurement (PDOM) - หลักสูตรเชิงปฏิบัติการสำหรับนักพัฒนา เพื่อสร้างระบบ AI ที่โปร่งใสและเป็นธรรม",
+      img: "https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?q=80&w=800&auto=format&fit=crop",
+      badge: "นักพัฒนาและผู้ให้บริการ",
+      color: "#8b5cf6",
+      path: "developer",
+    },
     provider: {
-      title: "Developer / Service Provider",
+      title: "Service Provider",
       desc: "Plan, Development, Operation, Measurement (PDOM) - หลักสูตรเชิงปฏิบัติการสำหรับนักพัฒนา เพื่อสร้างระบบ AI ที่โปร่งใสและเป็นธรรม",
       img: "https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?q=80&w=800&auto=format&fit=crop",
       badge: "นักพัฒนาและผู้ให้บริการ",
       color: "#8b5cf6",
       path: "provider",
     },
-    user: {
+    users: {
       title: "General User",
       desc: "Aware Utilize Feedback (AUF) - หลักสูตรสร้างความตระหนักรู้ เพื่อการใช้งาน AI อย่างปลอดภัยและมีความรับผิดชอบ",
       img: "https://images.unsplash.com/photo-1531482615713-2afd69097998?q=80&w=800&auto=format&fit=crop",
       badge: "ผู้ใช้งานทั่วไป",
       color: "#10b981",
-      path: "user",
+      path: "users",
     },
   };
 
