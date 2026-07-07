@@ -154,6 +154,7 @@ const AdminMapping = () => {
                 <option value="policy">Policy (ผู้วางนโยบาย)</option>
                 <option value="researcher">Researcher (นักวิจัย)</option>
                 <option value="developer">Developer (นักพัฒนา)</option>
+                <option value="service provider">Service Provider (ผู้ให้บริการ)</option>
                 <option value="users">Users (ผู้ใช้งานทั่วไป)</option>
               </select>
             </div>

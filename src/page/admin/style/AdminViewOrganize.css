@@ -8,7 +8,7 @@
 .admin-view-org-layout {
   display: flex;
   min-height: 100vh;
-  background-color: #f4f6f8; /* สีพื้นหลังหลักเดียวกับหน้าจัดการ */
+  background-color: #f4f6f8;
 }
 
 .admin-view-org-main-content {
@@ -20,7 +20,6 @@
 .admin-view-org-content-inner {
   padding: 40px 50px;
   width: 100%;
-  /* max-width: 1400px; */
   margin: 0 auto;
 }
 
@@ -95,11 +94,11 @@
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.05);
 }
 
-.admin-view-org-card.main-info {
+.admin-view-org-main-info {
   grid-column: 1 / -1;
 }
 @media (min-width: 1024px) {
-  .admin-view-org-card.main-info {
+  .admin-view-org-main-info {
     grid-column: span 2;
   }
 }
@@ -114,20 +113,19 @@
   font-size: 22px;
 }
 
-/* คุมโทนสี Icon ใน Card ให้ล้อกับธีมหลัก */
-.building-icon {
+.admin-view-org-building-icon {
   background: #f1f5f9;
   color: #0f172a;
 }
-.user-tie-icon {
+.admin-view-org-user-tie-icon {
   background: #e0e7ff;
   color: #3730a3;
 }
-.project-icon {
+.admin-view-org-project-icon {
   background: #dcfce7;
   color: #15803d;
 }
-.group-icon {
+.admin-view-org-group-icon {
   background: #f1f5f9;
   color: #475569;
 }
@@ -149,15 +147,18 @@
   font-size: 20px;
   color: #1e293b;
   font-weight: 700;
+  display: flex;
+  align-items: center;
 }
 
-.admin-view-org-title.highlight {
+.admin-view-org-highlight {
   font-size: 26px;
 }
-.admin-view-org-title.highlight small {
+.admin-view-org-highlight small {
   font-size: 14px;
   color: #94a3b8;
   font-weight: 500;
+  margin-left: 5px;
 }
 
 .admin-view-org-status-badge {
@@ -169,16 +170,36 @@
   margin-top: 12px;
   width: fit-content;
 }
-.admin-view-org-status-badge.active {
+.admin-view-org-active {
   background: #dcfce7;
   color: #166534;
 }
-.admin-view-org-status-badge.inactive {
+.admin-view-org-inactive {
   background: #fee2e2;
   color: #991b1b;
 }
 
-/* Table Section - ปรับโครงสร้างให้เป็น Card Table แยกบรรทัดแบบหน้าหลัก */
+.admin-view-org-edit-name-btn {
+  background: transparent;
+  border: none;
+  color: #cbd5e1;
+  font-size: 16px;
+  margin-left: 10px;
+  cursor: pointer;
+  transition:
+    color 0.2s,
+    transform 0.2s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+}
+.admin-view-org-edit-name-btn:hover {
+  color: #2563eb;
+  transform: scale(1.1);
+}
+
+/* Table Section */
 .admin-view-org-list-section {
   width: 100%;
 }
@@ -284,7 +305,7 @@
   font-size: 13px;
 }
 
-/* Badge สิทธิ์การใช้งานเหมือนหน้าหลัก */
+/* Badge สิทธิ์การใช้งาน */
 .admin-view-org-role-badge {
   display: inline-flex;
   align-items: center;
@@ -294,15 +315,15 @@
   font-size: 12px;
   font-weight: 600;
 }
-.admin-view-org-role-badge.admin {
+.admin-view-org-badge-admin {
   background-color: #fee2e2;
   color: #991b1b;
 }
-.admin-view-org-role-badge.regulator {
+.admin-view-org-badge-regulator {
   background-color: #e0e7ff;
   color: #3730a3;
 }
-.admin-view-org-role-badge.user {
+.admin-view-org-badge-user {
   background-color: #f1f5f9;
   color: #475569;
 }
@@ -360,6 +381,210 @@
 .admin-view-org-btn-retry:hover {
   background: #1e293b;
   transform: translateY(-2px);
+}
+
+/* =========================================
+   MODALS (Edit & Alert)
+   ========================================= */
+.admin-view-org-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(4px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 99999;
+  animation: adminViewOrgFadeIn 0.2s ease-out forwards;
+}
+.admin-view-org-modal-content {
+  background-color: #ffffff;
+  width: 90%;
+  max-width: 450px;
+  border-radius: 20px;
+  padding: 0;
+  position: relative;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  animation: adminViewOrgSlideUp 0.3s ease-out forwards;
+  overflow: hidden;
+}
+.admin-view-org-modal-header {
+  padding: 20px 25px;
+  border-bottom: 1px solid #f1f5f9;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.admin-view-org-modal-header h2 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+  color: #0f172a;
+}
+.admin-view-org-modal-close {
+  background: none;
+  border: none;
+  font-size: 18px;
+  color: #94a3b8;
+  cursor: pointer;
+  transition: color 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.admin-view-org-modal-close:hover {
+  color: #ef4444;
+}
+
+.admin-view-org-modal-body {
+  padding: 25px;
+}
+.admin-view-org-form-group {
+  margin-bottom: 20px;
+}
+.admin-view-org-form-group label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: #475569;
+  margin-bottom: 8px;
+}
+.admin-view-org-form-group input {
+  width: 100%;
+  padding: 12px 15px;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  font-size: 14px;
+  color: #0f172a;
+  outline: none;
+  transition: border 0.2s;
+}
+.admin-view-org-form-group input:focus {
+  border-color: #0f172a;
+}
+
+.admin-view-org-modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+.admin-view-org-btn-cancel {
+  background: #f1f5f9;
+  color: #475569;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+}
+.admin-view-org-btn-cancel:hover {
+  background: #e2e8f0;
+}
+.admin-view-org-btn-submit {
+  background: #0f172a;
+  color: #ffffff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+}
+.admin-view-org-btn-submit:hover:not(:disabled) {
+  background: #1e293b;
+}
+.admin-view-org-btn-submit:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* Alert Modal */
+.admin-view-org-alert-content {
+  background-color: #ffffff;
+  width: 90%;
+  max-width: 400px;
+  border-radius: 20px;
+  padding: 40px 30px;
+  position: relative;
+  text-align: center;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  animation: adminViewOrgSlideUp 0.3s ease-out forwards;
+}
+.admin-view-org-alert-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 32px;
+  margin: 0 auto 20px auto;
+}
+.admin-view-org-alert-success {
+  background-color: #10b981;
+  color: #ffffff;
+}
+.admin-view-org-alert-error {
+  background-color: #fee2e2;
+  color: #ef4444;
+}
+.admin-view-org-alert-warning {
+  background-color: #fef3c7;
+  color: #f59e0b;
+}
+.admin-view-org-alert-info {
+  background-color: #f1f5f9;
+  color: #3b82f6;
+}
+
+.admin-view-org-alert-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 12px 0;
+}
+.admin-view-org-alert-desc {
+  font-size: 15px;
+  color: #64748b;
+  line-height: 1.6;
+  margin: 0 0 30px 0;
+}
+.admin-view-org-alert-btn {
+  border: none;
+  padding: 12px 0;
+  width: 100%;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  color: white;
+  transition: 0.2s;
+}
+.admin-view-org-alert-btn:hover {
+  filter: brightness(0.9);
+}
+
+@keyframes adminViewOrgFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes adminViewOrgSlideUp {
+  from {
+    transform: translateY(20px) scale(0.95);
+  }
+  to {
+    transform: translateY(0) scale(1);
+  }
 }
 
 /* Responsive */

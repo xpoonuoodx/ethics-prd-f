@@ -36,6 +36,7 @@ import AdminAddChapter from "./page/admin/AdminAddChapter"; // หน้าเ�
 import AdminEditChapter from "./page/admin/AdminEditChapter"; // หน้าแก้ไขบทเรียนของ Admin
 import AdminCertificate from "./page/admin/AdminCertificate";
 import AdminManageCertificate from "./page/admin/AdminManageCertificate";
+import AdminUserDetail from "./page/admin/AdminUserDetail";
 // User Pages
 import UserDashboard from "./page/user/UserDashboard";
 import UserSelectRole from "./page/user/UserSelectRole"; // หน้าเลือกบทบาท
@@ -186,6 +187,18 @@ function App() {
             </AdminRoute>
           }
         />
+
+        <Route
+          path="/admin-user-detail/:id"
+          element={
+            <AdminRoute>
+              <AdminUserDetail />
+            </AdminRoute>
+          }
+        />  
+
+
+
         {/* === Regulator Routes === */}
         <Route
           path="/regulator-dashboard"

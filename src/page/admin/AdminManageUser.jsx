@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom"; // นำเข้า useNavigate
 import "./style/AdminManageUser.css";
 import {
   FaSearch,
   FaPlus,
   FaSpinner,
-  FaEdit,
+  FaEye, // เปลี่ยนไอคอนเป็นรูปตา
   FaTrash,
   FaTimes,
   FaUserShield,
@@ -19,6 +20,7 @@ import SidebarAdmin from "./SidebarAdmin";
 import api from "../../api/Api";
 
 const AdminManageUser = () => {
+  const navigate = useNavigate(); // เรียกใช้ navigate
   const [users, setUsers] = useState([]);
   const [organizations, setOrganizations] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -115,7 +117,6 @@ const AdminManageUser = () => {
   const handleAddSubmit = async (e) => {
     e.preventDefault();
 
-    // ดักจับการกรอกข้อมูลพื้นฐานให้ครบ
     if (
       !formData.username ||
       !formData.password ||
@@ -329,11 +330,15 @@ const AdminManageUser = () => {
                           </td>
                           <td>
                             <div className="admin-manage-user-action-buttons">
+                              {/* เปลี่ยนเป็นปุ่มไปหน้า Detail */}
                               <button
                                 className="admin-manage-user-btn-action-icon admin-manage-user-edit"
-                                title="แก้ไขข้อมูล"
+                                title="ดูรายละเอียด"
+                                onClick={() =>
+                                  navigate(`/admin-user-detail/${u.id}`)
+                                }
                               >
-                                <FaEdit />
+                                <FaEye />
                               </button>
                               <button
                                 className="admin-manage-user-btn-action-icon admin-manage-user-delete"
@@ -454,7 +459,6 @@ const AdminManageUser = () => {
                   value={formData.role}
                   onChange={handleInputChange}
                 >
-                  <option value="user">ผู้ใช้งานทั่วไป (User)</option>
                   <option value="regulator">
                     ผู้กำกับดูแลหน่วยงาน (Regulator)
                   </option>
@@ -473,7 +477,6 @@ const AdminManageUser = () => {
                     <option value="">-- ไม่ระบุสังกัด --</option>
                     {organizations.map((org, idx) => (
                       <option key={idx} value={org.id}>
-                        {/* แก้ไขให้ดึง org.org_name ตามชื่อคอลัมน์ใน DB (ถ้าไม่มีใช้ org.name รองรับไว้) */}
                         {org.org_name || org.name} ({org.org_code || org.id})
                       </option>
                     ))}

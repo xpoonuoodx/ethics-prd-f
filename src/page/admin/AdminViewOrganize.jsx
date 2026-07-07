@@ -11,6 +11,12 @@ import {
   FaUserShield,
   FaUser,
   FaFileAlt,
+  FaEdit,
+  FaTimes,
+  FaCheckCircle,
+  FaTimesCircle,
+  FaExclamationTriangle,
+  FaInfoCircle,
 } from "react-icons/fa";
 import SidebarAdmin from "./SidebarAdmin";
 import api from "../../api/Api";
@@ -24,6 +30,31 @@ const AdminViewOrganize = () => {
   const [orgProjects, setOrgProjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  // ==========================================
+  // States สำหรับแก้ไขชื่อหน่วยงาน
+  // ==========================================
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [editOrgName, setEditOrgName] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // ==========================================
+  // Custom Alert Modal State
+  // ==========================================
+  const [alertModal, setAlertModal] = useState({
+    isOpen: false,
+    type: "info",
+    title: "",
+    desc: "",
+  });
+
+  const openAlert = (type, title, desc) => {
+    setAlertModal({ isOpen: true, type, title, desc });
+  };
+
+  const closeAlert = () => {
+    setAlertModal((prev) => ({ ...prev, isOpen: false }));
+  };
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -40,7 +71,6 @@ const AdminViewOrganize = () => {
       if (response.data && response.data.success) {
         setOrganization(response.data.data.organization);
         setOrgUsers(response.data.data.users || []);
-        // ดึงข้อมูล projects ที่รวมรายชื่อ members มาด้วย
         setOrgProjects(response.data.data.projects || []);
       } else {
         setError("ไม่พบข้อมูลหน่วยงานนี้ในระบบ");
@@ -63,20 +93,58 @@ const AdminViewOrganize = () => {
         return {
           label: "ผู้ดูแลระบบ",
           icon: <FaUserShield />,
-          className: "admin",
+          className: "admin-view-org-badge-admin",
         };
       case "regulator":
         return {
           label: "ผู้กำกับดูแล",
           icon: <FaUserTie />,
-          className: "regulator",
+          className: "admin-view-org-badge-regulator",
         };
       default:
         return {
           label: "ผู้ใช้งานทั่วไป",
           icon: <FaUser />,
-          className: "user",
+          className: "admin-view-org-badge-user",
         };
+    }
+  };
+
+  // ==========================================
+  // ฟังก์ชันจัดการการแก้ไขหน่วยงาน
+  // ==========================================
+  const handleOpenEditModal = () => {
+    setEditOrgName(organization.name);
+    setIsEditModalOpen(true);
+  };
+
+  const handleEditSubmit = async (e) => {
+    e.preventDefault();
+    if (!editOrgName.trim()) {
+      openAlert("warning", "ข้อมูลไม่ครบถ้วน", "กรุณากรอกชื่อหน่วยงาน");
+      return;
+    }
+
+    try {
+      setIsSubmitting(true);
+      const response = await api.put(`/admin/edit-organize/${id}`, {
+        org_name: editOrgName,
+      });
+
+      if (response.data && response.data.success) {
+        setIsEditModalOpen(false);
+        openAlert("success", "สำเร็จ", "แก้ไขชื่อหน่วยงานเรียบร้อยแล้ว");
+        fetchOrganizationDetails();
+      }
+    } catch (err) {
+      console.error("Edit Organization Error:", err);
+      openAlert(
+        "error",
+        "เกิดข้อผิดพลาด",
+        err.response?.data?.message || "ไม่สามารถแก้ไขชื่อหน่วยงานได้",
+      );
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -119,8 +187,8 @@ const AdminViewOrganize = () => {
               <>
                 {/* Cards ข้อมูลภาพรวม */}
                 <div className="admin-view-org-summary-grid">
-                  <div className="admin-view-org-card main-info">
-                    <div className="admin-view-org-card-icon-wrapper building-icon">
+                  <div className="admin-view-org-card admin-view-org-main-info">
+                    <div className="admin-view-org-card-icon-wrapper admin-view-org-building-icon">
                       <FaBuilding />
                     </div>
                     <div className="admin-view-org-card-details">
@@ -129,9 +197,20 @@ const AdminViewOrganize = () => {
                       </span>
                       <h2 className="admin-view-org-title">
                         {organization.name}
+                        <button
+                          className="admin-view-org-edit-name-btn"
+                          onClick={handleOpenEditModal}
+                          title="แก้ไขชื่อหน่วยงาน"
+                        >
+                          <FaEdit />
+                        </button>
                       </h2>
                       <span
-                        className={`admin-view-org-status-badge ${organization.status === "Active" ? "active" : "inactive"}`}
+                        className={`admin-view-org-status-badge ${
+                          organization.status === "Active"
+                            ? "admin-view-org-active"
+                            : "admin-view-org-inactive"
+                        }`}
                       >
                         {organization.status === "Active"
                           ? "กำลังเปิดใช้งาน"
@@ -141,7 +220,7 @@ const AdminViewOrganize = () => {
                   </div>
 
                   <div className="admin-view-org-card">
-                    <div className="admin-view-org-card-icon-wrapper user-tie-icon">
+                    <div className="admin-view-org-card-icon-wrapper admin-view-org-user-tie-icon">
                       <FaUserTie />
                     </div>
                     <div className="admin-view-org-card-details">
@@ -155,28 +234,28 @@ const AdminViewOrganize = () => {
                   </div>
 
                   <div className="admin-view-org-card">
-                    <div className="admin-view-org-card-icon-wrapper project-icon">
+                    <div className="admin-view-org-card-icon-wrapper admin-view-org-project-icon">
                       <FaProjectDiagram />
                     </div>
                     <div className="admin-view-org-card-details">
                       <span className="admin-view-org-label">
                         โครงการทั้งหมด
                       </span>
-                      <h2 className="admin-view-org-title highlight">
+                      <h2 className="admin-view-org-title admin-view-org-highlight">
                         {organization.totalProjects || 0} <small>โครงการ</small>
                       </h2>
                     </div>
                   </div>
 
                   <div className="admin-view-org-card">
-                    <div className="admin-view-org-card-icon-wrapper group-icon">
+                    <div className="admin-view-org-card-icon-wrapper admin-view-org-group-icon">
                       <FaUsers />
                     </div>
                     <div className="admin-view-org-card-details">
                       <span className="admin-view-org-label">
                         ผู้ใช้งานในระบบ
                       </span>
-                      <h2 className="admin-view-org-title highlight">
+                      <h2 className="admin-view-org-title admin-view-org-highlight">
                         {organization.totalUsers || 0} <small>บัญชี</small>
                       </h2>
                     </div>
@@ -248,7 +327,7 @@ const AdminViewOrganize = () => {
                   </div>
                 </div>
 
-                {/* 3. ตารางโครงการ */}
+                {/* ตารางโครงการ */}
                 <div className="admin-view-org-list-section">
                   <div className="admin-view-org-list-header">
                     <h2>โครงการในหน่วยงาน ({(orgProjects || []).length})</h2>
@@ -328,7 +407,11 @@ const AdminViewOrganize = () => {
                             </td>
                             <td>
                               <span
-                                className={`admin-view-org-role-badge ${proj.status === "Active" ? "regulator" : "user"}`}
+                                className={`admin-view-org-role-badge ${
+                                  proj.status === "Active"
+                                    ? "admin-view-org-badge-regulator"
+                                    : "admin-view-org-badge-user"
+                                }`}
                               >
                                 {proj.status}
                               </span>
@@ -360,6 +443,85 @@ const AdminViewOrganize = () => {
           )}
         </div>
       </div>
+
+      {/* ==========================================
+          Modal แก้ไขข้อมูลหน่วยงาน 
+          ========================================== */}
+      {isEditModalOpen && (
+        <div className="admin-view-org-modal-overlay">
+          <div className="admin-view-org-modal-content">
+            <div className="admin-view-org-modal-header">
+              <h2>แก้ไขข้อมูลหน่วยงาน</h2>
+              <button
+                className="admin-view-org-modal-close"
+                onClick={() => setIsEditModalOpen(false)}
+              >
+                <FaTimes />
+              </button>
+            </div>
+            <form
+              onSubmit={handleEditSubmit}
+              className="admin-view-org-modal-body"
+            >
+              <div className="admin-view-org-form-group">
+                <label>ชื่อหน่วยงาน (Organization Name)</label>
+                <input
+                  type="text"
+                  placeholder="กรอกชื่อหน่วยงานใหม่"
+                  value={editOrgName}
+                  onChange={(e) => setEditOrgName(e.target.value)}
+                  required
+                />
+              </div>
+              <div className="admin-view-org-modal-footer">
+                <button
+                  type="button"
+                  className="admin-view-org-btn-cancel"
+                  onClick={() => setIsEditModalOpen(false)}
+                >
+                  ยกเลิก
+                </button>
+                <button
+                  type="submit"
+                  className="admin-view-org-btn-submit"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? "กำลังบันทึก..." : "บันทึกข้อมูล"}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* ==========================================
+          Custom Alert Modal Popup 
+          ========================================== */}
+      {alertModal.isOpen && (
+        <div className="admin-view-org-modal-overlay" onClick={closeAlert}>
+          <div
+            className="admin-view-org-alert-content"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div
+              className={`admin-view-org-alert-icon admin-view-org-alert-${alertModal.type}`}
+            >
+              {alertModal.type === "success" && <FaCheckCircle />}
+              {alertModal.type === "error" && <FaTimesCircle />}
+              {alertModal.type === "warning" && <FaExclamationTriangle />}
+              {alertModal.type === "info" && <FaInfoCircle />}
+            </div>
+            <h3 className="admin-view-org-alert-title">{alertModal.title}</h3>
+            <p className="admin-view-org-alert-desc">{alertModal.desc}</p>
+            <button
+              className={`admin-view-org-alert-btn admin-view-org-alert-${alertModal.type}`}
+              onClick={closeAlert}
+            >
+              ตกลง
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
