@@ -10,7 +10,7 @@ import {
   FaTimesCircle,
   FaFileAlt,
 } from "react-icons/fa";
-import api from "../../api/Api";
+import api, { getStoredUser } from "../../api/Api";
 import "./style/UserTest.css";
 
 const UserTest = () => {
@@ -26,10 +26,13 @@ const UserTest = () => {
   const fetchTestsList = async () => {
     try {
       setLoading(true);
-      const storedUser = JSON.parse(localStorage.getItem("user"));
+      const storedUser = getStoredUser();
       const userId = storedUser?.id || storedUser?.user_id;
 
-      if (!userId) return;
+      if (!userId) {
+        console.warn("ไม่พบ User ID ใน LocalStorage");
+        return;
+      }
 
       const response = await api.get(`/user/tests/${userId}`);
       if (response.data && response.data.success) {

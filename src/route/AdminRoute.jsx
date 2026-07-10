@@ -5,13 +5,11 @@
 
 import React from "react";
 import { Navigate } from "react-router-dom";
+import { getStoredUser } from "../api/Api";
 
 const AdminRoute = ({ children }) => {
   const token = localStorage.getItem("token");
-
-  const userString = localStorage.getItem("user");
-  const user = userString ? JSON.parse(userString) : null;
-
+  const user = getStoredUser();
   const role = user?.role;
 
   if (!token) return <Navigate to="/login" />;

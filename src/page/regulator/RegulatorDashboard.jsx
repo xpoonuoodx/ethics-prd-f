@@ -20,7 +20,7 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
-import api from "../../api/Api";
+import api, { getStoredUser } from "../../api/Api";
 
 const RegulatorDashboard = () => {
   const [userData, setUserData] = useState(null);
@@ -51,7 +51,7 @@ const RegulatorDashboard = () => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    const storedUser = JSON.parse(localStorage.getItem("user"));
+    const storedUser = getStoredUser();
     setUserData(storedUser);
     fetchDashboardData();
   }, []);

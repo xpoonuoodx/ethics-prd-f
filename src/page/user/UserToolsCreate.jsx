@@ -9,7 +9,7 @@ import {
   FaCogs,
   FaSpinner,
 } from "react-icons/fa";
-import api from "../../api/Api";
+import api, { getStoredUser } from "../../api/Api";
 import Swal from "sweetalert2";
 
 const UserToolsCreate = () => {
@@ -65,9 +65,8 @@ const UserToolsCreate = () => {
   const handleGenerateAndSave = async () => {
     try {
       setLoading(true);
-      const userId =
-        JSON.parse(localStorage.getItem("user"))?.id ||
-        JSON.parse(localStorage.getItem("user"))?.user_id;
+      const storedUser = getStoredUser();
+      const userId = storedUser?.id || storedUser?.user_id;
       const response = await api.post("/user/generate-tool", {
         userId,
         maturityId: selectedMaturity,

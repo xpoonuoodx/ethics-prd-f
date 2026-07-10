@@ -59,4 +59,19 @@ api.interceptors.request.use(
   },
 );
 
+// อ่านข้อมูล user จาก localStorage แบบปลอดภัย กัน SyntaxError ทำเว็บขาวทั้งหน้า
+// ถ้าค่าเสีย/parse ไม่ได้ จะเคลียร์ค่านั้นทิ้งแล้วคืน null แทนการ throw
+export const getStoredUser = () => {
+  const raw = localStorage.getItem("user");
+  if (!raw) return null;
+
+  try {
+    return JSON.parse(raw);
+  } catch (error) {
+    console.error("Corrupted 'user' data in localStorage, clearing it.", error);
+    localStorage.removeItem("user");
+    return null;
+  }
+};
+
 export default api;

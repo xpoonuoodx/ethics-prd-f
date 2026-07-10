@@ -13,12 +13,13 @@ import {
   FaGripLinesVertical,
   FaCertificate,
 } from "react-icons/fa";
+import { getStoredUser } from "../../api/Api";
 
 const SidebarUser = () => {
   const [isOpen, setIsOpen] = useState(true);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
 
-  const user = JSON.parse(localStorage.getItem("user"));
+  const user = getStoredUser();
 
   const getInitials = (name) => {
     if (!name) return "US";

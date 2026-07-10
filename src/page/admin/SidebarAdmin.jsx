@@ -21,6 +21,7 @@ import {
   FaCertificate,
   FaPalette,
 } from "react-icons/fa";
+import { getStoredUser } from "../../api/Api";
 
 const SidebarAdmin = () => {
   const [isOpen, setIsOpen] = useState(true);
@@ -29,7 +30,7 @@ const SidebarAdmin = () => {
   const [isAssessmentOpen, setIsAssessmentOpen] = useState(false);
 
   const location = useLocation();
-  const user = JSON.parse(localStorage.getItem("user")) || {
+  const user = getStoredUser() || {
     name: "ผู้ดูแลระบบ",
   };
 

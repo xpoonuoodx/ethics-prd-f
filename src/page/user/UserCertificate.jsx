@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import SidebarUser from "./SidebarUser";
 import { FaCertificate, FaDownload, FaSpinner, FaTrophy } from "react-icons/fa";
-import api from "../../api/Api";
+import api, { getStoredUser } from "../../api/Api";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 import "./style/UserCertificate.css";
@@ -14,7 +14,7 @@ const UserCertificate = () => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    const user = JSON.parse(localStorage.getItem("user"));
+    const user = getStoredUser();
     if (user) {
       setUserName(user.name || user.firstname || "Student");
       fetchCertificates(user.id || user.user_id);

@@ -10,7 +10,7 @@ import {
   FaSpinner,
   FaBookOpen,
 } from "react-icons/fa";
-import api from "../../api/Api";
+import api, { getStoredUser } from "../../api/Api";
 import "./style/UserClassroom.css";
 
 const UserClassroom = () => {
@@ -31,7 +31,7 @@ const UserClassroom = () => {
   const fetchClassroomData = async () => {
     try {
       setLoading(true);
-      const storedUser = JSON.parse(localStorage.getItem("user"));
+      const storedUser = getStoredUser();
       const userId = storedUser?.id || storedUser?.user_id;
 
       if (!userId) {

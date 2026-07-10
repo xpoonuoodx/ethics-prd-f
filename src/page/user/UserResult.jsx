@@ -11,6 +11,7 @@ import {
 } from "react-icons/fa";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
+import { getStoredUser } from "../../api/Api";
 import "./style/UserResult.css";
 
 const UserResult = () => {
@@ -28,11 +29,11 @@ const UserResult = () => {
     if (!resultData || !chapterInfo) {
       navigate("/user-test");
     }
-    const user = JSON.parse(localStorage.getItem("user"));
+    const user = getStoredUser();
     if (user) setUserName(user.name || user.firstname || "Student");
   }, [resultData, chapterInfo, navigate]);
 
-  if (!resultData) return null;
+  if (!resultData || !chapterInfo) return null;
 
   const isChapterPassed = resultData.isPassed;
   const isAllPassed = resultData.isAllPassed;

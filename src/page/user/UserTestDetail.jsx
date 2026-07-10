@@ -10,7 +10,7 @@ import {
   FaPlay,
   FaSpinner,
 } from "react-icons/fa";
-import api from "../../api/Api";
+import api, { getStoredUser } from "../../api/Api";
 import "./style/UserTestDetail.css";
 
 const UserTestDetail = () => {
@@ -78,7 +78,7 @@ const UserTestDetail = () => {
   const submitTest = async (finalScore) => {
     try {
       setLoading(true);
-      const storedUser = JSON.parse(localStorage.getItem("user"));
+      const storedUser = getStoredUser();
       const userId = storedUser?.id || storedUser?.user_id;
 
       const payload = {

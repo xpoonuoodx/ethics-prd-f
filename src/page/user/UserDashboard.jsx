@@ -25,7 +25,7 @@ import {
   ResponsiveContainer,
   Tooltip,
 } from "recharts";
-import api from "../../api/Api";
+import api, { getStoredUser } from "../../api/Api";
 
 const UserDashboard = () => {
   const navigate = useNavigate();
@@ -52,7 +52,7 @@ const UserDashboard = () => {
   const fetchDashboardData = async () => {
     try {
       setLoading(true);
-      const storedUser = JSON.parse(localStorage.getItem("user"));
+      const storedUser = getStoredUser();
       const userId = storedUser?.id || storedUser?.user_id;
 
       if (!userId) {
@@ -63,7 +63,14 @@ const UserDashboard = () => {
 
       const response = await api.get(`/user/dashboard/${userId}`);
       if (response.data && response.data.success) {
-        setDashboardData(response.data.data);
+        // merge กับค่า default เดิมเสมอ กัน crash ถ้า response ไม่มี stats/radarData ครบ
+        const data = response.data.data || {};
+        setDashboardData((prev) => ({
+          ...prev,
+          ...data,
+          stats: { ...prev.stats, ...(data.stats || {}) },
+          radarData: data.radarData || [],
+        }));
       }
     } catch (error) {
       console.error("Fetch Dashboard Error:", error);
