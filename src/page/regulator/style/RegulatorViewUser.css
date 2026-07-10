@@ -261,6 +261,8 @@
   font-size: 14px;
   outline: none;
   transition: 0.2s;
+  background-color: white;
+  color: #0f172a;
 }
 .regulator-view-user-form-group input:focus {
   border-color: #0f172a;

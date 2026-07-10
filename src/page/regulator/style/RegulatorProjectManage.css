@@ -125,6 +125,7 @@
   width: 100%;
   font-size: 14px;
   color: #0f172a;
+  background-color: white
 }
 .rpm-search-box input::placeholder {
   color: #94a3b8;
