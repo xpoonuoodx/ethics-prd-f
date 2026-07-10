@@ -445,12 +445,14 @@
   transition:
     border-color 0.2s,
     background-color 0.2s;
+  color: #1e293b;
 }
 
 .admin-manage-user-form-group input:focus,
 .admin-manage-user-form-group select:focus {
   border-color: #0f172a;
   background-color: #ffffff;
+  color: #1e293b;
 }
 
 .admin-manage-user-modal-footer {
