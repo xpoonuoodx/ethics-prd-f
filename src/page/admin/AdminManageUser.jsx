@@ -460,7 +460,7 @@ const AdminManageUser = () => {
                   onChange={handleInputChange}
                 >
                   <option value="regulator">
-                    ผู้กำกับดูแลหน่วยงาน (Regulator)
+                    ผู้กำกับดูแลหน่วยงาน (Organizer)
                   </option>
                   <option value="admin">ผู้ดูแลระบบสูงสุด (Admin)</option>
                 </select>

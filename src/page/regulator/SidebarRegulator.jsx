@@ -64,7 +64,7 @@ const SidebarRegulator = () => {
             <div className="rgsidebar-brand-icon">
               <FaShieldAlt />
             </div>
-            <h2 className="rgsidebar-title">Regulator</h2>
+            <h2 className="rgsidebar-title">Organizer</h2>
           </div>
 
           {/* <button className="rgsidebar-desktop-toggle" onClick={toggleSidebar}>
@@ -142,7 +142,7 @@ const SidebarRegulator = () => {
           <div className="rgsidebar-user-card">
             <div className="rgsidebar-avatar">{getInitials(user?.name)}</div>
             <div className={`rgsidebar-user-info ${!isOpen ? "hidden" : ""}`}>
-              <p className="rgsidebar-user-name">{user?.name || "Regulator"}</p>
+              <p className="rgsidebar-user-name">{user?.name || "Organizer"}</p>
               <p className="rgsidebar-user-role">ผู้กำกับดูแล</p>
             </div>
           </div>
