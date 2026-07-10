@@ -1,19 +1,38 @@
-.ucert-admin-container {
-  padding: 40px;
-  /* max-width: 1200px; */
-  /* margin: 0 auto; */
+@import url("https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap");
+
+
+
+/* เพิ่มเติมสำหรับ Custom Logo และ Signature ให้สัดส่วนสวยงาม */
+.cert-custom-logo,
+.ucert-custom-logo {
+  height: 60px;
+  object-fit: contain;
+  margin-bottom: 20px;
 }
-.ucert-spin-icon {
-  font-size: 40px;
-  color: #eab308;
-  animation: spin 1s linear infinite;
+
+.cert-custom-signature,
+.ucert-custom-signature {
+  height: 50px;
+  object-fit: contain;
+  margin-bottom: 5px;
+}
+
+.ures-cert-ref,
+.ucert-cert-ref {
+  position: absolute;
+  bottom: 25px;
+  left: 30px;
+  font-size: 14px;
+  color: #94a3b8;
+  font-family: monospace;
+  text-align: left;
 }
 
 .ucert-header {
   margin-bottom: 30px;
 }
 .ucert-title {
-  font-size: 26px;
+  font-size: 28px;
   font-weight: 700;
   color: #0f172a;
   margin: 0 0 8px 0;
@@ -24,129 +43,234 @@
   margin: 0;
 }
 
-.text-yellow {
-  color: #eab308;
-}
-.bg-yellow-light {
-  background: #fef9c3;
+.ucert-card {
+  background: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+  border: 1px solid #e2e8f0;
+  overflow: hidden;
 }
 
-.ucert-card {
-  background: white;
-  border-radius: 16px;
-  border: 1px solid #e2e8f0;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
-}
 .ucert-card-header {
-  padding: 20px 24px;
-  border-bottom: 1px solid #f1f5f9;
-  background: #fcfcfc;
+  background: #f8fafc;
+  padding: 20px 25px;
+  border-bottom: 1px solid #e2e8f0;
 }
 .ucert-card-header h3 {
   margin: 0;
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 700;
-  color: #0f172a;
+  color: #1e293b;
   display: flex;
   align-items: center;
   gap: 10px;
 }
+.text-yellow {
+  color: #f59e0b;
+}
+
 .ucert-card-body {
-  padding: 30px 24px;
+  padding: 30px 25px;
 }
 
 .ucert-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 20px;
-}
-.ucert-item-card {
-  background: white;
-  border: 1px solid #e2e8f0;
-  border-radius: 12px;
-  padding: 24px;
   display: flex;
   flex-direction: column;
+  gap: 20px;
+}
+
+.ucert-item-card {
+  display: flex;
   align-items: center;
-  text-align: center;
-  transition: all 0.2s;
-  position: relative;
-  overflow: hidden;
+  gap: 20px;
+  padding: 20px;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  background: #ffffff;
+  transition: all 0.3s ease;
 }
 .ucert-item-card:hover {
   border-color: #cbd5e1;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.04);
-  transform: translateY(-3px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
 }
 
 .ucert-item-icon {
-  width: 70px;
-  height: 70px;
-  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  border-radius: 12px;
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 32px;
-  margin-bottom: 15px;
+  font-size: 28px;
+}
+.bg-yellow-light {
+  background: #fef3c7;
+}
+
+.ucert-item-details {
+  flex: 1;
 }
 .ucert-course-title {
-  font-size: 16px;
+  margin: 0 0 8px 0;
+  font-size: 18px;
   font-weight: 700;
-  color: #1e293b;
-  margin: 0 0 10px 0;
-  line-height: 1.4;
+  color: #0f172a;
 }
 .ucert-meta {
-  font-size: 13px;
-  color: #64748b;
   margin: 0 0 4px 0;
-}
-.ucert-meta strong {
-  color: #0f172a;
+  font-size: 14px;
+  color: #64748b;
 }
 
 .ucert-btn-download {
-  margin-top: 20px;
-  width: 100%;
-  background: white;
-  border: 1px solid #cbd5e1;
-  color: #334155;
-  padding: 10px;
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: 600;
   display: flex;
-  justify-content: center;
   align-items: center;
   gap: 8px;
+  background: #10b981;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: background 0.2s;
 }
 .ucert-btn-download:hover:not(:disabled) {
-  background: #f8fafc;
-  border-color: #94a3b8;
-  color: #0f172a;
+  background: #059669;
 }
 .ucert-btn-download:disabled {
-  opacity: 0.6;
+  opacity: 0.7;
   cursor: not-allowed;
-}
-.spin {
-  animation: spin 1s linear infinite;
 }
 
 .ucert-empty-state {
-  grid-column: 1 / -1;
-  padding: 50px;
   text-align: center;
+  padding: 40px;
   color: #94a3b8;
-  background: #f8fafc;
-  border-radius: 12px;
-  border: 1px dashed #cbd5e1;
+  font-style: italic;
+  font-size: 15px;
 }
 
+/* =========================================
+   TEMPLATE สำหรับวาดรูปลง PDF
+   ========================================= */
+.ucert-certificate-template {
+  width: 297mm; /* A4 แนวนอน */
+  height: 210mm;
+  padding: 20px;
+  background-color: #ffffff;
+  box-sizing: border-box;
+}
+
+.ucert-cert-border {
+  border: 10px solid #0f172a;
+  padding: 40px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  text-align: center;
+  background-image: radial-gradient(#f1f5f9 1px, transparent 1px);
+  background-size: 20px 20px;
+  position: relative; /* สำคัญ: เพื่อให้สามารถแปะเลข Ref ไว้มุมได้ */
+}
+
+.ucert-cert-header .ucert-cert-logo {
+  font-size: 24px;
+  font-weight: 700;
+  color: #3b82f6;
+  margin-bottom: 20px;
+}
+.ucert-cert-header h2 {
+  font-size: 40px;
+  font-weight: 700;
+  color: #0f172a;
+  letter-spacing: 2px;
+  margin: 0 0 10px 0;
+}
+.ucert-cert-header p {
+  font-size: 18px;
+  color: #64748b;
+  margin: 0;
+}
+
+.ucert-cert-body {
+  margin: 40px 0;
+}
+.ucert-cert-name {
+  font-size: 50px;
+  font-weight: 700;
+  color: #1e293b;
+  text-decoration: underline;
+  margin: 0 0 20px 0;
+  text-underline-offset: 10px;
+}
+.ucert-cert-body p {
+  font-size: 20px;
+  color: #64748b;
+  margin: 0 0 10px 0;
+}
+.ucert-cert-course {
+  font-size: 32px;
+  font-weight: 700;
+  color: #3b82f6;
+  margin: 0;
+}
+
+.ucert-cert-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-top: 40px;
+  padding: 0 40px;
+}
+.ucert-cert-date span,
+.ucert-cert-signature span {
+  font-size: 14px;
+  color: #64748b;
+  display: block;
+}
+.ucert-cert-date p {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1e293b;
+  margin: 5px 0 0 0;
+}
+.ucert-signature-line {
+  width: 250px;
+  border-bottom: 2px solid #0f172a;
+  margin-bottom: 10px;
+}
+
+/* รหัสอ้างอิงตรงมุมใบเซอร์ */
+.ucert-cert-ref {
+  position: absolute;
+  bottom: 25px;
+  left: 30px;
+  font-size: 14px;
+  color: #94a3b8;
+  font-family: monospace; /* ให้ฟอนต์ดูเป็นรหัส */
+  text-align: left;
+}
+
+/* Responsive */
+@media (max-width: 899px) {
+  .user-portal-content {
+    margin-left: 0;
+    padding: 80px 20px 20px 20px;
+  }
+}
 @media (max-width: 768px) {
-  .ucert-admin-container {
-    padding: 20px;
+  .ucert-item-card {
+    flex-direction: column;
+    text-align: center;
+  }
+  .ucert-item-icon {
+    margin: 0 auto;
+  }
+  .ucert-btn-download {
+    width: 100%;
+    justify-content: center;
   }
 }

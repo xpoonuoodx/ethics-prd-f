@@ -7,6 +7,7 @@ import {
   FaArrowLeft,
   FaDownload,
   FaRedo,
+  FaBookOpen,
 } from "react-icons/fa";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
@@ -15,7 +16,7 @@ import "./style/UserResult.css";
 const UserResult = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const certRef = useRef(null); // Reference สำหรับจับภาพทำ PDF
+  const certRef = useRef(null);
 
   const resultData = location.state?.resultData;
   const chapterInfo = location.state?.chapterInfo;
@@ -33,24 +34,25 @@ const UserResult = () => {
 
   if (!resultData) return null;
 
-  // ฟังก์ชันดาวน์โหลด PDF
+  const isChapterPassed = resultData.isPassed;
+  const isAllPassed = resultData.isAllPassed;
+  const certSettings = resultData.certSettings || {}; // ดึง Setting มาใช้งาน
+
   const handleDownloadPDF = async () => {
     const input = certRef.current;
     if (!input) return;
 
     try {
       setIsGenerating(true);
-      // จับภาพ HTML เป็น Canvas
       const canvas = await html2canvas(input, { scale: 2, useCORS: true });
       const imgData = canvas.toDataURL("image/png");
 
-      // สร้าง PDF แนวนอน (Landscape) ขนาด A4
       const pdf = new jsPDF("landscape", "mm", "a4");
       const pdfWidth = pdf.internal.pageSize.getWidth();
       const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
 
       pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
-      pdf.save(`Certificate_${chapterInfo.title}.pdf`);
+      pdf.save(`Certificate_AIEthics_${userName}.pdf`);
     } catch (error) {
       console.error("PDF Generation Failed:", error);
     } finally {
@@ -72,7 +74,7 @@ const UserResult = () => {
 
           <div className="ures-main-card">
             <div className="ures-status-icon">
-              {resultData.isPassed ? (
+              {isChapterPassed ? (
                 <FaCheckCircle className="text-green" />
               ) : (
                 <FaTimesCircle className="text-red" />
@@ -80,11 +82,27 @@ const UserResult = () => {
             </div>
 
             <h1 className="ures-title">
-              {resultData.isPassed
-                ? "ยินดีด้วย! คุณสอบผ่าน"
-                : "คุณยังทำคะแนนไม่ถึงเกณฑ์ที่กำหนด"}
+              {!isChapterPassed
+                ? "คุณยังทำคะแนนไม่ถึงเกณฑ์ที่กำหนด"
+                : isAllPassed
+                  ? "ยินดีด้วย! คุณสอบผ่านครบทุกบทเรียนแล้ว"
+                  : "ยินดีด้วย! คุณสอบผ่านบทเรียนนี้แล้ว"}
             </h1>
+
             <p className="ures-subtitle">บทเรียน: {chapterInfo.title}</p>
+
+            {!isAllPassed && isChapterPassed && (
+              <p
+                style={{
+                  color: "#f59e0b",
+                  fontSize: "14px",
+                  marginTop: "10px",
+                  fontWeight: "600",
+                }}
+              >
+                * กรุณาทำแบบทดสอบในบทอื่นๆ ให้ผ่านครบถ้วนเพื่อรับใบประกาศนียบัตร
+              </p>
+            )}
 
             <div className="ures-score-board">
               <div className="ures-score-col">
@@ -110,7 +128,7 @@ const UserResult = () => {
             </div>
 
             <div className="ures-actions">
-              {!resultData.isPassed ? (
+              {!isChapterPassed ? (
                 <button
                   className="ures-btn-primary"
                   onClick={() =>
@@ -119,7 +137,7 @@ const UserResult = () => {
                 >
                   <FaRedo /> ทำแบบทดสอบอีกครั้ง
                 </button>
-              ) : (
+              ) : isAllPassed ? (
                 <>
                   <button
                     className="ures-btn-success"
@@ -141,28 +159,61 @@ const UserResult = () => {
                     ดูประกาศนียบัตรทั้งหมด
                   </button>
                 </>
+              ) : (
+                <button
+                  className="ures-btn-primary"
+                  onClick={() => navigate("/user-test")}
+                >
+                  <FaBookOpen /> ไปทำบทเรียนอื่นต่อ
+                </button>
               )}
             </div>
           </div>
 
           {/* =======================================
-              TEMPLATE ใบประกาศนียบัตร (ซ่อนไว้สำหรับดึงเป็น PDF)
+              TEMPLATE ใบประกาศนียบัตร (ดึงค่า Dynamic)
               ======================================= */}
-          {resultData.isPassed && (
+          {isAllPassed && (
             <div className="ures-cert-preview-section">
-              <h3 className="ures-preview-title">ตัวอย่างใบประกาศนียบัตร</h3>
+              <h3 className="ures-preview-title">
+                ตัวอย่างใบประกาศนียบัตรหลักสูตรสมบูรณ์
+              </h3>
               <div className="ures-cert-wrapper">
                 <div className="ures-certificate-template" ref={certRef}>
-                  <div className="cert-border">
+                  <div
+                    className="cert-border"
+                    style={{
+                      backgroundImage: certSettings.background_url
+                        ? `url(${certSettings.background_url})`
+                        : "radial-gradient(#f1f5f9 1px, transparent 1px)",
+                      backgroundSize: certSettings.background_url
+                        ? "cover"
+                        : "20px 20px",
+                      backgroundPosition: "center",
+                      border: certSettings.background_url
+                        ? "none"
+                        : "10px solid #0f172a",
+                    }}
+                  >
                     <div className="cert-header">
-                      <div className="cert-logo">AI ETHIC PORTAL</div>
+                      {certSettings.logo_url ? (
+                        <img
+                          src={certSettings.logo_url}
+                          alt="Logo"
+                          className="cert-custom-logo"
+                        />
+                      ) : (
+                        <div className="cert-logo">AI ETHIC PORTAL</div>
+                      )}
                       <h2>CERTIFICATE OF COMPLETION</h2>
                       <p>ประกาศนียบัตรฉบับนี้ให้ไว้เพื่อแสดงว่า</p>
                     </div>
                     <div className="cert-body">
                       <h1 className="cert-name">{userName}</h1>
                       <p>ได้ผ่านการทดสอบและสำเร็จหลักสูตร</p>
-                      <h3 className="cert-course">{chapterInfo.title}</h3>
+                      <h3 className="cert-course">
+                        {certSettings.course_name || "AI Ethics Management"}
+                      </h3>
                     </div>
                     <div className="cert-footer">
                       <div className="cert-date">
@@ -176,9 +227,30 @@ const UserResult = () => {
                         </p>
                       </div>
                       <div className="cert-signature">
-                        <div className="signature-line"></div>
-                        <span>ผู้อำนวยการโครงการ (Director)</span>
+                        {certSettings.signature_url ? (
+                          <img
+                            src={certSettings.signature_url}
+                            alt="Signature"
+                            className="cert-custom-signature"
+                          />
+                        ) : (
+                          <div className="signature-line"></div>
+                        )}
+                        <span>
+                          {certSettings.signatory_name ||
+                            "ผู้อำนวยการโครงการ (Director)"}
+                        </span>
+                        {certSettings.signatory_position && (
+                          <span style={{ fontSize: "12px", marginTop: "2px" }}>
+                            {certSettings.signatory_position}
+                          </span>
+                        )}
                       </div>
+                    </div>
+                    {/* รหัสอ้างอิง */}
+                    <div className="ures-cert-ref">
+                      Reference No: AI-CERT-
+                      {String(certSettings.certId || 0).padStart(3, "0")}
                     </div>
                   </div>
                 </div>

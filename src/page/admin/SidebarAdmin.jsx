@@ -72,6 +72,7 @@ const SidebarAdmin = () => {
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
+    localStorage.clear();
     window.location.href = "/login";
   };
 
