@@ -83,6 +83,36 @@
 }
 
 /* =======================================
+   Filter Bar (User Type)
+   ======================================= */
+.pub-db-filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 25px;
+}
+.pub-db-filter-btn {
+  background-color: #ffffff;
+  color: #475569;
+  border: 1px solid #e2e8f0;
+  padding: 8px 18px;
+  border-radius: 50px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.pub-db-filter-btn:hover {
+  border-color: #3b82f6;
+  color: #3b82f6;
+}
+.pub-db-filter-btn.active {
+  background-color: #0f172a;
+  border-color: #0f172a;
+  color: #ffffff;
+}
+
+/* =======================================
    Summary Cards (KPIs)
    ======================================= */
 .pub-db-stats-grid {
@@ -192,6 +222,13 @@
   font-size: 13px;
   color: #64748b;
   margin: 0;
+}
+.pub-db-radar-note {
+  display: block;
+  font-size: 11px;
+  color: #94a3b8;
+  margin-top: 4px;
+  font-style: italic;
 }
 .pub-db-card-body {
   width: 100%;

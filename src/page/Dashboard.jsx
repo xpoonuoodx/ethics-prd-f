@@ -34,45 +34,48 @@ import {
 import "./style/Dashboard.css";
 
 // ==========================================
-// Mock Data สำหรับกราฟทั้ง 4 ตัว
+// ตัวเลือก filter user_type (ต้องตรงกับ enum จริงในระบบ)
 // ==========================================
-const mockRadarData = [
-  { subject: "โปร่งใส (Transparency)", A: 85, fullMark: 100 },
-  { subject: "เป็นธรรม (Fairness)", A: 78, fullMark: 100 },
-  { subject: "ปลอดภัย (Security)", A: 88, fullMark: 100 },
-  { subject: "ส่วนตัว (Privacy)", A: 92, fullMark: 100 },
-  { subject: "รับผิดชอบ (Accountability)", A: 75, fullMark: 100 },
-  { subject: "เชื่อถือได้ (Reliability)", A: 80, fullMark: 100 },
-  { subject: "คุณค่ามนุษย์ (Human Values)", A: 89, fullMark: 100 },
+const USER_TYPE_FILTERS = [
+  "",
+  "regulator",
+  "policy",
+  "researcher",
+  "developer",
+  "service provider",
+  "users",
 ];
 
-const mockTrendData = [
-  { month: "ม.ค.", certs: 15 },
-  { month: "ก.พ.", certs: 30 },
-  { month: "มี.ค.", certs: 55 },
-  { month: "เม.ย.", certs: 80 },
-  { month: "พ.ค.", certs: 120 },
-  { month: "มิ.ย.", certs: 185 },
-];
+const USER_TYPE_LABELS = {
+  "": "ทั้งหมด",
+  regulator: "Regulator",
+  policy: "Policy",
+  researcher: "Researcher",
+  developer: "Developer",
+  "service provider": "Service Provider",
+  users: "Users",
+};
 
-const mockMaturityData = [
-  { level: "Lv.1 Initial", count: 45 },
-  { level: "Lv.2 Developing", count: 50 },
-  { level: "Lv.3 Defined", count: 30 },
-  { level: "Lv.4 Managed", count: 12 },
-  { level: "Lv.5 Optimizing", count: 5 },
-];
-
-const mockUserRoleData = [
-  { name: "Users", value: 3450 },
-  { name: "Developers", value: 820 },
-  { name: "Researchers", value: 410 },
-  { name: "Regulators", value: 150 },
-  { name: "Policy Makers", value: 95 },
+const THAI_MONTHS = [
+  "ม.ค.",
+  "ก.พ.",
+  "มี.ค.",
+  "เม.ย.",
+  "พ.ค.",
+  "มิ.ย.",
+  "ก.ค.",
+  "ส.ค.",
+  "ก.ย.",
+  "ต.ค.",
+  "พ.ย.",
+  "ธ.ค.",
 ];
 
 function Dashboard() {
   const [loading, setLoading] = useState(true);
+
+  // filter มุมมองตาม user_type (ค่าว่าง = ดูภาพรวมทั้งหมด)
+  const [userTypeFilter, setUserTypeFilter] = useState("");
 
   // State สำหรับเก็บข้อมูล Summary 4 การ์ดบน (ของจริงจาก API)
   const [stats, setStats] = useState({
@@ -82,7 +85,7 @@ function Dashboard() {
     totalProjects: 0,
   });
 
-  // State สำหรับกราฟ (ตอนนี้จะใช้ Mock Data ไปก่อน)
+  // State สำหรับกราฟ (ของจริงจาก API ทั้งหมด)
   const [radarData, setRadarData] = useState([]);
   const [maturityData, setMaturityData] = useState([]);
   const [userRoleData, setUserRoleData] = useState([]);
@@ -90,18 +93,21 @@ function Dashboard() {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    fetchDashboardData();
-  }, []);
+    fetchDashboardData(userTypeFilter);
+  }, [userTypeFilter]);
 
-  const fetchDashboardData = async () => {
+  const fetchDashboardData = async (userType) => {
     try {
       setLoading(true);
 
       const API_URL = `${import.meta.env.VITE_APP_API_ENDPOINT}/public/dashboard-stats`;
-      const response = await axios.get(API_URL);
+      const response = await axios.get(API_URL, {
+        params: userType ? { user_type: userType } : {},
+      });
 
       if (response.data && response.data.success) {
-        const { summary } = response.data.data;
+        const { summary, userTypes, trend, maturityDistribution, radar } =
+          response.data.data;
 
         // เซ็ตค่า 4 การ์ดบนจาก API
         setStats({
@@ -110,6 +116,42 @@ function Dashboard() {
           totalCerts: summary.totalCerts || 0,
           totalProjects: summary.totalProjects || 0,
         });
+
+        // สัดส่วนบุคลากรตามบทบาท (ภาพรวมทั้งระบบเสมอ ไม่ผูกกับ filter)
+        setUserRoleData(
+          (userTypes || []).map((item) => ({
+            name: USER_TYPE_LABELS[item.name] || item.name,
+            value: parseInt(item.value),
+          })),
+        );
+
+        // เทรนด์ใบประกาศนียบัตรย้อนหลัง 6 เดือน
+        setTrendData(
+          (trend || []).map((item) => {
+            const monthNum = parseInt(item.month.split("-")[1], 10);
+            return {
+              month: THAI_MONTHS[monthNum - 1] || item.month,
+              certs: parseInt(item.certs),
+            };
+          }),
+        );
+
+        // สัดส่วนระดับความพร้อม (Maturity)
+        setMaturityData(
+          (maturityDistribution || []).map((item) => ({
+            level: item.level,
+            count: parseInt(item.count),
+          })),
+        );
+
+        // คะแนนเฉลี่ยจริยธรรม 7 มิติ (ประมาณการจากผลประเมินตนเองจริง)
+        setRadarData(
+          (radar || []).map((item) => ({
+            subject: item.principle_name,
+            A: Math.round(parseFloat(item.avg_score)),
+            fullMark: 100,
+          })),
+        );
       }
     } catch (error) {
       console.error("Error fetching dashboard data:", error);
@@ -120,12 +162,11 @@ function Dashboard() {
         totalCerts: 1,
         totalProjects: 3,
       });
+      setRadarData([]);
+      setTrendData([]);
+      setMaturityData([]);
+      setUserRoleData([]);
     } finally {
-      // โหลด Mock Data ใส่กราฟทั้ง 4 เสมอ (ตามคำขอ)
-      setRadarData(mockRadarData);
-      setTrendData(mockTrendData);
-      setMaturityData(mockMaturityData);
-      setUserRoleData(mockUserRoleData);
       setLoading(false);
     }
   };
@@ -167,6 +208,19 @@ function Dashboard() {
           <button className="pub-db-btn-export">
             <Download size={18} /> โหลดรายงานสรุป (PDF)
           </button>
+        </div>
+
+        {/* Filter มุมมองตาม User Type */}
+        <div className="pub-db-filter-bar">
+          {USER_TYPE_FILTERS.map((type) => (
+            <button
+              key={type || "all"}
+              className={`pub-db-filter-btn ${userTypeFilter === type ? "active" : ""}`}
+              onClick={() => setUserTypeFilter(type)}
+            >
+              {USER_TYPE_LABELS[type]}
+            </button>
+          ))}
         </div>
 
         {/* Summary Cards (KPIs) */}
@@ -230,6 +284,9 @@ function Dashboard() {
                 7 มิติ
               </h3>
               <p>ดัชนีภาพรวมจากการประเมินของทุกองค์กร</p>
+              <span className="pub-db-radar-note">
+                * ประมาณการจากผลการประเมินตนเองของผู้ใช้งานในระบบ
+              </span>
             </div>
             <div className="pub-db-card-body radar-container">
               {radarData.length > 0 ? (
@@ -275,7 +332,7 @@ function Dashboard() {
                 <TrendingUp size={18} className="text-purple" />{" "}
                 การเติบโตของผู้ผ่านหลักสูตร
               </h3>
-              <p>จำนวนใบประกาศนียบัตรที่ออกในแต่ละเดือน (ย้อนหลัง 6 เดือน)</p>
+              <p>จำนวนใบประกาศนียบัตรสะสมทั้งหมด (ย้อนหลัง 6 เดือน)</p>
             </div>
             <div className="pub-db-card-body">
               {trendData.length > 0 ? (
