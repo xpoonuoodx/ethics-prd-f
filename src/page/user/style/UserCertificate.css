@@ -122,6 +122,13 @@
   color: #64748b;
 }
 
+.ucert-item-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
 .ucert-btn-download {
   display: flex;
   align-items: center;
@@ -142,6 +149,91 @@
 .ucert-btn-download:disabled {
   opacity: 0.7;
   cursor: not-allowed;
+}
+
+.ucert-btn-preview {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: #f1f5f9;
+  color: #334155;
+  border: 1px solid #e2e8f0;
+  padding: 10px 20px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background 0.2s,
+    border-color 0.2s;
+}
+.ucert-btn-preview:hover {
+  background: #e2e8f0;
+  border-color: #cbd5e1;
+}
+
+/* =========================================
+   Modal: Preview ใบประกาศนียบัตร
+   ========================================= */
+.ucert-preview-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(4px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 99999;
+  padding: 20px;
+}
+.ucert-preview-content {
+  background: #ffffff;
+  border-radius: 20px;
+  max-width: 95vw;
+  max-height: 92vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+}
+.ucert-preview-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 24px;
+  border-bottom: 1px solid #f1f5f9;
+  flex-shrink: 0;
+}
+.ucert-preview-header h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: #0f172a;
+}
+.ucert-preview-close {
+  background: none;
+  border: none;
+  font-size: 18px;
+  color: #94a3b8;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.ucert-preview-close:hover {
+  color: #ef4444;
+}
+.ucert-preview-body {
+  overflow: auto;
+  padding: 24px;
+  display: flex;
+  justify-content: center;
+}
+.ucert-preview-footer {
+  display: flex;
+  justify-content: flex-end;
+  padding: 16px 24px;
+  border-top: 1px solid #f1f5f9;
+  flex-shrink: 0;
 }
 
 .ucert-empty-state {
@@ -269,7 +361,11 @@
   .ucert-item-icon {
     margin: 0 auto;
   }
-  .ucert-btn-download {
+  .ucert-item-actions {
+    width: 100%;
+  }
+  .ucert-btn-download,
+  .ucert-btn-preview {
     width: 100%;
     justify-content: center;
   }

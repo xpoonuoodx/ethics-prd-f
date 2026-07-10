@@ -125,9 +125,9 @@ const AdminCertificate = () => {
                     <th style={{ width: "25%" }}>หน่วยงาน / องค์กร</th>
                     <th style={{ width: "20%" }}>หลักสูตรที่ได้รับ</th>
                     <th style={{ width: "20%" }}>วันที่ได้รับสิทธิ์</th>
-                    <th className="act-text-center" style={{ width: "10%" }}>
+                    {/* <th className="act-text-center" style={{ width: "10%" }}>
                       จัดการ
-                    </th>
+                    </th> */}
                   </tr>
                 </thead>
                 <tbody>
@@ -146,7 +146,7 @@ const AdminCertificate = () => {
                       <td className="act-text-muted">
                         {formatDate(cert.issuedAt)}
                       </td>
-                      <td>
+                      {/* <td>
                         <div className="act-actions">
                           <button
                             className="act-btn-action delete"
@@ -162,7 +162,7 @@ const AdminCertificate = () => {
                             <FaTrash />
                           </button>
                         </div>
-                      </td>
+                      </td> */}
                     </tr>
                   ))}
 

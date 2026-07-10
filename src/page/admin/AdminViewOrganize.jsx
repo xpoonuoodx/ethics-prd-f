@@ -17,6 +17,8 @@ import {
   FaTimesCircle,
   FaExclamationTriangle,
   FaInfoCircle,
+  FaUserPlus,
+  FaTrash,
 } from "react-icons/fa";
 import SidebarAdmin from "./SidebarAdmin";
 import api from "../../api/Api";
@@ -39,6 +41,15 @@ const AdminViewOrganize = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // ==========================================
+  // States สำหรับเพิ่มผู้กำกับดูแลเข้าหน่วยงาน
+  // ==========================================
+  const [isAssignModalOpen, setIsAssignModalOpen] = useState(false);
+  const [unassignedRegulators, setUnassignedRegulators] = useState([]);
+  const [loadingUnassigned, setLoadingUnassigned] = useState(false);
+  const [selectedUserId, setSelectedUserId] = useState("");
+  const [isAssigning, setIsAssigning] = useState(false);
+
+  // ==========================================
   // Custom Alert Modal State
   // ==========================================
   const [alertModal, setAlertModal] = useState({
@@ -46,10 +57,18 @@ const AdminViewOrganize = () => {
     type: "info",
     title: "",
     desc: "",
+    showCancel: false,
+    onConfirm: null,
   });
 
-  const openAlert = (type, title, desc) => {
-    setAlertModal({ isOpen: true, type, title, desc });
+  const openAlert = (
+    type,
+    title,
+    desc,
+    showCancel = false,
+    onConfirm = null,
+  ) => {
+    setAlertModal({ isOpen: true, type, title, desc, showCancel, onConfirm });
   };
 
   const closeAlert = () => {
@@ -146,6 +165,85 @@ const AdminViewOrganize = () => {
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  // ==========================================
+  // ฟังก์ชันจัดการการเพิ่มผู้กำกับดูแลเข้าหน่วยงาน
+  // ==========================================
+  const handleOpenAssignModal = async () => {
+    setIsAssignModalOpen(true);
+    setSelectedUserId("");
+    setLoadingUnassigned(true);
+    try {
+      const response = await api.get("/admin/get-unassigned-regulators");
+      if (response.data && response.data.success) {
+        setUnassignedRegulators(response.data.data);
+      }
+    } catch (err) {
+      console.error("Fetch Unassigned Regulators Error:", err);
+      openAlert(
+        "error",
+        "เกิดข้อผิดพลาด",
+        "ไม่สามารถดึงรายชื่อผู้กำกับดูแลที่ยังไม่มีสังกัดได้",
+      );
+    } finally {
+      setLoadingUnassigned(false);
+    }
+  };
+
+  const handleAssignSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      setIsAssigning(true);
+      const response = await api.post(`/admin/assign-regulator-to-org/${id}`, {
+        user_id: selectedUserId,
+      });
+
+      if (response.data && response.data.success) {
+        setIsAssignModalOpen(false);
+        openAlert("success", "สำเร็จ", response.data.message);
+        fetchOrganizationDetails();
+      }
+    } catch (err) {
+      console.error("Assign Regulator Error:", err);
+      openAlert(
+        "error",
+        "เกิดข้อผิดพลาด",
+        err.response?.data?.message || "ไม่สามารถเพิ่มผู้กำกับดูแลเข้าหน่วยงานได้",
+      );
+    } finally {
+      setIsAssigning(false);
+    }
+  };
+
+  const handleRemoveRegulator = (userId, userName) => {
+    openAlert(
+      "warning",
+      "ยืนยันการถอดผู้กำกับดูแล?",
+      `คุณต้องการถอด "${userName}" ออกจากหน่วยงานนี้ใช่หรือไม่ (บัญชีผู้ใช้จะไม่ถูกลบ แค่ไม่มีสังกัดเท่านั้น)`,
+      true,
+      async () => {
+        closeAlert();
+        try {
+          const response = await api.post(
+            `/admin/remove-regulator-from-org/${id}`,
+            { user_id: userId },
+          );
+          if (response.data && response.data.success) {
+            openAlert("success", "สำเร็จ", response.data.message);
+            fetchOrganizationDetails();
+          }
+        } catch (err) {
+          console.error("Remove Regulator Error:", err);
+          openAlert(
+            "error",
+            "เกิดข้อผิดพลาด",
+            err.response?.data?.message || "ไม่สามารถถอดผู้กำกับดูแลออกจากหน่วยงานได้",
+          );
+        }
+      },
+    );
   };
 
   return (
@@ -269,6 +367,12 @@ const AdminViewOrganize = () => {
                 >
                   <div className="admin-view-org-list-header">
                     <h2>บุคลากรในสังกัด ({(orgUsers || []).length})</h2>
+                    <button
+                      className="admin-view-org-btn-add-user"
+                      onClick={handleOpenAssignModal}
+                    >
+                      <FaUserPlus /> เพิ่มผู้กำกับดูแลในหน่วยงานนี้
+                    </button>
                   </div>
                   <div className="admin-view-org-table-responsive">
                     <table className="admin-view-org-table">
@@ -278,6 +382,7 @@ const AdminViewOrganize = () => {
                           <th>อีเมลติดต่อ</th>
                           <th>รหัสผู้ใช้ (Username)</th>
                           <th>สิทธิ์การใช้งาน (Role)</th>
+                          <th className="admin-view-org-text-center">จัดการ</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -308,6 +413,19 @@ const AdminViewOrganize = () => {
                                   {roleData.icon} {roleData.label}
                                 </span>
                               </td>
+                              <td className="admin-view-org-text-center">
+                                {user.role === "regulator" && (
+                                  <button
+                                    className="admin-view-org-btn-remove"
+                                    title="ถอดออกจากหน่วยงาน"
+                                    onClick={() =>
+                                      handleRemoveRegulator(user.id, user.name)
+                                    }
+                                  >
+                                    <FaTrash />
+                                  </button>
+                                )}
+                              </td>
                             </tr>
                           );
                         })}
@@ -315,7 +433,7 @@ const AdminViewOrganize = () => {
                         {(orgUsers || []).length === 0 && (
                           <tr>
                             <td
-                              colSpan="4"
+                              colSpan="5"
                               className="admin-view-org-empty-state"
                             >
                               ยังไม่มีบุคลากรในหน่วยงานนี้
@@ -495,7 +613,71 @@ const AdminViewOrganize = () => {
       )}
 
       {/* ==========================================
-          Custom Alert Modal Popup 
+          Modal เพิ่มผู้ใช้งานเข้าหน่วยงาน
+          ========================================== */}
+      {isAssignModalOpen && (
+        <div className="admin-view-org-modal-overlay">
+          <div className="admin-view-org-modal-content">
+            <div className="admin-view-org-modal-header">
+              <h2>เพิ่มผู้กำกับดูแลเข้าหน่วยงาน</h2>
+              <button
+                className="admin-view-org-modal-close"
+                onClick={() => setIsAssignModalOpen(false)}
+              >
+                <FaTimes />
+              </button>
+            </div>
+
+            <form onSubmit={handleAssignSubmit} className="admin-view-org-modal-body">
+              <div className="admin-view-org-form-group">
+                <label>เลือกผู้กำกับดูแลที่ยังไม่มีหน่วยงาน</label>
+                <select
+                  value={selectedUserId}
+                  onChange={(e) => setSelectedUserId(e.target.value)}
+                  disabled={loadingUnassigned}
+                  required
+                >
+                  <option value="" disabled>
+                    {loadingUnassigned
+                      ? "กำลังโหลด..."
+                      : "-- เลือกรายชื่อผู้กำกับดูแล --"}
+                  </option>
+                  {unassignedRegulators.map((u) => (
+                    <option key={u.id} value={u.id}>
+                      {u.name || "ไม่มีชื่อ"} (@{u.username})
+                    </option>
+                  ))}
+                </select>
+                {!loadingUnassigned && unassignedRegulators.length === 0 && (
+                  <p className="admin-view-org-picker-hint">
+                    ไม่มีผู้กำกับดูแลที่ยังไม่มีสังกัดในระบบขณะนี้
+                  </p>
+                )}
+              </div>
+
+              <div className="admin-view-org-modal-footer">
+                <button
+                  type="button"
+                  className="admin-view-org-btn-cancel"
+                  onClick={() => setIsAssignModalOpen(false)}
+                >
+                  ยกเลิก
+                </button>
+                <button
+                  type="submit"
+                  className="admin-view-org-btn-submit"
+                  disabled={isAssigning || unassignedRegulators.length === 0}
+                >
+                  {isAssigning ? "กำลังเพิ่ม..." : "เพิ่มเข้าหน่วยงาน"}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* ==========================================
+          Custom Alert Modal Popup
           ========================================== */}
       {alertModal.isOpen && (
         <div className="admin-view-org-modal-overlay" onClick={closeAlert}>
@@ -513,12 +695,28 @@ const AdminViewOrganize = () => {
             </div>
             <h3 className="admin-view-org-alert-title">{alertModal.title}</h3>
             <p className="admin-view-org-alert-desc">{alertModal.desc}</p>
-            <button
-              className={`admin-view-org-alert-btn admin-view-org-alert-${alertModal.type}`}
-              onClick={closeAlert}
-            >
-              ตกลง
-            </button>
+            <div className="admin-view-org-alert-actions">
+              {alertModal.showCancel && (
+                <button
+                  className="admin-view-org-alert-btn admin-view-org-alert-cancel"
+                  onClick={closeAlert}
+                >
+                  ยกเลิก
+                </button>
+              )}
+              <button
+                className={`admin-view-org-alert-btn admin-view-org-alert-${alertModal.type}`}
+                onClick={() => {
+                  if (alertModal.onConfirm) {
+                    alertModal.onConfirm();
+                  } else {
+                    closeAlert();
+                  }
+                }}
+              >
+                {alertModal.showCancel ? "ยืนยันการถอดออก" : "ตกลง"}
+              </button>
+            </div>
           </div>
         </div>
       )}

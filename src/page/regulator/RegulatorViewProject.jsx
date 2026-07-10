@@ -8,8 +8,12 @@ import {
   FaUsers,
   FaSpinner,
   FaUserTie,
+  FaEdit,
+  FaTrash,
+  FaTimes,
 } from "react-icons/fa";
 import api from "../../api/Api";
+import Swal from "sweetalert2";
 
 const RegulatorViewProject = () => {
   const { id } = useParams();
@@ -19,6 +23,13 @@ const RegulatorViewProject = () => {
   const [members, setMembers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  // ==========================================
+  // States สำหรับแก้ไขชื่อโครงการ
+  // ==========================================
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [editProjectName, setEditProjectName] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -43,6 +54,100 @@ const RegulatorViewProject = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  // ==========================================
+  // ฟังก์ชันจัดการการแก้ไขชื่อโครงการ
+  // ==========================================
+  const handleOpenEditModal = () => {
+    setEditProjectName(projectData.project_name);
+    setIsEditModalOpen(true);
+  };
+
+  const handleEditSubmit = async (e) => {
+    e.preventDefault();
+    if (!editProjectName.trim()) {
+      Swal.fire({
+        title: "ข้อมูลไม่ครบถ้วน",
+        text: "กรุณากรอกชื่อโครงการ",
+        icon: "warning",
+        confirmButtonColor: "#0f172a",
+      });
+      return;
+    }
+
+    try {
+      setIsSubmitting(true);
+      const response = await api.put(`/regulator/edit-project/${id}`, {
+        project_name: editProjectName.trim(),
+      });
+
+      if (response.data && response.data.success) {
+        setProjectData((prev) => ({
+          ...prev,
+          project_name: editProjectName.trim(),
+        }));
+        setIsEditModalOpen(false);
+        Swal.fire({
+          title: "สำเร็จ",
+          text: "แก้ไขชื่อโครงการเรียบร้อยแล้ว",
+          icon: "success",
+          confirmButtonColor: "#10b981",
+        });
+      }
+    } catch (err) {
+      console.error("Edit Project Error:", err);
+      Swal.fire({
+        title: "เกิดข้อผิดพลาด",
+        text: err.response?.data?.message || "ไม่สามารถแก้ไขชื่อโครงการได้",
+        icon: "error",
+        confirmButtonColor: "#ef4444",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  // ==========================================
+  // ฟังก์ชันถอดบุคลากรออกจากโครงการ
+  // ==========================================
+  const handleRemoveMember = (userId, name) => {
+    Swal.fire({
+      title: "ยืนยันการถอดออก?",
+      text: `คุณต้องการถอด "${name || "บุคลากรท่านนี้"}" ออกจากโครงการนี้หรือไม่`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#dc2626",
+      cancelButtonColor: "#94a3b8",
+      confirmButtonText: "ถอดออก",
+      cancelButtonText: "ยกเลิก",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          const response = await api.post(
+            `/regulator/remove-project-member/${id}`,
+            { user_id: userId },
+          );
+          if (response.data && response.data.success) {
+            setMembers((prev) => prev.filter((m) => m.id !== userId));
+            Swal.fire({
+              title: "สำเร็จ",
+              text: "ถอดบุคลากรออกจากโครงการแล้ว",
+              icon: "success",
+              confirmButtonColor: "#10b981",
+            });
+          }
+        } catch (err) {
+          console.error("Remove Member Error:", err);
+          Swal.fire({
+            title: "เกิดข้อผิดพลาด",
+            text: err.response?.data?.message || "ไม่สามารถถอดบุคลากรได้",
+            icon: "error",
+            confirmButtonColor: "#ef4444",
+          });
+        }
+      }
+    });
   };
 
   return (
@@ -86,7 +191,16 @@ const RegulatorViewProject = () => {
                       <span className="rvp-label">
                         รหัสโครงการ: {projectData.project_code}
                       </span>
-                      <h2 className="rvp-title">{projectData.project_name}</h2>
+                      <h2 className="rvp-title">
+                        {projectData.project_name}
+                        <button
+                          className="rvp-edit-name-btn"
+                          onClick={handleOpenEditModal}
+                          title="แก้ไขชื่อโครงการ"
+                        >
+                          <FaEdit />
+                        </button>
+                      </h2>
                       <span className="rvp-date-badge">
                         บันทึกเมื่อ:{" "}
                         {new Date(projectData.created_at).toLocaleDateString(
@@ -122,6 +236,7 @@ const RegulatorViewProject = () => {
                           <th>ชื่อ-นามสกุล</th>
                           <th>อีเมลติดต่อ</th>
                           <th>รหัสผู้ใช้ (Username)</th>
+                          <th className="rvp-text-center">จัดการ</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -143,12 +258,23 @@ const RegulatorViewProject = () => {
                             <td className="rvp-text-muted">
                               @{member.username}
                             </td>
+                            <td className="rvp-text-center">
+                              <button
+                                className="rvp-btn-remove"
+                                title="ถอดออกจากโครงการ"
+                                onClick={() =>
+                                  handleRemoveMember(member.id, member.name)
+                                }
+                              >
+                                <FaTrash />
+                              </button>
+                            </td>
                           </tr>
                         ))}
 
                         {members.length === 0 && (
                           <tr>
-                            <td colSpan="3" className="rvp-empty-state">
+                            <td colSpan="4" className="rvp-empty-state">
                               ยังไม่มีการเพิ่มบุคลากรรับผิดชอบในโครงการนี้
                             </td>
                           </tr>
@@ -162,6 +288,51 @@ const RegulatorViewProject = () => {
           )}
         </div>
       </div>
+
+      {/* Modal แก้ไขชื่อโครงการ */}
+      {isEditModalOpen && (
+        <div className="rvp-modal-overlay">
+          <div className="rvp-modal-container">
+            <div className="rvp-modal-header">
+              <h2>แก้ไขชื่อโครงการ</h2>
+              <button
+                className="rvp-modal-close"
+                onClick={() => setIsEditModalOpen(false)}
+              >
+                <FaTimes />
+              </button>
+            </div>
+            <form onSubmit={handleEditSubmit} className="rvp-modal-body">
+              <div className="rvp-form-group">
+                <label>ชื่อโครงการ (AI System Name)</label>
+                <input
+                  type="text"
+                  placeholder="ระบุชื่อระบบ AI"
+                  value={editProjectName}
+                  onChange={(e) => setEditProjectName(e.target.value)}
+                  required
+                />
+              </div>
+              <div className="rvp-modal-footer">
+                <button
+                  type="button"
+                  className="rvp-btn-cancel"
+                  onClick={() => setIsEditModalOpen(false)}
+                >
+                  ยกเลิก
+                </button>
+                <button
+                  type="submit"
+                  className="rvp-btn-submit"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? "กำลังบันทึก..." : "บันทึกข้อมูล"}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

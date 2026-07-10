@@ -466,6 +466,46 @@
   border-color: #0f172a;
 }
 
+.admin-view-org-btn-add-user {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #0f172a;
+  color: #ffffff;
+  border: none;
+  padding: 9px 16px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.admin-view-org-btn-add-user:hover {
+  background: #1e293b;
+}
+
+.admin-view-org-picker-hint {
+  margin: 8px 0 0 0;
+  font-size: 12.5px;
+  color: #64748b;
+}
+
+.admin-view-org-form-group select {
+  width: 100%;
+  padding: 12px 15px;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  font-size: 14px;
+  color: #0f172a;
+  outline: none;
+  transition: border 0.2s;
+  background-color: #ffffff;
+}
+.admin-view-org-form-group select:focus {
+  border-color: #0f172a;
+}
+
 .admin-view-org-modal-footer {
   display: flex;
   justify-content: flex-end;
@@ -555,10 +595,14 @@
   line-height: 1.6;
   margin: 0 0 30px 0;
 }
+.admin-view-org-alert-actions {
+  display: flex;
+  gap: 12px;
+}
 .admin-view-org-alert-btn {
   border: none;
   padding: 12px 0;
-  width: 100%;
+  flex: 1;
   border-radius: 10px;
   font-size: 15px;
   font-weight: 600;
@@ -568,6 +612,31 @@
 }
 .admin-view-org-alert-btn:hover {
   filter: brightness(0.9);
+}
+.admin-view-org-alert-btn.admin-view-org-alert-cancel {
+  background-color: #f1f5f9;
+  color: #475569;
+}
+
+.admin-view-org-text-center {
+  text-align: center;
+}
+
+.admin-view-org-btn-remove {
+  background: #fee2e2;
+  color: #ef4444;
+  border: none;
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+.admin-view-org-btn-remove:hover {
+  background: #fecaca;
 }
 
 @keyframes adminViewOrgFadeIn {

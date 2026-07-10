@@ -22,7 +22,6 @@ import api from "../../api/Api";
 const AdminManageUser = () => {
   const navigate = useNavigate(); // เรียกใช้ navigate
   const [users, setUsers] = useState([]);
-  const [organizations, setOrganizations] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -63,8 +62,7 @@ const AdminManageUser = () => {
     name: "",
     email: "",
     id_card: "",
-    role: "user",
-    org_id: "",
+    role: "regulator",
   });
 
   const fetchUsers = async () => {
@@ -89,21 +87,9 @@ const AdminManageUser = () => {
     }
   };
 
-  const fetchOrganizations = async () => {
-    try {
-      const response = await api.get("/admin/get-organize");
-      if (response.data && response.data.success) {
-        setOrganizations(response.data.data);
-      }
-    } catch (err) {
-      console.error("Fetch Organizations Error:", err);
-    }
-  };
-
   useEffect(() => {
     window.scrollTo(0, 0);
     fetchUsers();
-    fetchOrganizations();
   }, []);
 
   const handleInputChange = (e) => {
@@ -144,8 +130,7 @@ const AdminManageUser = () => {
           name: "",
           email: "",
           id_card: "",
-          role: "user",
-          org_id: "",
+          role: "regulator",
         });
         openAlert("success", "สำเร็จ", "เพิ่มผู้ใช้งานใหม่เรียบร้อยแล้ว");
         fetchUsers();
@@ -465,24 +450,6 @@ const AdminManageUser = () => {
                   <option value="admin">ผู้ดูแลระบบสูงสุด (Admin)</option>
                 </select>
               </div>
-
-              {formData.role !== "admin" && (
-                <div className="admin-manage-user-form-group">
-                  <label>สังกัดหน่วยงาน</label>
-                  <select
-                    name="org_id"
-                    value={formData.org_id}
-                    onChange={handleInputChange}
-                  >
-                    <option value="">-- ไม่ระบุสังกัด --</option>
-                    {organizations.map((org, idx) => (
-                      <option key={idx} value={org.id}>
-                        {org.org_name || org.name} ({org.org_code || org.id})
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              )}
 
               <div className="admin-manage-user-modal-footer">
                 <button

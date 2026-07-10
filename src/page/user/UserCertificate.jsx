@@ -1,6 +1,13 @@
 import React, { useEffect, useState } from "react";
 import SidebarUser from "./SidebarUser";
-import { FaCertificate, FaDownload, FaSpinner, FaTrophy } from "react-icons/fa";
+import {
+  FaCertificate,
+  FaDownload,
+  FaEye,
+  FaSpinner,
+  FaTrophy,
+  FaTimes,
+} from "react-icons/fa";
 import api, { getStoredUser } from "../../api/Api";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
@@ -11,6 +18,7 @@ const UserCertificate = () => {
   const [certificates, setCertificates] = useState([]);
   const [userName, setUserName] = useState("");
   const [downloadingId, setDownloadingId] = useState(null);
+  const [previewCert, setPreviewCert] = useState(null);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -60,6 +68,63 @@ const UserCertificate = () => {
       setDownloadingId(null);
     }
   };
+
+  // แม่แบบใบประกาศนียบัตร ดึงค่าตาม course_group ของใบเซอนั้นๆ (ไม่ใช่ user_type ปัจจุบันของผู้ใช้)
+  // ใช้ร่วมกันทั้งตอน capture เป็น PDF และตอนโชว์ preview
+  const renderCertBorder = (cert) => (
+    <div
+      className="ucert-cert-border"
+      style={{
+        backgroundImage: cert.background_url
+          ? `url(${cert.background_url})`
+          : "radial-gradient(#f1f5f9 1px, transparent 1px)",
+        backgroundSize: cert.background_url ? "cover" : "20px 20px",
+        backgroundPosition: "center",
+        border: cert.background_url ? "none" : "10px solid #0f172a",
+      }}
+    >
+      <div className="ucert-cert-header">
+        {cert.logo_url ? (
+          <img src={cert.logo_url} alt="Logo" className="ucert-custom-logo" />
+        ) : (
+          <div className="ucert-cert-logo">AI ETHIC PORTAL</div>
+        )}
+        <h2>CERTIFICATE OF COMPLETION</h2>
+        <p>ประกาศนียบัตรฉบับนี้ให้ไว้เพื่อแสดงว่า</p>
+      </div>
+      <div className="ucert-cert-body">
+        <h1 className="ucert-cert-name">{userName}</h1>
+        <p>ได้ผ่านการทดสอบและสำเร็จหลักสูตร</p>
+        <h3 className="ucert-cert-course">{cert.course_name}</h3>
+      </div>
+      <div className="ucert-cert-footer">
+        <div className="ucert-cert-date">
+          <span>วันที่สำเร็จการศึกษา</span>
+          <p>{cert.passDate}</p>
+        </div>
+        <div className="ucert-cert-signature">
+          {cert.signature_url ? (
+            <img
+              src={cert.signature_url}
+              alt="Signature"
+              className="ucert-custom-signature"
+            />
+          ) : (
+            <div className="ucert-signature-line"></div>
+          )}
+          <span>{cert.signatory_name || "ผู้อำนวยการโครงการ (Director)"}</span>
+          {cert.signatory_position && (
+            <span style={{ fontSize: "12px", marginTop: "2px" }}>
+              {cert.signatory_position}
+            </span>
+          )}
+        </div>
+      </div>
+      <div className="ucert-cert-ref">
+        Reference No: AI-CERT-{String(cert.certId).padStart(3, "0")}
+      </div>
+    </div>
+  );
 
   if (loading) {
     return (
@@ -120,20 +185,28 @@ const UserCertificate = () => {
                           {String(cert.certId).padStart(3, "0")}
                         </p>
                       </div>
-                      <button
-                        className="ucert-btn-download"
-                        onClick={() => handleDownload(cert)}
-                        disabled={downloadingId === cert.certId}
-                      >
-                        {downloadingId === cert.certId ? (
-                          <FaSpinner className="spin" />
-                        ) : (
-                          <FaDownload />
-                        )}
-                        {downloadingId === cert.certId
-                          ? " กำลังโหลด..."
-                          : " โหลดเอกสาร PDF"}
-                      </button>
+                      <div className="ucert-item-actions">
+                        <button
+                          className="ucert-btn-preview"
+                          onClick={() => setPreviewCert(cert)}
+                        >
+                          <FaEye /> ดูตัวอย่าง
+                        </button>
+                        <button
+                          className="ucert-btn-download"
+                          onClick={() => handleDownload(cert)}
+                          disabled={downloadingId === cert.certId}
+                        >
+                          {downloadingId === cert.certId ? (
+                            <FaSpinner className="spin" />
+                          ) : (
+                            <FaDownload />
+                          )}
+                          {downloadingId === cert.certId
+                            ? " กำลังโหลด..."
+                            : " โหลดเอกสาร PDF"}
+                        </button>
+                      </div>
 
                       {/* --- DOM ที่ซ่อนไว้สำหรับสร้าง PDF (ดึงค่าแม่แบบมาใช้) --- */}
                       <div
@@ -148,79 +221,7 @@ const UserCertificate = () => {
                           className="ucert-certificate-template"
                           style={{ display: "none" }}
                         >
-                          <div
-                            className="ucert-cert-border"
-                            style={{
-                              backgroundImage: cert.background_url
-                                ? `url(${cert.background_url})`
-                                : "radial-gradient(#f1f5f9 1px, transparent 1px)",
-                              backgroundSize: cert.background_url
-                                ? "cover"
-                                : "20px 20px",
-                              backgroundPosition: "center",
-                              border: cert.background_url
-                                ? "none"
-                                : "10px solid #0f172a",
-                            }}
-                          >
-                            <div className="ucert-cert-header">
-                              {cert.logo_url ? (
-                                <img
-                                  src={cert.logo_url}
-                                  alt="Logo"
-                                  className="ucert-custom-logo"
-                                />
-                              ) : (
-                                <div className="ucert-cert-logo">
-                                  AI ETHIC PORTAL
-                                </div>
-                              )}
-                              <h2>CERTIFICATE OF COMPLETION</h2>
-                              <p>ประกาศนียบัตรฉบับนี้ให้ไว้เพื่อแสดงว่า</p>
-                            </div>
-                            <div className="ucert-cert-body">
-                              <h1 className="ucert-cert-name">{userName}</h1>
-                              <p>ได้ผ่านการทดสอบและสำเร็จหลักสูตร</p>
-                              <h3 className="ucert-cert-course">
-                                {cert.course_name}
-                              </h3>
-                            </div>
-                            <div className="ucert-cert-footer">
-                              <div className="ucert-cert-date">
-                                <span>วันที่สำเร็จการศึกษา</span>
-                                <p>{cert.passDate}</p>
-                              </div>
-                              <div className="ucert-cert-signature">
-                                {cert.signature_url ? (
-                                  <img
-                                    src={cert.signature_url}
-                                    alt="Signature"
-                                    className="ucert-custom-signature"
-                                  />
-                                ) : (
-                                  <div className="ucert-signature-line"></div>
-                                )}
-                                <span>
-                                  {cert.signatory_name ||
-                                    "ผู้อำนวยการโครงการ (Director)"}
-                                </span>
-                                {cert.signatory_position && (
-                                  <span
-                                    style={{
-                                      fontSize: "12px",
-                                      marginTop: "2px",
-                                    }}
-                                  >
-                                    {cert.signatory_position}
-                                  </span>
-                                )}
-                              </div>
-                            </div>
-                            <div className="ucert-cert-ref">
-                              Reference No: AI-CERT-
-                              {String(cert.certId).padStart(3, "0")}
-                            </div>
-                          </div>
+                          {renderCertBorder(cert)}
                         </div>
                       </div>
                       {/* ------------------------------------------- */}
@@ -246,6 +247,53 @@ const UserCertificate = () => {
           </div>
         </div>
       </div>
+
+      {/* Modal ดูตัวอย่างใบประกาศนียบัตร */}
+      {previewCert && (
+        <div
+          className="ucert-preview-overlay"
+          onClick={() => setPreviewCert(null)}
+        >
+          <div
+            className="ucert-preview-content"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="ucert-preview-header">
+              <h3>ตัวอย่างใบประกาศนียบัตร</h3>
+              <button
+                className="ucert-preview-close"
+                onClick={() => setPreviewCert(null)}
+              >
+                <FaTimes />
+              </button>
+            </div>
+            <div className="ucert-preview-body">
+              <div
+                className="ucert-certificate-template"
+                style={{ display: "block" }}
+              >
+                {renderCertBorder(previewCert)}
+              </div>
+            </div>
+            <div className="ucert-preview-footer">
+              <button
+                className="ucert-btn-download"
+                onClick={() => handleDownload(previewCert)}
+                disabled={downloadingId === previewCert.certId}
+              >
+                {downloadingId === previewCert.certId ? (
+                  <FaSpinner className="spin" />
+                ) : (
+                  <FaDownload />
+                )}
+                {downloadingId === previewCert.certId
+                  ? " กำลังโหลด..."
+                  : " โหลดเอกสาร PDF"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
