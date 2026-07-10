@@ -105,9 +105,9 @@ function Tabbar() {
         {/* --- ฝั่งขวา: ปุ่มกด (Desktop) --- */}
         <div className="ai-tabbar-right-desktop">
           {/* เพิ่มปุ่มสมัครเข้าร่วมโครงการ */}
-          <Link to="/register" className="ai-tabbar-outline-btn">
+          {/* <Link to="/register" className="ai-tabbar-outline-btn">
             สมัครเข้าร่วมโครงการ
-          </Link>
+          </Link> */}
           <Link to="/login" className="ai-tabbar-btn">
             เข้าสู่ระบบ
           </Link>
