@@ -317,3 +317,69 @@
     display: none;
   }
 }
+
+/* =========================================
+   Sidebar Sub-menus (Dropdown)
+   ========================================= */
+.admin-sidebar-dropdown {
+  display: flex;
+  flex-direction: column;
+}
+
+.admin-menu-caret {
+  margin-left: auto;
+  color: #94a3b8;
+  display: flex;
+  align-items: center;
+  transition: transform 0.2s ease;
+}
+
+.admin-sidebar-submenus {
+  display: flex;
+  flex-direction: column;
+  padding-left: 45px; /* ดันเมนูย่อยเข้าไปให้ตรงกับตัวหนังสือเมนูแม่ */
+  margin-top: 2px;
+  margin-bottom: 8px;
+  gap: 4px;
+}
+
+.admin-sidebar-subitem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  text-decoration: none;
+  color: #64748b;
+  border-radius: 8px;
+  font-size: 13.5px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.admin-sidebar-subitem:hover {
+  color: #0f172a;
+  background-color: #f8fafc;
+}
+
+.admin-sidebar-subitem.active {
+  color: #2563eb;
+  background-color: #eff6ff;
+  font-weight: 600;
+}
+
+.admin-subitem-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: #cbd5e1;
+  transition: all 0.2s ease;
+}
+
+.admin-sidebar-subitem.active .admin-subitem-dot {
+  background-color: #2563eb;
+  transform: scale(1.2);
+}
+
+.admin-subitem-text {
+  flex: 1;
+}

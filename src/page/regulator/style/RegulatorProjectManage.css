@@ -1,18 +1,38 @@
-@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap");
 
-.rpm-container * {
+.rpm-layout * {
   box-sizing: border-box;
-  font-family: "IBM Plex Sans Thai", sans-serif;
+  font-family: "Prompt", sans-serif;
+}
+
+.rpm-layout {
+  display: flex;
+  min-height: 100vh;
+  background-color: #f4f6f8; /* พื้นหลังสีเทาอ่อนแบบเดียวกับ Admin */
+}
+
+.rpm-main-content {
+  flex: 1;
+  margin-left: 260px;
+  transition: margin-left 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.rpm-btn-action.view:hover {
+  background: #f1f5f9;
+  color: #0f172a;
 }
 
 .rpm-container {
-  padding: 40px;
+  padding: 40px 50px;
   width: 100%;
+  /* max-width: 1400px; */
   margin: 0 auto;
 }
 
 /* =========================================
-   HEADER SECTION
+   HEADER
    ========================================= */
 .rpm-header {
   display: flex;
@@ -30,15 +50,13 @@
 .rpm-header-icon {
   width: 50px;
   height: 50px;
-  background: linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 100%);
-  color: #4338ca;
+  background: #f1f5f9;
+  color: #0f172a;
   border-radius: 14px;
   display: flex;
   justify-content: center;
   align-items: center;
   font-size: 22px;
-  box-shadow: 0 4px 10px rgba(67, 56, 202, 0.1);
-  border: 1px solid #c7d2fe;
 }
 
 .rpm-title {
@@ -50,193 +68,164 @@
 }
 
 .rpm-subtitle {
-  font-size: 15px;
+  font-size: 14px;
   color: #64748b;
   margin: 0;
 }
 
-/* ปุ่มสร้างโครงการใหม่ */
 .rpm-btn-primary {
-  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-  color: white;
-  padding: 12px 24px;
-  border-radius: 50px; /* แคปซูล */
+  background: #0f172a; /* ปุ่มสีกรมท่าเข้ม */
+  color: #ffffff;
+  padding: 10px 24px;
+  border-radius: 50px;
   border: none;
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 600;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(37, 99, 235, 0.2);
+  box-shadow: 0 4px 10px rgba(15, 23, 42, 0.2);
 }
 .rpm-btn-primary:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 20px rgba(37, 99, 235, 0.3);
+  background: #1e293b;
+  transform: translateY(-2px);
 }
 
 /* =========================================
-   TOOLBAR (Search)
+   TOOLBAR
    ========================================= */
 .rpm-toolbar {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 25px;
+  gap: 16px;
+  margin-bottom: 20px;
 }
 
 .rpm-search-box {
   background: #ffffff;
   border: 1px solid #e2e8f0;
-  padding: 10px 20px;
+  padding: 8px 20px;
   border-radius: 50px;
   display: flex;
   align-items: center;
   gap: 12px;
   width: 350px;
   transition: all 0.3s ease;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.02);
 }
-
 .rpm-search-box:focus-within {
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  border-color: #0f172a;
 }
-
 .rpm-search-icon {
   color: #94a3b8;
 }
-
 .rpm-search-box input {
   border: none;
   outline: none;
   width: 100%;
   font-size: 14px;
   color: #0f172a;
+  background-color: white
 }
 .rpm-search-box input::placeholder {
   color: #94a3b8;
 }
 
 /* =========================================
-   TABLE CARD
+   DATA TABLE (CARD TABLE STYLE)
    ========================================= */
-.rpm-card {
-  background: white;
-  border-radius: 20px;
-  border: 1px solid #e2e8f0;
-  overflow: hidden;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
-}
-
 .rpm-table-wrapper {
   overflow-x: auto;
+  padding-bottom: 20px;
 }
 
-.rpm-table {
+.rpm-card-table {
   width: 100%;
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 0 10px;
   min-width: 900px;
 }
 
-.rpm-table th {
-  background: #f8fafc;
-  padding: 18px 24px;
-  font-size: 13px;
-  color: #64748b;
+.rpm-card-table th {
+  background: transparent;
+  padding: 0 20px 5px 20px;
+  font-size: 11px;
+  color: #94a3b8;
+  font-weight: 700;
   text-align: left;
-  border-bottom: 2px solid #f1f5f9;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+  border: none;
 }
 
-.rpm-table td {
-  padding: 20px 24px;
-  border-bottom: 1px solid #f1f5f9;
+.rpm-card-table tbody tr {
+  background: #ffffff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+  transition:
+    box-shadow 0.2s,
+    transform 0.2s;
+}
+.rpm-card-table tbody tr:hover {
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+  transform: translateY(-1px);
+}
+
+.rpm-card-table td {
+  padding: 16px 20px;
   font-size: 14px;
   vertical-align: middle;
+  border-top: 1px solid #f8fafc;
+  border-bottom: 1px solid #f8fafc;
+  color: #1e293b;
 }
 
-.rpm-table tbody tr {
-  transition: background-color 0.2s;
+.rpm-card-table td:first-child {
+  border-top-left-radius: 16px;
+  border-bottom-left-radius: 16px;
+  border-left: 1px solid #f8fafc;
 }
-.rpm-table tbody tr:hover {
-  background-color: #f8fafc;
+.rpm-card-table td:last-child {
+  border-top-right-radius: 16px;
+  border-bottom-right-radius: 16px;
+  border-right: 1px solid #f8fafc;
 }
 
-.rpm-text-muted {
-  color: #64748b;
-  font-weight: 500;
-}
+/* User & Profile Cells */
 .rpm-font-bold {
   font-weight: 600;
   color: #0f172a;
 }
+.rpm-text-muted {
+  color: #64748b;
+  font-size: 13px;
+}
 
-/* Avatar Cell */
 .rpm-user-cell {
   display: flex;
   align-items: center;
   gap: 12px;
   font-weight: 500;
-  color: #334155;
 }
-
 .rpm-avatar {
-  width: 34px;
-  height: 34px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
-  color: #1e40af;
+  background: #f1f5f9;
+  color: #475569;
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 700;
   font-size: 13px;
-  border: 2px solid #ffffff;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
 }
 
 .rpm-member-badge {
   background: #f1f5f9;
   color: #475569;
-  padding: 4px 10px;
+  padding: 4px 12px;
   border-radius: 8px;
   font-size: 13px;
   font-weight: 600;
-}
-
-/* Progress Bar */
-.rpm-progress-wrap {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.rpm-progress-track {
-  width: 100px;
-  height: 8px;
-  background: #e2e8f0;
-  border-radius: 10px;
-  overflow: hidden;
-}
-
-.rpm-progress-fill {
-  height: 100%;
-  background: linear-gradient(90deg, #60a5fa 0%, #3b82f6 100%);
-  border-radius: 10px;
-  transition: width 1s ease-in-out;
-}
-.rpm-progress-fill.completed {
-  background: linear-gradient(90deg, #34d399 0%, #10b981 100%);
-}
-
-.rpm-progress-text {
-  font-size: 13px;
-  font-weight: 600;
-  color: #475569;
-  min-width: 35px;
 }
 
 /* Status Badges */
@@ -248,6 +237,7 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
+  text-transform: capitalize;
 }
 .rpm-status-dot {
   width: 6px;
@@ -255,41 +245,43 @@
   border-radius: 50%;
 }
 
-.rpm-status-badge.active {
-  background: #eff6ff;
-  color: #2563eb;
-  border: 1px solid #dbeafe;
+.rpm-status-badge.active,
+.rpm-status-badge.completed {
+  background: #dcfce7;
+  color: #166534;
 }
-.rpm-status-badge.active .rpm-status-dot {
-  background-color: #2563eb;
+.rpm-status-badge.active .rpm-status-dot,
+.rpm-status-badge.completed .rpm-status-dot {
+  background-color: #166534;
 }
 
 .rpm-status-badge.pending {
   background: #fffbeb;
   color: #d97706;
-  border: 1px solid #fef3c7;
 }
 .rpm-status-badge.pending .rpm-status-dot {
   background-color: #d97706;
 }
 
-.rpm-status-badge.completed {
-  background: #ecfdf5;
-  color: #059669;
-  border: 1px solid #bbf7d0;
+.rpm-status-badge.rejected {
+  background: #fee2e2;
+  color: #991b1b;
 }
-.rpm-status-badge.completed .rpm-status-dot {
-  background-color: #059669;
+.rpm-status-badge.rejected .rpm-status-dot {
+  background-color: #991b1b;
 }
 
-/* Action Buttons */
+.rpm-text-center {
+  text-align: center;
+}
+
+/* Actions */
 .rpm-actions {
   display: flex;
   gap: 8px;
   justify-content: center;
 }
-
-.rpm-btn-icon {
+.rpm-btn-action {
   width: 36px;
   height: 36px;
   border-radius: 10px;
@@ -298,57 +290,202 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 14px;
   transition: all 0.2s ease;
+  font-size: 14px;
+  background: #f8fafc;
+  color: #64748b;
 }
-
-.rpm-btn-icon.assign {
-  background: #f0f9ff;
-  color: #0284c7;
+.rpm-btn-action.assign:hover {
+  background: #eff6ff;
+  color: #2563eb;
 }
-.rpm-btn-icon.assign:hover {
-  background: #e0f2fe;
-  transform: translateY(-2px);
-}
-
-.rpm-btn-icon.edit {
-  background: #f1f5f9;
-  color: #475569;
-}
-.rpm-btn-icon.edit:hover {
-  background: #e2e8f0;
-  transform: translateY(-2px);
-}
-
-.rpm-btn-icon.delete {
-  background: #fef2f2;
+.rpm-btn-action.delete:hover {
+  background: #fee2e2;
   color: #dc2626;
 }
-.rpm-btn-icon.delete:hover {
-  background: #fee2e2;
-  transform: translateY(-2px);
-}
 
-/* Empty State */
+/* States */
 .rpm-empty-state {
   text-align: center;
-  padding: 40px !important;
+  padding: 50px !important;
   color: #94a3b8;
-  font-size: 15px;
+  font-size: 14px;
+  background: transparent !important;
+}
+.rpm-state-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 80px 20px;
+  color: #64748b;
+}
+.rpm-spin {
+  font-size: 30px;
+  color: #0f172a;
+  margin-bottom: 15px;
+  animation: rpmSpin 1s linear infinite;
+}
+@keyframes rpmSpin {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* =========================================
+   MODAL (POPUP)
+   ========================================= */
+.rpm-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(15, 23, 42, 0.4);
+  backdrop-filter: blur(4px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.rpm-modal-container {
+  background: #ffffff;
+  width: 100%;
+  max-width: 480px;
+  border-radius: 20px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.rpm-modal-header {
+  padding: 20px 25px;
+  border-bottom: 1px solid #f1f5f9;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.rpm-modal-header h2 {
+  font-size: 18px;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0;
+}
+.rpm-modal-close {
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  font-size: 18px;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.rpm-modal-close:hover {
+  color: #ef4444;
+}
+
+.rpm-modal-body {
+  padding: 25px;
+}
+
+.rpm-form-group {
+  margin-bottom: 15px;
+}
+.rpm-form-group label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: #475569;
+  margin-bottom: 8px;
+}
+.rpm-form-group input,
+.rpm-form-group select {
+  width: 100%;
+  padding: 12px 15px;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  font-size: 14px;
+  color: #0f172a;
+  outline: none;
+  transition: border 0.2s;
+  background-color: #ffffff;
+}
+.rpm-form-group input:focus,
+.rpm-form-group select:focus {
+  border-color: #0f172a;
+}
+
+.rpm-modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 25px;
+}
+.rpm-btn-cancel {
+  background: #f1f5f9;
+  color: #475569;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.rpm-btn-cancel:hover {
+  background: #e2e8f0;
+}
+
+.rpm-btn-submit {
+  background: #0f172a;
+  color: #ffffff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.rpm-btn-submit:hover {
+  background: #1e293b;
+}
+.rpm-btn-submit:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
 }
 
 /* =========================================
    RESPONSIVE
    ========================================= */
 @media (max-width: 899px) {
-  .regulator-portal-content {
+  .rpm-main-content {
     margin-left: 0;
   }
 }
 
 @media (max-width: 768px) {
   .rpm-container {
-    padding: 100px 20px 40px 20px;
+    padding: 80px 15px 30px 15px;
   }
   .rpm-header {
     flex-direction: column;
@@ -358,9 +495,6 @@
   .rpm-btn-primary {
     width: 100%;
     justify-content: center;
-  }
-  .rpm-toolbar {
-    flex-direction: column;
   }
   .rpm-search-box {
     width: 100%;

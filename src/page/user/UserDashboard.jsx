@@ -6,14 +6,15 @@ import {
   FaPlayCircle,
   FaClipboardCheck,
   FaBookOpen,
-  FaFileAlt,
   FaClock,
   FaStar,
   FaChartLine,
   FaTrophy,
   FaLightbulb,
-  FaArrowRight,
   FaCertificate,
+  FaSpinner,
+  FaBuilding,
+  FaFolderOpen,
 } from "react-icons/fa";
 import {
   Radar,
@@ -24,76 +25,193 @@ import {
   ResponsiveContainer,
   Tooltip,
 } from "recharts";
+import api, { getStoredUser } from "../../api/Api";
 
 const UserDashboard = () => {
-  const [userData, setUserData] = useState(null);
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(true);
+  const [dashboardData, setDashboardData] = useState({
+    name: "Loading...",
+    userType: "user",
+    organization: "",
+    projects: "",
+    stats: {
+      totalAttempts: 0,
+      passedChapters: 0,
+      certificates: 0,
+      progressPercentage: 0,
+    },
+    radarData: [],
+  });
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    const storedUser = JSON.parse(localStorage.getItem("user"));
-    setUserData(storedUser);
+    fetchDashboardData();
   }, []);
 
-  // ----------------------------------------
-  // ข้อมูลจำลองความพร้อม (Mock Data ฐานเต็ม 5)
-  // ----------------------------------------
-  const readinessData = [
-    { subject: "ความโปร่งใส", score: 4.5, fullMark: 5 },
-    { subject: "ความปลอดภัย", score: 4.2, fullMark: 5 },
-    { subject: "ความเป็นธรรม", score: 3.8, fullMark: 5 }, // จุดอ่อนที่นำไปใช้แนะนำคอร์ส
-    { subject: "ความเป็นส่วนตัว", score: 4.8, fullMark: 5 },
-    { subject: "ความรับผิดชอบ", score: 4.0, fullMark: 5 },
-    { subject: "จริยธรรม", score: 4.6, fullMark: 5 },
-  ];
+  const fetchDashboardData = async () => {
+    try {
+      setLoading(true);
+      const storedUser = getStoredUser();
+      const userId = storedUser?.id || storedUser?.user_id;
 
-  const recentActivities = [
-    {
-      id: 1,
-      title: "ทำแบบทดสอบสาย Provider (นักพัฒนา)",
-      type: "assessment",
-      date: "วันนี้, 10:30 น.",
-      status: "ผ่านแล้ว",
-      score: "Level 4",
+      if (!userId) {
+        console.warn("ไม่พบ User ID ใน LocalStorage");
+        setLoading(false);
+        return;
+      }
+
+      const response = await api.get(`/user/dashboard/${userId}`);
+      if (response.data && response.data.success) {
+        // merge กับค่า default เดิมเสมอ กัน crash ถ้า response ไม่มี stats/radarData ครบ
+        const data = response.data.data || {};
+        setDashboardData((prev) => ({
+          ...prev,
+          ...data,
+          stats: { ...prev.stats, ...(data.stats || {}) },
+          radarData: data.radarData || [],
+        }));
+      }
+    } catch (error) {
+      console.error("Fetch Dashboard Error:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const getRoleCategory = (type) => {
+    if (!type) return "users";
+    const t = type.toLowerCase();
+    if (t.includes("regulator")) return "regulator";
+    if (t.includes("policy")) return "policy";
+    if (t.includes("researcher")) return "researcher";
+    if (t.includes("developer")) return "developer";
+    if (t.includes("provider")) return "provider";
+
+    return "users";
+  };
+
+  const roleCategory = getRoleCategory(dashboardData.userType);
+
+  const roleConfig = {
+    regulator: {
+      title: "Regulator",
+      desc: "Evaluate, Regulate and Monitor (ERM) - หลักสูตรเจาะลึกสำหรับการกำกับดูแล การประเมินความเสี่ยง และการวางนโยบายที่เกี่ยวข้องกับ AI",
+      img: "https://images.unsplash.com/photo-1589829085413-56de8ae18c73?q=80&w=800&auto=format&fit=crop",
+      badge: "ผู้กำกับดูแลและนโยบาย",
+      color: "#3b82f6",
+      path: "regulator",
     },
-    {
-      id: 2,
-      title: "เรียนรู้โมดูล: จริยธรรม AI พื้นฐาน (User)",
-      type: "learning",
-      date: "เมื่อวาน, 14:00 น.",
-      status: "เรียนจบแล้ว",
-      score: null,
+    policy: {
+      title: "Policy Maker",
+      desc: "Evaluate, Regulate and Monitor (ERM) - หลักสูตรเจาะลึกสำหรับการกำกับดูแล การประเมินความเสี่ยง และการวางนโยบายที่เกี่ยวข้องกับ AI",
+      img: "https://images.unsplash.com/photo-1589829085413-56de8ae18c73?q=80&w=800&auto=format&fit=crop",
+      badge: "ผู้กำกับดูแลและนโยบาย",
+      color: "#3b82f6",
+      path: "policy",
     },
-    {
-      id: 3,
-      title: "ทำแบบทดสอบสาย Regulator (ผู้วางนโยบาย)",
-      type: "assessment",
-      date: "18 เม.ย. 2569",
-      status: "ยังไม่ผ่าน",
-      score: "Level 2",
+    researcher: {
+      title: "Researcher",
+      desc: "Research and Development (R&D) - หลักสูตรสำหรับนักวิจัยเพื่อพัฒนาและวิเคราะห์ระบบ AI อย่างมีประสิทธิภาพ",
+      img: "https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?q=80&w=800&auto=format&fit=crop",
+      badge: "นักวิจัย",
+      color: "#8b5cf6",
+      path: "researcher",
     },
-  ];
+    developer: {
+      title: "Developer",
+      desc: "Plan, Development, Operation, Measurement (PDOM) - หลักสูตรเชิงปฏิบัติการสำหรับนักพัฒนา เพื่อสร้างระบบ AI ที่โปร่งใสและเป็นธรรม",
+      img: "https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?q=80&w=800&auto=format&fit=crop",
+      badge: "นักพัฒนาและผู้ให้บริการ",
+      color: "#8b5cf6",
+      path: "developer",
+    },
+    provider: {
+      title: "Service Provider",
+      desc: "Plan, Development, Operation, Measurement (PDOM) - หลักสูตรเชิงปฏิบัติการสำหรับนักพัฒนา เพื่อสร้างระบบ AI ที่โปร่งใสและเป็นธรรม",
+      img: "https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?q=80&w=800&auto=format&fit=crop",
+      badge: "นักพัฒนาและผู้ให้บริการ",
+      color: "#8b5cf6",
+      path: "provider",
+    },
+    users: {
+      title: "General User",
+      desc: "Aware Utilize Feedback (AUF) - หลักสูตรสร้างความตระหนักรู้ เพื่อการใช้งาน AI อย่างปลอดภัยและมีความรับผิดชอบ",
+      img: "https://images.unsplash.com/photo-1531482615713-2afd69097998?q=80&w=800&auto=format&fit=crop",
+      badge: "ผู้ใช้งานทั่วไป",
+      color: "#10b981",
+      path: "users",
+    },
+  };
+
+  const activeRole = roleConfig[roleCategory];
+
+  // แมปข้อมูลสำหรับ Recharts (ป้องกัน NaN และดึงชื่อเต็มไว้โชว์ Tooltip)
+  const formattedRadarData = dashboardData.radarData.map((item) => {
+    const rawLevel =
+      item.maturityLevel !== undefined
+        ? item.maturityLevel
+        : item.maturitylevel;
+    const rawName = item.componentName || item.componentname || "ไม่ระบุชื่อ";
+    const maxLevel = item.maxMaturity || item.maxmaturity || 5;
+    const parsedLevel = parseInt(rawLevel) || 0;
+
+    return {
+      subject: rawName.length > 15 ? rawName.substring(0, 15) + "..." : rawName, // ตัดคำเพื่อไม่ให้ล้นแกนกราฟ
+      fullSubjectName: rawName, // เก็บชื่อเต็มไว้โชว์ตอนเอาเมาส์ชี้
+      level: parsedLevel,
+      maxMark: parseInt(maxLevel),
+    };
+  });
+
+  if (loading) {
+    return (
+      <div className="user-portal-layout">
+        <SidebarUser />
+        <div
+          className="user-portal-content"
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <FaSpinner
+            className="text-blue"
+            style={{ fontSize: "40px", animation: "spin 1s linear infinite" }}
+          />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="user-portal-layout">
-      {/* Sidebar ด้านซ้าย */}
       <SidebarUser />
 
-      {/* เนื้อหาหลัก (ขยายเต็มจอ) */}
       <div className="user-portal-content">
         <div className="ud-container">
-          {/* =======================================
-              ส่วนหัวทักทาย และปุ่มใบประกาศมุมขวาบน
-              ======================================= */}
           <div className="ud-header-wrapper">
             <div className="ud-simple-header">
               <h1 className="ud-greeting-title">
-                ยินดีต้อนรับ, {userData?.name || "Somchai"}
+                ยินดีต้อนรับ, {dashboardData.name}
               </h1>
               <p className="ud-greeting-subtitle">
-                เลือกบทบาทของคุณเพื่อดูระดับความพร้อม (Maturity Level 1-5)
-                และเข้าสู่การเรียนรู้
+                สถานะปัจจุบันของคุณคือ{" "}
+                <strong style={{ color: activeRole.color }}>
+                  {activeRole.title}
+                </strong>{" "}
+                ดูภาพรวมความก้าวหน้าและเรียนรู้ต่อได้เลย
               </p>
+
+              <div className="ud-user-meta-tags">
+                <span className="ud-meta-tag org-tag">
+                  <FaBuilding /> {dashboardData.organization}
+                </span>
+                <span className="ud-meta-tag proj-tag">
+                  <FaFolderOpen /> {dashboardData.projects}
+                </span>
+              </div>
             </div>
 
             <button
@@ -104,18 +222,16 @@ const UserDashboard = () => {
             </button>
           </div>
 
-          {/* =======================================
-              1. แถบสรุปสถิติด่วน (Quick Stats)
-              ======================================= */}
           <div className="ud-quick-stats-grid">
             <div className="ud-stat-card">
               <div className="ud-stat-icon bg-blue-light">
                 <FaClock className="text-blue" />
               </div>
               <div className="ud-stat-info">
-                <p className="ud-stat-label">ชั่วโมงเรียนสะสม</p>
+                <p className="ud-stat-label">จำนวนการทำข้อสอบรวม</p>
                 <h4 className="ud-stat-value">
-                  12.5 <span className="ud-stat-unit">ชม.</span>
+                  {dashboardData.stats.totalAttempts}{" "}
+                  <span className="ud-stat-unit">ครั้ง</span>
                 </h4>
               </div>
             </div>
@@ -124,9 +240,10 @@ const UserDashboard = () => {
                 <FaClipboardCheck className="text-green" />
               </div>
               <div className="ud-stat-info">
-                <p className="ud-stat-label">แบบทดสอบที่ผ่าน</p>
+                <p className="ud-stat-label">บทเรียนที่สอบผ่าน</p>
                 <h4 className="ud-stat-value">
-                  2 <span className="ud-stat-unit">หมวด</span>
+                  {dashboardData.stats.passedChapters}{" "}
+                  <span className="ud-stat-unit">บท</span>
                 </h4>
               </div>
             </div>
@@ -135,281 +252,142 @@ const UserDashboard = () => {
                 <FaTrophy className="text-purple" />
               </div>
               <div className="ud-stat-info">
-                <p className="ud-stat-label">ใบประกาศนียบัตร</p>
+                <p className="ud-stat-label">ใบประกาศนียบัตรที่ได้รับ</p>
                 <h4 className="ud-stat-value">
-                  2 <span className="ud-stat-unit">ใบ</span>
+                  {dashboardData.stats.certificates}{" "}
+                  <span className="ud-stat-unit">ใบ</span>
                 </h4>
               </div>
             </div>
           </div>
 
-          {/* =======================================
-              2. แนะนำให้เรียนต่อ (Continue Learning)
-              ======================================= */}
-          <div className="ud-action-banner">
-            <div className="ud-banner-content">
-              <span className="ud-banner-badge">เรียนค้างไว้</span>
-              <div className="ud-banner-text">
-                <h3>กฎหมายและข้อบังคับที่เกี่ยวข้อง (PDPA & AI Act)</h3>
-                <p>สายงาน: Regulator • ความคืบหน้า 50%</p>
-              </div>
+          <h2 className="ud-section-heading" style={{ marginBottom: "20px" }}>
+            <FaBookOpen
+              className="text-blue"
+              style={{ marginRight: "8px", color: activeRole.color }}
+            />{" "}
+            เส้นทางการเรียนรู้ของคุณ (My Learning Path)
+          </h2>
+
+          <div className="ud-hero-role-card">
+            <div className="ud-hero-img-wrapper">
+              <img src={activeRole.img} alt={activeRole.title} />
+              <span className="ud-hero-badge">
+                <FaStar color="#f59e0b" /> {activeRole.badge}
+              </span>
             </div>
-            <button className="ud-btn-banner">
-              เรียนต่อ <FaArrowRight />
-            </button>
-          </div>
+            <div className="ud-hero-content">
+              <h3 className="ud-hero-title">{activeRole.title}</h3>
+              <p className="ud-hero-desc">{activeRole.desc}</p>
 
-          {/* =======================================
-              การ์ดบทบาท 3 ใบ (Recipe Card Design)
-              ======================================= */}
-          <div className="ud-recipe-cards-grid">
-            {/* Card 1: Regulator */}
-            <div className="ud-recipe-card">
-              <div className="ud-recipe-img-wrapper">
-                <img
-                  src="https://images.unsplash.com/photo-1589829085413-56de8ae18c73?q=80&w=800&auto=format&fit=crop"
-                  alt="Regulator"
-                />
-                <span className="ud-recipe-badge">
-                  <FaStar color="#f59e0b" /> หน่วยงานรัฐ
-                </span>
-              </div>
-              <div className="ud-recipe-content">
-                <h3 className="ud-recipe-title">Regulator/Policy</h3>
-                <p className="ud-recipe-desc">
-                  Evaluate, Regulate and Monitor (ERM)
-                </p>
-
-                <div className="ud-recipe-divider"></div>
-
-                <div className="ud-recipe-meta">
-                  <div className="ud-meta-item">
-                    <FaChartLine className="meta-icon" /> Maturity Level
-                  </div>
-                  <div className="ud-meta-divider"></div>
-                  <div className="ud-meta-item progress-wrap">
-                    <div className="ud-mini-progress">
-                      <div
-                        className="ud-mini-progress-fill"
-                        style={{ width: "80%", backgroundColor: "#3b82f6" }}
-                      ></div>
-                    </div>
-                  </div>
-                  <div className="ud-meta-divider"></div>
-                  <div className="ud-meta-item font-bold">4 / 5</div>
+              <div className="ud-hero-meta">
+                <div className="ud-meta-item">
+                  <FaChartLine className="meta-icon" />{" "}
+                  ความคืบหน้าหลักสูตรปัจจุบัน
                 </div>
-
-                <div className="ud-recipe-actions">
-                  <button
-                    className="ud-btn-half dark"
-                    onClick={() => navigate("/user-classroom?role=regulator")}
-                  >
-                    <FaPlayCircle /> สื่อการเรียนรู้
-                  </button>
-                  <button className="ud-btn-half outline">
-                    <FaClipboardCheck /> แบบทดสอบ
-                  </button>
+                <div className="ud-meta-item font-bold">
+                  {dashboardData.stats.progressPercentage}%
                 </div>
               </div>
-            </div>
 
-            {/* Card 2: Provider */}
-            <div className="ud-recipe-card">
-              <div className="ud-recipe-img-wrapper">
-                <img
-                  src="https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?q=80&w=800&auto=format&fit=crop"
-                  alt="Provider"
-                />
-                <span className="ud-recipe-badge">
-                  <FaStar color="#f59e0b" /> นักพัฒนา
-                </span>
-              </div>
-              <div className="ud-recipe-content">
-                <h3 className="ud-recipe-title">
-                  Researcher/Developer/Service Provider
-                </h3>
-                <p className="ud-recipe-desc">
-                  Plan, Development, Operation, Measurement (PDOM)
-                </p>
-
-                <div className="ud-recipe-divider"></div>
-
-                <div className="ud-recipe-meta">
-                  <div className="ud-meta-item">
-                    <FaChartLine className="meta-icon" /> Maturity Level
-                  </div>
-                  <div className="ud-meta-divider"></div>
-                  <div className="ud-meta-item progress-wrap">
-                    <div className="ud-mini-progress">
-                      <div
-                        className="ud-mini-progress-fill"
-                        style={{ width: "40%", backgroundColor: "#8b5cf6" }}
-                      ></div>
-                    </div>
-                  </div>
-                  <div className="ud-meta-divider"></div>
-                  <div className="ud-meta-item font-bold">2 / 5</div>
-                </div>
-
-                <div className="ud-recipe-actions">
-                  <button
-                    className="ud-btn-half dark"
-                    onClick={() => navigate("/user-classroom?role=provider")}
-                  >
-                    <FaPlayCircle /> สื่อการเรียนรู้
-                  </button>
-                  <button className="ud-btn-half outline">
-                    <FaClipboardCheck /> แบบทดสอบ
-                  </button>
+              <div className="ud-hero-progress-wrap">
+                <div className="ud-mini-progress" style={{ height: "10px" }}>
+                  <div
+                    className="ud-mini-progress-fill"
+                    style={{
+                      width: `${dashboardData.stats.progressPercentage}%`,
+                      backgroundColor: activeRole.color,
+                    }}
+                  ></div>
                 </div>
               </div>
-            </div>
 
-            {/* Card 3: User */}
-            <div className="ud-recipe-card">
-              <div className="ud-recipe-img-wrapper">
-                <img
-                  src="https://images.unsplash.com/photo-1531482615713-2afd69097998?q=80&w=800&auto=format&fit=crop"
-                  alt="User"
-                />
-                <span className="ud-recipe-badge">
-                  <FaStar color="#f59e0b" /> ผู้ใช้งานทั่วไป
-                </span>
-              </div>
-              <div className="ud-recipe-content">
-                <h3 className="ud-recipe-title">Users </h3>
-                <p className="ud-recipe-desc">Aware Utilize Feedback (AUF)</p>
-
-                <div className="ud-recipe-divider"></div>
-
-                <div className="ud-recipe-meta">
-                  <div className="ud-meta-item">
-                    <FaChartLine className="meta-icon" /> Maturity Level
-                  </div>
-                  <div className="ud-meta-divider"></div>
-                  <div className="ud-meta-item progress-wrap">
-                    <div className="ud-mini-progress">
-                      <div
-                        className="ud-mini-progress-fill"
-                        style={{ width: "100%", backgroundColor: "#10b981" }}
-                      ></div>
-                    </div>
-                  </div>
-                  <div className="ud-meta-divider"></div>
-                  <div className="ud-meta-item font-bold">5 / 5</div>
-                </div>
-
-                <div className="ud-recipe-actions">
-                  <button
-                    className="ud-btn-half dark"
-                    onClick={() => navigate("/user-classroom?role=user")}
-                  >
-                    <FaPlayCircle /> สื่อการเรียนรู้
-                  </button>
-                  <button className="ud-btn-half outline">
-                    <FaClipboardCheck /> แบบทดสอบ
-                  </button>
-                </div>
+              <div className="ud-hero-actions">
+                <button
+                  className="ud-btn-hero dark"
+                  onClick={() => navigate(`/user-classroom`)}
+                >
+                  <FaPlayCircle /> เข้าสู่ห้องเรียน
+                </button>
+                <button
+                  className="ud-btn-hero outline"
+                  onClick={() => navigate(`/user-classroom`)}
+                >
+                  <FaClipboardCheck /> เริ่มทำแบบทดสอบ
+                </button>
               </div>
             </div>
           </div>
 
-          {/* =======================================
-              ส่วนกราฟ 6 เหลี่ยม และกิจกรรมล่าสุด
-              ======================================= */}
-          <div className="ud-progress-layout">
+          <div className="ud-progress-layout full-width">
             <div className="ud-card">
               <div className="ud-card-header">
                 <h3 className="ud-card-title">
-                  ภาพรวมระดับความพร้อม (Overall Maturity Level)
+                  ผลการประเมินธรรมาภิบาลระบบปัญญาประดิษฐ์ (AI Ethic Components
+                  Maturity Analysis)
                 </h3>
               </div>
-              <div className="ud-card-body" style={{ height: "350px" }}>
-                <ResponsiveContainer width="100%" height="100%">
-                  <RadarChart
-                    cx="50%"
-                    cy="50%"
-                    outerRadius="75%"
-                    data={readinessData}
-                  >
-                    <PolarGrid stroke="#e5e7eb" />
-                    <PolarAngleAxis
-                      dataKey="subject"
-                      tick={{ fill: "#4b5563", fontSize: 13 }}
-                    />
-                    <PolarRadiusAxis
-                      angle={30}
-                      domain={[0, 5]}
-                      tick={true}
-                      axisLine={false}
-                    />
-                    <Radar
-                      name="Maturity Level"
-                      dataKey="score"
-                      stroke="#75ba40"
-                      strokeWidth={2}
-                      fill="#75ba40"
-                      fillOpacity={0.5}
-                    />
-                    <Tooltip
-                      contentStyle={{
-                        borderRadius: "8px",
-                        border: "none",
-                        boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
-                      }}
-                      formatter={(value) => [
-                        `Level ${value}`,
-                        "ระดับความพร้อม",
-                      ]}
-                    />
-                  </RadarChart>
-                </ResponsiveContainer>
-              </div>
-            </div>
-
-            <div className="ud-card">
-              <div className="ud-card-header">
-                <h3 className="ud-card-title">ประวัติกิจกรรมล่าสุด</h3>
-              </div>
-              <div className="ud-card-body ud-p-0">
-                <ul className="ud-activity-list">
-                  {recentActivities.map((act) => (
-                    <li key={act.id} className="ud-activity-item">
-                      <div className="ud-activity-icon">
-                        {act.type === "assessment" ? (
-                          <FaFileAlt size={18} className="text-purple" />
-                        ) : (
-                          <FaBookOpen size={18} className="text-blue" />
-                        )}
-                      </div>
-                      <div className="ud-activity-details">
-                        <p className="ud-activity-name">{act.title}</p>
-                        <div className="ud-activity-meta">
-                          <span className="ud-date">
-                            <FaClock size={12} /> {act.date}
-                          </span>
-                          {act.score && (
-                            <span className="ud-score">ผล: {act.score}</span>
-                          )}
-                        </div>
-                      </div>
-                      <div className="ud-activity-status">
-                        <span
-                          className={`ud-badge ${act.status === "ผ่านแล้ว" || act.status === "เรียนจบแล้ว" ? "success" : "warning"}`}
-                        >
-                          {act.status}
-                        </span>
-                      </div>
-                    </li>
-                  ))}
-                </ul>
+              <div className="ud-card-body" style={{ height: "400px" }}>
+                {formattedRadarData.length > 0 ? (
+                  <ResponsiveContainer width="100%" height="100%">
+                    <RadarChart
+                      cx="50%"
+                      cy="50%"
+                      outerRadius="75%"
+                      data={formattedRadarData}
+                    >
+                      <PolarGrid stroke="#e5e7eb" />
+                      <PolarAngleAxis
+                        dataKey="subject"
+                        tick={{
+                          fill: "#4b5563",
+                          fontSize: 13,
+                          fontWeight: 500,
+                        }}
+                      />
+                      <PolarRadiusAxis
+                        angle={30}
+                        domain={[0, 5]}
+                        tick={true}
+                        axisLine={false}
+                      />
+                      <Radar
+                        name="ระดับความพร้อม"
+                        dataKey="level"
+                        stroke="#2563eb"
+                        strokeWidth={2.5}
+                        fill="#3b82f6"
+                        fillOpacity={0.35}
+                      />
+                      <Tooltip
+                        contentStyle={{
+                          borderRadius: "12px",
+                          border: "none",
+                          boxShadow: "0 8px 24px rgba(0,0,0,0.15)",
+                        }}
+                        formatter={(value, name, props) => [
+                          `Level ${value} / ${props.payload.maxMark}`, // แสดงคะแนนเต็มตามฐานข้อมูล (4 หรือ 5)
+                          "ระดับความสอดคล้องตามเกณฑ์หลักการ",
+                        ]}
+                        labelFormatter={(label, payload) => {
+                          // แสดงชื่อเต็มในกล่อง Tooltip (ไม่โดนตัดคำ)
+                          if (payload && payload.length > 0) {
+                            return payload[0].payload.fullSubjectName;
+                          }
+                          return label;
+                        }}
+                      />
+                    </RadarChart>
+                  </ResponsiveContainer>
+                ) : (
+                  <div className="ud-radar-empty">
+                    ระบบกำลังรองรับการเพิ่มข้อมูลโครงสร้าง Component ใหม่ในอนาคต
+                  </div>
+                )}
               </div>
             </div>
           </div>
 
-          {/* =======================================
-              3. Smart Recommendations
-              ======================================= */}
           <div className="ud-section-spacer">
             <h2 className="ud-section-heading">
               <FaLightbulb
@@ -419,8 +397,8 @@ const UserDashboard = () => {
               แนะนำสำหรับคุณ (Smart Recommendations)
             </h2>
             <p className="ud-section-subheading">
-              ระบบวิเคราะห์จากคะแนนกราฟด้าน "ความเป็นธรรม" (3.8/5)
-              ที่ยังสามารถพัฒนาได้อีก
+              ระบบวิเคราะห์แนะนำบทเรียนเพิ่มเติมตามเกณฑ์ภาพรวมเพื่อยกระดับทักษะความตระหนักรู้ด้าน
+              AI
             </p>
 
             <div className="ud-recom-card">
@@ -436,7 +414,10 @@ const UserDashboard = () => {
                   เนื้อหาเจาะลึกเกี่ยวกับการตรวจสอบชุดข้อมูลและการปรับแต่งอัลกอริทึมเพื่อป้องกันผลกระทบเชิงลบ
                 </p>
               </div>
-              <button className="ud-btn-outline">
+              <button
+                className="ud-btn-outline"
+                onClick={() => navigate(`/user-classroom`)}
+              >
                 <FaPlayCircle /> ดูรายละเอียด
               </button>
             </div>

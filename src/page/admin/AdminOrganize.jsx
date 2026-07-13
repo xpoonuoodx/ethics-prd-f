@@ -7,17 +7,29 @@ import {
   FaSpinner,
   FaEdit,
   FaTrash,
-  FaUserShield,
+  FaTimes,
 } from "react-icons/fa";
 import SidebarAdmin from "./SidebarAdmin";
 import api from "../../api/Api";
 import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom"; // เพิ่ม useNavigate
 
 const AdminOrganize = () => {
+  const navigate = useNavigate(); // เรียกใช้งาน useNavigate
   const [organizations, setOrganizations] = useState([]);
+  const [regulators, setRegulators] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [formData, setFormData] = useState({
+    id: "",
+    name: "",
+    regulatorName: "",
+    status: "Active",
+  });
 
   const fetchOrganizations = async () => {
     try {
@@ -26,7 +38,7 @@ const AdminOrganize = () => {
       const response = await api.get("/admin/get-organize");
 
       if (response.data && response.data.success) {
-        setOrganizations(response.data.data.organizations);
+        setOrganizations(response.data.data);
       } else {
         setError("ไม่สามารถโหลดข้อมูลหน่วยงานได้");
       }
@@ -41,40 +53,127 @@ const AdminOrganize = () => {
     }
   };
 
+  const fetchRegulators = async () => {
+    try {
+      const response = await api.get("/admin/get-regulators");
+      if (response.data && response.data.success) {
+        setRegulators(response.data.data);
+      }
+    } catch (err) {
+      console.error("Fetch Regulators Error:", err);
+    }
+  };
+
   useEffect(() => {
     window.scrollTo(0, 0);
     fetchOrganizations();
+    fetchRegulators();
   }, []);
 
-  const handleDelete = (id, name) => {
-    Swal.fire({
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleAddSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!formData.id || !formData.name) {
+      Swal.fire({
+        title: "ข้อมูลไม่ครบถ้วน",
+        text: "กรุณากรอกรหัสและชื่อหน่วยงานให้ครบถ้วน",
+        icon: "warning",
+        confirmButtonColor: "#0f172a",
+      });
+      return;
+    }
+
+    try {
+      setIsSubmitting(true);
+      const response = await api.post("/admin/add-organize", formData);
+
+      if (response.data && response.data.success) {
+        Swal.fire({
+          title: "สำเร็จ",
+          text: "เพิ่มหน่วยงานใหม่เรียบร้อยแล้ว",
+          icon: "success",
+          confirmButtonColor: "#10b981",
+        });
+        setIsModalOpen(false);
+        setFormData({ id: "", name: "", regulatorName: "", status: "Active" });
+        fetchOrganizations();
+      }
+    } catch (err) {
+      console.error("Add Organization Error:", err);
+      Swal.fire({
+        title: "เกิดข้อผิดพลาด",
+        text: err.response?.data?.message || "ไม่สามารถเพิ่มหน่วยงานได้",
+        icon: "error",
+        confirmButtonColor: "#ef4444",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleDelete = async (id, name) => {
+    const result = await Swal.fire({
       title: "ยืนยันการลบหน่วยงาน?",
       text: `คุณต้องการลบหน่วยงาน "${name}" ใช่หรือไม่ ข้อมูลที่เกี่ยวข้องจะถูกลบทั้งหมด`,
       icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: "#0f172a",
+      confirmButtonColor: "#ef4444",
       cancelButtonColor: "#94a3b8",
       confirmButtonText: "ยืนยันลบข้อมูล",
       cancelButtonText: "ยกเลิก",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        setOrganizations(organizations.filter((org) => org.id !== id));
+    });
+
+    if (result.isConfirmed) {
+      try {
+        // 💡 ยิง API ไปที่หลังบ้าน
+        const response = await api.delete(`/admin/delete-organize/${id}`);
+
+        if (response.data && response.data.success) {
+          // อัปเดต State เฉพาะเมื่อลบในฐานข้อมูลสำเร็จแล้ว
+          setOrganizations(organizations.filter((org) => org.id !== id));
+
+          Swal.fire({
+            title: "ลบข้อมูลสำเร็จ",
+            text: "ข้อมูลหน่วยงานถูกนำออกจากระบบแล้ว",
+            icon: "success",
+            confirmButtonColor: "#10b981",
+          });
+        }
+      } catch (error) {
+        console.error("Delete Error:", error);
         Swal.fire({
-          title: "ลบข้อมูลสำเร็จ",
-          text: "ข้อมูลหน่วยงานถูกนำออกจากระบบแล้ว",
-          icon: "success",
-          confirmButtonColor: "#10b981",
+          title: "เกิดข้อผิดพลาด",
+          text: error.response?.data?.message || "ไม่สามารถลบข้อมูลได้",
+          icon: "error",
+          confirmButtonColor: "#ef4444",
         });
       }
-    });
+    }
   };
 
-  const filteredOrganizations = organizations.filter(
-    (org) =>
-      org.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      org.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      org.regulatorName.toLowerCase().includes(searchTerm.toLowerCase()),
-  );
+  const filteredOrganizations = organizations.filter((org) => {
+    const searchStr = searchTerm.toLowerCase();
+
+    const matchName = org.name
+      ? org.name.toLowerCase().includes(searchStr)
+      : false;
+    const matchId = org.id
+      ? String(org.id).toLowerCase().includes(searchStr)
+      : false;
+    const matchRegulator = org.regulatorName
+      ? org.regulatorName.toLowerCase().includes(searchStr)
+      : false;
+
+    return matchName || matchId || matchRegulator;
+  });
 
   return (
     <div className="admin-organize-layout">
@@ -101,7 +200,10 @@ const AdminOrganize = () => {
                 />
               </div>
 
-              <button className="admin-organize-btn-dark">
+              <button
+                className="admin-organize-btn-dark"
+                onClick={() => setIsModalOpen(true)}
+              >
                 <FaPlus /> เพิ่มหน่วยงาน
               </button>
             </div>
@@ -125,7 +227,7 @@ const AdminOrganize = () => {
           ) : (
             <div className="admin-organize-list-section">
               <div className="admin-organize-list-header">
-                <h2>รายการหน่วยงานผู้เช่าใช้</h2>
+                <h2>รายการหน่วยงาน</h2>
                 <span className="admin-organize-list-count">
                   {filteredOrganizations.length} หน่วยงาน
                 </span>
@@ -147,16 +249,23 @@ const AdminOrganize = () => {
                   <tbody>
                     {filteredOrganizations.map((org, index) => (
                       <tr key={index} className="admin-organize-table-row">
-                        <td className="admin-organize-col-id">{org.id}</td>
-                        <td className="admin-organize-col-name">{org.name}</td>
+                        <td className="admin-organize-col-id">
+                          {org.id || "-"}
+                        </td>
+                        <td className="admin-organize-col-name">
+                          {org.name || "ไม่มีชื่อหน่วยงาน"}
+                        </td>
                         <td>
                           <div className="admin-organize-user-profile">
                             <div className="admin-organize-avatar">
-                              {org.regulatorName.charAt(0)}
+                              {org.regulatorName &&
+                              org.regulatorName !== "ยังไม่มีผู้ดูแล"
+                                ? org.regulatorName.charAt(0)
+                                : "-"}
                             </div>
                             <div className="admin-organize-user-text">
                               <span className="admin-organize-user-name">
-                                {org.regulatorName}
+                                {org.regulatorName || "ยังไม่มีผู้ดูแล"}
                               </span>
                               <span className="admin-organize-user-role">
                                 ผู้กำกับดูแล
@@ -166,17 +275,17 @@ const AdminOrganize = () => {
                         </td>
                         <td className="admin-organize-text-center">
                           <span className="admin-organize-bold-number">
-                            {org.totalProjects}
+                            {org.totalProjects || 0}
                           </span>
                         </td>
                         <td className="admin-organize-text-center">
                           <span className="admin-organize-bold-number">
-                            {org.totalUsers}
+                            {org.totalUsers || 0}
                           </span>
                         </td>
                         <td>
                           <span
-                            className={`admin-organize-badge admin-organize-status-${org.status.toLowerCase()}`}
+                            className={`admin-organize-badge admin-organize-status-${org.status ? org.status.toLowerCase() : "inactive"}`}
                           >
                             <span className="admin-organize-badge-dot"></span>
                             {org.status === "Active"
@@ -186,9 +295,13 @@ const AdminOrganize = () => {
                         </td>
                         <td>
                           <div className="admin-organize-action-buttons">
+                            {/* เพิ่ม onClick สำหรับไปหน้า View Details */}
                             <button
                               className="admin-organize-btn-action-icon admin-organize-edit"
-                              title="แก้ไขข้อมูล"
+                              title="ดูรายละเอียด/จัดการ"
+                              onClick={() =>
+                                navigate(`/admin-view-organize/${org.id}`)
+                              }
                             >
                               <FaEdit />
                             </button>
@@ -218,6 +331,98 @@ const AdminOrganize = () => {
           )}
         </div>
       </div>
+
+      {isModalOpen && (
+        <div className="admin-organize-modal-overlay">
+          <div className="admin-organize-modal-container">
+            <div className="admin-organize-modal-header">
+              <h2>เพิ่มหน่วยงานใหม่</h2>
+              <button
+                className="admin-organize-modal-close"
+                onClick={() => setIsModalOpen(false)}
+              >
+                <FaTimes />
+              </button>
+            </div>
+
+            <form
+              onSubmit={handleAddSubmit}
+              className="admin-organize-modal-body"
+            >
+              <div className="admin-organize-form-group">
+                <label>รหัสหน่วยงาน</label>
+                <input
+                  type="text"
+                  name="id"
+                  placeholder="เช่น ORG-001"
+                  value={formData.id}
+                  onChange={handleInputChange}
+                  required
+                />
+              </div>
+
+              <div className="admin-organize-form-group">
+                <label>ชื่อหน่วยงาน</label>
+                <input
+                  type="text"
+                  name="name"
+                  placeholder="กรอกชื่อหน่วยงาน"
+                  value={formData.name}
+                  onChange={handleInputChange}
+                  required
+                />
+              </div>
+
+              {/* <div className="admin-organize-form-group">
+                <label>ชื่อผู้กำกับดูแล (Regulator)</label>
+                <input
+                  type="text"
+                  name="regulatorName"
+                  list="regulator-list"
+                  placeholder="เลือกหรือพิมพ์ชื่อผู้กำกับดูแล (เว้นว่างได้)"
+                  value={formData.regulatorName}
+                  onChange={handleInputChange}
+                  autoComplete="off"
+                />
+                <datalist id="regulator-list">
+                  {regulators.map((reg, idx) => (
+                    <option key={idx} value={reg.name} />
+                  ))}
+                </datalist>
+              </div> */}
+
+              <div className="admin-organize-form-group">
+                <label>สถานะเริ่มต้น</label>
+                <select
+                  name="status"
+                  value={formData.status}
+                  onChange={handleInputChange}
+                >
+                  <option value="Active">ใช้งานปกติ</option>
+                  <option value="Inactive">ระงับการใช้งาน</option>
+                </select>
+              </div>
+
+              <div className="admin-organize-modal-footer">
+                <button
+                  type="button"
+                  className="admin-organize-btn-cancel"
+                  onClick={() => setIsModalOpen(false)}
+                >
+                  ยกเลิก
+                </button>
+                <button
+                  type="submit"
+                  className="admin-organize-btn-submit"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? "กำลังบันทึก..." : "บันทึกข้อมูล"}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

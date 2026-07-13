@@ -3,153 +3,169 @@ import { useLocation, useNavigate } from "react-router-dom";
 import SidebarUser from "./SidebarUser";
 import {
   FaPlayCircle,
-  FaCheckCircle,
   FaArrowLeft,
   FaClipboardList,
+  FaSpinner,
+  FaBookOpen,
+  FaCheck,
 } from "react-icons/fa";
+import api from "../../api/Api";
 import "./style/UserClassroomDetail.css";
 
 const UserClassroomDetail = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const queryParams = new URLSearchParams(location.search);
-  const role = queryParams.get("role") || "user";
   const lessonId = queryParams.get("lesson");
 
-  const [courseData, setCourseData] = useState({});
+  const [loading, setLoading] = useState(true);
+  const [chapterData, setChapterData] = useState({
+    title: "กำลังโหลดข้อมูล...",
+    video_url: "",
+  });
 
   useEffect(() => {
     window.scrollTo(0, 0);
-
-    // 1. กำหนด YouTube Video ID ตาม Role
-    let youtubeVideoId = "";
-    if (role === "regulator") {
-      // ใส่ Video ID ของ YouTube สำหรับ Regulator
-      youtubeVideoId = "mqLhEpib-Yg";
-    } else if (role === "provider") {
-      youtubeVideoId = "mqLhEpib-Yg"; // ตัวอย่าง ID สำหรับ Provider
+    if (lessonId) {
+      fetchChapterDetail(lessonId);
     } else {
-      youtubeVideoId = "mqLhEpib-Yg"; // ตัวอย่าง ID สำหรับ User ทั่วไป
+      navigate("/user-classroom");
     }
+  }, [lessonId, navigate]);
 
-    // 2. เซ็ตข้อมูลจำลองสำหรับเพลย์ลิสต์
-    setCourseData({
-      title: `สื่อการเรียนรู้สายงาน: ${role.toUpperCase()}`,
-      desc: "ดูวิดีโอให้จบเพื่อปลดล็อกแบบทดสอบประจำบทเรียน",
-      videoId: youtubeVideoId,
-      modules: [
-        {
-          id: 1,
-          title: "เนื้อหาหลักประจำบทเรียน",
-          duration: "25 นาที",
-          completed: true,
-        },
-      ],
-    });
-  }, [role, lessonId]);
+  const fetchChapterDetail = async (id) => {
+    try {
+      setLoading(true);
+      const response = await api.get(`/user/chapter/${id}`);
+      if (response.data && response.data.success) {
+        setChapterData(response.data.data);
+      } else {
+        setChapterData({
+          title: "ไม่พบข้อมูลบทเรียน",
+          video_url: "",
+        });
+      }
+    } catch (error) {
+      console.error("Fetch Chapter Error:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const getYouTubeID = (url) => {
+    if (!url) return null;
+    const regExp =
+      /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+    const match = url.match(regExp);
+    return match && match[2].length === 11 ? match[2] : null;
+  };
+
+  const videoId = getYouTubeID(chapterData.video_url);
+
+  if (loading) {
+    return (
+      <div className="user-portal-layout">
+        <SidebarUser />
+        <div className="user-portal-content flex-center">
+          <FaSpinner className="ucd-spin-icon" />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="user-portal-layout">
       <SidebarUser />
       <div className="user-portal-content">
-        <div className="ucd-container">
-          <button
-            className="ucd-back-btn"
-            onClick={() => navigate(`/user-classroom?role=${role}`)}
-          >
-            <FaArrowLeft /> กลับหน้ารายการตัวชี้วัด
-          </button>
-
+        <div className="ucd-admin-container">
           <div className="ucd-header">
-            <h1 className="ucd-title">{courseData.title}</h1>
-            <p className="ucd-subtitle">{courseData.desc}</p>
+            <button className="ucd-back-btn" onClick={() => navigate(-1)}>
+              <FaArrowLeft /> กลับหน้ารายการสื่อการเรียนรู้
+            </button>
+            <h1 className="ucd-title">{chapterData.title}</h1>
+            <p className="ucd-subtitle">
+              ศึกษาเนื้อหาในวิดีโอให้ครบถ้วน เพื่อเตรียมพร้อมสำหรับการทดสอบ
+            </p>
           </div>
 
-          <div className="ucd-content-layout">
-            {/* ส่วนวิดีโอหลัก */}
-            <div className="ucd-video-section">
-              <div
-                className="ucd-video-player"
-                style={{
-                  position: "relative",
-                  paddingBottom: "56.25%",
-                  height: 0,
-                  overflow: "hidden",
-                  borderRadius: "16px",
-                  background: "#000",
-                  boxShadow: "0 10px 30px rgba(0,0,0,0.1)",
-                }}
-              >
-                {courseData.videoId ? (
-                  <iframe
-                    src={`https://www.youtube.com/embed/${courseData.videoId}?rel=0&modestbranding=1`}
-                    title="YouTube video player"
-                    frameBorder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                    style={{
-                      position: "absolute",
-                      top: 0,
-                      left: 0,
-                      width: "100%",
-                      height: "100%",
-                    }}
-                  ></iframe>
-                ) : (
-                  <div className="ucd-video-placeholder">
-                    <FaPlayCircle className="ucd-play-icon" />
-                    <p>กำลังเล่นวิดีโอรหัส: {lessonId}</p>
-                  </div>
-                )}
+          <div className="ucd-split-layout">
+            {/* ซ้าย: วิดีโอและรายละเอียด */}
+            <div className="ucd-main-col">
+              <div className="ucd-video-card">
+                <div className="ucd-video-wrapper">
+                  {videoId ? (
+                    <iframe
+                      src={`https://www.youtube.com/embed/${videoId}?rel=0&modestbranding=1`}
+                      title="YouTube video player"
+                      frameBorder="0"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                      className="ucd-iframe"
+                    ></iframe>
+                  ) : (
+                    <div className="ucd-video-empty">
+                      <FaPlayCircle className="empty-icon" />
+                      <p>ไม่มีวิดีโอสำหรับบทเรียนนี้ หรือลิงก์ไม่ถูกต้อง</p>
+                    </div>
+                  )}
+                </div>
               </div>
 
-              <div className="ucd-current-module-info">
-                <div>
-                  <h2 className="ucd-current-module-title">
-                    เนื้อหาหลักประจำบทเรียน
-                  </h2>
-                  <p className="ucd-current-module-desc">
-                    ทำความเข้าใจภาพรวมและวัตถุประสงค์ของบทเรียนในหมวดหมู่นี้
-                    เมื่อเรียนจบแล้วสามารถกดทำแบบทดสอบเพื่อเก็บคะแนนได้ทันที
+              <div className="ucd-details-card mt-20">
+                <div className="ucd-card-header">
+                  <h3>
+                    <FaBookOpen className="text-blue" /> รายละเอียดบทเรียน
+                  </h3>
+                </div>
+                <div className="ucd-card-body">
+                  <p className="ucd-desc-text">
+                    ไม่มีรายละเอียดเพิ่มเติมสำหรับบทเรียนนี้
+                    (กรุณาศึกษาเนื้อหาจากวิดีโอด้านบนเป็นหลัก)
                   </p>
                 </div>
               </div>
             </div>
 
-            {/* ส่วนรายการวิดีโอย่อย (Playlist) */}
-            <div className="ucd-playlist-section">
-              <h3 className="ucd-playlist-title">วิดีโอในบทเรียนนี้</h3>
-              <ul className="ucd-modules-list">
-                {courseData.modules?.map((mod) => (
-                  <li
-                    key={mod.id}
-                    className={`ucd-module-item ${mod.completed ? "completed" : ""}`}
-                  >
-                    <div className="ucd-module-status">
-                      {mod.completed ? (
-                        <FaCheckCircle className="text-green" />
-                      ) : (
-                        <FaPlayCircle className="text-gray" />
-                      )}
-                    </div>
-                    <div className="ucd-module-info">
-                      <h4>{mod.title}</h4>
-                      <span>{mod.duration}</span>
-                    </div>
-                  </li>
-                ))}
-              </ul>
+            {/* ขวา: ขั้นตอนและแบบทดสอบ */}
+            <div className="ucd-side-col">
+              <div className="ucd-steps-card">
+                <div className="ucd-card-header">
+                  <h3>ขั้นตอนการเรียนรู้</h3>
+                </div>
+                <div className="ucd-card-body">
+                  <ul className="ucd-stepper">
+                    <li className="step-item active">
+                      <div className="step-circle">
+                        <FaPlayCircle />
+                      </div>
+                      <div className="step-text">
+                        <h4>ขั้นที่ 1: สื่อการเรียนรู้</h4>
+                        <p>รับชมวิดีโอและทำความเข้าใจ</p>
+                      </div>
+                    </li>
+                    <li className="step-item">
+                      <div className="step-circle">
+                        <FaClipboardList />
+                      </div>
+                      <div className="step-text">
+                        <h4>ขั้นที่ 2: แบบทดสอบ</h4>
+                        <p>ทดสอบความรู้เก็บคะแนน</p>
+                      </div>
+                    </li>
+                  </ul>
 
-              {/* ส่วนท้ายของ Playlist สำหรับปุ่มทำแบบทดสอบ */}
-              <div className="ucd-playlist-footer">
-                <button
-                  className="ucd-btn-take-test"
-                  onClick={() =>
-                    navigate(`/user-test?role=${role}&lesson=${lessonId}`)
-                  }
-                >
-                  <FaClipboardList size={18} /> ทำแบบทดสอบ
-                </button>
+                  <div className="ucd-alert-box">
+                    เมื่อศึกษาเนื้อหาเสร็จสิ้น
+                    ให้คลิกปุ่มด้านล่างเพื่อทำการทดสอบ
+                  </div>
+
+                  <button
+                    className="ucd-btn-success"
+                    onClick={() => navigate(`/user-test?lesson=${lessonId}`)}
+                  >
+                    <FaClipboardList size={16} /> เข้าสู่แบบทดสอบ
+                  </button>
+                </div>
               </div>
             </div>
           </div>

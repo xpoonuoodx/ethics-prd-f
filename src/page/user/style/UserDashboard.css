@@ -22,12 +22,18 @@
 .ud-container {
   padding: 40px;
   width: 100%;
-  max-width: 100%;
+  /* max-width: 1400px; */
   margin: 0 auto;
 }
 
+@keyframes spin {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
 /* =========================================
-   HEADER WRAPPER & TOP CERT BUTTON
+   HEADER & USER TAGS
    ========================================= */
 .ud-header-wrapper {
   display: flex;
@@ -35,11 +41,9 @@
   align-items: flex-start;
   margin-bottom: 30px;
 }
-
 .ud-simple-header {
   flex: 1;
 }
-
 .ud-greeting-title {
   font-size: 28px;
   font-weight: 600;
@@ -50,6 +54,32 @@
   font-size: 16px;
   color: #6b7280;
   margin: 0;
+}
+
+.ud-user-meta-tags {
+  display: flex;
+  gap: 12px;
+  margin-top: 15px;
+  flex-wrap: wrap;
+}
+.ud-meta-tag {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  border-radius: 8px;
+  font-size: 13.5px;
+  font-weight: 500;
+}
+.org-tag {
+  background-color: #ffffff;
+  color: #475569;
+  border: 1px solid #cbd5e1;
+}
+.proj-tag {
+  background-color: #eff6ff;
+  color: #2563eb;
+  border: 1px solid #bfdbfe;
 }
 
 .ud-btn-top-cert {
@@ -67,27 +97,25 @@
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.03);
   transition: all 0.2s ease;
 }
-
 .ud-btn-top-cert:hover {
   background: #f9fafb;
   border-color: #d1d5db;
   transform: translateY(-2px);
   box-shadow: 0 6px 15px rgba(0, 0, 0, 0.06);
 }
-
 .ud-icon-cert {
-  color: #f59e0b; /* สีเหลืองทองให้ดูพรีเมียม */
+  color: #f59e0b;
   font-size: 18px;
 }
 
 /* =========================================
-   QUICK STATS
+   CARD SUMMARY
    ========================================= */
 .ud-quick-stats-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 24px;
-  margin-bottom: 24px;
+  margin-bottom: 40px;
 }
 .ud-stat-card {
   background: white;
@@ -129,7 +157,6 @@
 .text-yellow {
   color: #f59e0b;
 }
-
 .ud-stat-info {
   display: flex;
   flex-direction: column;
@@ -153,142 +180,109 @@
 }
 
 /* =========================================
-   CONTINUE LEARNING BANNER
+   HERO LEARNING PATH CARD
    ========================================= */
-.ud-action-banner {
-  background: rgb(213 229 255);
-  border: rgb(185 212 255);
-  border-radius: 16px;
-  padding: 20px 30px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 40px;
-  box-shadow: 0 4px 10px rgba(22, 163, 74, 0.05);
-}
-.ud-banner-content {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-}
-.ud-banner-badge {
-  background: rgb(25 79 164);
-  color: white;
-  padding: 6px 12px;
-  border-radius: 20px;
-  font-size: 12px;
-  font-weight: 600;
-  white-space: nowrap;
-}
-.ud-banner-text h3 {
-  margin: 0 0 4px 0;
-  font-size: 16px;
-  font-weight: 600;
-  color: rgb(25 79 164);
-}
-.ud-banner-text p {
-  margin: 0;
-  font-size: 14px;
-  color: #6a6a6a;
-}
-.ud-btn-banner {
-  background: rgb(25 79 164);
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 10px;
-  font-weight: 600;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  transition: background 0.2s;
-}
-.ud-btn-banner:hover {
-  background: #166534;
-}
-
-/* =========================================
-   RECIPE STYLE CARDS (3 CARDS)
-   ========================================= */
-.ud-recipe-cards-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 30px;
-  margin-bottom: 40px;
-}
-.ud-recipe-card {
+.ud-hero-role-card {
   background-color: #ffffff;
   border-radius: 20px;
   overflow: hidden;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
-  transition:
-    transform 0.3s ease,
-    box-shadow 0.3s ease;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  margin-bottom: 40px;
+  border: 1px solid #f3f4f6;
+  min-height: 280px;
 }
-.ud-recipe-card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
-}
-.ud-recipe-img-wrapper {
+.ud-hero-img-wrapper {
   position: relative;
-  height: 200px;
-  width: 100%;
+  width: 40%;
+  flex-shrink: 0;
 }
-.ud-recipe-img-wrapper img {
+.ud-hero-img-wrapper img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
-.ud-recipe-badge {
+.ud-hero-badge {
   position: absolute;
-  top: 16px;
-  left: 16px;
+  top: 20px;
+  left: 20px;
   background-color: #ffffff;
   color: #111827;
-  padding: 6px 14px;
+  padding: 8px 16px;
   border-radius: 20px;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 600;
   display: flex;
   align-items: center;
   gap: 6px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
-.ud-recipe-content {
-  padding: 24px;
+.ud-hero-content {
+  padding: 40px;
   display: flex;
   flex-direction: column;
+  justify-content: center;
   flex-grow: 1;
 }
-.ud-recipe-title {
-  font-size: 20px;
+.ud-hero-title {
+  font-size: 26px;
   font-weight: 700;
   color: #111827;
-  margin: 0 0 10px 0;
+  margin: 0 0 12px 0;
   letter-spacing: -0.3px;
 }
-.ud-recipe-desc {
-  font-size: 14.5px;
+.ud-hero-desc {
+  font-size: 15px;
   color: #6b7280;
   line-height: 1.6;
-  margin: 0 0 20px 0;
-  flex-grow: 1;
+  margin: 0 0 25px 0;
 }
-.ud-recipe-divider {
-  height: 1px;
-  background-color: #f3f4f6;
-  margin: 0 0 16px 0;
-  width: 100%;
-}
-.ud-recipe-meta {
+.ud-hero-meta {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 24px;
+  margin-bottom: 12px;
 }
+.ud-hero-progress-wrap {
+  margin-bottom: 30px;
+}
+.ud-hero-actions {
+  display: flex;
+  gap: 15px;
+}
+.ud-btn-hero {
+  padding: 14px 24px;
+  border-radius: 30px;
+  font-size: 15px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+}
+.ud-btn-hero.dark {
+  background-color: #1f2937;
+  color: #ffffff;
+  box-shadow: 0 4px 10px rgba(31, 41, 55, 0.15);
+}
+.ud-btn-hero.dark:hover {
+  background-color: #111827;
+  transform: translateY(-2px);
+}
+.ud-btn-hero.outline {
+  background-color: transparent;
+  border: 1px solid #d1d5db;
+  color: #374151;
+}
+.ud-btn-hero.outline:hover {
+  background-color: #f9fafb;
+  border-color: #9ca3af;
+}
+
 .ud-meta-item {
   display: flex;
   align-items: center;
@@ -300,23 +294,12 @@
 .meta-icon {
   color: #9ca3af;
 }
-.ud-meta-divider {
-  width: 1px;
-  height: 20px;
-  background-color: #e5e7eb;
-}
 .font-bold {
   font-weight: 700;
   color: #111827;
 }
-.progress-wrap {
-  flex: 1;
-  padding: 0 15px;
-  justify-content: center;
-}
 .ud-mini-progress {
   width: 100%;
-  height: 6px;
   background-color: #f3f4f6;
   border-radius: 10px;
   overflow: hidden;
@@ -326,50 +309,13 @@
   border-radius: 10px;
   transition: width 1s ease-in-out;
 }
-.ud-recipe-actions {
-  display: flex;
-  gap: 12px;
-}
-.ud-btn-half {
-  flex: 1;
-  padding: 12px 10px;
-  border-radius: 30px;
-  font-size: 14px;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  border: none;
-}
-.ud-btn-half.dark {
-  background-color: #1f2937;
-  color: #ffffff;
-  box-shadow: 0 4px 10px rgba(31, 41, 55, 0.15);
-}
-.ud-btn-half.dark:hover {
-  background-color: #111827;
-  transform: translateY(-2px);
-}
-.ud-btn-half.outline {
-  background-color: transparent;
-  border: 1px solid #d1d5db;
-  color: #374151;
-}
-.ud-btn-half.outline:hover {
-  background-color: #f9fafb;
-  border-color: #9ca3af;
-}
 
 /* =========================================
-   RADAR CHART & ACTIVITY
+   RADAR CHART FULL-WIDTH LAYOUT
    ========================================= */
-.ud-progress-layout {
+.ud-progress-layout.full-width {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 24px;
+  grid-template-columns: 1fr;
   margin-bottom: 40px;
 }
 .ud-card {
@@ -394,79 +340,18 @@
   padding: 24px;
   flex-grow: 1;
 }
-.ud-card-body.ud-p-0 {
-  padding: 0;
-}
-.ud-activity-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-.ud-activity-item {
+.ud-radar-empty {
   display: flex;
-  align-items: center;
-  padding: 20px 24px;
-  border-bottom: 1px solid #f3f4f6;
-  gap: 16px;
-}
-.ud-activity-item:last-child {
-  border-bottom: none;
-}
-.ud-activity-icon {
-  width: 44px;
-  height: 44px;
-  border-radius: 12px;
-  background: #f9fafb;
-  display: flex;
-  align-items: center;
   justify-content: center;
-  flex-shrink: 0;
-}
-.ud-activity-details {
-  flex-grow: 1;
-}
-.ud-activity-name {
-  font-size: 15px;
-  font-weight: 500;
-  color: #1f2937;
-  margin: 0 0 6px 0;
-}
-.ud-activity-meta {
-  display: flex;
   align-items: center;
-  gap: 16px;
-  font-size: 13px;
-  color: #9ca3af;
-}
-.ud-date {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-.ud-score {
-  font-weight: 500;
-  color: #4b5563;
-}
-.ud-activity-status {
-  flex-shrink: 0;
-}
-.ud-badge {
-  font-size: 12px;
-  padding: 6px 12px;
-  border-radius: 20px;
-  font-weight: 500;
-}
-.ud-badge.success {
-  background: #ecfdf5;
-  color: #059669;
-}
-.ud-badge.warning {
-  background: #fef2f2;
-  color: #dc2626;
+  height: 100%;
+  color: #94a3b8;
+  font-style: italic;
+  font-size: 14.5px;
 }
 
 /* =========================================
-   SECTIONS (Recommendations)
+   RECOMMENDATIONS
    ========================================= */
 .ud-section-spacer {
   margin-bottom: 40px;
@@ -484,7 +369,6 @@
   color: #6b7280;
   margin: 0 0 20px 0;
 }
-
 .ud-recom-card {
   background: white;
   border: 1px solid #e5e7eb;
@@ -546,22 +430,16 @@
 /* =========================================
    RESPONSIVE
    ========================================= */
-@media (max-width: 1400px) {
-  .ud-progress-layout {
-    grid-template-columns: 1fr 1fr;
-  }
-}
-@media (max-width: 1200px) {
-  .ud-progress-layout {
-    grid-template-columns: 1fr;
-  }
-}
 @media (max-width: 1024px) {
-  .ud-recipe-cards-grid {
-    grid-template-columns: 1fr 1fr;
-  }
   .ud-quick-stats-grid {
     grid-template-columns: 1fr 1fr;
+  }
+  .ud-hero-role-card {
+    flex-direction: column;
+  }
+  .ud-hero-img-wrapper {
+    width: 100%;
+    height: 250px;
   }
 }
 @media (max-width: 899px) {
@@ -588,17 +466,14 @@
     grid-template-columns: 1fr;
     gap: 15px;
   }
-  .ud-action-banner {
+  .ud-hero-content {
+    padding: 24px;
+  }
+  .ud-hero-actions {
     flex-direction: column;
-    align-items: flex-start;
-    gap: 15px;
   }
-  .ud-btn-banner {
+  .ud-btn-hero {
     width: 100%;
-    justify-content: center;
-  }
-  .ud-recipe-cards-grid {
-    grid-template-columns: 1fr;
   }
   .ud-recom-card {
     flex-direction: column;
@@ -607,12 +482,5 @@
   .ud-btn-outline {
     width: 100%;
     justify-content: center;
-  }
-  .ud-activity-item {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-  .ud-activity-status {
-    margin-left: 60px;
   }
 }

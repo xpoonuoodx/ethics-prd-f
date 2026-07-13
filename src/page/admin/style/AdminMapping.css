@@ -1,0 +1,313 @@
+@import url("https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap");
+
+.amap-layout * {
+  box-sizing: border-box;
+  font-family: "Prompt", sans-serif;
+}
+
+.amap-layout {
+  display: flex;
+  min-height: 100vh;
+  background-color: #f4f6f8;
+}
+
+.amap-main-content {
+  flex: 1;
+  margin-left: 260px;
+  transition: margin-left 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.amap-container {
+  padding: 40px 50px;
+  width: 100%;
+  /* max-width: 1500px; */
+  margin: 0 auto;
+}
+
+/* =========================================
+   HEADER
+   ========================================= */
+.amap-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 25px;
+}
+.amap-header-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.amap-header-icon {
+  width: 50px;
+  height: 50px;
+  background: #f1f5f9;
+  color: #0f172a;
+  border-radius: 14px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 22px;
+}
+.amap-title {
+  font-size: 26px;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 6px 0;
+  letter-spacing: -0.5px;
+}
+.amap-subtitle {
+  font-size: 14px;
+  color: #64748b;
+  margin: 0;
+}
+
+/* =========================================
+   TOOLBAR
+   ========================================= */
+.amap-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  background: #ffffff;
+  padding: 15px 25px;
+  border-radius: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+  border: 1px solid #e2e8f0;
+}
+
+.amap-filter-group {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+.amap-filter-group label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #475569;
+}
+.amap-role-select {
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: 1px solid #cbd5e1;
+  font-size: 14px;
+  color: #0f172a;
+  outline: none;
+  font-family: "Prompt", sans-serif;
+  cursor: pointer;
+  background: #f8fafc;
+}
+.amap-role-select:focus {
+  border-color: #0f172a;
+}
+
+.amap-btn-save {
+  background: #0f172a;
+  color: #ffffff;
+  padding: 10px 24px;
+  border-radius: 50px;
+  border: none;
+  font-size: 14px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 10px rgba(15, 23, 42, 0.2);
+}
+.amap-btn-save:hover {
+  background: #1e293b;
+  transform: translateY(-2px);
+}
+.amap-btn-save:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* =========================================
+   MATRIX TABLE (สไตล์ให้เหมือน Excel)
+   ========================================= */
+.amap-card {
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+  border: 1px solid #e2e8f0;
+  overflow: hidden;
+}
+
+.amap-table-responsive {
+  overflow-x: auto;
+}
+
+.amap-matrix-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 900px;
+}
+
+/* หัวตาราง */
+.amap-matrix-table th {
+  border: 1px solid #e2e8f0;
+  background-color: #f1f5f9;
+  color: #1e293b;
+  font-weight: 600;
+  text-align: center;
+  padding: 10px;
+  font-size: 13px;
+}
+
+.amap-th-component {
+  width: 40%;
+  text-align: left !important;
+  padding-left: 20px !important;
+  font-size: 14px !important;
+  background-color: #e2e8f0 !important;
+}
+
+.amap-th-group {
+  background-color: #e2e8f0 !important;
+}
+
+/* ข้อความตั้งฉาก */
+.amap-th-principle {
+  height: 160px; /* ความสูงเผื่อให้ตัวหนังสือตั้งได้ */
+  vertical-align: bottom;
+  padding-bottom: 15px !important;
+  min-width: 50px;
+}
+
+.amap-vertical-text {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  white-space: nowrap;
+  font-size: 13px;
+  color: #475569;
+  margin: 0 auto;
+}
+
+.amap-th-max {
+  width: 60px;
+  background-color: #e2e8f0 !important;
+}
+
+/* เนื้อหาในตาราง */
+.amap-matrix-table td {
+  border: 1px solid #e2e8f0;
+  padding: 12px;
+  vertical-align: middle;
+}
+
+.amap-td-title {
+  padding-left: 20px !important;
+}
+.amap-comp-id {
+  font-size: 12px;
+  color: #64748b;
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+.amap-comp-name {
+  font-size: 14px;
+  color: #0f172a;
+}
+
+.amap-td-max {
+  text-align: center;
+  font-weight: 700;
+  color: #0f172a;
+  background-color: #f8fafc;
+}
+
+/* Checkbox (Clickable TD) */
+.amap-td-check {
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 0.1s;
+}
+.amap-td-check:hover {
+  background-color: #f8fafc;
+}
+.amap-td-check.active {
+  background-color: #f0fdf4; /* สีพื้นเขียวอ่อน เมื่อติ๊กถูก */
+}
+
+.amap-checkbox {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 2px solid #cbd5e1;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: transparent;
+  transition: all 0.2s;
+}
+.amap-checkbox.checked {
+  border-color: #10b981;
+  background-color: #10b981;
+  color: #ffffff;
+}
+
+/* States */
+.amap-empty-state {
+  text-align: center;
+  padding: 80px 20px;
+  color: #94a3b8;
+  font-size: 15px;
+  line-height: 1.6;
+}
+.amap-state-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 100px 20px;
+  color: #64748b;
+}
+.amap-spin {
+  animation: amapSpin 1s linear infinite;
+}
+.amap-spin-large {
+  font-size: 40px;
+  color: #0f172a;
+  margin-bottom: 20px;
+  animation: amapSpin 1s linear infinite;
+}
+@keyframes amapSpin {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* =========================================
+   RESPONSIVE
+   ========================================= */
+@media (max-width: 899px) {
+  .amap-main-content {
+    margin-left: 0;
+  }
+}
+@media (max-width: 768px) {
+  .amap-container {
+    padding: 80px 15px 30px 15px;
+  }
+  .amap-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+  .amap-toolbar {
+    flex-direction: column;
+    gap: 15px;
+    align-items: stretch;
+  }
+  .amap-btn-save {
+    justify-content: center;
+  }
+}

@@ -4,20 +4,20 @@ import {
   FaHome,
   FaUsers,
   FaFolderOpen,
-  FaChartLine,
-  FaCog,
+  FaBuilding,
   FaSignOutAlt,
   FaBars,
   FaTimes,
   FaGripLinesVertical,
-  FaBalanceScale,
+  FaShieldAlt,
 } from "react-icons/fa";
+import { getStoredUser } from "../../api/Api";
 
 const SidebarRegulator = () => {
   const [isOpen, setIsOpen] = useState(true);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
 
-  const user = JSON.parse(localStorage.getItem("user"));
+  const user = getStoredUser();
 
   const getInitials = (name) => {
     if (!name) return "RG";
@@ -35,123 +35,116 @@ const SidebarRegulator = () => {
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
+    localStorage.clear();
     window.location.href = "/login";
   };
 
-  // ตรวจสอบ URL ปัจจุบันเพื่อให้เมนูขึ้นแถบ Active ถูกหน้า
   const currentPath = window.location.pathname + window.location.search;
 
   return (
     <>
-      {/* ปุ่ม Toggle สำหรับมือถือ */}
-      <button
-        className="regulator-sidebar-mobile-toggle"
-        onClick={toggleMobileSidebar}
-      >
+      {/* Mobile Toggle Button */}
+      <button className="rgsidebar-mobile-toggle" onClick={toggleMobileSidebar}>
         {isMobileOpen ? <FaTimes /> : <FaBars />}
       </button>
 
-      {/* Overlay พื้นหลังเวลาเปิดเมนูบนมือถือ */}
+      {/* Mobile Overlay */}
       {isMobileOpen && (
-        <div
-          className="regulator-sidebar-overlay"
-          onClick={toggleMobileSidebar}
-        ></div>
+        <div className="rgsidebar-overlay" onClick={toggleMobileSidebar}></div>
       )}
 
-      {/* กล่อง Sidebar */}
+      {/* Sidebar Container */}
       <div
-        className={`regulator-sidebar-container ${isOpen ? "open" : "closed"} ${
+        className={`rgsidebar-container ${isOpen ? "open" : "closed"} ${
           isMobileOpen ? "mobile-open" : ""
         }`}
       >
-        {/* ส่วนหัว Sidebar */}
-        <div className="regulator-sidebar-header">
-          <div className={`regulator-sidebar-brand ${!isOpen && "hidden"}`}>
-            <div className="regulator-brand-icon-wrapper">
-              <FaBalanceScale />
+        {/* Header Section */}
+        <div className="rgsidebar-header">
+          <div className={`rgsidebar-brand ${!isOpen ? "hidden" : ""}`}>
+            <div className="rgsidebar-brand-icon">
+              <FaShieldAlt />
             </div>
-            <h2 className="regulator-sidebar-title">Regulator Portal</h2>
+            <h2 className="rgsidebar-title">Organizer</h2>
           </div>
 
-          <button className="regulator-desktop-toggle" onClick={toggleSidebar}>
+          {/* <button className="rgsidebar-desktop-toggle" onClick={toggleSidebar}>
             <FaGripLinesVertical />
-          </button>
+          </button> */}
         </div>
 
-        {/* เมนูนำทาง (ปรับปรุงตาม Requirement ของหน่วยงาน) */}
-        <div className="regulator-sidebar-menu">
+        {/* Menu Section */}
+        <div className="rgsidebar-menu">
+          <span className={`rgsidebar-menu-label ${!isOpen ? "hidden" : ""}`}>
+            MAIN MENU
+          </span>
+
           <a
             href="/regulator-dashboard"
-            className={`regulator-sidebar-item ${currentPath.includes("dashboard") ? "active" : ""}`}
+            className={`rgsidebar-item ${currentPath.includes("dashboard") ? "active" : ""}`}
           >
-            <FaHome className="regulator-sidebar-icon" />
-            <span className={`regulator-sidebar-text ${!isOpen && "hidden"}`}>
+            <FaHome className="rgsidebar-icon" />
+            <span className={`rgsidebar-text ${!isOpen ? "hidden" : ""}`}>
               แดชบอร์ด
             </span>
           </a>
 
           <a
             href="/regulator-user-manage"
-            className={`regulator-sidebar-item ${currentPath.includes("/users") ? "active" : ""}`}
+            className={`rgsidebar-item ${currentPath.includes("user") ? "active" : ""}`}
           >
-            <FaUsers className="regulator-sidebar-icon" />
-            <span className={`regulator-sidebar-text ${!isOpen && "hidden"}`}>
+            <FaUsers className="rgsidebar-icon" />
+            <span className={`rgsidebar-text ${!isOpen ? "hidden" : ""}`}>
               จัดการบุคลากร
             </span>
           </a>
 
           <a
             href="/regulator-project-manage"
-            className={`regulator-sidebar-item ${currentPath.includes("/projects") ? "active" : ""}`}
+            className={`rgsidebar-item ${currentPath.includes("project") ? "active" : ""}`}
           >
-            <FaFolderOpen className="regulator-sidebar-icon" />
-            <span className={`regulator-sidebar-text ${!isOpen && "hidden"}`}>
+            <FaFolderOpen className="rgsidebar-icon" />
+            <span className={`rgsidebar-text ${!isOpen ? "hidden" : ""}`}>
               จัดการโครงการ
             </span>
           </a>
 
-          {/* <a
-            href="/regulator/inspections"
-            className={`regulator-sidebar-item ${currentPath.includes("/inspections") ? "active" : ""}`}
+          <span
+            className={`rgsidebar-menu-label r-mt ${!isOpen ? "hidden" : ""}`}
           >
-            <FaChartLine className="regulator-sidebar-icon" />
-            <span className={`regulator-sidebar-text ${!isOpen && "hidden"}`}>
-              ติดตามผลประเมิน
+            SETTINGS
+          </span>
+
+          <a
+            href="/regulator-org-manage"
+            className={`rgsidebar-item ${currentPath.includes("org") ? "active" : ""}`}
+          >
+            <FaBuilding className="rgsidebar-icon" />
+            <span className={`rgsidebar-text ${!isOpen ? "hidden" : ""}`}>
+              ข้อมูลหน่วยงาน
             </span>
-          </a> */}
+          </a>
         </div>
 
-        {/* ส่วนล่าง Sidebar */}
-        <div className="regulator-sidebar-footer">
-          <div className="regulator-bottom-menu">
-            {/* <a
-              href="/regulator/settings"
-              className={`regulator-sidebar-item ${currentPath.includes("/settings") ? "active" : ""}`}
-            >
-              <FaCog className="regulator-sidebar-icon" />
-              <span className={`regulator-sidebar-text ${!isOpen && "hidden"}`}>
-                ตั้งค่าหน่วยงาน
-              </span>
-            </a> */}
+        {/* Footer Section */}
+        <div className="rgsidebar-footer">
+          <div className="rgsidebar-bottom-menu">
             <button
               onClick={handleLogout}
-              className="regulator-sidebar-item regulator-logout-btn"
+              className="rgsidebar-item rgsidebar-logout-btn"
             >
-              <FaSignOutAlt className="regulator-sidebar-icon" />
-              <span className={`regulator-sidebar-text ${!isOpen && "hidden"}`}>
+              <FaSignOutAlt className="rgsidebar-icon" />
+              <span className={`rgsidebar-text ${!isOpen ? "hidden" : ""}`}>
                 ออกจากระบบ
               </span>
             </button>
           </div>
 
-          <div className="regulator-user-card">
-            <div className="regulator-avatar">{getInitials(user?.name)}</div>
-            <div className={`regulator-user-info ${!isOpen && "hidden"}`}>
-              <p className="regulator-user-name">
-                {user?.name || "Regulator User"}
-              </p>
-              <p className="regulator-user-role">ผู้กำกับดูแลหน่วยงาน</p>
+          <div className="rgsidebar-user-card">
+            <div className="rgsidebar-avatar">{getInitials(user?.name)}</div>
+            <div className={`rgsidebar-user-info ${!isOpen ? "hidden" : ""}`}>
+              <p className="rgsidebar-user-name">{user?.name || "Organizer"}</p>
+              <p className="rgsidebar-user-role">ผู้กำกับดูแล</p>
             </div>
           </div>
         </div>

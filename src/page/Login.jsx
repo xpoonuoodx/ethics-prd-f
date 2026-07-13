@@ -1,19 +1,40 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom"; // 1. นำเข้า useNavigate
+import { useNavigate } from "react-router-dom";
 import "./style/Login.css";
-import { FaEye, FaEyeSlash, FaArrowLeft } from "react-icons/fa";
-import logo from "../assets/logo-bde.png"; // นำเข้าโลโก้จากโฟลเดอร์ assets
+import {
+  FaEye,
+  FaEyeSlash,
+  FaArrowLeft,
+  FaTimes,
+  FaTools,
+  FaTimesCircle,
+} from "react-icons/fa";
+import logo from "../assets/logo-bde.png";
 import axios from "axios";
-import Swal from "sweetalert2";
 
 const Login = () => {
-  const navigate = useNavigate(); // 2. เรียกใช้งาน navigate
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  // State สำหรับเก็บค่าที่พิมพ์
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+
+  // 1. สร้าง State แบบรวมศูนย์ สำหรับจัดการ Popup ทุกประเภทในหน้า Login
+  const [modal, setModal] = useState({
+    isOpen: false,
+    type: "info", // "info" หรือ "error"
+    title: "",
+    desc: "",
+  });
+
+  // ฟังก์ชันช่วยเปิด-ปิด Popup
+  const openModal = (type, title, desc) => {
+    setModal({ isOpen: true, type, title, desc });
+  };
+  const closeModal = () => {
+    setModal({ ...modal, isOpen: false });
+  };
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -24,7 +45,6 @@ const Login = () => {
     setLoading(true);
 
     try {
-      // 3. เคลียร์ Token และ User เก่าทิ้งก่อน เพื่อป้องกัน Token ค้างกากในระบบ
       localStorage.removeItem("token");
       localStorage.removeItem("user");
 
@@ -37,12 +57,10 @@ const Login = () => {
 
       const { token, user } = response.data;
 
-      // บันทึก Token และ User ใหม่ลงเครื่อง
       localStorage.setItem("token", token);
       localStorage.setItem("user", JSON.stringify(user));
 
-      // --- กำหนดเส้นทางตาม Role ของผู้ใช้งาน ---
-      let targetUrl = "/user-dashboard"; // ค่าเริ่มต้นสำหรับ user ทั่วไป
+      let targetUrl = "/user-dashboard";
 
       if (
         user.role === "admin" ||
@@ -56,7 +74,6 @@ const Login = () => {
         targetUrl = "/regulator-dashboard";
       }
 
-      // 4. เปลี่ยนจาก window.location.href เป็น navigate() จะทำให้หน้าเว็บลื่นไหลไม่กระตุก
       navigate(targetUrl);
     } catch (error) {
       console.error("Login Error:", error);
@@ -64,29 +81,32 @@ const Login = () => {
         error.response?.data?.message ||
         "เกิดข้อผิดพลาดในการเชื่อมต่อเซิร์ฟเวอร์";
 
-      Swal.fire({
-        icon: "error",
-        title: "เข้าสู่ระบบไม่สำเร็จ",
-        text: errorMessage,
-        confirmButtonColor: "#75ba40",
-      });
+      // 2. เรียกใช้ Custom Popup แจ้งเตือน Error
+      openModal("error", "เข้าสู่ระบบไม่สำเร็จ", errorMessage);
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleThaiDLogin = () => {
+    // 3. เรียกใช้ Custom Popup แจ้งเตือน Info
+    openModal(
+      "info",
+      "กำลังทำการพัฒนา",
+      "ขออภัยในความไม่สะดวก ระบบการเข้าสู่ระบบด้วย ThaID กำลังอยู่ในขั้นตอนการพัฒนาระบบ",
+    );
   };
 
   return (
     <div className="premium-login-container">
       {/* ================= ส่วนซ้าย: ฟอร์มเข้าสู่ระบบ ================= */}
       <div className="premium-login-left">
-        {/* แถบด้านบน */}
         <div className="premium-login-top-nav">
           <a href="/" className="premium-back-btn">
             <FaArrowLeft size={14} /> กลับสู่หน้าหลัก
           </a>
         </div>
 
-        {/* กล่องฟอร์ม */}
         <div className="premium-form-wrapper">
           <div className="premium-brand-header">
             <img src={logo} alt="BDE Logo" className="premium-logo" />
@@ -98,7 +118,6 @@ const Login = () => {
           </div>
 
           <form onSubmit={handleLogin}>
-            {/* ช่องชื่อผู้ใช้งาน */}
             <div className="premium-input-group">
               <label htmlFor="username">ชื่อผู้ใช้งาน (Username)</label>
               <input
@@ -111,7 +130,6 @@ const Login = () => {
               />
             </div>
 
-            {/* ช่องรหัสผ่าน */}
             <div className="premium-input-group">
               <label htmlFor="password">รหัสผ่าน</label>
               <div className="premium-password-wrapper">
@@ -133,14 +151,12 @@ const Login = () => {
               </div>
             </div>
 
-            {/* ลืมรหัสผ่าน */}
-            <div className="premium-form-options">
+            {/* <div className="premium-form-options">
               <a href="/forgot-password" className="premium-forgot-pass">
                 ลืมรหัสผ่านใช่หรือไม่?
               </a>
-            </div>
+            </div> */}
 
-            {/* ปุ่ม Submit */}
             <button
               type="submit"
               className="premium-submit-btn"
@@ -151,12 +167,76 @@ const Login = () => {
             </button>
           </form>
 
-          {/* ลิงก์สมัครสมาชิก */}
-          <div className="premium-register-prompt">
+          {/* <div className="premium-register-prompt">
             <p>
               ยังไม่มีบัญชีผู้ใช้งาน? <a href="/register">ลงทะเบียนที่นี่</a>
             </p>
+          </div> */}
+
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              margin: "25px 0 20px 0",
+            }}
+          >
+            <div style={{ flex: 1, borderBottom: "1px solid #e2e8f0" }}></div>
+            <span
+              style={{
+                padding: "0 15px",
+                color: "#94a3b8",
+                fontSize: "14px",
+                fontWeight: "500",
+              }}
+            >
+              หรือ
+            </span>
+            <div style={{ flex: 1, borderBottom: "1px solid #e2e8f0" }}></div>
           </div>
+
+          <button
+            type="button"
+            onClick={handleThaiDLogin}
+            style={{
+              width: "100%",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: "12px",
+              padding: "12px",
+              backgroundColor: "#1e293b",
+              color: "#ffffff",
+              border: "none",
+              borderRadius: "8px",
+              fontSize: "15px",
+              fontWeight: "600",
+              cursor: "pointer",
+              boxShadow: "0 4px 6px rgba(0,0,0,0.05)",
+              transition: "transform 0.2s, box-shadow 0.2s",
+            }}
+            onMouseOver={(e) => {
+              e.currentTarget.style.transform = "translateY(-2px)";
+              e.currentTarget.style.boxShadow = "0 6px 12px rgba(0,0,0,0.1)";
+            }}
+            onMouseOut={(e) => {
+              e.currentTarget.style.transform = "translateY(0)";
+              e.currentTarget.style.boxShadow = "0 4px 6px rgba(0,0,0,0.05)";
+            }}
+          >
+            {/* <img
+              src="https://www.bora.dopa.go.th/wp-content/uploads/2023/03/ThaID-Logo-1024x1024.png"
+              alt="ThaID Logo"
+              style={{
+                width: "26px",
+                height: "26px",
+                objectFit: "contain",
+                backgroundColor: "white",
+                borderRadius: "4px",
+                padding: "2px",
+              }}
+            /> */}
+            เข้าสู่ระบบด้วย ThaID
+          </button>
         </div>
       </div>
 
@@ -174,6 +254,35 @@ const Login = () => {
           </div>
         </div>
       </div>
+
+      {/* ================= 4. Dynamic Custom Modal Popup ================= */}
+      {modal.isOpen && (
+        <div className="custom-modal-overlay" onClick={closeModal}>
+          <div
+            className="custom-modal-content"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button className="custom-modal-close" onClick={closeModal}>
+              <FaTimes />
+            </button>
+
+            {/* ไอคอนและสีจะเปลี่ยนไปตาม type */}
+            <div className={`custom-modal-icon-wrapper ${modal.type}`}>
+              {modal.type === "error" ? <FaTimesCircle /> : <FaTools />}
+            </div>
+
+            <h3 className="custom-modal-title">{modal.title}</h3>
+            <p className="custom-modal-desc">{modal.desc}</p>
+
+            <button
+              className={`custom-modal-btn ${modal.type}`}
+              onClick={closeModal}
+            >
+              {modal.type === "error" ? "ตกลง" : "รับทราบ"}
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

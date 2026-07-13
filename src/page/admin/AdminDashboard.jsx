@@ -10,10 +10,10 @@ import {
   FaUserShield,
 } from "react-icons/fa";
 import SidebarAdmin from "./SidebarAdmin";
-import api from "../../api/Api";
+import api, { getStoredUser } from "../../api/Api";
 
 const AdminDashboard = () => {
-  const user = JSON.parse(localStorage.getItem("user"));
+  const user = getStoredUser();
 
   // State สำหรับเก็บข้อมูลที่ดึงมาจากหลังบ้าน
   const [summary, setSummary] = useState({
@@ -36,9 +36,16 @@ const AdminDashboard = () => {
       const response = await api.get("/admin/dashboard");
 
       if (response.data && response.data.success) {
-        const { summary, organizations } = response.data.data;
-        setSummary(summary);
-        setOrganizations(organizations);
+        const { summary, organizations } = response.data.data || {};
+        setSummary(
+          summary || {
+            totalOrganizations: 0,
+            totalRegulators: 0,
+            totalProjects: 0,
+            totalUsers: 0,
+          },
+        );
+        setOrganizations(organizations || []);
       } else {
         setError("ไม่สามารถดึงข้อมูลภาพรวมระบบได้");
       }
@@ -57,13 +64,15 @@ const AdminDashboard = () => {
     fetchDashboardData();
   }, []);
 
-  // กรองตารางหน่วยงานตามคำค้นหา
-  const filteredOrganizations = organizations.filter(
-    (org) =>
-      org.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      org.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      org.regulatorName.toLowerCase().includes(searchTerm.toLowerCase()),
-  );
+  // กรองตารางหน่วยงานตามคำค้นหา (กัน crash เมื่อบางฟิลด์เป็น null/ไม่ใช่ string เช่น regulatorName ที่ยังไม่ได้ตั้งค่า)
+  const filteredOrganizations = organizations.filter((org) => {
+    const term = searchTerm.toLowerCase();
+    return (
+      String(org.name ?? "").toLowerCase().includes(term) ||
+      String(org.id ?? "").toLowerCase().includes(term) ||
+      String(org.regulatorName ?? "").toLowerCase().includes(term)
+    );
+  });
 
   return (
     <div className="admin-layout">
@@ -93,9 +102,9 @@ const AdminDashboard = () => {
                 />
               </div>
 
-              <button className="admin-btn-dark">
+              {/* <button className="admin-btn-dark">
                 <FaPlus /> เพิ่มหน่วยงาน
-              </button>
+              </button> */}
             </div>
           </div>
 

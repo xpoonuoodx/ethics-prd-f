@@ -10,10 +10,11 @@ import {
   FaBars,
   FaTimes,
 } from "react-icons/fa";
+import { getStoredUser } from "../../api/Api";
 
 const SidebarProvider = () => {
   const [isOpen, setIsOpen] = useState(true);
-  const user = JSON.parse(localStorage.getItem("user"));
+  const user = getStoredUser();
 
   const toggleSidebar = () => {
     setIsOpen(!isOpen);

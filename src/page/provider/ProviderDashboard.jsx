@@ -2,9 +2,10 @@ import React from "react";
 import "./style/ProviderDashboard.css";
 import { FaBuilding } from "react-icons/fa";
 import SidebarProvider from "./SidebarProvider"; // นำเข้า Sidebar
+import { getStoredUser } from "../../api/Api";
 
 const ProviderDashboard = () => {
-  const user = JSON.parse(localStorage.getItem("user"));
+  const user = getStoredUser();
 
   return (
     <div className="provider-portal-layout">

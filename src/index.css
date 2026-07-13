@@ -55,6 +55,11 @@ body {
   font-family: 'IBM Plex Sans Thai', sans-serif;
 }
 
+/* บังคับให้ popup ของ SweetAlert2 อยู่บนสุดเสมอ กันโดน custom modal ของแอป (z-index สูงสุด 99999) บังไว้ */
+.swal2-container {
+  z-index: 100000 !important;
+}
+
 #root {
   width: 100%;
   max-width: 100%;

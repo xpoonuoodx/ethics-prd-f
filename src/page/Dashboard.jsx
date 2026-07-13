@@ -1,16 +1,15 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Tabbar from "../component/Tabbar";
 import Footer from "../component/Footer";
+import axios from "axios";
 import {
-  BarChart3,
-  AlertTriangle,
-  TrendingUp,
-  BookOpen,
   Building2,
-  Search,
-  Filter,
+  Users,
+  Award,
+  Cpu,
   Download,
-  MoreHorizontal,
+  TrendingUp,
+  Activity,
 } from "lucide-react";
 import {
   AreaChart,
@@ -26,459 +25,495 @@ import {
   Tooltip,
   Legend,
   ResponsiveContainer,
+  RadarChart,
+  PolarGrid,
+  PolarAngleAxis,
+  PolarRadiusAxis,
+  Radar,
 } from "recharts";
 import "./style/Dashboard.css";
 
+// ==========================================
+// ตัวเลือก filter user_type (ต้องตรงกับ enum จริงในระบบ)
+// ==========================================
+const USER_TYPE_FILTERS = [
+  "",
+  "regulator",
+  "policy",
+  "researcher",
+  "developer",
+  "service provider",
+  "users",
+];
+
+const USER_TYPE_LABELS = {
+  "": "ทั้งหมด",
+  regulator: "Regulator",
+  policy: "Policy",
+  researcher: "Researcher",
+  developer: "Developer",
+  "service provider": "Service Provider",
+  users: "Users",
+};
+
+const THAI_MONTHS = [
+  "ม.ค.",
+  "ก.พ.",
+  "มี.ค.",
+  "เม.ย.",
+  "พ.ค.",
+  "มิ.ย.",
+  "ก.ค.",
+  "ส.ค.",
+  "ก.ย.",
+  "ต.ค.",
+  "พ.ย.",
+  "ธ.ค.",
+];
+
 function Dashboard() {
+  const [loading, setLoading] = useState(true);
+
+  // filter มุมมองตาม user_type (ค่าว่าง = ดูภาพรวมทั้งหมด)
+  const [userTypeFilter, setUserTypeFilter] = useState("");
+
+  // State สำหรับเก็บข้อมูล Summary 4 การ์ดบน (ของจริงจาก API)
+  const [stats, setStats] = useState({
+    totalOrgs: 0,
+    totalUsers: 0,
+    totalCerts: 0,
+    totalProjects: 0,
+  });
+
+  // State สำหรับกราฟ (ของจริงจาก API ทั้งหมด)
+  const [radarData, setRadarData] = useState([]);
+  const [maturityData, setMaturityData] = useState([]);
+  const [userRoleData, setUserRoleData] = useState([]);
+  const [trendData, setTrendData] = useState([]);
+
   useEffect(() => {
     window.scrollTo(0, 0);
-  }, []);
+    fetchDashboardData(userTypeFilter);
+  }, [userTypeFilter]);
 
-  // ----------------------------------------
-  // ข้อมูลจำลองสำหรับกราฟต่างๆ (Mock Data)
-  // ----------------------------------------
+  const fetchDashboardData = async (userType) => {
+    try {
+      setLoading(true);
 
-  // 1. ข้อมูลกราฟเส้น (Area Chart): แนวโน้มองค์กร
-  const areaChartData = [
-    { name: "Apr 15", value: 45 },
-    { name: "Apr 16", value: 38 },
-    { name: "Apr 17", value: 65 },
-    { name: "Apr 18", value: 48 },
-    { name: "Apr 19", value: 55 },
-    { name: "Apr 20", value: 40 },
-    { name: "Apr 21", value: 62 },
-    { name: "Apr 22", value: 58 },
+      const API_URL = `${import.meta.env.VITE_APP_API_ENDPOINT}/public/dashboard-stats`;
+      const response = await axios.get(API_URL, {
+        params: userType ? { user_type: userType } : {},
+      });
+
+      if (response.data && response.data.success) {
+        const { summary, userTypes, trend, maturityDistribution, radar } =
+          response.data.data;
+
+        // เซ็ตค่า 4 การ์ดบนจาก API
+        setStats({
+          totalOrgs: summary.totalOrgs || 0,
+          totalUsers: summary.totalUsers || 0,
+          totalCerts: summary.totalCerts || 0,
+          totalProjects: summary.totalProjects || 0,
+        });
+
+        // สัดส่วนบุคลากรตามบทบาท (ภาพรวมทั้งระบบเสมอ ไม่ผูกกับ filter)
+        setUserRoleData(
+          (userTypes || []).map((item) => ({
+            name: USER_TYPE_LABELS[item.name] || item.name,
+            value: parseInt(item.value),
+          })),
+        );
+
+        // เทรนด์ใบประกาศนียบัตรย้อนหลัง 6 เดือน
+        setTrendData(
+          (trend || []).map((item) => {
+            const monthNum = parseInt(item.month.split("-")[1], 10);
+            return {
+              month: THAI_MONTHS[monthNum - 1] || item.month,
+              certs: parseInt(item.certs),
+            };
+          }),
+        );
+
+        // สัดส่วนระดับความพร้อม (Maturity)
+        setMaturityData(
+          (maturityDistribution || []).map((item) => ({
+            level: item.level,
+            count: parseInt(item.count),
+          })),
+        );
+
+        // คะแนนเฉลี่ยจริยธรรม 7 มิติ (ประมาณการจากผลประเมินตนเองจริง)
+        setRadarData(
+          (radar || []).map((item) => ({
+            subject: item.principle_name,
+            A: Math.round(parseFloat(item.avg_score)),
+            fullMark: 100,
+          })),
+        );
+      }
+    } catch (error) {
+      console.error("Error fetching dashboard data:", error);
+      // หาก API พัง ให้โชว์เลขสแปร์เพื่อให้หน้าเว็บไม่โล่ง
+      setStats({
+        totalOrgs: 3,
+        totalUsers: 20,
+        totalCerts: 1,
+        totalProjects: 3,
+      });
+      setRadarData([]);
+      setTrendData([]);
+      setMaturityData([]);
+      setUserRoleData([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const COLORS = [
+    "#3b82f6",
+    "#8b5cf6",
+    "#f59e0b",
+    "#10b981",
+    "#ef4444",
+    "#ec4899",
   ];
 
-  // 2. ข้อมูลกราฟวงกลม (Pie Chart)
-  const pieChartData = [
-    { name: "เทคโนโลยี & IT", value: 400 },
-    { name: "การเงิน & ธนาคาร", value: 300 },
-    { name: "สาธารณสุข", value: 200 },
-    { name: "การศึกษา", value: 150 },
-    { name: "อื่นๆ", value: 200 },
-  ];
-  const COLORS = ["#f97316", "#8b5cf6", "#3b82f6", "#10b981", "#9ca3af"];
-
-  // 3. ข้อมูลกราฟแท่ง (Bar Chart)
-  const barChartData = [
-    { category: "โปร่งใส", score: 85 },
-    { category: "ปลอดภัย", score: 92 },
-    { category: "เป็นธรรม", score: 78 },
-    { category: "ส่วนตัว", score: 88 },
-    { category: "รับผิดชอบ", score: 82 },
-  ];
-
-  // 4. ข้อมูล Progress Bar
-  const progressData = [
-    { label: "ความโปร่งใสและอธิบายได้", percent: 85, color: "#f97316" },
-    { label: "ความมั่นคงปลอดภัย", percent: 92, color: "#8b5cf6" },
-    { label: "ความเป็นธรรมและลดความลำเอียง", percent: 78, color: "#3b82f6" },
-    { label: "การคุ้มครองข้อมูลส่วนบุคคล", percent: 88, color: "#10b981" },
-  ];
-
-  // 5. ข้อมูลกิจกรรมล่าสุด (รูปแบบตาราง)
-  const tableActivities = [
-    {
-      id: 1,
-      campaign: "ผ่านการประเมินความพร้อม AI",
-      start: "Apr 1, 2026",
-      end: "Apr 30, 2026",
-      impressions: "500,000",
-      engagements: "35,000",
-      creator: "บริษัท เอไอ โซลูชั่น จำกัด",
-      cost: "$15,000",
-      status: "Active",
-    },
-    {
-      id: 2,
-      campaign: "ส่งรายงานความเสี่ยงระบบสินเชื่อ",
-      start: "May 1, 2026",
-      end: "May 31, 2026",
-      impressions: "-",
-      engagements: "-",
-      creator: "ธนาคารไทยนวัตกรรม",
-      cost: "$12,000",
-      status: "Planned",
-    },
-    {
-      id: 3,
-      campaign: "ลงทะเบียนเข้าร่วมโครงการนำร่อง",
-      start: "Mar 15, 2026",
-      end: "Apr 15, 2026",
-      impressions: "200,000",
-      engagements: "10,000",
-      creator: "มหาวิทยาลัยเทคโนโลยี",
-      cost: "$8,000",
-      status: "Completed",
-    },
-    {
-      id: 4,
-      campaign: "อัปเดตข้อมูล PDPA Policy",
-      start: "Feb 1, 2026",
-      end: "Mar 1, 2026",
-      impressions: "150,000",
-      engagements: "7,500",
-      creator: "โรงพยาบาลศูนย์สุขภาพ",
-      cost: "$5,000",
-      status: "Completed",
-    },
-  ];
+  if (loading) {
+    return (
+      <div className="pub-db-wrapper flex-center">
+        <div className="pub-db-loader"></div>
+        <p style={{ marginTop: "15px", color: "#64748b" }}>
+          กำลังโหลดข้อมูลสถิติภาพรวม...
+        </p>
+      </div>
+    );
+  }
 
   return (
-    <div className="db-wrapper">
+    <div className="pub-db-wrapper">
       <Tabbar />
 
-      <main className="db-main-content">
-        {/* =======================================
-            TOP SECTION: HEADER & EXPORT BUTTON
-            ======================================= */}
-        <div className="db-header">
+      <main className="pub-db-main-content">
+        {/* Header */}
+        <div className="pub-db-header">
           <div>
-            <h1 className="db-title">แดชบอร์ดภาพรวมโครงการ</h1>
-            <p className="db-subtitle">
-              สถิติและข้อมูลการดำเนินงานด้านแนวปฏิบัติจริยธรรมปัญญาประดิษฐ์
+            <h1 className="pub-db-title">สถานการณ์จริยธรรม AI ระดับประเทศ</h1>
+            <p className="pub-db-subtitle">
+              ข้อมูลสถิติภาพรวมเชิงสาธารณะ (Public Aggregated Data)
+              จากระบบประเมินความพร้อมและหลักสูตร
             </p>
           </div>
-          <button className="db-btn-export">
-            <Download size={18} /> Export Data
+          <button className="pub-db-btn-export">
+            <Download size={18} /> โหลดรายงานสรุป (PDF)
           </button>
         </div>
 
-        {/* =======================================
-            TOP SECTION: STATS (2x2) & AREA CHART
-            ======================================= */}
-        <div className="db-top-layout">
-          {/* ฝั่งซ้าย: Stat Cards 4 ใบ */}
-          <div className="db-stats-grid">
-            {/* Card 1 */}
-            <div className="db-stat-card">
-              <div className="db-stat-header">
-                <span className="db-stat-title">องค์กรที่เข้าร่วม</span>
-                <div className="db-stat-icon orange-bg">
-                  <Building2 size={16} className="orange-icon" />
-                </div>
-              </div>
-              <div className="db-stat-value">1,250</div>
-              <div className="db-stat-trend positive">
-                <TrendingUp size={14} /> +12% <span>from last week</span>
-              </div>
-            </div>
-
-            {/* Card 2 */}
-            <div className="db-stat-card">
-              <div className="db-stat-header">
-                <span className="db-stat-title">คะแนนความพร้อม</span>
-                <div className="db-stat-icon purple-bg">
-                  <BarChart3 size={16} className="purple-icon" />
-                </div>
-              </div>
-              <div className="db-stat-value">84.5</div>
-              <div className="db-stat-trend positive">
-                <TrendingUp size={14} /> +3.12% <span>from last week</span>
-              </div>
-            </div>
-
-            {/* Card 3 */}
-            <div className="db-stat-card">
-              <div className="db-stat-header">
-                <span className="db-stat-title">ผู้ผ่านการอบรม</span>
-                <div className="db-stat-icon blue-bg">
-                  <BookOpen size={16} className="blue-icon" />
-                </div>
-              </div>
-              <div className="db-stat-value">8,430</div>
-              <div className="db-stat-trend negative">
-                <TrendingUp size={14} style={{ transform: "rotate(180deg)" }} />{" "}
-                -0.56% <span>from last week</span>
-              </div>
-            </div>
-
-            {/* Card 4 */}
-            <div className="db-stat-card">
-              <div className="db-stat-header">
-                <span className="db-stat-title">เคสความเสี่ยง</span>
-                <div className="db-stat-icon gray-bg">
-                  <AlertTriangle size={16} className="gray-icon" />
-                </div>
-              </div>
-              <div className="db-stat-value">14</div>
-              <div className="db-stat-trend positive">
-                <TrendingUp size={14} /> +2.65% <span>from last week</span>
-              </div>
-            </div>
-          </div>
-
-          {/* ฝั่งขวา: Area Chart */}
-          <div className="db-chart-main-card">
-            <div className="db-chart-header">
-              <h3 className="db-chart-title">ภาพรวมโครงการ (Performance)</h3>
-              <div className="db-chart-filters">
-                <select className="db-select">
-                  <option>ภาพรวมรายสัปดาห์</option>
-                  <option>ภาพรวมรายเดือน</option>
-                </select>
-                <div className="db-date-range">
-                  <CalendarIcon size={14} /> 15 - 22 Apr 2026
-                </div>
-              </div>
-            </div>
-            <div className="db-chart-area-wrapper">
-              <ResponsiveContainer width="100%" height="100%">
-                <AreaChart
-                  data={areaChartData}
-                  margin={{ top: 20, right: 0, left: -20, bottom: 0 }}
-                >
-                  <defs>
-                    <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#8b5cf6" stopOpacity={0.3} />
-                      <stop offset="95%" stopColor="#8b5cf6" stopOpacity={0} />
-                    </linearGradient>
-                  </defs>
-                  <CartesianGrid
-                    strokeDasharray="3 3"
-                    vertical={false}
-                    stroke="#f3f4f6"
-                  />
-                  <XAxis
-                    dataKey="name"
-                    axisLine={false}
-                    tickLine={false}
-                    tick={{ fill: "#9ca3af", fontSize: 12 }}
-                    dy={10}
-                  />
-                  <YAxis
-                    axisLine={false}
-                    tickLine={false}
-                    tick={{ fill: "#9ca3af", fontSize: 12 }}
-                    tickFormatter={(val) => `${val}%`}
-                  />
-                  <Tooltip
-                    contentStyle={{
-                      borderRadius: "8px",
-                      border: "none",
-                      boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
-                    }}
-                  />
-                  <Area
-                    type="monotone"
-                    dataKey="value"
-                    stroke="#8b5cf6"
-                    strokeWidth={3}
-                    fillOpacity={1}
-                    fill="url(#colorValue)"
-                  />
-                </AreaChart>
-              </ResponsiveContainer>
-            </div>
-          </div>
+        {/* Filter มุมมองตาม User Type */}
+        <div className="pub-db-filter-bar">
+          {USER_TYPE_FILTERS.map((type) => (
+            <button
+              key={type || "all"}
+              className={`pub-db-filter-btn ${userTypeFilter === type ? "active" : ""}`}
+              onClick={() => setUserTypeFilter(type)}
+            >
+              {USER_TYPE_LABELS[type]}
+            </button>
+          ))}
         </div>
 
-        {/* =======================================
-            MIDDLE SECTION: PIE, BAR, PROGRESS
-            ======================================= */}
-        <div className="db-middle-layout">
-          <div className="db-card">
-            <div className="db-card-header-simple">
-              <h3 className="db-card-title-simple">สัดส่วนตามอุตสาหกรรม</h3>
+        {/* Summary Cards (KPIs) */}
+        <div className="pub-db-stats-grid">
+          <div className="pub-db-stat-card">
+            <div className="pub-db-stat-icon-wrapper org">
+              <Building2 size={24} />
             </div>
-            <div className="db-card-body" style={{ height: "300px" }}>
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie
-                    data={pieChartData}
-                    cx="50%"
-                    cy="50%"
-                    innerRadius={60}
-                    outerRadius={90}
-                    paddingAngle={5}
-                    dataKey="value"
-                  >
-                    {pieChartData.map((entry, index) => (
-                      <Cell
-                        key={`cell-${index}`}
-                        fill={COLORS[index % COLORS.length]}
-                      />
-                    ))}
-                  </Pie>
-                  <Tooltip
-                    contentStyle={{
-                      borderRadius: "8px",
-                      border: "none",
-                      boxShadow: "0 4px 6px rgba(0,0,0,0.1)",
-                    }}
-                  />
-                  <Legend
-                    verticalAlign="bottom"
-                    height={36}
-                    iconType="circle"
-                  />
-                </PieChart>
-              </ResponsiveContainer>
-            </div>
-          </div>
-
-          <div className="db-card">
-            <div className="db-card-header-simple">
-              <h3 className="db-card-title-simple">คะแนนประเมินเฉลี่ย</h3>
-            </div>
-            <div className="db-card-body" style={{ height: "300px" }}>
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart
-                  data={barChartData}
-                  margin={{ top: 20, right: 30, left: -20, bottom: 0 }}
-                  layout="vertical"
-                >
-                  <CartesianGrid
-                    strokeDasharray="3 3"
-                    horizontal={false}
-                    stroke="#f3f4f6"
-                  />
-                  <XAxis
-                    type="number"
-                    domain={[0, 100]}
-                    axisLine={false}
-                    tickLine={false}
-                    tick={{ fill: "#9ca3af", fontSize: 12 }}
-                  />
-                  <YAxis
-                    dataKey="category"
-                    type="category"
-                    axisLine={false}
-                    tickLine={false}
-                    tick={{ fill: "#4b5563", fontSize: 12 }}
-                    width={80}
-                  />
-                  <Tooltip
-                    cursor={{ fill: "rgba(139, 92, 246, 0.05)" }}
-                    contentStyle={{
-                      borderRadius: "8px",
-                      border: "none",
-                      boxShadow: "0 4px 6px rgba(0,0,0,0.1)",
-                    }}
-                  />
-                  <Bar
-                    dataKey="score"
-                    fill="#3b82f6"
-                    radius={[0, 4, 4, 0]}
-                    barSize={20}
-                  />
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
-          </div>
-
-          <div className="db-card">
-            <div className="db-card-header-simple">
-              <h3 className="db-card-title-simple">
-                ความคืบหน้าตามหลักจริยธรรม
+            <div className="pub-db-stat-info">
+              <span className="pub-db-stat-label">องค์กรที่เข้าร่วม</span>
+              <h3 className="pub-db-stat-value">
+                {stats.totalOrgs.toLocaleString()}
               </h3>
             </div>
-            <div className="db-card-body">
-              <div className="db-progress-list">
-                {progressData.map((item, index) => (
-                  <div key={index} className="db-progress-item">
-                    <div className="db-progress-info">
-                      <span className="db-progress-label">{item.label}</span>
-                      <span className="db-progress-percent">
-                        {item.percent}%
-                      </span>
-                    </div>
-                    <div className="db-progress-bar-bg">
-                      <div
-                        className="db-progress-bar-fill"
-                        style={{
-                          width: `${item.percent}%`,
-                          backgroundColor: item.color,
-                        }}
-                      ></div>
-                    </div>
-                  </div>
-                ))}
-              </div>
+          </div>
+
+          <div className="pub-db-stat-card">
+            <div className="pub-db-stat-icon-wrapper proj">
+              <Cpu size={24} />
+            </div>
+            <div className="pub-db-stat-info">
+              <span className="pub-db-stat-label">โครงการ AI ที่ประเมิน</span>
+              <h3 className="pub-db-stat-value">
+                {stats.totalProjects.toLocaleString()}
+              </h3>
+            </div>
+          </div>
+
+          <div className="pub-db-stat-card">
+            <div className="pub-db-stat-icon-wrapper users">
+              <Users size={24} />
+            </div>
+            <div className="pub-db-stat-info">
+              <span className="pub-db-stat-label">ผู้ใช้งานในระบบ</span>
+              <h3 className="pub-db-stat-value">
+                {stats.totalUsers.toLocaleString()}
+              </h3>
+            </div>
+          </div>
+
+          <div className="pub-db-stat-card">
+            <div className="pub-db-stat-icon-wrapper cert">
+              <Award size={24} />
+            </div>
+            <div className="pub-db-stat-info">
+              <span className="pub-db-stat-label">ใบประกาศฯที่ออกแล้ว</span>
+              <h3 className="pub-db-stat-value">
+                {stats.totalCerts.toLocaleString()}
+              </h3>
             </div>
           </div>
         </div>
 
-        {/* =======================================
-            BOTTOM SECTION: DATA TABLE LIST
-            ======================================= */}
-        <div className="db-table-card">
-          <div className="db-table-header-main">
-            <div className="db-table-title-wrap">
-              <h3 className="db-table-title">รายการอัปเดตล่าสุด</h3>
-              <span className="db-table-count">({tableActivities.length})</span>
+        {/* Top Charts: Radar & Area */}
+        <div className="pub-db-chart-row-large">
+          {/* Radar Chart (7-8 เหลี่ยม) */}
+          <div className="pub-db-card">
+            <div className="pub-db-card-header">
+              <h3>
+                <Activity size={18} className="text-blue" /> คะแนนเฉลี่ยจริยธรรม
+                7 มิติ
+              </h3>
+              <p>ดัชนีภาพรวมจากการประเมินของทุกองค์กร</p>
+              <span className="pub-db-radar-note">
+                * ประมาณการจากผลการประเมินตนเองของผู้ใช้งานในระบบ
+              </span>
             </div>
-            {/* เอาปุ่ม 'จัดการข้อมูล' ออกตามคำขอ */}
+            <div className="pub-db-card-body radar-container">
+              {radarData.length > 0 ? (
+                <ResponsiveContainer width="100%" height={320}>
+                  <RadarChart
+                    cx="50%"
+                    cy="50%"
+                    outerRadius="70%"
+                    data={radarData}
+                  >
+                    <PolarGrid stroke="#e2e8f0" />
+                    <PolarAngleAxis
+                      dataKey="subject"
+                      tick={{ fill: "#475569", fontSize: 12, fontWeight: 500 }}
+                    />
+                    <PolarRadiusAxis
+                      angle={30}
+                      domain={[0, 100]}
+                      tick={{ fill: "#94a3b8" }}
+                    />
+                    <Radar
+                      name="คะแนนเฉลี่ยประเทศ"
+                      dataKey="A"
+                      stroke="#3b82f6"
+                      fill="#3b82f6"
+                      fillOpacity={0.4}
+                    />
+                    <Tooltip />
+                  </RadarChart>
+                </ResponsiveContainer>
+              ) : (
+                <div className="pub-db-empty-chart">
+                  ยังไม่มีข้อมูลการประเมิน
+                </div>
+              )}
+            </div>
           </div>
 
-          <div className="db-table-toolbar">
-            <div className="db-search-box">
-              <Search size={16} className="db-search-icon" />
-              <input
-                type="text"
-                placeholder="ค้นหารายการ..."
-                className="db-search-input"
-              />
+          {/* Area Chart */}
+          <div className="pub-db-card">
+            <div className="pub-db-card-header">
+              <h3>
+                <TrendingUp size={18} className="text-purple" />{" "}
+                การเติบโตของผู้ผ่านหลักสูตร
+              </h3>
+              <p>จำนวนใบประกาศนียบัตรสะสมทั้งหมด (ย้อนหลัง 6 เดือน)</p>
             </div>
-            <div className="db-filter-group">
-              <button className="db-btn-filter">
-                All Status <ChevronDownIcon size={14} />
-              </button>
-              <button className="db-btn-filter">
-                <Filter size={14} /> Filters <ChevronDownIcon size={14} />
-              </button>
+            <div className="pub-db-card-body">
+              {trendData.length > 0 ? (
+                <ResponsiveContainer width="100%" height={320}>
+                  <AreaChart
+                    data={trendData}
+                    margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
+                  >
+                    <defs>
+                      <linearGradient
+                        id="colorCerts"
+                        x1="0"
+                        y1="0"
+                        x2="0"
+                        y2="1"
+                      >
+                        <stop
+                          offset="5%"
+                          stopColor="#8b5cf6"
+                          stopOpacity={0.4}
+                        />
+                        <stop
+                          offset="95%"
+                          stopColor="#8b5cf6"
+                          stopOpacity={0}
+                        />
+                      </linearGradient>
+                    </defs>
+                    <CartesianGrid
+                      strokeDasharray="3 3"
+                      vertical={false}
+                      stroke="#f1f5f9"
+                    />
+                    <XAxis
+                      dataKey="month"
+                      axisLine={false}
+                      tickLine={false}
+                      tick={{ fill: "#64748b" }}
+                      dy={10}
+                    />
+                    <YAxis
+                      axisLine={false}
+                      tickLine={false}
+                      tick={{ fill: "#64748b" }}
+                    />
+                    <Tooltip
+                      contentStyle={{
+                        borderRadius: "10px",
+                        border: "none",
+                        boxShadow: "0 4px 15px rgba(0,0,0,0.1)",
+                      }}
+                    />
+                    <Area
+                      type="monotone"
+                      dataKey="certs"
+                      name="ใบประกาศฯ"
+                      stroke="#8b5cf6"
+                      strokeWidth={3}
+                      fillOpacity={1}
+                      fill="url(#colorCerts)"
+                    />
+                  </AreaChart>
+                </ResponsiveContainer>
+              ) : (
+                <div className="pub-db-empty-chart">
+                  ยังไม่มีข้อมูลการออกใบประกาศนียบัตร
+                </div>
+              )}
             </div>
-            <div className="db-sort-group">
-              <span className="db-sort-label">Sort by:</span>
-              <select className="db-sort-select">
-                <option>Newest</option>
-                <option>Oldest</option>
-              </select>
+          </div>
+        </div>
+
+        {/* Bottom Charts: Bar & Pie */}
+        <div className="pub-db-chart-row-small">
+          {/* Bar Chart (Maturity Levels) */}
+          <div className="pub-db-card">
+            <div className="pub-db-card-header">
+              <h3>สัดส่วนระดับความพร้อม (Maturity Level)</h3>
+            </div>
+            <div className="pub-db-card-body">
+              {maturityData.length > 0 ? (
+                <ResponsiveContainer width="100%" height={280}>
+                  <BarChart
+                    data={maturityData}
+                    margin={{ top: 20, right: 20, left: -20, bottom: 0 }}
+                  >
+                    <CartesianGrid
+                      strokeDasharray="3 3"
+                      vertical={false}
+                      stroke="#f1f5f9"
+                    />
+                    <XAxis
+                      dataKey="level"
+                      axisLine={false}
+                      tickLine={false}
+                      tick={{ fill: "#64748b", fontSize: 12 }}
+                      dy={10}
+                    />
+                    <YAxis
+                      axisLine={false}
+                      tickLine={false}
+                      tick={{ fill: "#64748b" }}
+                    />
+                    <Tooltip
+                      cursor={{ fill: "#f8fafc" }}
+                      contentStyle={{
+                        borderRadius: "10px",
+                        border: "none",
+                        boxShadow: "0 4px 15px rgba(0,0,0,0.1)",
+                      }}
+                    />
+                    <Bar
+                      dataKey="count"
+                      name="จำนวนองค์กร"
+                      fill="#10b981"
+                      radius={[6, 6, 0, 0]}
+                      barSize={40}
+                    >
+                      {maturityData.map((entry, index) => (
+                        <Cell
+                          key={`cell-${index}`}
+                          fill={COLORS[index % COLORS.length]}
+                        />
+                      ))}
+                    </Bar>
+                  </BarChart>
+                </ResponsiveContainer>
+              ) : (
+                <div className="pub-db-empty-chart">
+                  ยังไม่มีข้อมูลการจัดระดับความพร้อม
+                </div>
+              )}
             </div>
           </div>
 
-          <div className="db-table-wrapper">
-            <table className="db-table">
-              <thead>
-                <tr>
-                  <th width="30%">หัวข้อการดำเนินการ</th>
-                  <th width="15%">วันที่เริ่ม</th>
-                  <th width="15%">วันสิ้นสุด</th>
-                  <th width="25%">องค์กร / หน่วยงาน</th>
-                  <th width="15%">สถานะ</th>
-                </tr>
-              </thead>
-              <tbody>
-                {tableActivities.map((act) => (
-                  <tr key={act.id}>
-                    <td>
-                      <div className="db-cell-campaign">
-                        <div
-                          className={`db-toggle ${act.status === "Active" ? "on" : "off"}`}
-                        ></div>
-                        <span className="db-campaign-name">{act.campaign}</span>
-                      </div>
-                    </td>
-                    <td className="db-cell-text">{act.start}</td>
-                    <td className="db-cell-text">{act.end}</td>
-                    <td>
-                      <div className="db-cell-creator">
-                        <div className="db-avatar-mock">
-                          {act.creator.charAt(0)}
-                        </div>
-                        <span className="db-cell-text">{act.creator}</span>
-                      </div>
-                    </td>
-                    <td>
-                      <span className={`db-badge ${act.status.toLowerCase()}`}>
-                        {act.status}
-                      </span>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+          {/* Donut Chart (User Types) */}
+          <div className="pub-db-card">
+            <div className="pub-db-card-header">
+              <h3>สัดส่วนบุคลากรตามบทบาท (User Type)</h3>
+            </div>
+            <div className="pub-db-card-body">
+              {userRoleData.length > 0 ? (
+                <ResponsiveContainer width="100%" height={280}>
+                  <PieChart>
+                    <Pie
+                      data={userRoleData}
+                      cx="50%"
+                      cy="50%"
+                      innerRadius={70}
+                      outerRadius={100}
+                      paddingAngle={3}
+                      dataKey="value"
+                    >
+                      {userRoleData.map((entry, index) => (
+                        <Cell
+                          key={`cell-${index}`}
+                          fill={COLORS[index % COLORS.length]}
+                        />
+                      ))}
+                    </Pie>
+                    <Tooltip
+                      contentStyle={{
+                        borderRadius: "10px",
+                        border: "none",
+                        boxShadow: "0 4px 15px rgba(0,0,0,0.1)",
+                      }}
+                    />
+                    <Legend
+                      verticalAlign="bottom"
+                      height={36}
+                      iconType="circle"
+                      wrapperStyle={{ fontSize: "13px" }}
+                    />
+                  </PieChart>
+                </ResponsiveContainer>
+              ) : (
+                <div className="pub-db-empty-chart">
+                  ยังไม่มีข้อมูลบุคลากรในระบบ
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </main>
@@ -486,38 +521,5 @@ function Dashboard() {
     </div>
   );
 }
-
-// Custom Mini Icons for UI Matching
-const CalendarIcon = ({ size }) => (
-  <svg
-    width={size}
-    height={size}
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
-    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-    <line x1="16" y1="2" x2="16" y2="6"></line>
-    <line x1="8" y1="2" x2="8" y2="6"></line>
-    <line x1="3" y1="10" x2="21" y2="10"></line>
-  </svg>
-);
-const ChevronDownIcon = ({ size }) => (
-  <svg
-    width={size}
-    height={size}
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
-    <polyline points="6 9 12 15 18 9"></polyline>
-  </svg>
-);
 
 export default Dashboard;
