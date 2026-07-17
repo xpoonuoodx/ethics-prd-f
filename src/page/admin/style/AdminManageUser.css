@@ -149,6 +149,50 @@
   border-radius: 50px;
   font-size: 12px;
   font-weight: 600;
+  white-space: nowrap;
+}
+
+/* Pagination */
+.admin-manage-user-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 20px;
+}
+.admin-manage-user-page-btn {
+  min-width: 36px;
+  height: 36px;
+  padding: 0 10px;
+  border-radius: 10px;
+  border: 1px solid #e2e8f0;
+  background: #ffffff;
+  color: #475569;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+.admin-manage-user-page-btn:hover:not(:disabled) {
+  background: #f1f5f9;
+  border-color: #cbd5e1;
+}
+.admin-manage-user-page-btn.active {
+  background: #0f172a;
+  border-color: #0f172a;
+  color: #ffffff;
+}
+.admin-manage-user-page-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+.admin-manage-user-page-ellipsis {
+  color: #94a3b8;
+  font-size: 13px;
+  padding: 0 4px;
 }
 
 .admin-manage-user-table-responsive {

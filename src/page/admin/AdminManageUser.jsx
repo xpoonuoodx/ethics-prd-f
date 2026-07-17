@@ -15,6 +15,8 @@ import {
   FaTimesCircle,
   FaExclamationTriangle,
   FaInfoCircle,
+  FaChevronLeft,
+  FaChevronRight,
 } from "react-icons/fa";
 import SidebarAdmin from "./SidebarAdmin";
 import api from "../../api/Api";
@@ -27,6 +29,10 @@ const AdminManageUser = () => {
   const [roleFilter, setRoleFilter] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  // Pagination
+  const ITEMS_PER_PAGE = 10;
+  const [currentPage, setCurrentPage] = useState(1);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -228,6 +234,27 @@ const AdminManageUser = () => {
     return userRole === roleFilter;
   });
 
+  // กลับไปหน้า 1 เสมอเมื่อค้นหา/กรองเปลี่ยน กันโชว์หน้าว่างเปล่าค้างอยู่
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm, roleFilter]);
+
+  const totalPages = Math.max(
+    1,
+    Math.ceil(filteredUsers.length / ITEMS_PER_PAGE),
+  );
+  const safeCurrentPage = Math.min(currentPage, totalPages);
+  const paginatedUsers = filteredUsers.slice(
+    (safeCurrentPage - 1) * ITEMS_PER_PAGE,
+    safeCurrentPage * ITEMS_PER_PAGE,
+  );
+  const rangeStart =
+    filteredUsers.length === 0 ? 0 : (safeCurrentPage - 1) * ITEMS_PER_PAGE + 1;
+  const rangeEnd = Math.min(
+    safeCurrentPage * ITEMS_PER_PAGE,
+    filteredUsers.length,
+  );
+
   return (
     <div className="admin-manage-user-layout">
       <SidebarAdmin />
@@ -291,7 +318,9 @@ const AdminManageUser = () => {
               <div className="admin-manage-user-list-header">
                 <h2>รายชื่อบัญชีผู้ใช้งานทั้งหมด</h2>
                 <span className="admin-manage-user-list-count">
-                  {filteredUsers.length} บัญชี
+                  {filteredUsers.length === 0
+                    ? "0 บัญชี"
+                    : `แสดง ${rangeStart}-${rangeEnd} จาก ${filteredUsers.length} บัญชี`}
                 </span>
               </div>
 
@@ -307,7 +336,7 @@ const AdminManageUser = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {filteredUsers.map((u, index) => {
+                    {paginatedUsers.map((u, index) => {
                       const roleData = getRoleBadge(u.role);
                       return (
                         <tr key={index} className="admin-manage-user-table-row">
@@ -378,6 +407,61 @@ const AdminManageUser = () => {
                   </tbody>
                 </table>
               </div>
+
+              {totalPages > 1 && (
+                <div className="admin-manage-user-pagination">
+                  <button
+                    className="admin-manage-user-page-btn"
+                    onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                    disabled={safeCurrentPage === 1}
+                  >
+                    <FaChevronLeft />
+                  </button>
+
+                  {Array.from({ length: totalPages }, (_, i) => i + 1)
+                    .filter(
+                      (page) =>
+                        page === 1 ||
+                        page === totalPages ||
+                        Math.abs(page - safeCurrentPage) <= 1,
+                    )
+                    .reduce((acc, page, i, arr) => {
+                      if (i > 0 && page - arr[i - 1] > 1) acc.push("...");
+                      acc.push(page);
+                      return acc;
+                    }, [])
+                    .map((page, i) =>
+                      page === "..." ? (
+                        <span
+                          key={`ellipsis-${i}`}
+                          className="admin-manage-user-page-ellipsis"
+                        >
+                          …
+                        </span>
+                      ) : (
+                        <button
+                          key={page}
+                          className={`admin-manage-user-page-btn ${
+                            page === safeCurrentPage ? "active" : ""
+                          }`}
+                          onClick={() => setCurrentPage(page)}
+                        >
+                          {page}
+                        </button>
+                      ),
+                    )}
+
+                  <button
+                    className="admin-manage-user-page-btn"
+                    onClick={() =>
+                      setCurrentPage((p) => Math.min(totalPages, p + 1))
+                    }
+                    disabled={safeCurrentPage === totalPages}
+                  >
+                    <FaChevronRight />
+                  </button>
+                </div>
+              )}
             </div>
           )}
         </div>

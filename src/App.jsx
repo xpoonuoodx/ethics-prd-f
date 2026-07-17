@@ -66,6 +66,7 @@ import RegulatorTools from "./page/regulator/RegulatorTools";
 import RegulatorToolsCreate from "./page/regulator/RegulatorToolsCreate";
 import RegulatorToolsResult from "./page/regulator/RegulatorToolsResult";
 import RegulatorCertificate from "./page/regulator/RegulatorCertificate";
+import RegulatorOrganizeManage from "./page/regulator/RegulatorOrganizeManage";
 
 function App() {
   return (
@@ -428,6 +429,14 @@ function App() {
           element={
             <RegulatorRoute>
               <RegulatorCertificate />
+            </RegulatorRoute>
+          }
+        />
+        <Route
+          path="/regulator-org-manage"
+          element={
+            <RegulatorRoute>
+              <RegulatorOrganizeManage />
             </RegulatorRoute>
           }
         />

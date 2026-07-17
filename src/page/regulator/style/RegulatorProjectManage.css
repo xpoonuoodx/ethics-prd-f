@@ -263,12 +263,26 @@
   background-color: #d97706;
 }
 
+.rpm-status-badge.in-progress {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+.rpm-status-badge.in-progress .rpm-status-dot {
+  background-color: #1d4ed8;
+}
+
 .rpm-status-badge.rejected {
   background: #fee2e2;
   color: #991b1b;
 }
 .rpm-status-badge.rejected .rpm-status-dot {
   background-color: #991b1b;
+}
+
+.rpm-status-fraction {
+  margin-top: 6px;
+  font-size: 11px;
+  color: #94a3b8;
 }
 
 .rpm-text-center {

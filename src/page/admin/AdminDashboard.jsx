@@ -8,6 +8,8 @@ import {
   FaPlus,
   FaSpinner,
   FaUserShield,
+  FaChevronLeft,
+  FaChevronRight,
 } from "react-icons/fa";
 import SidebarAdmin from "./SidebarAdmin";
 import api, { getStoredUser } from "../../api/Api";
@@ -26,6 +28,9 @@ const AdminDashboard = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  const ITEMS_PER_PAGE = 10;
+  const [currentPage, setCurrentPage] = useState(1);
 
   // ฟังก์ชันยิง API ดึงข้อมูลจากหลังบ้าน
   const fetchDashboardData = async () => {
@@ -73,6 +78,29 @@ const AdminDashboard = () => {
       String(org.regulatorName ?? "").toLowerCase().includes(term)
     );
   });
+
+  // กลับไปหน้า 1 เสมอเมื่อค้นหาเปลี่ยน กันโชว์หน้าว่างเปล่าค้างอยู่
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm]);
+
+  const totalPages = Math.max(
+    1,
+    Math.ceil(filteredOrganizations.length / ITEMS_PER_PAGE),
+  );
+  const safeCurrentPage = Math.min(currentPage, totalPages);
+  const paginatedOrganizations = filteredOrganizations.slice(
+    (safeCurrentPage - 1) * ITEMS_PER_PAGE,
+    safeCurrentPage * ITEMS_PER_PAGE,
+  );
+  const rangeStart =
+    filteredOrganizations.length === 0
+      ? 0
+      : (safeCurrentPage - 1) * ITEMS_PER_PAGE + 1;
+  const rangeEnd = Math.min(
+    safeCurrentPage * ITEMS_PER_PAGE,
+    filteredOrganizations.length,
+  );
 
   return (
     <div className="admin-layout">
@@ -181,7 +209,9 @@ const AdminDashboard = () => {
                 <div className="admin-list-header">
                   <h2>รายชื่อหน่วยงานในระบบ</h2>
                   <span className="admin-list-count">
-                    {filteredOrganizations.length} รายการ
+                    {filteredOrganizations.length === 0
+                      ? "0 รายการ"
+                      : `แสดง ${rangeStart}-${rangeEnd} จาก ${filteredOrganizations.length} รายการ`}
                   </span>
                 </div>
 
@@ -198,7 +228,7 @@ const AdminDashboard = () => {
                       </tr>
                     </thead>
                     <tbody>
-                      {filteredOrganizations.map((org, index) => (
+                      {paginatedOrganizations.map((org, index) => (
                         <tr key={index} className="admin-table-row">
                           <td className="col-id">{org.id}</td>
                           <td className="col-name">{org.name}</td>
@@ -248,6 +278,61 @@ const AdminDashboard = () => {
                     </tbody>
                   </table>
                 </div>
+
+                {totalPages > 1 && (
+                  <div className="admin-pagination">
+                    <button
+                      className="admin-page-btn"
+                      onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                      disabled={safeCurrentPage === 1}
+                    >
+                      <FaChevronLeft />
+                    </button>
+
+                    {Array.from({ length: totalPages }, (_, i) => i + 1)
+                      .filter(
+                        (page) =>
+                          page === 1 ||
+                          page === totalPages ||
+                          Math.abs(page - safeCurrentPage) <= 1,
+                      )
+                      .reduce((acc, page, i, arr) => {
+                        if (i > 0 && page - arr[i - 1] > 1) acc.push("...");
+                        acc.push(page);
+                        return acc;
+                      }, [])
+                      .map((page, i) =>
+                        page === "..." ? (
+                          <span
+                            key={`ellipsis-${i}`}
+                            className="admin-page-ellipsis"
+                          >
+                            …
+                          </span>
+                        ) : (
+                          <button
+                            key={page}
+                            className={`admin-page-btn ${
+                              page === safeCurrentPage ? "active" : ""
+                            }`}
+                            onClick={() => setCurrentPage(page)}
+                          >
+                            {page}
+                          </button>
+                        ),
+                      )}
+
+                    <button
+                      className="admin-page-btn"
+                      onClick={() =>
+                        setCurrentPage((p) => Math.min(totalPages, p + 1))
+                      }
+                      disabled={safeCurrentPage === totalPages}
+                    >
+                      <FaChevronRight />
+                    </button>
+                  </div>
+                )}
               </div>
             </>
           )}

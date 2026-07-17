@@ -11,7 +11,18 @@ import {
   FaEdit,
   FaTrash,
   FaTimes,
+  FaCheckCircle,
+  FaRegClock,
 } from "react-icons/fa";
+import {
+  Radar,
+  RadarChart,
+  PolarGrid,
+  PolarAngleAxis,
+  PolarRadiusAxis,
+  Tooltip,
+  ResponsiveContainer,
+} from "recharts";
 import api from "../../api/Api";
 import Swal from "sweetalert2";
 
@@ -21,6 +32,7 @@ const RegulatorViewProject = () => {
 
   const [projectData, setProjectData] = useState(null);
   const [members, setMembers] = useState([]);
+  const [ethicsRadar, setEthicsRadar] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -45,6 +57,7 @@ const RegulatorViewProject = () => {
       if (response.data && response.data.success) {
         setProjectData(response.data.data.project);
         setMembers(response.data.data.members || []);
+        setEthicsRadar(response.data.data.ethicsRadar || []);
       } else {
         setError("ไม่พบข้อมูลโครงการนี้");
       }
@@ -150,6 +163,15 @@ const RegulatorViewProject = () => {
     });
   };
 
+  // สถานะโครงการคำนวณอัตโนมัติจากจำนวนสมาชิกที่ทำแบบประเมินตนเองแล้ว
+  const getStatusMeta = (status) => {
+    if (status === "Completed")
+      return { label: "เสร็จสิ้น", className: "completed" };
+    if (status === "In Progress")
+      return { label: "กำลังดำเนินการ", className: "in-progress" };
+    return { label: "รอดำเนินการ", className: "pending" };
+  };
+
   return (
     <div className="rvp-layout">
       <SidebarRegulator />
@@ -221,6 +243,38 @@ const RegulatorViewProject = () => {
                       </h2>
                     </div>
                   </div>
+
+                  <div className="rvp-card">
+                    <div className="rvp-card-icon-wrapper status-icon">
+                      <FaCheckCircle />
+                    </div>
+                    <div className="rvp-card-details">
+                      <span className="rvp-label">สถานะความคืบหน้า</span>
+                      <span
+                        className={`rvp-status-badge ${getStatusMeta(projectData.status).className}`}
+                      >
+                        {getStatusMeta(projectData.status).label}
+                      </span>
+                      <div className="rvp-status-progress-track">
+                        <div
+                          className="rvp-status-progress-fill"
+                          style={{
+                            width: `${
+                              projectData.total_members > 0
+                                ? (projectData.completed_members /
+                                    projectData.total_members) *
+                                  100
+                                : 0
+                            }%`,
+                          }}
+                        ></div>
+                      </div>
+                      <span className="rvp-status-fraction">
+                        {projectData.completed_members || 0}/
+                        {projectData.total_members || 0} คนประเมินตนเองแล้ว
+                      </span>
+                    </div>
+                  </div>
                 </div>
 
                 {/* รายชื่อสมาชิก */}
@@ -236,6 +290,7 @@ const RegulatorViewProject = () => {
                           <th>ชื่อ-นามสกุล</th>
                           <th>อีเมลติดต่อ</th>
                           <th>รหัสผู้ใช้ (Username)</th>
+                          <th className="rvp-text-center">สถานะการประเมิน</th>
                           <th className="rvp-text-center">จัดการ</th>
                         </tr>
                       </thead>
@@ -259,6 +314,17 @@ const RegulatorViewProject = () => {
                               @{member.username}
                             </td>
                             <td className="rvp-text-center">
+                              {member.has_assessed ? (
+                                <span className="rvp-assess-badge done">
+                                  <FaCheckCircle /> ประเมินแล้ว
+                                </span>
+                              ) : (
+                                <span className="rvp-assess-badge pending">
+                                  <FaRegClock /> ยังไม่ประเมิน
+                                </span>
+                              )}
+                            </td>
+                            <td className="rvp-text-center">
                               <button
                                 className="rvp-btn-remove"
                                 title="ถอดออกจากโครงการ"
@@ -274,13 +340,72 @@ const RegulatorViewProject = () => {
 
                         {members.length === 0 && (
                           <tr>
-                            <td colSpan="4" className="rvp-empty-state">
+                            <td colSpan="5" className="rvp-empty-state">
                               ยังไม่มีการเพิ่มบุคลากรรับผิดชอบในโครงการนี้
                             </td>
                           </tr>
                         )}
                       </tbody>
                     </table>
+                  </div>
+                </div>
+
+                {/* ภาพรวมคะแนนประเมินจริยธรรม AI เฉพาะสมาชิกในโครงการนี้ */}
+                <div className="rvp-list-section rvp-radar-section">
+                  <div className="rvp-list-header">
+                    <h2>ภาพรวมคะแนนประเมินจริยธรรม AI ของโครงการนี้</h2>
+                    <span className="rvp-list-subtitle">
+                      คำนวณจากผลประเมินตนเองของบุคลากรที่ทำแบบประเมินแล้วในโครงการนี้เท่านั้น
+                    </span>
+                  </div>
+                  <div className="rvp-radar-body">
+                    {ethicsRadar.length > 0 ? (
+                      <ResponsiveContainer width="100%" height={320}>
+                        <RadarChart
+                          cx="50%"
+                          cy="50%"
+                          outerRadius="75%"
+                          data={ethicsRadar}
+                        >
+                          <PolarGrid stroke="#e2e8f0" />
+                          <PolarAngleAxis
+                            dataKey="subject"
+                            tick={{
+                              fill: "#64748b",
+                              fontSize: 13,
+                              fontWeight: 500,
+                            }}
+                          />
+                          <PolarRadiusAxis
+                            angle={30}
+                            domain={[0, 100]}
+                            tick={{ fill: "#94a3b8", fontSize: 11 }}
+                            tickCount={6}
+                          />
+                          <Radar
+                            name="คะแนนเฉลี่ย"
+                            dataKey="score"
+                            stroke="#10b981"
+                            strokeWidth={2}
+                            fill="#10b981"
+                            fillOpacity={0.3}
+                          />
+                          <Tooltip
+                            contentStyle={{
+                              borderRadius: "10px",
+                              border: "none",
+                              boxShadow: "0 10px 25px -5px rgba(0,0,0,0.1)",
+                              fontSize: "13px",
+                              color: "#1e293b",
+                            }}
+                          />
+                        </RadarChart>
+                      </ResponsiveContainer>
+                    ) : (
+                      <div className="rvp-empty-state">
+                        ยังไม่มีบุคลากรในโครงการนี้ที่ทำแบบประเมินตนเอง
+                      </div>
+                    )}
                   </div>
                 </div>
               </>
