@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./style/Login.css";
 import {
@@ -8,6 +8,9 @@ import {
   FaTimes,
   FaTools,
   FaTimesCircle,
+  FaCheckCircle,
+  FaBuilding,
+  FaUser,
 } from "react-icons/fa";
 import logo from "../assets/logo-bde.png";
 import axios from "axios";
@@ -16,6 +19,7 @@ const Login = () => {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [isRegisterChoiceOpen, setIsRegisterChoiceOpen] = useState(false);
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -35,6 +39,36 @@ const Login = () => {
   const closeModal = () => {
     setModal({ ...modal, isOpen: false });
   };
+
+  // เช็ค query param ที่ backend ส่งกลับมาหลังกดยืนยันอีเมลจากลิงก์ (/login?status=verified หรือ ?error=...)
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const status = params.get("status");
+    const error = params.get("error");
+
+    if (status === "verified") {
+      openModal(
+        "success",
+        "ยืนยันอีเมลสำเร็จ",
+        "บัญชีของคุณพร้อมใช้งานแล้ว กรุณาเข้าสู่ระบบ",
+      );
+      window.history.replaceState({}, "", "/login");
+    } else if (error === "invalid_token") {
+      openModal(
+        "error",
+        "ลิงก์ยืนยันไม่ถูกต้อง",
+        "ลิงก์ยืนยันอีเมลนี้ไม่ถูกต้องหรือถูกใช้งานไปแล้ว",
+      );
+      window.history.replaceState({}, "", "/login");
+    } else if (error === "server_error") {
+      openModal(
+        "error",
+        "เกิดข้อผิดพลาด",
+        "ไม่สามารถยืนยันอีเมลได้ กรุณาลองใหม่อีกครั้ง",
+      );
+      window.history.replaceState({}, "", "/login");
+    }
+  }, []);
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -167,11 +201,18 @@ const Login = () => {
             </button>
           </form>
 
-          {/* <div className="premium-register-prompt">
+          <div className="premium-register-prompt">
             <p>
-              ยังไม่มีบัญชีผู้ใช้งาน? <a href="/register">ลงทะเบียนที่นี่</a>
+              ยังไม่มีบัญชีผู้ใช้งาน?{" "}
+              <button
+                type="button"
+                className="premium-register-link"
+                onClick={() => setIsRegisterChoiceOpen(true)}
+              >
+                ลงทะเบียนที่นี่
+              </button>
             </p>
-          </div> */}
+          </div>
 
           <div
             style={{
@@ -268,7 +309,13 @@ const Login = () => {
 
             {/* ไอคอนและสีจะเปลี่ยนไปตาม type */}
             <div className={`custom-modal-icon-wrapper ${modal.type}`}>
-              {modal.type === "error" ? <FaTimesCircle /> : <FaTools />}
+              {modal.type === "error" ? (
+                <FaTimesCircle />
+              ) : modal.type === "success" ? (
+                <FaCheckCircle />
+              ) : (
+                <FaTools />
+              )}
             </div>
 
             <h3 className="custom-modal-title">{modal.title}</h3>
@@ -280,6 +327,65 @@ const Login = () => {
             >
               {modal.type === "error" ? "ตกลง" : "รับทราบ"}
             </button>
+          </div>
+        </div>
+      )}
+
+      {/* ================= 5. Popup เลือกประเภทการลงทะเบียน ================= */}
+      {isRegisterChoiceOpen && (
+        <div
+          className="custom-modal-overlay"
+          onClick={() => setIsRegisterChoiceOpen(false)}
+        >
+          <div
+            className="register-choice-content"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              className="custom-modal-close"
+              onClick={() => setIsRegisterChoiceOpen(false)}
+            >
+              <FaTimes />
+            </button>
+
+            <h3 className="custom-modal-title">เลือกประเภทการลงทะเบียน</h3>
+            <p className="custom-modal-desc">
+              กรุณาเลือกรูปแบบบัญชีที่ต้องการสมัครใช้งาน
+            </p>
+
+            <div className="register-choice-options">
+              <button
+                type="button"
+                className="register-choice-card"
+                onClick={() => navigate("/register?type=organization")}
+              >
+                <div className="register-choice-icon">
+                  <FaBuilding />
+                </div>
+                <span className="register-choice-title">
+                  สมัครในฐานะหน่วยงาน
+                </span>
+                <span className="register-choice-desc">
+                  สำหรับหน่วยงานที่ต้องการเข้าร่วมและกำกับดูแลโครงการ AI
+                </span>
+              </button>
+
+              <button
+                type="button"
+                className="register-choice-card"
+                onClick={() => navigate("/register?type=individual")}
+              >
+                <div className="register-choice-icon">
+                  <FaUser />
+                </div>
+                <span className="register-choice-title">
+                  สมัครในนามประชาชนทั่วไป
+                </span>
+                <span className="register-choice-desc">
+                  สำหรับบุคคลทั่วไปที่ต้องการเรียนรู้และประเมินตนเอง
+                </span>
+              </button>
+            </div>
           </div>
         </div>
       )}

@@ -53,6 +53,7 @@ const SidebarAdmin = () => {
   useEffect(() => {
     if (
       location.pathname.includes("/admin-maturity") ||
+      location.pathname.includes("/admin-impact") ||
       location.pathname.includes("/admin-principle") ||
       location.pathname.includes("/admin-component") ||
       location.pathname.includes("/admin-mapping") ||
@@ -82,6 +83,7 @@ const SidebarAdmin = () => {
   // เช็คเพื่อทำให้เมนูแม่ (จัดการการประเมิน) เป็นสี Active หากอยู่ในหน้าลูก
   const isAssessmentActive =
     location.pathname.includes("/admin-maturity") ||
+    location.pathname.includes("/admin-impact") ||
     location.pathname.includes("/admin-principle") ||
     location.pathname.includes("/admin-component") ||
     location.pathname.includes("/admin-mapping") ||
@@ -219,6 +221,14 @@ const SidebarAdmin = () => {
                 >
                   <span className="admin-subitem-dot"></span>
                   <span className="admin-subitem-text">Maturity Level</span>
+                </Link>
+
+                <Link
+                  to="/admin-impact"
+                  className={`admin-sidebar-subitem ${isActive("/admin-impact")}`}
+                >
+                  <span className="admin-subitem-dot"></span>
+                  <span className="admin-subitem-text">Impact Level</span>
                 </Link>
 
                 <Link

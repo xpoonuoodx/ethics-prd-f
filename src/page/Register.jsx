@@ -1,39 +1,59 @@
 import React, { useState } from "react";
-import "./style/Register.css"; // อย่าลืมสร้างไฟล์นี้ในโฟลเดอร์ style
-import { FaEye, FaEyeSlash, FaArrowLeft } from "react-icons/fa";
-import logo from "../assets/logo-bde.png"; // นำเข้าโลโก้
+import { useSearchParams } from "react-router-dom";
+import "./style/Register.css";
+import { FaEye, FaEyeSlash, FaArrowLeft, FaBuilding, FaUser } from "react-icons/fa";
+import logo from "../assets/logo-bde.png";
 import axios from "axios";
 import Swal from "sweetalert2";
+import { sanitizeUsername, sanitizePassword } from "../utils/validators";
+
+const USER_TYPE_OPTIONS = [
+  { value: "regulator", label: "Regulator (ผู้กำกับดูแล)" },
+  { value: "policy", label: "Policy (ผู้วางนโยบาย)" },
+  { value: "researcher", label: "Researcher (นักวิจัย)" },
+  { value: "developer", label: "Developer (นักพัฒนา)" },
+  { value: "service provider", label: "Service Provider (ผู้ให้บริการ)" },
+  { value: "users", label: "Users (ผู้ใช้งานทั่วไป)" },
+];
 
 const Register = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const accountType = searchParams.get("type"); // "organization" | "individual" | null
+
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  // State สำหรับเก็บข้อมูลฟอร์มทั้งหมดตามที่ Backend ต้องการ
   const [formData, setFormData] = useState({
     first_name: "",
     last_name: "",
     id_card: "",
-    phone: "",
     email: "",
     username: "",
     password: "",
-    confirmPassword: "", // ใช้เช็คฝั่งหน้าบ้านเฉยๆ
+    confirmPassword: "",
+    user_type: "",
+    org_name: "",
   });
 
-  // ฟังก์ชันจัดการเมื่อพิมพ์ข้อมูลในช่องต่างๆ
   const handleChange = (e) => {
+    const { id, value } = e.target;
+    let finalValue = value;
+    if (id === "username") finalValue = sanitizeUsername(value);
+    if (id === "password" || id === "confirmPassword")
+      finalValue = sanitizePassword(value);
+
     setFormData({
       ...formData,
-      [e.target.id]: e.target.value,
+      [id]: finalValue,
     });
   };
+
+  const isOrganization = accountType === "organization";
 
   const handleRegister = async (e) => {
     e.preventDefault();
 
-    // 1. ตรวจสอบว่ารหัสผ่านตรงกันหรือไม่
     if (formData.password !== formData.confirmPassword) {
       return Swal.fire({
         icon: "warning",
@@ -43,30 +63,48 @@ const Register = () => {
       });
     }
 
+    if (!formData.user_type) {
+      return Swal.fire({
+        icon: "warning",
+        title: "ข้อมูลไม่ครบถ้วน",
+        text: "กรุณาเลือกประเภทผู้ใช้งาน",
+        confirmButtonColor: "#75ba40",
+      });
+    }
+
+    if (isOrganization && !formData.org_name.trim()) {
+      return Swal.fire({
+        icon: "warning",
+        title: "ข้อมูลไม่ครบถ้วน",
+        text: "กรุณากรอกชื่อหน่วยงาน",
+        confirmButtonColor: "#75ba40",
+      });
+    }
+
     setLoading(true);
 
     try {
-      // 2. ส่งข้อมูลไปที่ API
-      const API_URL = `${import.meta.env.VITE_APP_API_ENDPOINT}/register`;
+      const API_URL = `${import.meta.env.VITE_APP_API_ENDPOINT}/auth/register`;
 
       const response = await axios.post(API_URL, {
+        account_type: accountType,
         id_card: formData.id_card,
         first_name: formData.first_name,
         last_name: formData.last_name,
-        phone: formData.phone,
         email: formData.email,
         username: formData.username,
         password: formData.password,
+        user_type: formData.user_type,
+        ...(isOrganization ? { org_name: formData.org_name.trim() } : {}),
       });
 
-      // 3. เมื่อสำเร็จ แจ้งเตือนและพากลับไปหน้า Login
       Swal.fire({
         icon: "success",
         title: "ลงทะเบียนสำเร็จ!",
         text: response.data.message || "กรุณาตรวจสอบอีเมลเพื่อยืนยันตัวตน",
         confirmButtonColor: "#75ba40",
       }).then(() => {
-        window.location.href = "/login"; // เด้งไปหน้า login
+        window.location.href = "/login";
       });
     } catch (error) {
       console.error("Register Error:", error);
@@ -85,24 +123,94 @@ const Register = () => {
     }
   };
 
+  // ==========================================
+  // หน้าจอเลือกประเภทการลงทะเบียน (ยังไม่ได้เลือก type)
+  // ==========================================
+  if (!isOrganization && accountType !== "individual") {
+    return (
+      <div className="auth-register-container">
+        <div className="auth-register-left">
+          <a href="/login" className="auth-register-back-btn">
+            <FaArrowLeft /> กลับสู่หน้าเข้าสู่ระบบ
+          </a>
+
+          <div className="auth-register-form-wrapper">
+            <img src={logo} alt="BDE Logo" className="auth-register-logo" />
+            <h2>เลือกประเภทการลงทะเบียน</h2>
+            <p className="auth-register-subtitle">
+              กรุณาเลือกรูปแบบบัญชีที่ต้องการสมัครใช้งาน
+            </p>
+
+            <div className="auth-register-choice-options">
+              <button
+                type="button"
+                className="auth-register-choice-card"
+                onClick={() => setSearchParams({ type: "organization" })}
+              >
+                <div className="auth-register-choice-icon">
+                  <FaBuilding />
+                </div>
+                <span className="auth-register-choice-title">
+                  สมัครในฐานะหน่วยงาน
+                </span>
+                <span className="auth-register-choice-desc">
+                  สำหรับหน่วยงานที่ต้องการเข้าร่วมและกำกับดูแลโครงการ AI
+                </span>
+              </button>
+
+              <button
+                type="button"
+                className="auth-register-choice-card"
+                onClick={() => setSearchParams({ type: "individual" })}
+              >
+                <div className="auth-register-choice-icon">
+                  <FaUser />
+                </div>
+                <span className="auth-register-choice-title">
+                  สมัครในนามประชาชนทั่วไป
+                </span>
+                <span className="auth-register-choice-desc">
+                  สำหรับบุคคลทั่วไปที่ต้องการเรียนรู้และประเมินตนเอง
+                </span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div className="auth-register-right">
+          <div className="auth-register-image-overlay"></div>
+        </div>
+      </div>
+    );
+  }
+
+  // ==========================================
+  // ฟอร์มลงทะเบียนจริง
+  // ==========================================
   return (
     <div className="auth-register-container">
-      {/* ส่วนซ้าย: ฟอร์มลงทะเบียน */}
       <div className="auth-register-left">
-        <a href="/login" className="auth-register-back-btn">
-          <FaArrowLeft /> กลับสู่หน้าเข้าสู่ระบบ
-        </a>
+        <button
+          type="button"
+          className="auth-register-back-btn"
+          onClick={() => setSearchParams({})}
+        >
+          <FaArrowLeft /> เปลี่ยนประเภทการสมัคร
+        </button>
 
         <div className="auth-register-form-wrapper">
           <img src={logo} alt="BDE Logo" className="auth-register-logo" />
 
-          <h2>สร้างบัญชีผู้ใช้งาน</h2>
+          <h2>
+            {isOrganization ? "ลงทะเบียนในฐานะหน่วยงาน" : "ลงทะเบียนบุคคลทั่วไป"}
+          </h2>
           <p className="auth-register-subtitle">
-            กรอกข้อมูลด้านล่างเพื่อลงทะเบียนเข้าใช้งานระบบ
+            {isOrganization
+              ? "กรอกข้อมูลด้านล่างเพื่อลงทะเบียนหน่วยงานและบัญชีผู้กำกับดูแล"
+              : "กรอกข้อมูลด้านล่างเพื่อลงทะเบียนเข้าใช้งานระบบ"}
           </p>
 
           <form onSubmit={handleRegister}>
-            {/* Grid 2 คอลัมน์ สำหรับฟอร์ม */}
             <div className="auth-register-form-grid">
               <div className="auth-register-input-group">
                 <label htmlFor="first_name">ชื่อจริง</label>
@@ -142,19 +250,6 @@ const Register = () => {
               </div>
 
               <div className="auth-register-input-group">
-                <label htmlFor="phone">เบอร์โทรศัพท์</label>
-                <input
-                  type="tel"
-                  id="phone"
-                  placeholder="08X-XXX-XXXX"
-                  maxLength="10"
-                  value={formData.phone}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
-
-              <div className="auth-register-input-group">
                 <label htmlFor="email">อีเมล</label>
                 <input
                   type="email"
@@ -176,6 +271,28 @@ const Register = () => {
                   onChange={handleChange}
                   required
                 />
+                <span className="auth-register-field-hint">
+                  ใช้ได้เฉพาะภาษาอังกฤษ ตัวเลข และ . _ - (ห้ามใช้ภาษาไทย)
+                </span>
+              </div>
+
+              <div className="auth-register-input-group">
+                <label htmlFor="user_type">ประเภทผู้ใช้งาน (User Type)</label>
+                <select
+                  id="user_type"
+                  value={formData.user_type}
+                  onChange={handleChange}
+                  required
+                >
+                  <option value="" disabled>
+                    -- เลือกประเภท --
+                  </option>
+                  {USER_TYPE_OPTIONS.map((opt) => (
+                    <option key={opt.value} value={opt.value}>
+                      {opt.label}
+                    </option>
+                  ))}
+                </select>
               </div>
 
               <div className="auth-register-input-group">
@@ -196,6 +313,9 @@ const Register = () => {
                     {showPassword ? <FaEyeSlash /> : <FaEye />}
                   </span>
                 </div>
+                <span className="auth-register-field-hint">
+                  ใช้ได้เฉพาะภาษาอังกฤษ ตัวเลข และสัญลักษณ์ (ห้ามใช้ภาษาไทย)
+                </span>
               </div>
 
               <div className="auth-register-input-group">
@@ -217,6 +337,20 @@ const Register = () => {
                   </span>
                 </div>
               </div>
+
+              {isOrganization && (
+                <div className="auth-register-input-group auth-register-full-width">
+                  <label htmlFor="org_name">ชื่อหน่วยงานของท่าน</label>
+                  <input
+                    type="text"
+                    id="org_name"
+                    placeholder="กรอกชื่อหน่วยงาน"
+                    value={formData.org_name}
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
+              )}
             </div>
 
             <button
@@ -235,7 +369,6 @@ const Register = () => {
         </div>
       </div>
 
-      {/* ส่วนขวา: รูปภาพ */}
       <div className="auth-register-right">
         <div className="auth-register-image-overlay"></div>
       </div>

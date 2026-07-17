@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import SidebarUser from "./SidebarUser";
+import SidebarRegulator from "./SidebarRegulator";
 import {
   FaArrowLeft,
   FaPrint,
@@ -14,16 +14,16 @@ import {
   FaUserTie,
   FaLayerGroup,
 } from "react-icons/fa";
-import "./style/UserToolsResult.css";
+import "./style/RegulatorToolsResult.css";
 
-const UserToolsResult = () => {
+const RegulatorToolsResult = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const resultData = location.state?.resultData;
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    if (!resultData) navigate("/user-tools");
+    if (!resultData) navigate("/regulator-tools");
   }, [resultData, navigate]);
 
   if (!resultData) return null;
@@ -31,14 +31,14 @@ const UserToolsResult = () => {
 
   return (
     <div className="user-portal-layout">
-      <SidebarUser />
+      <SidebarRegulator />
       <div className="user-portal-content">
         <div className="utr-minimal-container">
           {/* Header */}
           <div className="utr-top-actions">
             <button
               className="utr-back-btn"
-              onClick={() => navigate("/user-tools")}
+              onClick={() => navigate("/regulator-tools")}
             >
               <FaArrowLeft /> กลับ
             </button>
@@ -197,4 +197,4 @@ const UserToolsResult = () => {
   );
 };
 
-export default UserToolsResult;
+export default RegulatorToolsResult;

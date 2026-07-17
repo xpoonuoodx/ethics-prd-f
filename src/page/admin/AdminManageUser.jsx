@@ -18,11 +18,13 @@ import {
 } from "react-icons/fa";
 import SidebarAdmin from "./SidebarAdmin";
 import api from "../../api/Api";
+import { sanitizeUsername, sanitizePassword } from "../../utils/validators";
 
 const AdminManageUser = () => {
   const navigate = useNavigate(); // เรียกใช้ navigate
   const [users, setUsers] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [roleFilter, setRoleFilter] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -94,9 +96,13 @@ const AdminManageUser = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+    let finalValue = value;
+    if (name === "username") finalValue = sanitizeUsername(value);
+    if (name === "password") finalValue = sanitizePassword(value);
+
     setFormData((prev) => ({
       ...prev,
-      [name]: value,
+      [name]: finalValue,
     }));
   };
 
@@ -209,7 +215,17 @@ const AdminManageUser = () => {
     const matchOrg = u.org_name
       ? u.org_name.toLowerCase().includes(searchStr)
       : false;
-    return matchName || matchUsername || matchOrg;
+    const matchSearch = matchName || matchUsername || matchOrg;
+
+    if (!matchSearch) return false;
+    if (!roleFilter) return true;
+
+    const userRole = (u.role || "").toLowerCase();
+    if (roleFilter === "user") {
+      // "ผู้ใช้งานทั่วไป" คือค่า default ของ getRoleBadge (ไม่ใช่ admin/regulator)
+      return userRole !== "admin" && userRole !== "regulator";
+    }
+    return userRole === roleFilter;
   });
 
   return (
@@ -234,6 +250,17 @@ const AdminManageUser = () => {
                   onChange={(e) => setSearchTerm(e.target.value)}
                 />
               </div>
+
+              <select
+                className="admin-manage-user-role-filter"
+                value={roleFilter}
+                onChange={(e) => setRoleFilter(e.target.value)}
+              >
+                <option value="">สิทธิ์การใช้งานทั้งหมด</option>
+                <option value="admin">ผู้ดูแลระบบสูงสุด</option>
+                <option value="regulator">ผู้กำกับดูแล</option>
+                <option value="user">ผู้ใช้งานทั่วไป</option>
+              </select>
 
               <button
                 className="admin-manage-user-btn-dark"
@@ -423,6 +450,9 @@ const AdminManageUser = () => {
                     onChange={handleInputChange}
                     required
                   />
+                  <span className="admin-manage-user-field-hint">
+                    ภาษาอังกฤษ/ตัวเลข/. _ - เท่านั้น
+                  </span>
                 </div>
                 <div className="admin-manage-user-form-group admin-manage-user-half-width">
                   <label>รหัสผ่าน (Password)</label>
@@ -434,6 +464,9 @@ const AdminManageUser = () => {
                     onChange={handleInputChange}
                     required
                   />
+                  <span className="admin-manage-user-field-hint">
+                    ห้ามใช้ภาษาไทย
+                  </span>
                 </div>
               </div>
 

@@ -1,0 +1,275 @@
+@import url("https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap");
+
+.user-portal-layout * {
+  box-sizing: border-box;
+  font-family: "Prompt", sans-serif;
+}
+.user-portal-layout {
+  display: flex;
+  min-height: 100vh;
+  background-color: #f4f6f8;
+} /* พื้นหลังเทาแบบ Admin */
+.user-portal-content {
+  flex: 1;
+  margin-left: 260px;
+  transition: margin-left 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+.flex-center {
+  justify-content: center;
+  align-items: center;
+}
+
+.ucl-admin-container {
+  padding: 40px;
+  width: 100%;
+  /* max-width: 1200px; */
+  /* margin: 0 auto; */
+}
+.ucl-spin-icon {
+  font-size: 40px;
+  color: #2563eb;
+  animation: spin 1s linear infinite;
+}
+@keyframes spin {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Utilities */
+.text-blue {
+  color: #2563eb;
+}
+.bg-blue-light {
+  background: #dbeafe;
+}
+.text-green {
+  color: #10b981;
+}
+.bg-green-light {
+  background: #d1fae5;
+}
+
+/* Header */
+.ucl-header {
+  margin-bottom: 30px;
+}
+.ucl-back-btn {
+  background: none;
+  border: none;
+  color: #64748b;
+  font-size: 14px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  padding: 0;
+  margin-bottom: 20px;
+  transition: color 0.2s;
+}
+.ucl-back-btn:hover {
+  color: #0f172a;
+}
+.ucl-title {
+  font-size: 26px;
+  font-weight: 700;
+  color: #111827;
+  margin: 0 0 8px 0;
+  letter-spacing: -0.3px;
+}
+.ucl-subtitle {
+  font-size: 15px;
+  color: #64748b;
+  margin: 0;
+}
+
+/* Main Card */
+.ucl-card {
+  background: #ffffff;
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+  overflow: hidden;
+}
+.ucl-card-header {
+  padding: 20px 24px;
+  border-bottom: 1px solid #f1f5f9;
+  background: #fcfcfc;
+}
+.ucl-card-header h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: #0f172a;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.ucl-card-body {
+  padding: 24px;
+}
+
+/* List Wrapper */
+.ucl-lessons-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.ucl-lesson-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  background: #ffffff;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  transition: all 0.2s ease;
+}
+.ucl-lesson-row:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.04);
+  border-color: #cbd5e1;
+}
+
+.ucl-lesson-info {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.ucl-lesson-icon-box {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.ucl-lesson-details {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.ucl-lesson-index {
+  font-size: 12px;
+  font-weight: 600;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.ucl-lesson-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1e293b;
+  margin: 0;
+}
+
+/* Actions & Buttons */
+.ucl-lesson-actions {
+  display: flex;
+  gap: 10px;
+}
+.ucl-btn-primary {
+  background: #2563eb;
+  color: white;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: background 0.2s;
+  white-space: nowrap;
+}
+.ucl-btn-primary:hover {
+  background: #1d4ed8;
+}
+
+.ucl-btn-success {
+  background: #10b981;
+  color: white;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: background 0.2s;
+  white-space: nowrap;
+}
+.ucl-btn-success:hover {
+  background: #059669;
+}
+
+.ucl-btn-outline {
+  background: white;
+  border: 1px solid #cbd5e1;
+  color: #475569;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.ucl-btn-outline:disabled {
+  background: #f8fafc;
+  color: #94a3b8;
+  border-color: #e2e8f0;
+  cursor: not-allowed;
+}
+
+.ucl-empty-state {
+  text-align: center;
+  padding: 40px;
+  color: #94a3b8;
+  font-size: 15px;
+  font-style: italic;
+  background: #f8fafc;
+  border-radius: 12px;
+  border: 1px dashed #cbd5e1;
+}
+
+@media (max-width: 1024px) {
+  .ucl-lesson-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+  }
+  .ucl-lesson-actions {
+    width: 100%;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+  }
+}
+@media (max-width: 899px) {
+  .user-portal-content {
+    margin-left: 0;
+  }
+}
+@media (max-width: 768px) {
+  .ucl-admin-container {
+    padding: 20px 15px;
+  }
+  .ucl-btn-primary,
+  .ucl-btn-success,
+  .ucl-btn-outline {
+    width: 100%;
+    justify-content: center;
+  }
+}

@@ -14,6 +14,7 @@ import {
 } from "react-icons/fa";
 import Swal from "sweetalert2";
 import api from "../../api/Api";
+import { sanitizeUsername, sanitizePassword } from "../../utils/validators";
 
 const RegulatorUserManage = () => {
   const navigate = useNavigate(); // เรียกใช้งาน navigate
@@ -63,6 +64,10 @@ const RegulatorUserManage = () => {
     if (name === "id_card") {
       const numericValue = value.replace(/\D/g, "");
       setFormData((prev) => ({ ...prev, [name]: numericValue }));
+    } else if (name === "username") {
+      setFormData((prev) => ({ ...prev, [name]: sanitizeUsername(value) }));
+    } else if (name === "password") {
+      setFormData((prev) => ({ ...prev, [name]: sanitizePassword(value) }));
     } else {
       setFormData((prev) => ({ ...prev, [name]: value }));
     }
@@ -350,6 +355,9 @@ const RegulatorUserManage = () => {
                   onChange={handleInputChange}
                   required
                 />
+                <span className="rum-field-hint">
+                  ภาษาอังกฤษ/ตัวเลข/. _ - เท่านั้น
+                </span>
               </div>
 
               <div className="rum-form-group">
@@ -362,6 +370,7 @@ const RegulatorUserManage = () => {
                   onChange={handleInputChange}
                   required
                 />
+                <span className="rum-field-hint">ห้ามใช้ภาษาไทย</span>
               </div>
 
               <div className="rum-form-group">

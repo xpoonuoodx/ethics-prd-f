@@ -1,0 +1,285 @@
+@import url("https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap");
+
+/* Layout และ CSS เฉพาะโฟลเดอร์แบบทดสอบ */
+.utest-container * {
+  box-sizing: border-box;
+  font-family: "Prompt", sans-serif;
+}
+.utest-container {
+  padding: 40px;
+  width: 100%;
+  /* max-width: 1200px; */
+  /* margin: 0 auto; */
+}
+.utest-flex-center {
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  height: 100%;
+}
+
+.utest-loading-spin {
+  font-size: 40px;
+  color: #2563eb;
+  animation: utest-spin 1s linear infinite;
+}
+@keyframes utest-spin {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* โทนสีเฉพาะจุดของหน้า */
+.utest-text-blue {
+  color: #2563eb;
+}
+.utest-bg-blue-light {
+  background: #eff6ff;
+}
+.utest-text-green {
+  color: #10b981;
+}
+.utest-bg-green-light {
+  background: #d1fae5;
+}
+.utest-text-red {
+  color: #ef4444;
+}
+.utest-bg-red-light {
+  background: #fee2e2;
+}
+
+/* Header & Back Button */
+.utest-back-btn {
+  background: none;
+  border: none;
+  color: #64748b;
+  font-size: 14px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  padding: 0;
+  margin-bottom: 25px;
+  transition: color 0.2s;
+}
+.utest-back-btn:hover {
+  color: #0f172a;
+}
+
+.utest-header {
+  margin-bottom: 30px;
+}
+.utest-title {
+  font-size: 26px;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 8px 0;
+  letter-spacing: -0.3px;
+}
+.utest-subtitle {
+  font-size: 15px;
+  color: #64748b;
+  margin: 0;
+}
+
+/* Main White Card Layout (สไตล์มินิมอล) */
+.utest-card {
+  background: #ffffff;
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+  overflow: hidden;
+}
+.utest-card-header {
+  padding: 20px 24px;
+  border-bottom: 1px solid #f1f5f9;
+  background: #fcfcfc;
+}
+.utest-card-header h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: #0f172a;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.utest-card-body {
+  padding: 24px;
+}
+
+/* List wrapper Container */
+.utest-list-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+}
+
+/* การ์ดแยกแบบบรรทัด (Flex Row ชิดซ้ายและขวา) */
+.utest-list-row {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 20px 24px;
+  background: #ffffff;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  transition: all 0.2s ease;
+}
+.utest-list-row:hover {
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
+  border-color: #cbd5e1;
+}
+.utest-list-row.utest-row-passed {
+  border-left: 4px solid #10b981;
+}
+
+/* ฝั่งซ้าย (ข้อมูลชื่อบทเรียน) */
+.utest-list-info {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+.utest-list-icon {
+  width: 50px;
+  height: 50px;
+  border-radius: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 22px;
+  flex-shrink: 0;
+}
+
+.utest-list-details {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.utest-list-index {
+  font-size: 13px;
+  font-weight: 600;
+  color: #64748b;
+}
+.utest-list-name {
+  font-size: 17px;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0;
+}
+.utest-list-meta {
+  font-size: 13.5px;
+  color: #64748b;
+  margin: 0;
+}
+.utest-list-meta strong {
+  color: #0f172a;
+}
+
+/* ฝั่งขวา (ดีดตัวบล็อกคะแนนและปุ่มไปชิดขวาสุดของหน้าจอ) */
+.utest-list-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-left: auto; /* 💡 ดันและถีบกล่องนี้ไปอยู่ขวาสุดของพื้นที่การ์ดแบบถาวร */
+}
+
+.utest-score-badge {
+  background: #f8fafc;
+  padding: 8px 16px;
+  border-radius: 50px;
+  font-size: 14px;
+  color: #475569;
+  font-weight: 500;
+  border: 1px solid #e2e8f0;
+  white-space: nowrap;
+}
+.utest-score-badge strong {
+  color: #0f172a;
+  font-weight: 700;
+}
+
+/* ปุ่มกดจัดการ */
+.utest-btn-action {
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.utest-btn-action:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.utest-btn-action.utest-btn-primary {
+  background: #2563eb;
+  color: white;
+}
+.utest-btn-action.utest-btn-primary:hover:not(:disabled) {
+  background: #1d4ed8;
+}
+
+.utest-btn-action.utest-btn-outline {
+  background: white;
+  border: 1px solid #cbd5e1;
+  color: #334155;
+}
+.utest-btn-action.utest-btn-outline:hover:not(:disabled) {
+  background: #f8fafc;
+  border-color: #94a3b8;
+}
+
+.utest-empty-state {
+  text-align: center;
+  padding: 40px;
+  color: #94a3b8;
+  font-size: 14.5px;
+  font-style: italic;
+  background: #f8fafc;
+  border-radius: 12px;
+  border: 1px dashed #cbd5e1;
+}
+
+/* Responsive สำหรับแท็บเล็ตและมือถือ */
+@media (max-width: 1024px) {
+  .utest-list-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+  }
+  .utest-list-actions {
+    width: 100%;
+    justify-content: space-between;
+    margin-left: 0;
+    flex-wrap: wrap;
+  }
+}
+@media (max-width: 899px) {
+  .user-portal-content {
+    margin-left: 0;
+  }
+}
+@media (max-width: 768px) {
+  .utest-container {
+    padding: 20px 15px;
+  }
+  .utest-score-badge {
+    width: 100%;
+    text-align: center;
+  }
+  .utest-btn-action {
+    width: 100%;
+    justify-content: center;
+    margin-top: 10px;
+  }
+}

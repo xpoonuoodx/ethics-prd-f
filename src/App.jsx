@@ -28,6 +28,7 @@ import AdminManageUser from "./page/admin/AdminManageUser";
 import AdminViewOrganize from "./page/admin/AdminViewOrganize";
 import AdminPrinciple from "./page/admin/AdminPrinciple";
 import AdminMaturity from "./page/admin/AdminMaturity";
+import AdminImpact from "./page/admin/AdminImpact";
 import AdminComponent from "./page/admin/AdminComponent";
 import AdminMapping from "./page/admin/AdminMapping";
 import AdminGuideline from "./page/admin/AdminGuideline"; // หน้าแนวทางการพัฒนา
@@ -56,6 +57,15 @@ import RegulatorUserManage from "./page/regulator/RegulatorUserManage";
 import RegulatorProjectManage from "./page/regulator/RegulatorProjectManage";
 import RegulatorViewProject from "./page/regulator/RegulatorViewProject";
 import RegulatorViewUser from "./page/regulator/RegulatorViewUser";
+import RegulatorClassroom from "./page/regulator/RegulatorClassroom";
+import RegulatorClassroomDetail from "./page/regulator/RegulatorClassroomDetail";
+import RegulatorTest from "./page/regulator/RegulatorTest";
+import RegulatorTestDetail from "./page/regulator/RegulatorTestDetail";
+import RegulatorResult from "./page/regulator/RegulatorResult";
+import RegulatorTools from "./page/regulator/RegulatorTools";
+import RegulatorToolsCreate from "./page/regulator/RegulatorToolsCreate";
+import RegulatorToolsResult from "./page/regulator/RegulatorToolsResult";
+import RegulatorCertificate from "./page/regulator/RegulatorCertificate";
 
 function App() {
   return (
@@ -143,6 +153,14 @@ function App() {
           element={
             <AdminRoute>
               <AdminMaturity />
+            </AdminRoute>
+          }
+        />
+        <Route
+          path="/admin-impact"
+          element={
+            <AdminRoute>
+              <AdminImpact />
             </AdminRoute>
           }
         />
@@ -336,6 +354,80 @@ function App() {
           element={
             <RegulatorRoute>
               <RegulatorViewUser />
+            </RegulatorRoute>
+          }
+        />
+
+        {/* --- เส้นทางสื่อการเรียนรู้และแบบประเมิน สำหรับ Regulator --- */}
+        <Route
+          path="/regulator-classroom"
+          element={
+            <RegulatorRoute>
+              <RegulatorClassroom />
+            </RegulatorRoute>
+          }
+        />
+        <Route
+          path="/regulator-classroom-detail"
+          element={
+            <RegulatorRoute>
+              <RegulatorClassroomDetail />
+            </RegulatorRoute>
+          }
+        />
+        <Route
+          path="/regulator-test"
+          element={
+            <RegulatorRoute>
+              <RegulatorTest />
+            </RegulatorRoute>
+          }
+        />
+        <Route
+          path="/regulator-test-detail"
+          element={
+            <RegulatorRoute>
+              <RegulatorTestDetail />
+            </RegulatorRoute>
+          }
+        />
+        <Route
+          path="/regulator-result"
+          element={
+            <RegulatorRoute>
+              <RegulatorResult />
+            </RegulatorRoute>
+          }
+        />
+        <Route
+          path="/regulator-tools"
+          element={
+            <RegulatorRoute>
+              <RegulatorTools />
+            </RegulatorRoute>
+          }
+        />
+        <Route
+          path="/regulator-tools-create"
+          element={
+            <RegulatorRoute>
+              <RegulatorToolsCreate />
+            </RegulatorRoute>
+          }
+        />
+        <Route
+          path="/regulator-tools-result"
+          element={
+            <RegulatorRoute>
+              <RegulatorToolsResult />
+            </RegulatorRoute>
+          }
+        />
+        <Route
+          path="/regulator-certificate"
+          element={
+            <RegulatorRoute>
+              <RegulatorCertificate />
             </RegulatorRoute>
           }
         />
