@@ -76,7 +76,7 @@ function Contact() {
         {/* 2. ส่วนแผนที่ (กว้างเต็มกรอบ โค้งมน) */}
         <div className="contact-map-container">
           <iframe
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3873.3496987556735!2d100.5629169148318!3d13.877864490266014!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x30e2832c3f8f94d7%3A0x6e2c349071b782b4!2sGovernment%20Complex%20Building%20B!5e0!3m2!1sen!2sth!4v1680000000000!5m2!1sen!2sth"
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2340.1371266206716!2d100.56916613004393!3d13.879180897516976!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x30e2830059856db3%3A0xa6df457e0852ff98!2sBDE!5e1!3m2!1sth!2sth!4v1784262137935!5m2!1sth!2sth"
             width="100%"
             height="100%"
             style={{ border: 0 }}

@@ -10,6 +10,8 @@ import {
   Download,
   TrendingUp,
   Activity,
+  Layers,
+  ChartPie,
 } from "lucide-react";
 import {
   AreaChart,
@@ -171,13 +173,14 @@ function Dashboard() {
     }
   };
 
+  // ชุดสีเดียวกับธีมหน้า Home (เขียว/กรมท่าเป็นหลัก แซมด้วยโทนเสริมกลุ่มเดียวกัน)
   const COLORS = [
-    "#3b82f6",
-    "#8b5cf6",
-    "#f59e0b",
-    "#10b981",
-    "#ef4444",
-    "#ec4899",
+    "#75ba40",
+    "#0f172a",
+    "#d97706",
+    "#0f766e",
+    "#64748b",
+    "#b45309",
   ];
 
   if (loading) {
@@ -199,6 +202,7 @@ function Dashboard() {
         {/* Header */}
         <div className="pub-db-header">
           <div>
+            <span className="pub-db-eyebrow">ข้อมูลสาธารณะ</span>
             <h1 className="pub-db-title">สถานการณ์จริยธรรม AI ระดับประเทศ</h1>
             <p className="pub-db-subtitle">
               ข้อมูลสถิติภาพรวมเชิงสาธารณะ (Public Aggregated Data)
@@ -280,8 +284,10 @@ function Dashboard() {
           <div className="pub-db-card">
             <div className="pub-db-card-header">
               <h3>
-                <Activity size={18} className="text-blue" /> คะแนนเฉลี่ยจริยธรรม
-                7 มิติ
+                <span className="pub-db-card-icon accent-green">
+                  <Activity size={16} />
+                </span>
+                คะแนนเฉลี่ยจริยธรรม 7 มิติ
               </h3>
               <p>ดัชนีภาพรวมจากการประเมินของทุกองค์กร</p>
               <span className="pub-db-radar-note">
@@ -310,9 +316,9 @@ function Dashboard() {
                     <Radar
                       name="คะแนนเฉลี่ยประเทศ"
                       dataKey="A"
-                      stroke="#3b82f6"
-                      fill="#3b82f6"
-                      fillOpacity={0.4}
+                      stroke="#75ba40"
+                      fill="#75ba40"
+                      fillOpacity={0.35}
                     />
                     <Tooltip />
                   </RadarChart>
@@ -329,7 +335,9 @@ function Dashboard() {
           <div className="pub-db-card">
             <div className="pub-db-card-header">
               <h3>
-                <TrendingUp size={18} className="text-purple" />{" "}
+                <span className="pub-db-card-icon accent-navy">
+                  <TrendingUp size={16} />
+                </span>
                 การเติบโตของผู้ผ่านหลักสูตร
               </h3>
               <p>จำนวนใบประกาศนียบัตรสะสมทั้งหมด (ย้อนหลัง 6 เดือน)</p>
@@ -351,12 +359,12 @@ function Dashboard() {
                       >
                         <stop
                           offset="5%"
-                          stopColor="#8b5cf6"
-                          stopOpacity={0.4}
+                          stopColor="#0f172a"
+                          stopOpacity={0.35}
                         />
                         <stop
                           offset="95%"
-                          stopColor="#8b5cf6"
+                          stopColor="#0f172a"
                           stopOpacity={0}
                         />
                       </linearGradient>
@@ -389,7 +397,7 @@ function Dashboard() {
                       type="monotone"
                       dataKey="certs"
                       name="ใบประกาศฯ"
-                      stroke="#8b5cf6"
+                      stroke="#0f172a"
                       strokeWidth={3}
                       fillOpacity={1}
                       fill="url(#colorCerts)"
@@ -410,7 +418,12 @@ function Dashboard() {
           {/* Bar Chart (Maturity Levels) */}
           <div className="pub-db-card">
             <div className="pub-db-card-header">
-              <h3>สัดส่วนระดับความพร้อม (Maturity Level)</h3>
+              <h3>
+                <span className="pub-db-card-icon accent-amber">
+                  <Layers size={16} />
+                </span>
+                สัดส่วนระดับความพร้อม (Maturity Level)
+              </h3>
             </div>
             <div className="pub-db-card-body">
               {maturityData.length > 0 ? (
@@ -471,7 +484,12 @@ function Dashboard() {
           {/* Donut Chart (User Types) */}
           <div className="pub-db-card">
             <div className="pub-db-card-header">
-              <h3>สัดส่วนบุคลากรตามบทบาท (User Type)</h3>
+              <h3>
+                <span className="pub-db-card-icon accent-teal">
+                  <ChartPie size={16} />
+                </span>
+                สัดส่วนบุคลากรตามบทบาท (User Type)
+              </h3>
             </div>
             <div className="pub-db-card-body">
               {userRoleData.length > 0 ? (

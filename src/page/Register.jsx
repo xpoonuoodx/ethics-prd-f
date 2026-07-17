@@ -1,7 +1,14 @@
 import React, { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import "./style/Register.css";
-import { FaEye, FaEyeSlash, FaArrowLeft, FaBuilding, FaUser } from "react-icons/fa";
+import {
+  FaEye,
+  FaEyeSlash,
+  FaArrowLeft,
+  FaBuilding,
+  FaUser,
+  FaCheckCircle,
+} from "react-icons/fa";
 import logo from "../assets/logo-bde.png";
 import axios from "axios";
 import Swal from "sweetalert2";
@@ -136,6 +143,7 @@ const Register = () => {
 
           <div className="auth-register-form-wrapper">
             <img src={logo} alt="BDE Logo" className="auth-register-logo" />
+            <span className="auth-register-kicker">ลงทะเบียนใช้งาน</span>
             <h2>เลือกประเภทการลงทะเบียน</h2>
             <p className="auth-register-subtitle">
               กรุณาเลือกรูปแบบบัญชีที่ต้องการสมัครใช้งาน
@@ -178,7 +186,31 @@ const Register = () => {
         </div>
 
         <div className="auth-register-right">
-          <div className="auth-register-image-overlay"></div>
+          <div className="auth-register-image-overlay">
+            <div className="auth-register-hero-content">
+              <div className="auth-register-glass-card">
+                <span className="auth-register-glass-kicker">
+                  THAILAND AI ETHICS
+                </span>
+                <h3>ร่วมเป็นส่วนหนึ่งของ AI ที่มีจริยธรรม</h3>
+                <p>
+                  ไม่ว่าจะสมัครในนามหน่วยงานหรือบุคคลทั่วไป
+                  ทุกบัญชีสามารถประเมินความพร้อมและเรียนรู้แนวปฏิบัติจริยธรรมปัญญาประดิษฐ์ได้ทันที
+                </p>
+                <ul className="auth-register-glass-checklist">
+                  <li>
+                    <FaCheckCircle size={16} /> ใช้งานได้ฟรีทุกฟีเจอร์
+                  </li>
+                  <li>
+                    <FaCheckCircle size={16} /> รับใบประกาศนียบัตรเมื่อผ่านเกณฑ์
+                  </li>
+                  <li>
+                    <FaCheckCircle size={16} /> ยืนยันตัวตนผ่านอีเมลอย่างปลอดภัย
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     );
@@ -201,6 +233,9 @@ const Register = () => {
         <div className="auth-register-form-wrapper">
           <img src={logo} alt="BDE Logo" className="auth-register-logo" />
 
+          <span className="auth-register-kicker">
+            {isOrganization ? "บัญชีหน่วยงาน" : "บัญชีบุคคลทั่วไป"}
+          </span>
           <h2>
             {isOrganization ? "ลงทะเบียนในฐานะหน่วยงาน" : "ลงทะเบียนบุคคลทั่วไป"}
           </h2>
@@ -370,7 +405,31 @@ const Register = () => {
       </div>
 
       <div className="auth-register-right">
-        <div className="auth-register-image-overlay"></div>
+        <div className="auth-register-image-overlay">
+          <div className="auth-register-hero-content">
+            <div className="auth-register-glass-card">
+              <span className="auth-register-glass-kicker">
+                THAILAND AI ETHICS
+              </span>
+              <h3>ร่วมเป็นส่วนหนึ่งของ AI ที่มีจริยธรรม</h3>
+              <p>
+                ไม่ว่าจะสมัครในนามหน่วยงานหรือบุคคลทั่วไป
+                ทุกบัญชีสามารถประเมินความพร้อมและเรียนรู้แนวปฏิบัติจริยธรรมปัญญาประดิษฐ์ได้ทันที
+              </p>
+              <ul className="auth-register-glass-checklist">
+                <li>
+                  <FaCheckCircle size={16} /> ใช้งานได้ฟรีทุกฟีเจอร์
+                </li>
+                <li>
+                  <FaCheckCircle size={16} /> รับใบประกาศนียบัตรเมื่อผ่านเกณฑ์
+                </li>
+                <li>
+                  <FaCheckCircle size={16} /> ยืนยันตัวตนผ่านอีเมลอย่างปลอดภัย
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

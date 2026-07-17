@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import Tabbar from "../component/Tabbar";
 import Footer from "../component/Footer";
-import { Workflow, CheckCircle } from "lucide-react";
+import { Workflow } from "lucide-react";
 import "./style/About.css";
 
 function AboutProcess() {
@@ -21,6 +21,7 @@ function AboutProcess() {
       >
         <div className="about-hero-overlay"></div>
         <div className="about-hero-content">
+          <span className="about-kicker">ขั้นตอนการทำงาน</span>
           <h1 className="about-hero-title">ขั้นตอนการดำเนินการ</h1>
           <p className="about-hero-subtitle">
             กระบวนการแปลงแนวปฏิบัติจริยธรรมปัญญาประดิษฐ์ไปสู่การปฏิบัติจริง
@@ -44,7 +45,7 @@ function AboutProcess() {
 
           <ul className="about-list">
             <li>
-              <CheckCircle className="about-list-icon" size={24} />
+              <span className="about-step-badge">01</span>
               <div className="about-list-text">
                 <h4>ระยะที่ 1: สร้างความตระหนักรู้ (Awareness)</h4>
                 <p>
@@ -54,7 +55,7 @@ function AboutProcess() {
               </div>
             </li>
             <li>
-              <CheckCircle className="about-list-icon" size={24} />
+              <span className="about-step-badge">02</span>
               <div className="about-list-text">
                 <h4>ระยะที่ 2: โครงการนำร่อง (Pilot Project)</h4>
                 <p>
@@ -63,7 +64,7 @@ function AboutProcess() {
               </div>
             </li>
             <li>
-              <CheckCircle className="about-list-icon" size={24} />
+              <span className="about-step-badge">03</span>
               <div className="about-list-text">
                 <h4>ระยะที่ 3: ประเมินและวัดผล (Evaluation)</h4>
                 <p>
@@ -73,7 +74,7 @@ function AboutProcess() {
               </div>
             </li>
             <li>
-              <CheckCircle className="about-list-icon" size={24} />
+              <span className="about-step-badge">04</span>
               <div className="about-list-text">
                 <h4>ระยะที่ 4: ขยายผล (Expansion)</h4>
                 <p>

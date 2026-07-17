@@ -147,6 +147,7 @@ const Login = () => {
           </div>
 
           <div className="premium-form-header">
+            <span className="premium-kicker">สมาชิกระบบ</span>
             <h2>เข้าสู่ระบบ</h2>
             <p>ยินดีต้อนรับ กรุณาเข้าสู่ระบบเพื่อดำเนินการต่อในระบบ</p>
           </div>
@@ -237,45 +238,9 @@ const Login = () => {
 
           <button
             type="button"
+            className="premium-thaid-btn"
             onClick={handleThaiDLogin}
-            style={{
-              width: "100%",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: "12px",
-              padding: "12px",
-              backgroundColor: "#1e293b",
-              color: "#ffffff",
-              border: "none",
-              borderRadius: "8px",
-              fontSize: "15px",
-              fontWeight: "600",
-              cursor: "pointer",
-              boxShadow: "0 4px 6px rgba(0,0,0,0.05)",
-              transition: "transform 0.2s, box-shadow 0.2s",
-            }}
-            onMouseOver={(e) => {
-              e.currentTarget.style.transform = "translateY(-2px)";
-              e.currentTarget.style.boxShadow = "0 6px 12px rgba(0,0,0,0.1)";
-            }}
-            onMouseOut={(e) => {
-              e.currentTarget.style.transform = "translateY(0)";
-              e.currentTarget.style.boxShadow = "0 4px 6px rgba(0,0,0,0.05)";
-            }}
           >
-            {/* <img
-              src="https://www.bora.dopa.go.th/wp-content/uploads/2023/03/ThaID-Logo-1024x1024.png"
-              alt="ThaID Logo"
-              style={{
-                width: "26px",
-                height: "26px",
-                objectFit: "contain",
-                backgroundColor: "white",
-                borderRadius: "4px",
-                padding: "2px",
-              }}
-            /> */}
             เข้าสู่ระบบด้วย ThaID
           </button>
         </div>
@@ -286,6 +251,9 @@ const Login = () => {
         <div className="premium-image-overlay">
           <div className="premium-hero-content">
             <div className="premium-glass-card">
+              <span className="premium-glass-kicker">
+                THAILAND AI ETHICS
+              </span>
               <h3>Thailand AI Ethics Guideline</h3>
               <p>
                 โครงการสร้างความเข้าใจและส่งเสริมการใช้แนวปฏิบัติจริยธรรมปัญญาประดิษฐ์
