@@ -10,6 +10,8 @@ import {
   Calendar,
   FileText,
   Target,
+  ShieldCheck,
+  Scale,
 } from "lucide-react";
 import "./style/Home.css";
 
@@ -28,7 +30,10 @@ export const slideData = [
     title: "เครื่องมือประเมินความพร้อม AI",
     subtitle:
       "ทดสอบและประเมินระบบ AI ขององค์กรคุณ ว่าสอดคล้องกับหลักจริยธรรมหรือไม่ ด้วยชุดเครื่องมือประเมินมาตรฐาน",
-    buttons: ["เริ่มการประเมิน", "ศึกษาคู่มือการประเมิน"],
+    buttons: [
+      { label: "เริ่มการประเมิน", link: "/login" },
+      { label: "ศึกษาคู่มือการประเมิน", link: null },
+    ],
   },
   {
     id: 2,
@@ -37,7 +42,10 @@ export const slideData = [
     title: "แนวทางจริยธรรมปัญญาประดิษฐ์ของประเทศไทย",
     subtitle:
       "สมัครเข้าร่วมโครงการอบรมจริยธรรม ปัญญาประดิษฐ์ (หลักสูตรออนไลน์)",
-    buttons: ["อ่านรายละเอียดเพิ่มเติม", "สมัครเข้าร่วมโครงการ"],
+    buttons: [
+      { label: "อ่านรายละเอียดเพิ่มเติม", link: null },
+      { label: "สมัครเข้าร่วมโครงการ", link: "/register" },
+    ],
   },
   {
     id: 3,
@@ -46,7 +54,7 @@ export const slideData = [
     title: "รางวัลยกย่องบุคคลและองค์กรดีเด่น",
     subtitle:
       "สํานักงานคณะกรรมการดิจิทัลเพื่อเศรษฐกิจและสังคมแห่งชาติ มอบรางวัลยกย่องบุคคลและองค์กรที่มีการนําแนวทางจริยธรรมปัญญาประดิษฐ์มาประยุกต์ใช้งานดีเด่น เพื่อเป็นแบบอย่างในการแปลงแนวปฏิบัติจริยธรรมปัญญาประดิษฐ์ไปสู่การปฏิบัติอย่างเป็นรูปธรรม",
-    buttons: ["อ่านรายละเอียดเพิ่มเติม"],
+    buttons: [{ label: "อ่านรายละเอียดเพิ่มเติม", link: null }],
   },
 ];
 
@@ -119,6 +127,32 @@ export const newsData = [
   },
 ];
 
+// สามหลักการสำคัญที่กล่าวถึงในย่อหน้า "ความสำคัญของ Ethical AI" ด้านล่าง
+const pillars = [
+  {
+    icon: Target,
+    title: "ความรับผิดชอบ",
+    desc: "AI ต้องดำเนินงานภายใต้การกำกับดูแลที่ตรวจสอบได้",
+  },
+  {
+    icon: ShieldCheck,
+    title: "ความปลอดภัย",
+    desc: "ลดความเสี่ยงและผลกระทบที่อาจเกิดกับผู้ใช้งาน",
+  },
+  {
+    icon: Scale,
+    title: "ความเป็นธรรม",
+    desc: "ไม่สร้างอคติหรือความเหลื่อมล้ำต่อกลุ่มใดกลุ่มหนึ่ง",
+  },
+];
+
+// จับคู่หมวดข่าวกับสีธีมของเว็บ เพื่อให้แยกประเภทข่าวได้ไวขึ้นด้วยสายตา
+const newsCategoryClass = {
+  ข่าวประกาศ: "navy",
+  กิจกรรม: "green",
+  อบรมสัมมนา: "amber",
+};
+
 const Home = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [newsIndex, setNewsIndex] = useState(0);
@@ -172,12 +206,13 @@ const Home = () => {
               <h1 className="hm-slide-title">{slide.title}</h1>
               <p className="hm-slide-subtitle">{slide.subtitle}</p>
               <div className="hm-slide-actions">
-                {slide.buttons.map((btnText, i) => (
+                {slide.buttons.map((btn, i) => (
                   <button
                     key={i}
                     className={i === 0 ? "hm-btn-primary" : "hm-btn-secondary"}
+                    onClick={btn.link ? () => navigate(btn.link) : undefined}
                   >
-                    {btnText}
+                    {btn.label}
                   </button>
                 ))}
               </div>
@@ -204,7 +239,9 @@ const Home = () => {
       {/* 2. ส่วนวิดีโอแนะนำโครงการ (ปรับเป็น YouTube) */}
       <section className="hm-section hm-featured-video-section">
         <div className="hm-container text-center">
-          <span className="hm-badge">วิดีโอแนะนำ</span>
+          <span className="hm-badge">
+            <PlayCircle size={16} strokeWidth={2} /> วิดีโอแนะนำ
+          </span>
           <h2 className="hm-section-title">รับชมวิดีโอแนะนำโครงการ</h2>
           <p className="hm-section-subtitle">
             ทำความรู้จักกับแนวปฏิบัติจริยธรรมปัญญาประดิษฐ์ของประเทศไทย
@@ -245,6 +282,20 @@ const Home = () => {
             <button className="hm-btn-readmore">
               อ่านเพิ่มเติม <ArrowRight size={18} />
             </button>
+
+            <div className="hm-pillars-row">
+              {pillars.map((pillar) => (
+                <div key={pillar.title} className="hm-pillar-chip">
+                  <div className="hm-pillar-icon">
+                    <pillar.icon size={20} strokeWidth={1.75} />
+                  </div>
+                  <div className="hm-pillar-text">
+                    <strong>{pillar.title}</strong>
+                    <span>{pillar.desc}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
@@ -253,6 +304,9 @@ const Home = () => {
       <section className="hm-section hm-policy-section">
         <div className="hm-container">
           <div className="hm-policy-header text-center">
+            <span className="hm-eyebrow hm-eyebrow-center">
+              แนวทางการดำเนินงาน
+            </span>
             <h2 className="hm-section-title">
               กรอบแนวคิด นโยบายในการดำเนินโครงการ
             </h2>
@@ -263,13 +317,16 @@ const Home = () => {
 
           <div className="hm-policy-horizontal-card">
             <div className="hm-policy-card-img">
+              <span className="hm-policy-step-number">01</span>
               <img
                 src="https://images.unsplash.com/photo-1450101499163-c8848c66ca85?q=80&w=800&auto=format&fit=crop"
                 alt="Instruction"
               />
             </div>
             <div className="hm-policy-card-info">
-              <span className="hm-policy-step-tag">POLICY GUIDELINE</span>
+              <span className="hm-policy-step-tag">
+                <FileText size={14} strokeWidth={2.25} /> POLICY GUIDELINE
+              </span>
               <h3 className="hm-policy-card-title">ข้อสั่งการคณะรัฐมนตรี</h3>
               <p className="hm-policy-card-desc">
                 ตามหนังสือสำนักเลขาธิการคณะรัฐมนตรีที่ นร 0505/ว 74 ลงวันที่ 4
@@ -286,13 +343,16 @@ const Home = () => {
             style={{ marginTop: "40px" }}
           >
             <div className="hm-policy-card-img">
+              <span className="hm-policy-step-number">02</span>
               <img
                 src="https://images.unsplash.com/photo-1552664730-d307ca884978?q=80&w=800&auto=format&fit=crop"
                 alt="Goals"
               />
             </div>
             <div className="hm-policy-card-info">
-              <span className="hm-policy-step-tag">STRATEGIC GOAL</span>
+              <span className="hm-policy-step-tag">
+                <Target size={14} strokeWidth={2.25} /> STRATEGIC GOAL
+              </span>
               <h3 className="hm-policy-card-title">เป้าหมายและแนวทางปฏิบัติ</h3>
               <p className="hm-policy-card-desc">
                 มติ ครม. มอบหมาย ให้กระทรวงดิจิทัลฯ
@@ -310,6 +370,7 @@ const Home = () => {
         <div className="hm-container">
           <div className="hm-news-header-flex">
             <div>
+              <span className="hm-eyebrow">อัปเดตล่าสุด</span>
               <h2 className="hm-section-title">ข่าวสารและกิจกรรมต่างๆ</h2>
             </div>
             <div className="hm-news-nav-btns">
@@ -344,7 +405,13 @@ const Home = () => {
                         alt={news.title}
                         className="hm-news-img"
                       />
-                      <span className="hm-news-category">{news.category}</span>
+                      <span
+                        className={`hm-news-category ${
+                          newsCategoryClass[news.category] || "navy"
+                        }`}
+                      >
+                        {news.category}
+                      </span>
                     </div>
                     <div className="hm-news-info">
                       <div className="hm-news-date">

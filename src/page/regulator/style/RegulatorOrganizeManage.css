@@ -1,0 +1,619 @@
+@import url("https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap");
+
+.rom-layout * {
+  box-sizing: border-box;
+  font-family: "Prompt", sans-serif;
+}
+
+.rom-layout {
+  display: flex;
+  min-height: 100vh;
+  background-color: #f4f6f8;
+}
+
+.rom-main-content {
+  flex: 1;
+  margin-left: 260px;
+  transition: margin-left 0.3s ease;
+}
+
+.rom-container {
+  padding: 40px 50px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+/* Header */
+.rom-top-section {
+  margin-bottom: 30px;
+}
+.rom-header-text h1 {
+  font-size: 26px;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 6px 0;
+}
+.rom-header-text p {
+  font-size: 14px;
+  color: #64748b;
+  margin: 0;
+}
+
+/* =========================================
+   โปรไฟล์หน่วยงาน
+   ========================================= */
+.rom-profile-card {
+  background: #ffffff;
+  border-radius: 20px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
+  padding: 30px;
+  display: flex;
+  align-items: flex-start;
+  gap: 22px;
+  margin-bottom: 24px;
+}
+
+.rom-profile-icon {
+  width: 60px;
+  height: 60px;
+  border-radius: 18px;
+  background: #f1f5f9;
+  color: #0f172a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+.rom-profile-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.rom-org-code {
+  font-size: 13px;
+  color: #64748b;
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+.rom-org-name {
+  margin: 0;
+  font-size: 22px;
+  color: #1e293b;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+}
+
+.rom-edit-btn {
+  background: transparent;
+  border: none;
+  color: #cbd5e1;
+  font-size: 16px;
+  margin-left: 12px;
+  cursor: pointer;
+  transition:
+    color 0.2s,
+    transform 0.2s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.rom-edit-btn:hover {
+  color: #2563eb;
+  transform: scale(1.1);
+}
+
+.rom-profile-meta {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 10px;
+  flex-wrap: wrap;
+}
+
+.rom-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 14px;
+  border-radius: 50px;
+  font-size: 12px;
+  font-weight: 600;
+}
+.rom-status-badge.active {
+  background: #dcfce7;
+  color: #166534;
+}
+.rom-status-badge.inactive {
+  background: #fee2e2;
+  color: #991b1b;
+}
+.rom-status-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.rom-joined-date {
+  font-size: 13px;
+  color: #64748b;
+}
+
+.rom-status-hint {
+  display: block;
+  margin-top: 10px;
+  font-size: 12px;
+  color: #94a3b8;
+  font-style: italic;
+}
+
+/* =========================================
+   สถิติภาพรวม
+   ========================================= */
+.rom-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  margin-bottom: 24px;
+}
+
+.rom-stat-card {
+  background: #ffffff;
+  border-radius: 20px;
+  /* border: 1px solid #e2e8f0;
+  border-left: 4px solid transparent; */
+  padding: 22px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+}
+.rom-stat-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.05);
+}
+.rom-stat-card.accent-blue {
+  border-left-color: #3b82f6;
+}
+.rom-stat-card.accent-teal {
+  border-left-color: #14b8a6;
+}
+.rom-stat-card.accent-purple {
+  border-left-color: #a855f7;
+}
+.rom-stat-card.accent-orange {
+  border-left-color: #f97316;
+}
+
+.rom-stat-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+.blue-icon {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+.teal-icon {
+  background: #ccfbf1;
+  color: #0f766e;
+}
+.purple-icon {
+  background: #f3e8ff;
+  color: #7e22ce;
+}
+.orange-icon {
+  background: #ffedd5;
+  color: #c2410c;
+}
+
+.rom-stat-details {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.rom-stat-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #64748b;
+}
+.rom-stat-value {
+  font-size: 24px;
+  font-weight: 700;
+  color: #1e293b;
+  line-height: 1;
+}
+
+/* =========================================
+   ตารางรายชื่อผู้กำกับดูแล
+   ========================================= */
+.rom-list-section {
+  background: #ffffff;
+  border-radius: 20px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
+  padding: 25px;
+  margin-bottom: 24px;
+}
+
+.rom-list-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 15px;
+}
+.rom-list-header h2 {
+  font-size: 17px;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0;
+}
+.rom-list-count {
+  background: #e2e8f0;
+  color: #475569;
+  padding: 4px 10px;
+  border-radius: 50px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.rom-table-responsive {
+  overflow-x: auto;
+}
+
+.rom-card-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 10px;
+  min-width: 620px;
+}
+.rom-card-table th {
+  background: transparent;
+  color: #94a3b8;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  text-align: left;
+  padding: 0 20px 5px 20px;
+  border: none;
+}
+.rom-card-table tbody tr {
+  background: #fafbfc;
+}
+.rom-card-table td {
+  padding: 14px 20px;
+  font-size: 14px;
+  vertical-align: middle;
+  border-top: 1px solid #f1f5f9;
+  border-bottom: 1px solid #f1f5f9;
+}
+.rom-card-table td:first-child {
+  border-top-left-radius: 14px;
+  border-bottom-left-radius: 14px;
+  border-left: 1px solid #f1f5f9;
+}
+.rom-card-table td:last-child {
+  border-top-right-radius: 14px;
+  border-bottom-right-radius: 14px;
+  border-right: 1px solid #f1f5f9;
+}
+
+.rom-user-profile {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.rom-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #f1f5f9;
+  color: #475569;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 13px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.rom-user-name {
+  font-weight: 600;
+  color: #1e293b;
+  font-size: 14px;
+}
+.rom-text-muted {
+  color: #64748b;
+  font-size: 13px;
+}
+.rom-empty-state {
+  text-align: center;
+  padding: 40px !important;
+  color: #94a3b8;
+  font-style: italic;
+  background: transparent !important;
+}
+
+/* =========================================
+   ทางลัดไปหน้าจัดการที่เกี่ยวข้อง
+   ========================================= */
+.rom-quicklinks {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.rom-quicklink-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 18px;
+  padding: 20px 22px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  cursor: pointer;
+  text-align: left;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
+}
+.rom-quicklink-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+  border-color: #cbd5e1;
+}
+
+.rom-quicklink-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: #f1f5f9;
+  color: #0f172a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.rom-quicklink-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+}
+.rom-quicklink-text strong {
+  font-size: 14px;
+  color: #1e293b;
+}
+.rom-quicklink-text span {
+  font-size: 12.5px;
+  color: #64748b;
+}
+
+.rom-quicklink-arrow {
+  color: #cbd5e1;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+/* =========================================
+   Loading & Error States
+   ========================================= */
+.rom-state-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 100px 20px;
+  background: #ffffff;
+  border-radius: 20px;
+  color: #64748b;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.02);
+}
+.rom-spin {
+  font-size: 40px;
+  color: #0f172a;
+  margin-bottom: 20px;
+  animation: romSpinner 1s linear infinite;
+}
+@keyframes romSpinner {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+.rom-error {
+  color: #ef4444;
+}
+.rom-btn-retry {
+  background: #0f172a;
+  color: white;
+  border: none;
+  padding: 10px 24px;
+  border-radius: 50px;
+  margin-top: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* =========================================
+   Modal: แก้ไขชื่อหน่วยงาน
+   ========================================= */
+.rom-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(15, 23, 42, 0.4);
+  backdrop-filter: blur(4px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  animation: romFadeIn 0.2s ease;
+}
+@keyframes romFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes romSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.rom-modal-container {
+  background: #ffffff;
+  width: 100%;
+  max-width: 460px;
+  border-radius: 20px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  animation: romSlideUp 0.3s ease;
+}
+
+.rom-modal-header {
+  padding: 20px 25px;
+  border-bottom: 1px solid #f1f5f9;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.rom-modal-header h2 {
+  font-size: 18px;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0;
+}
+.rom-modal-close {
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  font-size: 18px;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.rom-modal-close:hover {
+  color: #ef4444;
+}
+
+.rom-modal-body {
+  padding: 25px;
+}
+
+.rom-form-group {
+  margin-bottom: 15px;
+}
+.rom-form-group label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: #475569;
+  margin-bottom: 8px;
+}
+.rom-form-group input {
+  width: 100%;
+  padding: 12px 15px;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  font-size: 14px;
+  color: #0f172a;
+  outline: none;
+  transition: border 0.2s;
+  background-color: #ffffff;
+}
+.rom-form-group input:focus {
+  border-color: #0f172a;
+}
+
+.rom-modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 25px;
+}
+.rom-btn-cancel {
+  background: #f1f5f9;
+  color: #475569;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.rom-btn-cancel:hover {
+  background: #e2e8f0;
+}
+.rom-btn-submit {
+  background: #0f172a;
+  color: #ffffff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.rom-btn-submit:hover {
+  background: #1e293b;
+}
+.rom-btn-submit:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* =========================================
+   Responsive
+   ========================================= */
+@media (max-width: 1100px) {
+  .rom-stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .rom-quicklinks {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 899px) {
+  .rom-main-content {
+    margin-left: 0;
+  }
+}
+@media (max-width: 768px) {
+  .rom-container {
+    padding: 20px 15px;
+    padding-top: 75px;
+  }
+  .rom-profile-card {
+    flex-direction: column;
+  }
+  .rom-stats-grid {
+    grid-template-columns: 1fr;
+  }
+}

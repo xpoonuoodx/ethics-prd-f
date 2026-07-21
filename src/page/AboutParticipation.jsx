@@ -21,6 +21,7 @@ function AboutParticipation() {
       >
         <div className="about-hero-overlay"></div>
         <div className="about-hero-content">
+          <span className="about-kicker">ช่องทางการมีส่วนร่วม</span>
           <h1 className="about-hero-title">รูปแบบการเข้าร่วมประชุม</h1>
           <p className="about-hero-subtitle">
             ช่องทางและรายละเอียดสำหรับการเข้าร่วมรับฟังความคิดเห็นและอบรมเชิงปฏิบัติการ

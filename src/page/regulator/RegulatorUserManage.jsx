@@ -11,15 +11,22 @@ import {
   FaTimes,
   FaSpinner,
   FaEye, // เพิ่มไอคอนตา
+  FaChevronLeft,
+  FaChevronRight,
 } from "react-icons/fa";
 import Swal from "sweetalert2";
 import api from "../../api/Api";
+import { sanitizeUsername, sanitizePassword } from "../../utils/validators";
 
 const RegulatorUserManage = () => {
   const navigate = useNavigate(); // เรียกใช้งาน navigate
   const [users, setUsers] = useState([]);
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
+
+  // Pagination
+  const ITEMS_PER_PAGE = 10;
+  const [currentPage, setCurrentPage] = useState(1);
 
   // Modal State เพิ่ม user_type
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -63,6 +70,10 @@ const RegulatorUserManage = () => {
     if (name === "id_card") {
       const numericValue = value.replace(/\D/g, "");
       setFormData((prev) => ({ ...prev, [name]: numericValue }));
+    } else if (name === "username") {
+      setFormData((prev) => ({ ...prev, [name]: sanitizeUsername(value) }));
+    } else if (name === "password") {
+      setFormData((prev) => ({ ...prev, [name]: sanitizePassword(value) }));
     } else {
       setFormData((prev) => ({ ...prev, [name]: value }));
     }
@@ -174,6 +185,27 @@ const RegulatorUserManage = () => {
       (user.id_card || "").includes(search),
   );
 
+  // กลับไปหน้า 1 เสมอเมื่อค้นหาเปลี่ยน กันโชว์หน้าว่างเปล่าค้างอยู่
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [search]);
+
+  const totalPages = Math.max(
+    1,
+    Math.ceil(filteredUsers.length / ITEMS_PER_PAGE),
+  );
+  const safeCurrentPage = Math.min(currentPage, totalPages);
+  const paginatedUsers = filteredUsers.slice(
+    (safeCurrentPage - 1) * ITEMS_PER_PAGE,
+    safeCurrentPage * ITEMS_PER_PAGE,
+  );
+  const rangeStart =
+    filteredUsers.length === 0 ? 0 : (safeCurrentPage - 1) * ITEMS_PER_PAGE + 1;
+  const rangeEnd = Math.min(
+    safeCurrentPage * ITEMS_PER_PAGE,
+    filteredUsers.length,
+  );
+
   return (
     <div className="rum-layout">
       <SidebarRegulator />
@@ -210,6 +242,11 @@ const RegulatorUserManage = () => {
                 onChange={(e) => setSearch(e.target.value)}
               />
             </div>
+            <span className="rum-list-count">
+              {filteredUsers.length === 0
+                ? "0 คน"
+                : `แสดง ${rangeStart}-${rangeEnd} จาก ${filteredUsers.length} คน`}
+            </span>
           </div>
 
           <div className="rum-table-wrapper">
@@ -230,7 +267,7 @@ const RegulatorUserManage = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredUsers.map((user) => (
+                  {paginatedUsers.map((user) => (
                     <tr key={user.id}>
                       <td>
                         <div className="rum-user-profile">
@@ -280,6 +317,58 @@ const RegulatorUserManage = () => {
                   )}
                 </tbody>
               </table>
+            )}
+
+            {!loading && totalPages > 1 && (
+              <div className="rum-pagination">
+                <button
+                  className="rum-page-btn"
+                  onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                  disabled={safeCurrentPage === 1}
+                >
+                  <FaChevronLeft />
+                </button>
+
+                {Array.from({ length: totalPages }, (_, i) => i + 1)
+                  .filter(
+                    (page) =>
+                      page === 1 ||
+                      page === totalPages ||
+                      Math.abs(page - safeCurrentPage) <= 1,
+                  )
+                  .reduce((acc, page, i, arr) => {
+                    if (i > 0 && page - arr[i - 1] > 1) acc.push("...");
+                    acc.push(page);
+                    return acc;
+                  }, [])
+                  .map((page, i) =>
+                    page === "..." ? (
+                      <span key={`ellipsis-${i}`} className="rum-page-ellipsis">
+                        …
+                      </span>
+                    ) : (
+                      <button
+                        key={page}
+                        className={`rum-page-btn ${
+                          page === safeCurrentPage ? "active" : ""
+                        }`}
+                        onClick={() => setCurrentPage(page)}
+                      >
+                        {page}
+                      </button>
+                    ),
+                  )}
+
+                <button
+                  className="rum-page-btn"
+                  onClick={() =>
+                    setCurrentPage((p) => Math.min(totalPages, p + 1))
+                  }
+                  disabled={safeCurrentPage === totalPages}
+                >
+                  <FaChevronRight />
+                </button>
+              </div>
             )}
           </div>
         </div>
@@ -350,6 +439,9 @@ const RegulatorUserManage = () => {
                   onChange={handleInputChange}
                   required
                 />
+                <span className="rum-field-hint">
+                  ภาษาอังกฤษ/ตัวเลข/. _ - เท่านั้น
+                </span>
               </div>
 
               <div className="rum-form-group">
@@ -362,6 +454,7 @@ const RegulatorUserManage = () => {
                   onChange={handleInputChange}
                   required
                 />
+                <span className="rum-field-hint">ห้ามใช้ภาษาไทย</span>
               </div>
 
               <div className="rum-form-group">

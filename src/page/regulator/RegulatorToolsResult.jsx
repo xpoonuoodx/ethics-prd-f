@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import SidebarUser from "./SidebarUser";
+import SidebarRegulator from "./SidebarRegulator";
 import {
   FaArrowLeft,
   FaPrint,
@@ -19,9 +19,9 @@ import {
   FaSpinner,
 } from "react-icons/fa";
 import api from "../../api/Api";
-import "./style/UserToolsResult.css";
+import "./style/RegulatorToolsResult.css";
 
-const UserToolsResult = () => {
+const RegulatorToolsResult = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const resultData = location.state?.resultData;
@@ -44,7 +44,9 @@ const UserToolsResult = () => {
       activities: [],
     });
     try {
-      const response = await api.get(`/user/component-activities/${comp.id}`);
+      const response = await api.get(
+        `/regulator/component-activities/${comp.id}`,
+      );
       if (response.data && response.data.success) {
         setActivityModal((prev) => ({
           ...prev,
@@ -71,7 +73,7 @@ const UserToolsResult = () => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    if (!resultData) navigate("/user-tools");
+    if (!resultData) navigate("/regulator-tools");
   }, [resultData, navigate]);
 
   if (!resultData) return null;
@@ -79,14 +81,14 @@ const UserToolsResult = () => {
 
   return (
     <div className="user-portal-layout">
-      <SidebarUser />
+      <SidebarRegulator />
       <div className="user-portal-content">
         <div className="utr-minimal-container">
           {/* Header */}
           <div className="utr-top-actions">
             <button
               className="utr-back-btn"
-              onClick={() => navigate("/user-tools")}
+              onClick={() => navigate("/regulator-tools")}
             >
               <FaArrowLeft /> กลับ
             </button>
@@ -111,9 +113,7 @@ const UserToolsResult = () => {
                 <FaLayerGroup className="text-green" />
               </div>
               <div className="sum-info">
-                <span>
-                  {resultData.impact ? "ระดับผลกระทบ" : "ระดับความพร้อม"}
-                </span>
+                <span>{resultData.impact ? "ระดับผลกระทบ" : "ระดับความพร้อม"}</span>
                 <h3>
                   {resultData.impact
                     ? resultData.impact.level_name
@@ -320,4 +320,4 @@ const UserToolsResult = () => {
   );
 };
 
-export default UserToolsResult;
+export default RegulatorToolsResult;

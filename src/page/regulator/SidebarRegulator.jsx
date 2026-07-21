@@ -10,6 +10,10 @@ import {
   FaTimes,
   FaGripLinesVertical,
   FaShieldAlt,
+  FaBookOpen,
+  FaClipboardCheck,
+  FaTools,
+  FaCertificate,
 } from "react-icons/fa";
 import { getStoredUser } from "../../api/Api";
 
@@ -106,6 +110,52 @@ const SidebarRegulator = () => {
             <FaFolderOpen className="rgsidebar-icon" />
             <span className={`rgsidebar-text ${!isOpen ? "hidden" : ""}`}>
               จัดการโครงการ
+            </span>
+          </a>
+
+          <span
+            className={`rgsidebar-menu-label r-mt ${!isOpen ? "hidden" : ""}`}
+          >
+            การเรียนรู้และประเมิน
+          </span>
+
+          <a
+            href="/regulator-classroom"
+            className={`rgsidebar-item ${currentPath.includes("classroom") ? "active" : ""}`}
+          >
+            <FaBookOpen className="rgsidebar-icon" />
+            <span className={`rgsidebar-text ${!isOpen ? "hidden" : ""}`}>
+              สื่อการเรียนรู้
+            </span>
+          </a>
+
+          <a
+            href="/regulator-test"
+            className={`rgsidebar-item ${currentPath.includes("test") ? "active" : ""}`}
+          >
+            <FaClipboardCheck className="rgsidebar-icon" />
+            <span className={`rgsidebar-text ${!isOpen ? "hidden" : ""}`}>
+              แบบทดสอบ
+            </span>
+          </a>
+
+          <a
+            href="/regulator-tools"
+            className={`rgsidebar-item ${currentPath.includes("tools") ? "active" : ""}`}
+          >
+            <FaTools className="rgsidebar-icon" />
+            <span className={`rgsidebar-text ${!isOpen ? "hidden" : ""}`}>
+              เครื่องมือประเมิน
+            </span>
+          </a>
+
+          <a
+            href="/regulator-certificate"
+            className={`rgsidebar-item ${currentPath.includes("certificate") ? "active" : ""}`}
+          >
+            <FaCertificate className="rgsidebar-icon" />
+            <span className={`rgsidebar-text ${!isOpen ? "hidden" : ""}`}>
+              ใบประกาศนียบัตร
             </span>
           </a>
 

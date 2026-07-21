@@ -206,10 +206,10 @@ const UserDashboard = () => {
 
               <div className="ud-user-meta-tags">
                 <span className="ud-meta-tag org-tag">
-                  <FaBuilding /> {dashboardData.organization}
+                  <FaBuilding /> หน่วยงาน : {dashboardData.organization}
                 </span>
                 <span className="ud-meta-tag proj-tag">
-                  <FaFolderOpen /> {dashboardData.projects}
+                  <FaFolderOpen /> โครงการ :  {dashboardData.projects}
                 </span>
               </div>
             </div>

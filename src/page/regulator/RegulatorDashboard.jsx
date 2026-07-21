@@ -4,7 +4,6 @@ import SidebarRegulator from "./SidebarRegulator";
 import {
   FaSearch,
   FaSyncAlt,
-  FaFileExport,
   FaUserPlus,
   FaRegFileAlt,
   FaRegCheckCircle,
@@ -33,21 +32,12 @@ const RegulatorDashboard = () => {
       activeProjects: 0,
     },
     chartData: [],
+    ethicsRadar: [],
     recentUsers: [],
     recentProjects: [],
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
-  // ข้อมูล Mock สำหรับกราฟ 6 เหลี่ยม (คะแนนการประเมินภาพรวมหน่วยงาน)
-  const mockEvaluationScores = [
-    { subject: "ความโปร่งใส", score: 85, fullMark: 100 },
-    { subject: "ความเป็นธรรม", score: 78, fullMark: 100 },
-    { subject: "ความปลอดภัย", score: 92, fullMark: 100 },
-    { subject: "ความเป็นส่วนตัว", score: 88, fullMark: 100 },
-    { subject: "ความรับผิดชอบ", score: 75, fullMark: 100 },
-    { subject: "ความน่าเชื่อถือ", score: 80, fullMark: 100 },
-  ];
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -71,19 +61,14 @@ const RegulatorDashboard = () => {
     }
   };
 
-  const getStatusColor = (status) => {
-    if (!status) return "status-default";
-    const lower = status.toLowerCase();
-    if (lower === "pending" || lower === "รอประเมิน") return "status-warning";
-    if (
-      lower === "active" ||
-      lower === "completed" ||
-      lower === "ดำเนินการแล้ว"
-    )
-      return "status-success";
-    if (lower === "rejected" || lower === "ความเสี่ยงสูง")
-      return "status-danger";
-    return "status-default";
+  // สถานะโครงการคำนวณอัตโนมัติจากจำนวนสมาชิกที่ทำแบบประเมินตนเองแล้ว
+  // (Pending = ยังไม่มีใครทำ, In Progress = ทำแล้วบางส่วน, Completed = ทำครบทุกคน)
+  const getStatusMeta = (status) => {
+    if (status === "Completed")
+      return { label: "เสร็จสิ้น", className: "status-success" };
+    if (status === "In Progress")
+      return { label: "กำลังดำเนินการ", className: "status-info" };
+    return { label: "รอดำเนินการ", className: "status-warning" };
   };
 
   return (
@@ -101,18 +86,15 @@ const RegulatorDashboard = () => {
                 {dashboardData.orgName ? ` | ${dashboardData.orgName}` : ""}
               </p>
             </div>
-            {/* <div className="rgdash-header-actions">
+            <div className="rgdash-header-actions">
               <button
                 className="rgdash-btn-icon-outline"
                 onClick={fetchDashboardData}
-                title="Refresh"
+                title="รีเฟรชข้อมูล"
               >
                 <FaSyncAlt />
               </button>
-              <button className="rgdash-btn-primary">
-                Export <FaFileExport />
-              </button>
-            </div> */}
+            </div>
           </div>
 
           {loading ? (
@@ -123,7 +105,7 @@ const RegulatorDashboard = () => {
             <>
               {/* Stats Row */}
               <div className="rgdash-stats-row">
-                <div className="rgdash-stat-card">
+                <div className="rgdash-stat-card accent-teal">
                   <div className="rgdash-stat-top">
                     <span className="rgdash-stat-label">TOTAL PROJECTS</span>
                     <div className="rgdash-stat-icon teal-icon">
@@ -135,7 +117,7 @@ const RegulatorDashboard = () => {
                   </div>
                 </div>
 
-                <div className="rgdash-stat-card">
+                <div className="rgdash-stat-card accent-green">
                   <div className="rgdash-stat-top">
                     <span className="rgdash-stat-label">ACTIVE PROJECTS</span>
                     <div className="rgdash-stat-icon green-icon">
@@ -147,7 +129,7 @@ const RegulatorDashboard = () => {
                   </div>
                 </div>
 
-                <div className="rgdash-stat-card">
+                <div className="rgdash-stat-card accent-orange">
                   <div className="rgdash-stat-top">
                     <span className="rgdash-stat-label">PENDING REVIEW</span>
                     <div className="rgdash-stat-icon orange-icon">
@@ -159,7 +141,7 @@ const RegulatorDashboard = () => {
                   </div>
                 </div>
 
-                <div className="rgdash-stat-card">
+                <div className="rgdash-stat-card accent-blue">
                   <div className="rgdash-stat-top">
                     <span className="rgdash-stat-label">TOTAL USERS</span>
                     <div className="rgdash-stat-icon blue-icon">
@@ -172,12 +154,62 @@ const RegulatorDashboard = () => {
                 </div>
               </div>
 
+              {/* สัดส่วนสถานะโครงการ (ใช้ chartData ที่ backend คำนวณไว้แล้ว) */}
+              {dashboardData.chartData && dashboardData.chartData.length > 0 && (
+                <div className="rgdash-status-breakdown">
+                  <div className="rgdash-status-breakdown-header">
+                    <h2>สัดส่วนสถานะโครงการ</h2>
+                    <span className="rgdash-subtitle">
+                      สถานะคำนวณอัตโนมัติจากจำนวนบุคลากรที่ทำแบบประเมินตนเองในแต่ละโครงการ
+                      — รอดำเนินการ (ยังไม่มีใครประเมิน) · กำลังดำเนินการ
+                      (ประเมินแล้วบางส่วน) · เสร็จสิ้น (ประเมินครบทุกคน)
+                    </span>
+                  </div>
+                  <div className="rgdash-status-breakdown-items">
+                    {dashboardData.chartData.map((item) => {
+                      const total = dashboardData.chartData.reduce(
+                        (sum, c) => sum + c.projects,
+                        0,
+                      );
+                      const pct =
+                        total > 0 ? (item.projects / total) * 100 : 0;
+                      return (
+                        <div key={item.name} className="rgdash-status-item">
+                          <div className="rgdash-status-item-label">
+                            <span
+                              className="rgdash-status-dot"
+                              style={{ backgroundColor: item.color }}
+                            ></span>
+                            <span>{item.name || "ไม่ระบุสถานะ"}</span>
+                            <strong>{item.projects}</strong>
+                          </div>
+                          <div className="rgdash-status-bar-track">
+                            <div
+                              className="rgdash-status-bar-fill"
+                              style={{
+                                width: `${pct}%`,
+                                backgroundColor: item.color,
+                              }}
+                            ></div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
               {/* Middle Section */}
               <div className="rgdash-middle-section">
                 {/* Chart (เปลี่ยนเป็นกราฟ 6 เหลี่ยม) */}
                 <div className="rgdash-card rgdash-chart-card">
                   <div className="rgdash-card-header">
-                    <h2>คะแนนประเมินจริยธรรม AI (ภาพรวมหน่วยงาน)</h2>
+                    <div>
+                      <h2>คะแนนประเมินจริยธรรม AI (ภาพรวมหน่วยงาน)</h2>
+                      <span className="rgdash-subtitle">
+                        คำนวณจากผลประเมินตนเองของบุคลากรในหน่วยงานนี้เท่านั้น
+                      </span>
+                    </div>
                   </div>
                   <div
                     className="rgdash-chart-body"
@@ -187,47 +219,54 @@ const RegulatorDashboard = () => {
                       alignItems: "center",
                     }}
                   >
-                    <ResponsiveContainer width="100%" height={300}>
-                      <RadarChart
-                        cx="50%"
-                        cy="50%"
-                        outerRadius="75%"
-                        data={mockEvaluationScores}
-                      >
-                        <PolarGrid stroke="#e2e8f0" />
-                        <PolarAngleAxis
-                          dataKey="subject"
-                          tick={{
-                            fill: "#64748b",
-                            fontSize: 13,
-                            fontWeight: 500,
-                          }}
-                        />
-                        <PolarRadiusAxis
-                          angle={30}
-                          domain={[0, 100]}
-                          tick={{ fill: "#94a3b8", fontSize: 11 }}
-                          tickCount={6}
-                        />
-                        <Radar
-                          name="คะแนนเฉลี่ย"
-                          dataKey="score"
-                          stroke="#10b981"
-                          strokeWidth={2}
-                          fill="#10b981"
-                          fillOpacity={0.3}
-                        />
-                        <Tooltip
-                          contentStyle={{
-                            borderRadius: "10px",
-                            border: "none",
-                            boxShadow: "0 10px 25px -5px rgba(0,0,0,0.1)",
-                            fontSize: "13px",
-                            color: "#1e293b",
-                          }}
-                        />
-                      </RadarChart>
-                    </ResponsiveContainer>
+                    {dashboardData.ethicsRadar &&
+                    dashboardData.ethicsRadar.length > 0 ? (
+                      <ResponsiveContainer width="100%" height={300}>
+                        <RadarChart
+                          cx="50%"
+                          cy="50%"
+                          outerRadius="75%"
+                          data={dashboardData.ethicsRadar}
+                        >
+                          <PolarGrid stroke="#e2e8f0" />
+                          <PolarAngleAxis
+                            dataKey="subject"
+                            tick={{
+                              fill: "#64748b",
+                              fontSize: 13,
+                              fontWeight: 500,
+                            }}
+                          />
+                          <PolarRadiusAxis
+                            angle={30}
+                            domain={[0, 100]}
+                            tick={{ fill: "#94a3b8", fontSize: 11 }}
+                            tickCount={6}
+                          />
+                          <Radar
+                            name="คะแนนเฉลี่ย"
+                            dataKey="score"
+                            stroke="#10b981"
+                            strokeWidth={2}
+                            fill="#10b981"
+                            fillOpacity={0.3}
+                          />
+                          <Tooltip
+                            contentStyle={{
+                              borderRadius: "10px",
+                              border: "none",
+                              boxShadow: "0 10px 25px -5px rgba(0,0,0,0.1)",
+                              fontSize: "13px",
+                              color: "#1e293b",
+                            }}
+                          />
+                        </RadarChart>
+                      </ResponsiveContainer>
+                    ) : (
+                      <div className="rgdash-empty-state">
+                        ยังไม่มีข้อมูลการประเมินตนเองในหน่วยงานนี้
+                      </div>
+                    )}
                   </div>
                 </div>
 
@@ -308,7 +347,7 @@ const RegulatorDashboard = () => {
                         <th>Manager</th>
                         <th>Progress</th>
                         <th>Created Date</th>
-                        {/* <th>Status</th> */}
+                        <th>Status</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -331,13 +370,17 @@ const RegulatorDashboard = () => {
                                 "th-TH",
                               )}
                             </td>
-                            {/* <td>
+                            <td>
                               <span
-                                className={`rgdash-badge ${getStatusColor(proj.status)}`}
+                                className={`rgdash-badge ${getStatusMeta(proj.status).className}`}
                               >
-                                {proj.status}
+                                {getStatusMeta(proj.status).label}
                               </span>
-                            </td> */}
+                              <div className="rgdash-status-fraction">
+                                {proj.completed_members || 0}/
+                                {proj.total_members || 0} คนประเมินแล้ว
+                              </div>
+                            </td>
                           </tr>
                         ))
                       ) : (

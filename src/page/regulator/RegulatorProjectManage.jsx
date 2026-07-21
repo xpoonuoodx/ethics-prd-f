@@ -175,6 +175,15 @@ const RegulatorProjectManage = () => {
     });
   };
 
+  // สถานะโครงการคำนวณอัตโนมัติจากจำนวนสมาชิกที่ทำแบบประเมินตนเองแล้ว
+  const getStatusMeta = (status) => {
+    if (status === "Completed")
+      return { label: "เสร็จสิ้น", className: "completed" };
+    if (status === "In Progress")
+      return { label: "กำลังดำเนินการ", className: "in-progress" };
+    return { label: "รอดำเนินการ", className: "pending" };
+  };
+
   const filteredProjects = projects.filter(
     (p) =>
       (p.project_name || "").toLowerCase().includes(search.toLowerCase()) ||
@@ -232,7 +241,7 @@ const RegulatorProjectManage = () => {
                     <th>ชื่อโครงการ</th>
                     <th>วันที่บันทึก</th>
                     <th className="rpm-text-center">จำนวนผู้รับผิดชอบ</th>
-                    <th>ความคืบหน้า</th>
+                    <th>สถานะ</th>
                     <th className="rpm-text-center">จัดการ</th>
                   </tr>
                 </thead>
@@ -250,9 +259,15 @@ const RegulatorProjectManage = () => {
                         </span>
                       </td>
                       <td>
-                        <span className="rpm-progress-text">
-                          {proj.progress || 0}%
+                        <span
+                          className={`rpm-status-badge ${getStatusMeta(proj.status).className}`}
+                        >
+                          {getStatusMeta(proj.status).label}
                         </span>
+                        <div className="rpm-status-fraction">
+                          {proj.completed_members || 0}/
+                          {proj.total_members || 0} คนประเมินแล้ว
+                        </div>
                       </td>
                       <td>
                         <div className="rpm-actions">

@@ -21,6 +21,7 @@ function AboutPrinciples() {
       >
         <div className="about-hero-overlay"></div>
         <div className="about-hero-content">
+          <span className="about-kicker">หลักการและเป้าหมาย</span>
           <h1 className="about-hero-title">หลักการ และวัตถุประสงค์</h1>
           <p className="about-hero-subtitle">
             เป้าหมายหลักในการสร้างสภาพแวดล้อมที่ปลอดภัยและเป็นธรรมสำหรับการใช้งาน

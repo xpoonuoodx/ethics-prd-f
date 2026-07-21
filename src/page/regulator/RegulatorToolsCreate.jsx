@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import "./style/UserToolsCreate.css";
-import SidebarUser from "./SidebarUser";
+import "./style/RegulatorToolsCreate.css";
+import SidebarRegulator from "./SidebarRegulator";
 import {
   FaCheck,
   FaArrowLeft,
@@ -12,7 +12,7 @@ import {
 import api, { getStoredUser } from "../../api/Api";
 import Swal from "sweetalert2";
 
-const UserToolsCreate = () => {
+const RegulatorToolsCreate = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [currentStep, setCurrentStep] = useState(1);
@@ -29,13 +29,13 @@ const UserToolsCreate = () => {
   const fetchSetupOptions = async () => {
     try {
       setLoading(true);
-      const response = await api.get("/user/tool-setup");
+      const response = await api.get("/regulator/tool-setup");
       if (response.data && response.data.success) {
         setMaturities(response.data.data.maturities);
         setPrinciples(response.data.data.principles);
         setLevelType(response.data.data.levelType || "maturity");
       }
-    } catch (error) {
+    } catch {
       Swal.fire("ผิดพลาด", "ไม่สามารถดึงข้อมูลเกณฑ์ตั้งต้นได้", "error");
     } finally {
       setLoading(false);
@@ -61,7 +61,9 @@ const UserToolsCreate = () => {
   };
 
   const handleBack = () => {
-    currentStep > 1 ? setCurrentStep(currentStep - 1) : navigate("/user-tools");
+    currentStep > 1
+      ? setCurrentStep(currentStep - 1)
+      : navigate("/regulator-tools");
   };
 
   const handleGenerateAndSave = async () => {
@@ -69,17 +71,17 @@ const UserToolsCreate = () => {
       setLoading(true);
       const storedUser = getStoredUser();
       const userId = storedUser?.id || storedUser?.user_id;
-      const response = await api.post("/user/generate-tool", {
+      const response = await api.post("/regulator/generate-tool", {
         userId,
         maturityId: selectedMaturity,
         principleIds: selectedPrinciples,
       });
       if (response.data && response.data.success) {
-        navigate("/user-tools-result", {
+        navigate("/regulator-tools-result", {
           state: { resultData: response.data.data, isHistory: false },
         });
       }
-    } catch (error) {
+    } catch {
       Swal.fire("ผิดพลาด", "เกิดข้อผิดพลาดในการสร้างเครื่องมือ", "error");
     } finally {
       setLoading(false);
@@ -89,7 +91,7 @@ const UserToolsCreate = () => {
   if (loading) {
     return (
       <div className="user-portal-layout">
-        <SidebarUser />
+        <SidebarRegulator />
         <div className="user-portal-content flex-center">
           <FaSpinner className="utc-spin" />
         </div>
@@ -103,7 +105,7 @@ const UserToolsCreate = () => {
 
   return (
     <div className="user-portal-layout">
-      <SidebarUser />
+      <SidebarRegulator />
       <div className="user-portal-content">
         <div className="utc-minimal-container">
           <div className="utc-header">
@@ -233,4 +235,4 @@ const UserToolsCreate = () => {
   );
 };
 
-export default UserToolsCreate;
+export default RegulatorToolsCreate;

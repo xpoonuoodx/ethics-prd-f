@@ -8,6 +8,8 @@ import {
   FaEdit,
   FaTrash,
   FaTimes,
+  FaChevronLeft,
+  FaChevronRight,
 } from "react-icons/fa";
 import SidebarAdmin from "./SidebarAdmin";
 import api from "../../api/Api";
@@ -21,6 +23,9 @@ const AdminOrganize = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  const ITEMS_PER_PAGE = 10;
+  const [currentPage, setCurrentPage] = useState(1);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -175,6 +180,29 @@ const AdminOrganize = () => {
     return matchName || matchId || matchRegulator;
   });
 
+  // กลับไปหน้า 1 เสมอเมื่อค้นหาเปลี่ยน กันโชว์หน้าว่างเปล่าค้างอยู่
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm]);
+
+  const totalPages = Math.max(
+    1,
+    Math.ceil(filteredOrganizations.length / ITEMS_PER_PAGE),
+  );
+  const safeCurrentPage = Math.min(currentPage, totalPages);
+  const paginatedOrganizations = filteredOrganizations.slice(
+    (safeCurrentPage - 1) * ITEMS_PER_PAGE,
+    safeCurrentPage * ITEMS_PER_PAGE,
+  );
+  const rangeStart =
+    filteredOrganizations.length === 0
+      ? 0
+      : (safeCurrentPage - 1) * ITEMS_PER_PAGE + 1;
+  const rangeEnd = Math.min(
+    safeCurrentPage * ITEMS_PER_PAGE,
+    filteredOrganizations.length,
+  );
+
   return (
     <div className="admin-organize-layout">
       <SidebarAdmin />
@@ -229,7 +257,9 @@ const AdminOrganize = () => {
               <div className="admin-organize-list-header">
                 <h2>รายการหน่วยงาน</h2>
                 <span className="admin-organize-list-count">
-                  {filteredOrganizations.length} หน่วยงาน
+                  {filteredOrganizations.length === 0
+                    ? "0 หน่วยงาน"
+                    : `แสดง ${rangeStart}-${rangeEnd} จาก ${filteredOrganizations.length} หน่วยงาน`}
                 </span>
               </div>
 
@@ -247,7 +277,7 @@ const AdminOrganize = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {filteredOrganizations.map((org, index) => (
+                    {paginatedOrganizations.map((org, index) => (
                       <tr key={index} className="admin-organize-table-row">
                         <td className="admin-organize-col-id">
                           {org.id || "-"}
@@ -327,6 +357,61 @@ const AdminOrganize = () => {
                   </tbody>
                 </table>
               </div>
+
+              {totalPages > 1 && (
+                <div className="admin-organize-pagination">
+                  <button
+                    className="admin-organize-page-btn"
+                    onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                    disabled={safeCurrentPage === 1}
+                  >
+                    <FaChevronLeft />
+                  </button>
+
+                  {Array.from({ length: totalPages }, (_, i) => i + 1)
+                    .filter(
+                      (page) =>
+                        page === 1 ||
+                        page === totalPages ||
+                        Math.abs(page - safeCurrentPage) <= 1,
+                    )
+                    .reduce((acc, page, i, arr) => {
+                      if (i > 0 && page - arr[i - 1] > 1) acc.push("...");
+                      acc.push(page);
+                      return acc;
+                    }, [])
+                    .map((page, i) =>
+                      page === "..." ? (
+                        <span
+                          key={`ellipsis-${i}`}
+                          className="admin-organize-page-ellipsis"
+                        >
+                          …
+                        </span>
+                      ) : (
+                        <button
+                          key={page}
+                          className={`admin-organize-page-btn ${
+                            page === safeCurrentPage ? "active" : ""
+                          }`}
+                          onClick={() => setCurrentPage(page)}
+                        >
+                          {page}
+                        </button>
+                      ),
+                    )}
+
+                  <button
+                    className="admin-organize-page-btn"
+                    onClick={() =>
+                      setCurrentPage((p) => Math.min(totalPages, p + 1))
+                    }
+                    disabled={safeCurrentPage === totalPages}
+                  >
+                    <FaChevronRight />
+                  </button>
+                </div>
+              )}
             </div>
           )}
         </div>

@@ -60,6 +60,29 @@
   ); /* ขยับขึ้นนิดนึงเพื่อให้สมดุลกับการ์ดที่เกยขึ้นมา */
 }
 
+/* Kicker: จังหวะภาพเดียวกับ Eyebrow ของหน้า Home แต่ใช้เขียวอ่อนให้อ่านง่ายบนพื้นเข้ม */
+.about-kicker {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 18px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #a3e635;
+}
+.about-kicker::before,
+.about-kicker::after {
+  content: "";
+  width: 26px;
+  height: 2px;
+  border-radius: 2px;
+  background: #a3e635;
+  flex-shrink: 0;
+}
+
 .about-hero-title {
   font-size: 3rem;
   font-weight: 700;
@@ -91,15 +114,27 @@
 }
 
 .about-card {
+  position: relative;
   background: #ffffff;
   border-radius: 24px; /* มุมโค้งมนแบบ Modern */
   padding: 60px; /* เพิ่มพื้นที่หายใจ */
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.04); /* เงาลึกและนุ่มนวล */
   border: 1px solid #f1f5f9;
+  overflow: hidden;
   margin-bottom: 40px;
   transition:
     transform 0.4s ease,
     box-shadow 0.4s ease;
+}
+/* เส้นไล่สีเขียวบางๆ ขอบบน ลายเซ็นเดียวกับการ์ดในหน้า Home/Dashboard */
+.about-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #75ba40 0%, transparent 85%);
 }
 
 .about-card:hover {
@@ -186,6 +221,22 @@
 .about-list-icon {
   color: #75ba40;
   margin-top: 2px;
+}
+
+/* Badge ลำดับขั้นตอน ใช้แทนไอคอนซ้ำๆ ในหน้า AboutProcess ให้เห็นลำดับชัดเจน */
+.about-step-badge {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: #0f172a;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
 }
 
 .about-list-text h4 {

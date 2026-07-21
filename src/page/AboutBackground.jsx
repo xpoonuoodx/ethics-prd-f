@@ -21,6 +21,7 @@ function AboutBackground() {
       >
         <div className="about-hero-overlay"></div>
         <div className="about-hero-content">
+          <span className="about-kicker">เกี่ยวกับโครงการ</span>
           <h1 className="about-hero-title">ที่มา และความสำคัญ</h1>
           <p className="about-hero-subtitle">
             จุดเริ่มต้นของกรอบแนวปฏิบัติจริยธรรมปัญญาประดิษฐ์เพื่อการพัฒนาที่ยั่งยืนในประเทศไทย
