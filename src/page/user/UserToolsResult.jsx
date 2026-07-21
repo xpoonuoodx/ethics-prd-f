@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import SidebarUser from "./SidebarUser";
 import {
@@ -13,13 +13,61 @@ import {
   FaFileAlt,
   FaUserTie,
   FaLayerGroup,
+  FaTimes,
+  FaCheckCircle,
+  FaRegCircle,
+  FaSpinner,
 } from "react-icons/fa";
+import api from "../../api/Api";
 import "./style/UserToolsResult.css";
 
 const UserToolsResult = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const resultData = location.state?.resultData;
+
+  // ป็อปอัพแสดง Activities ของ Component ที่กด
+  const [activityModal, setActivityModal] = useState({
+    isOpen: false,
+    loading: false,
+    component: null,
+    activities: [],
+  });
+
+  const achievedLevel = resultData?.maturity?.level_id ?? 0;
+
+  const handleOpenActivities = async (comp) => {
+    setActivityModal({
+      isOpen: true,
+      loading: true,
+      component: comp,
+      activities: [],
+    });
+    try {
+      const response = await api.get(`/user/component-activities/${comp.id}`);
+      if (response.data && response.data.success) {
+        setActivityModal((prev) => ({
+          ...prev,
+          loading: false,
+          activities: response.data.data,
+        }));
+      } else {
+        setActivityModal((prev) => ({ ...prev, loading: false }));
+      }
+    } catch (err) {
+      console.error("Fetch Component Activities Error:", err);
+      setActivityModal((prev) => ({ ...prev, loading: false }));
+    }
+  };
+
+  const closeActivityModal = () => {
+    setActivityModal({
+      isOpen: false,
+      loading: false,
+      component: null,
+      activities: [],
+    });
+  };
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -63,7 +111,9 @@ const UserToolsResult = () => {
                 <FaLayerGroup className="text-green" />
               </div>
               <div className="sum-info">
-                <span>{resultData.impact ? "ระดับผลกระทบ" : "ระดับความพร้อม"}</span>
+                <span>
+                  {resultData.impact ? "ระดับผลกระทบ" : "ระดับความพร้อม"}
+                </span>
                 <h3>
                   {resultData.impact
                     ? resultData.impact.level_name
@@ -82,31 +132,42 @@ const UserToolsResult = () => {
             </div>
           </div>
 
-          <div className="utr-content-layout">
-            {/* Left Column: Principles & Components */}
-            <div className="utr-left-col">
-              <div className="utr-white-card">
-                <h3 className="card-title">
-                  หลักการที่ถูกเลือก ({resultData.principles?.length})
-                </h3>
-                <div className="utr-tags">
-                  {resultData.principles?.map((p) => (
-                    <span key={p.id} className="pill-tag">
-                      {p.name}
-                    </span>
-                  ))}
-                </div>
+          <div className="utr-sections-stack">
+            {/* หลักการที่ถูกเลือก */}
+            <div className="utr-white-card">
+              <h3 className="card-title">
+                หลักการที่ถูกเลือก ({resultData.principles?.length})
+              </h3>
+              <div className="utr-tags">
+                {resultData.principles?.map((p) => (
+                  <span key={p.id} className="pill-tag">
+                    {p.name}
+                  </span>
+                ))}
               </div>
+            </div>
 
-              <div className="utr-white-card mt-20">
+            {/* องค์ประกอบที่พบ: จัดเป็นกริดและสกรอลภายในเมื่อมีจำนวนมาก */}
+            <div className="utr-white-card">
+              <div className="utr-card-header-row">
                 <h3 className="card-title">
                   <FaCubes className="text-blue" /> องค์ประกอบที่พบ
                 </h3>
+                <span className="utr-comp-count">
+                  {resultData.components?.length || 0} รายการ
+                </span>
+              </div>
+              <div className="utr-comp-list-scroll">
                 <div className="utr-comp-list">
                   {resultData.components?.map((comp) => (
-                    <div key={comp.id} className="comp-item">
+                    <button
+                      key={comp.id}
+                      type="button"
+                      className="comp-item comp-item-clickable"
+                      onClick={() => handleOpenActivities(comp)}
+                    >
                       <strong>[{comp.id}]</strong> {comp.title}
-                    </div>
+                    </button>
                   ))}
                   {(!resultData.components ||
                     resultData.components.length === 0) && (
@@ -116,8 +177,8 @@ const UserToolsResult = () => {
               </div>
             </div>
 
-            {/* Right Column: Guidelines */}
-            <div className="utr-right-col">
+            {/* ผลการวิเคราะห์และแนวทางปฏิบัติ */}
+            <div className="utr-guidelines-block">
               <h2 className="utr-section-title">
                 ผลการวิเคราะห์และแนวทางปฏิบัติ
               </h2>
@@ -193,6 +254,68 @@ const UserToolsResult = () => {
           </div>
         </div>
       </div>
+
+      {/* ป็อปอัพแสดง Activities ของ Component ที่กด */}
+      {activityModal.isOpen && (
+        <div className="utr-activity-overlay" onClick={closeActivityModal}>
+          <div
+            className="utr-activity-modal"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="utr-activity-header">
+              <div>
+                <span className="utr-activity-code">
+                  Activity: {activityModal.component?.id}
+                </span>
+                <h3>{activityModal.component?.title}</h3>
+              </div>
+              <button
+                className="utr-activity-close"
+                onClick={closeActivityModal}
+              >
+                <FaTimes />
+              </button>
+            </div>
+
+            <div className="utr-activity-body">
+              {activityModal.loading ? (
+                <div className="utr-activity-loading">
+                  <FaSpinner className="utr-activity-spin" /> กำลังโหลดข้อมูล...
+                </div>
+              ) : activityModal.activities.length === 0 ? (
+                <div className="utr-activity-empty">
+                  ยังไม่มีการกำหนด Activities สำหรับหัวข้อนี้
+                </div>
+              ) : (
+                <ul className="utr-activity-list">
+                  <h4>กิจกรรมที่ควรดำเนินการ</h4>
+                  {activityModal.activities.map((act) => {
+                    const passed = act.maturity_level <= achievedLevel;
+                    return (
+                      <li
+                        key={act.id}
+                        className={`utr-activity-item ${
+                          passed ? "passed" : "pending"
+                        }`}
+                      >
+                        <div className="utr-activity-status-icon">
+                          {passed ? <FaCheckCircle /> : <FaRegCircle />}
+                        </div>
+                        <span className="utr-activity-text">
+                          {act.activity_text}
+                        </span>
+                        <span className="utr-activity-level-badge">
+                          Lv. {act.maturity_level}
+                        </span>
+                      </li>
+                    );
+                  })}
+                </ul>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

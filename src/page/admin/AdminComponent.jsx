@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./style/AdminComponent.css";
 import SidebarAdmin from "./SidebarAdmin";
+import { useNavigate } from "react-router-dom";
 import {
   FaPlus,
   FaSearch,
@@ -13,10 +14,12 @@ import {
   FaTimesCircle,
   FaExclamationTriangle,
   FaInfoCircle,
+  FaTasks,
 } from "react-icons/fa";
 import api from "../../api/Api";
 
 const AdminComponent = () => {
+  const navigate = useNavigate();
   const [components, setComponents] = useState([]);
   const [search, setSearch] = useState("");
   const [filterRole, setFilterRole] = useState("all");
@@ -293,6 +296,15 @@ const AdminComponent = () => {
                       </td>
                       <td>
                         <div className="ac-actions">
+                          <button
+                            className="ac-btn-action activities"
+                            title="จัดการ Activities"
+                            onClick={() =>
+                              navigate(`/admin-component-activities/${comp.id}`)
+                            }
+                          >
+                            <FaTasks />
+                          </button>
                           <button
                             className="ac-btn-action edit"
                             title="แก้ไขข้อมูล"

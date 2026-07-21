@@ -5,9 +5,6 @@
   /* max-width: 1300px; */
   /* margin: 0 auto; */
 }
-.mt-20 {
-  margin-top: 20px;
-}
 
 /* Utilities */
 .text-blue {
@@ -130,18 +127,32 @@
 }
 
 /* Layout */
-.utr-content-layout {
+/* จัดทุก Section เรียงเต็มความกว้าง ให้ความสูงของแต่ละ Section ไม่ผูกกัน
+   (แก้ปัญหาเดิม: คอลัมน์ซ้ายที่มีองค์ประกอบเยอะๆ จะสูงเกินคอลัมน์ขวาไปมาก) */
+.utr-sections-stack {
   display: flex;
-  gap: 30px;
-  align-items: flex-start;
+  flex-direction: column;
+  gap: 25px;
 }
-.utr-left-col {
-  flex: 0 0 350px;
-  position: sticky;
-  top: 40px;
+
+.utr-card-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  margin-bottom: 15px;
 }
-.utr-right-col {
-  flex: 1;
+.utr-card-header-row .card-title {
+  margin: 0;
+}
+.utr-comp-count {
+  flex-shrink: 0;
+  background: #f1f5f9;
+  color: #475569;
+  padding: 4px 12px;
+  border-radius: 50px;
+  font-size: 12px;
+  font-weight: 600;
 }
 
 /* White Card Components */
@@ -176,18 +187,46 @@
   font-weight: 500;
 }
 
+/* กล่องสกรอลภายใน กันหน้าเพจสูงเกินไปเวลาองค์ประกอบเยอะ */
+.utr-comp-list-scroll {
+  max-height: 420px;
+  overflow-y: auto;
+  padding-right: 6px;
+}
+.utr-comp-list-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+.utr-comp-list-scroll::-webkit-scrollbar-thumb {
+  background: #e2e8f0;
+  border-radius: 10px;
+}
+
 .utr-comp-list {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
   gap: 10px;
 }
 .comp-item {
   background: #f8fafc;
   padding: 12px 16px;
   border-radius: 10px;
-  font-size: 14px;
+  font-size: 13.5px;
   color: #334155;
   line-height: 1.5;
+}
+.comp-item-clickable {
+  display: block;
+  width: 100%;
+  text-align: left;
+  border: 1px solid transparent;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.comp-item-clickable:hover {
+  background: #f0fdf4;
+  border-color: #bbf7d0;
+  transform: translateX(3px);
 }
 .comp-item strong {
   color: #0f172a;
@@ -209,9 +248,10 @@
   margin: 0 0 20px 0;
 }
 .utr-guides-stack {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
   gap: 15px;
+  align-items: start;
 }
 
 .utr-guide-card {
@@ -262,20 +302,6 @@
     grid-template-columns: 1fr;
     gap: 15px;
   }
-  .utr-content-layout {
-    flex-direction: column;
-  }
-  .utr-left-col {
-    flex: none;
-    width: 100%;
-    position: static;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
-  }
-  .utr-white-card.mt-20 {
-    margin-top: 0;
-  }
 }
 
 @media (max-width: 899px) {
@@ -288,7 +314,7 @@
   .utr-minimal-container {
     padding: 20px;
   }
-  .utr-left-col {
+  .utr-comp-list {
     grid-template-columns: 1fr;
   }
   .utr-guide-card {
@@ -319,12 +345,175 @@
     border: 1px solid #e2e8f0;
     break-inside: avoid;
   }
-  .utr-content-layout {
-    display: block;
+  .utr-comp-list-scroll {
+    max-height: none;
+    overflow: visible;
   }
-  .utr-left-col {
-    margin-bottom: 30px;
-    display: flex;
-    gap: 20px;
+  .utr-comp-list {
+    grid-template-columns: 1fr 1fr;
   }
+}
+
+/* =========================================
+   ป็อปอัพแสดง Activities ของ Component
+   ========================================= */
+.utr-activity-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(15, 23, 42, 0.5);
+  backdrop-filter: blur(4px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  padding: 20px;
+  animation: utrFadeIn 0.2s ease;
+}
+@keyframes utrFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes utrSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.utr-activity-modal {
+  background: #ffffff;
+  width: 100%;
+  max-width: 560px;
+  max-height: 80vh;
+  border-radius: 20px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  animation: utrSlideUp 0.3s ease;
+}
+
+.utr-activity-header {
+  padding: 22px 25px;
+  border-bottom: 1px solid #f1f5f9;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 15px;
+}
+.utr-activity-code {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 700;
+  color: #75ba40;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+}
+.utr-activity-header h3 {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 700;
+  color: #0f172a;
+  line-height: 1.4;
+}
+.utr-activity-close {
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  font-size: 18px;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: color 0.2s;
+}
+.utr-activity-close:hover {
+  color: #ef4444;
+}
+
+.utr-activity-body {
+  padding: 20px 25px 25px 25px;
+  overflow-y: auto;
+}
+
+.utr-activity-loading,
+.utr-activity-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  color: #94a3b8;
+  font-size: 14px;
+  padding: 40px 0;
+  text-align: center;
+}
+.utr-activity-spin {
+  animation: utrActivitySpin 1s linear infinite;
+}
+@keyframes utrActivitySpin {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.utr-activity-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.utr-activity-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid #f1f5f9;
+  background: #f8fafc;
+}
+.utr-activity-item.passed {
+  background: #f0fdf4;
+  border-color: #bbf7d0;
+}
+.utr-activity-status-icon {
+  margin-top: 2px;
+  font-size: 16px;
+  flex-shrink: 0;
+  color: #cbd5e1;
+}
+.utr-activity-item.passed .utr-activity-status-icon {
+  color: #16a34a;
+}
+.utr-activity-text {
+  flex: 1;
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: #334155;
+}
+.utr-activity-item.passed .utr-activity-text {
+  color: #14532d;
+}
+.utr-activity-level-badge {
+  flex-shrink: 0;
+  background: #e0e7ff;
+  color: #3730a3;
+  padding: 3px 10px;
+  border-radius: 8px;
+  font-size: 11.5px;
+  font-weight: 700;
+}
+.utr-activity-item.passed .utr-activity-level-badge {
+  background: #dcfce7;
+  color: #166534;
 }

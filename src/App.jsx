@@ -30,6 +30,7 @@ import AdminPrinciple from "./page/admin/AdminPrinciple";
 import AdminMaturity from "./page/admin/AdminMaturity";
 import AdminImpact from "./page/admin/AdminImpact";
 import AdminComponent from "./page/admin/AdminComponent";
+import AdminComponentActivities from "./page/admin/AdminComponentActivities";
 import AdminMapping from "./page/admin/AdminMapping";
 import AdminGuideline from "./page/admin/AdminGuideline"; // หน้าแนวทางการพัฒนา
 import AdminClassroom from "./page/admin/AdminClassroom"; // หน้าเรียนของ Admin
@@ -170,6 +171,14 @@ function App() {
           element={
             <AdminRoute>
               <AdminComponent />
+            </AdminRoute>
+          }
+        />
+        <Route
+          path="/admin-component-activities/:componentId"
+          element={
+            <AdminRoute>
+              <AdminComponentActivities />
             </AdminRoute>
           }
         />
