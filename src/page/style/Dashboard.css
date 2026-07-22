@@ -6,7 +6,7 @@
 
 .pub-db-wrapper {
   min-height: 100vh;
-  background-color: #fafbfc; /* Off-white เดียวกับหน้า Home */
+  background-color: #f4f6f8;
   display: flex;
   flex-direction: column;
 }
@@ -14,10 +14,8 @@
 .pub-db-main-content {
   flex: 1;
   width: 100%;
-  /* max-width: 1350px; */
-  /* margin: 0 auto; */
-  /* แก้ปัญหาโดน Tabbar ทับ ด้วยการเพิ่ม padding-top ให้เยอะขึ้น (130px) */
-  padding: 130px 50px 80px 50px;
+  /* Tabbar เป็น fixed สูง 70px พอดี เว้นเท่านี้ให้ banner ชนกับ nav โดยไม่มีช่องว่างเกิน */
+  padding-top: 70px;
 }
 
 .flex-center {
@@ -40,284 +38,233 @@
     transform: rotate(360deg);
   }
 }
+.pub-db-spin-icon {
+  animation: pubSpin 1s linear infinite;
+}
 
 /* =======================================
-   Header
+   Header Banner (เต็มความกว้าง โทนกรมท่า)
    ======================================= */
-.pub-db-header {
+.pub-db-header-banner {
+  position: relative;
+  background: linear-gradient(120deg, #0b1424 0%, #17233b 60%, #0f172a 100%);
+  padding: 26px 50px;
+  margin-bottom: 28px;
+  overflow: hidden;
+}
+.pub-db-header-banner::after {
+  content: "";
+  position: absolute;
+  top: -60px;
+  right: -60px;
+  width: 260px;
+  height: 260px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(117, 186, 64, 0.18) 0%, transparent 70%);
+  pointer-events: none;
+}
+.pub-db-header-inner {
+  position: relative;
+  z-index: 1;
   display: flex;
   justify-content: space-between;
-  align-items: flex-end;
-  margin-bottom: 35px;
+  align-items: flex-start;
+  gap: 20px;
+  flex-wrap: wrap;
 }
-/* Eyebrow: จังหวะภาพเดียวกับหน้า Home (เส้นเขียวสั้น + label ตัวพิมพ์ใหญ่) */
-.pub-db-eyebrow {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 10px;
-  font-size: 13px;
-  font-weight: 700;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  color: #75ba40;
+.pub-db-brand {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  max-width: 720px;
 }
-.pub-db-eyebrow::before {
-  content: "";
-  width: 26px;
-  height: 2px;
-  border-radius: 2px;
-  background: #75ba40;
-  flex-shrink: 0;
-}
-
 .pub-db-title {
-  font-size: 26px;
+  font-size: 24px;
   font-weight: 700;
-  color: #0f172a;
-  margin: 0 0 6px 0;
-  letter-spacing: -0.5px;
+  color: #ffffff;
+  margin: 2px 0 6px 0;
+  letter-spacing: -0.3px;
 }
 .pub-db-subtitle {
-  font-size: 14px;
-  color: #64748b;
+  font-size: 13.5px;
+  color: #94a3b8;
   margin: 0;
+  line-height: 1.6;
+}
+.pub-db-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+.pub-db-date-pill {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #e2e8f0;
+  padding: 9px 16px;
+  border-radius: 50px;
+  font-size: 13px;
+  font-weight: 500;
+  white-space: nowrap;
 }
 .pub-db-btn-export {
   display: flex;
   align-items: center;
   gap: 8px;
-  background-color: #0f172a;
-  color: #ffffff;
-  border: 1px solid #0f172a;
+  background-color: #75ba40;
+  color: #0f172a;
+  border: 1px solid #75ba40;
   padding: 10px 20px;
   border-radius: 50px;
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 700;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 10px rgba(15, 23, 42, 0.2);
+  box-shadow: 0 4px 14px rgba(117, 186, 64, 0.3);
+  white-space: nowrap;
 }
-.pub-db-btn-export:hover {
-  background-color: #75ba40;
-  border-color: #75ba40;
+.pub-db-btn-export:hover:not(:disabled) {
+  background-color: #8ccb54;
   transform: translateY(-2px);
-  box-shadow: 0 10px 20px -5px rgba(117, 186, 64, 0.4);
+  box-shadow: 0 10px 20px -5px rgba(117, 186, 64, 0.45);
+}
+.pub-db-btn-export:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.pub-db-body {
+  padding: 0 50px 80px 50px;
 }
 
 /* =======================================
-   Filter Bar (User Type)
-   ======================================= */
-.pub-db-filter-bar {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-bottom: 25px;
-}
-.pub-db-filter-btn {
-  background-color: #ffffff;
-  color: #475569;
-  border: 1px solid #e2e8f0;
-  padding: 8px 18px;
-  border-radius: 50px;
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-.pub-db-filter-btn:hover {
-  border-color: #75ba40;
-  color: #75ba40;
-}
-.pub-db-filter-btn.active {
-  background-color: #75ba40;
-  border-color: #75ba40;
-  color: #ffffff;
-  box-shadow: 0 4px 10px -2px rgba(117, 186, 64, 0.4);
-}
-
-/* =======================================
-   Summary Cards (KPIs)
+   KPI Cards (5 การ์ด)
    ======================================= */
 .pub-db-stats-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 20px;
-  margin-bottom: 35px;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 18px;
+  margin-bottom: 28px;
 }
 .pub-db-stat-card {
   position: relative;
   background-color: #ffffff;
-  padding: 25px;
-  border-radius: 20px;
+  padding: 22px;
+  border-radius: 18px;
   display: flex;
-  align-items: center;
-  gap: 20px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
+  align-items: flex-start;
+  gap: 14px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
   border: 1px solid #e2e8f0;
-  overflow: hidden;
   transition:
     transform 0.3s ease,
     box-shadow 0.3s;
 }
-.pub-db-stat-card::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 3px;
-  background: linear-gradient(90deg, #75ba40 0%, transparent 85%);
-}
 .pub-db-stat-card:hover {
   transform: translateY(-3px);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06);
 }
 
 .pub-db-stat-icon-wrapper {
-  width: 60px;
-  height: 60px;
-  border-radius: 16px;
+  width: 46px;
+  height: 46px;
+  border-radius: 12px;
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-shrink: 0;
 }
-.pub-db-stat-icon-wrapper.org {
-  background: #eef2f6;
-  color: #0f172a;
+.pub-db-stat-icon-wrapper.blue {
+  background: #dbeafe;
+  color: #2563eb;
 }
-.pub-db-stat-icon-wrapper.proj {
-  background: #fef3e2;
-  color: #b45309;
+.pub-db-stat-icon-wrapper.green {
+  background: #dcfce7;
+  color: #16a34a;
 }
-.pub-db-stat-icon-wrapper.users {
-  background: #eef7e6;
-  color: #4d7a29;
+.pub-db-stat-icon-wrapper.purple {
+  background: #ede9fe;
+  color: #7c3aed;
 }
-.pub-db-stat-icon-wrapper.cert {
-  background: #e6f4f1;
-  color: #0f766e;
+.pub-db-stat-icon-wrapper.orange {
+  background: #ffedd5;
+  color: #ea580c;
+}
+.pub-db-stat-icon-wrapper.teal {
+  background: #ccfbf1;
+  color: #0d9488;
 }
 
 .pub-db-stat-info {
   display: flex;
   flex-direction: column;
+  min-width: 0;
 }
 .pub-db-stat-label {
-  font-size: 13px;
+  font-size: 12.5px;
   color: #64748b;
   font-weight: 600;
-  margin-bottom: 4px;
+  margin-bottom: 5px;
+  line-height: 1.3;
 }
 .pub-db-stat-value {
-  font-size: 28px;
+  font-size: 24px;
   font-weight: 700;
   color: #0f172a;
-  margin: 0;
+  margin: 0 0 6px 0;
+  font-variant-numeric: tabular-nums;
+}
+.pub-db-stat-value small {
+  font-size: 12px;
+  font-weight: 600;
+  color: #94a3b8;
+}
+.pub-db-delta {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 11.5px;
+  font-weight: 600;
+  width: fit-content;
+}
+.pub-db-delta.up {
+  color: #16a34a;
+}
+.pub-db-delta.down {
+  color: #dc2626;
+}
+.pub-db-delta.neutral {
+  color: #94a3b8;
 }
 
 /* =======================================
-   Charts Grid Layout
+   Card shell (ใช้ร่วมกันทุก section)
    ======================================= */
-.pub-db-chart-row-large {
-  display: grid;
-  grid-template-columns: 1.1fr 1.3fr;
-  gap: 25px;
-  margin-bottom: 25px;
-}
-.pub-db-chart-row-small {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 25px;
-  margin-bottom: 40px;
-}
-
 .pub-db-card {
   position: relative;
   background: #ffffff;
-  border-radius: 20px;
-  padding: 25px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
+  border-radius: 18px;
+  padding: 24px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
   border: 1px solid #e2e8f0;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-}
-.pub-db-card::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 3px;
-  background: linear-gradient(90deg, #75ba40 0%, transparent 85%);
 }
 .pub-db-card-header {
-  margin-bottom: 20px;
+  margin-bottom: 16px;
 }
 .pub-db-card-header h3 {
-  font-size: 18px;
+  font-size: 15.5px;
   font-weight: 700;
   color: #1e293b;
-  margin: 0 0 5px 0;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-.pub-db-card-header p {
-  font-size: 13px;
-  color: #64748b;
   margin: 0;
 }
-.pub-db-radar-note {
-  display: block;
-  font-size: 11px;
-  color: #94a3b8;
-  margin-top: 4px;
-  font-style: italic;
-}
-.pub-db-card-body {
-  width: 100%;
-  flex-grow: 1;
-}
-.radar-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-/* ไอคอนหัวข้อการ์ดกราฟ ใช้โทนสีชุดเดียวกับหน้า Home */
-.pub-db-card-icon {
-  width: 30px;
-  height: 30px;
-  border-radius: 9px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-.pub-db-card-icon.accent-green {
-  background: #eef7e6;
-  color: #4d7a29;
-}
-.pub-db-card-icon.accent-navy {
-  background: #eef2f6;
-  color: #0f172a;
-}
-.pub-db-card-icon.accent-amber {
-  background: #fef3e2;
-  color: #b45309;
-}
-.pub-db-card-icon.accent-teal {
-  background: #e6f4f1;
-  color: #0f766e;
-}
-
 .pub-db-empty-chart {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 300px;
+  height: 220px;
   color: #94a3b8;
   font-size: 14px;
   font-style: italic;
@@ -326,30 +273,360 @@
   border: 1px dashed #e2e8f0;
 }
 
+.pub-db-row-2 {
+  display: grid;
+  grid-template-columns: 0.85fr 1.6fr;
+  gap: 22px;
+  margin-bottom: 30px;
+  align-items: stretch;
+}
+
+/* =======================================
+   Sector Donut Card
+   ======================================= */
+.pub-db-sector-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+.pub-db-sector-chart-wrap {
+  position: relative;
+  width: 100%;
+}
+.pub-db-sector-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  pointer-events: none;
+}
+.pub-db-sector-total {
+  font-size: 24px;
+  font-weight: 700;
+  color: #0f172a;
+  font-variant-numeric: tabular-nums;
+}
+.pub-db-sector-total-label {
+  font-size: 12px;
+  color: #94a3b8;
+  font-weight: 600;
+}
+.pub-db-sector-legend {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+.pub-db-sector-legend li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12.5px;
+  color: #334155;
+}
+.pub-db-sector-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.pub-db-sector-name {
+  flex: 1;
+  font-weight: 500;
+}
+.pub-db-sector-count {
+  font-weight: 700;
+  color: #0f172a;
+  font-variant-numeric: tabular-nums;
+  flex-shrink: 0;
+}
+
+/* =======================================
+   Role Maturity Gauge Card
+   ======================================= */
+.pub-db-role-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+.pub-db-role-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 12px;
+}
+.pub-db-role-col.with-divider {
+  border-left: 1px solid #f1f5f9;
+}
+.pub-db-role-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  min-height: 34px;
+}
+.pub-db-role-icon {
+  flex-shrink: 0;
+  width: 30px;
+  height: 30px;
+  border-radius: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.pub-db-role-name {
+  font-size: 12px;
+  font-weight: 700;
+  color: #1e293b;
+  line-height: 1.35;
+  text-align: left;
+}
+.pub-db-role-caption {
+  font-size: 11.5px;
+  color: #94a3b8;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+/* Gauge วงกลมเต็มวง (ใช้ร่วมกันทั้งขนาดใหญ่และเล็ก) */
+.pub-db-gauge-wrap {
+  position: relative;
+  width: 100%;
+}
+.pub-db-gauge-center-full {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  transform: translateY(-50%);
+  display: flex;
+  justify-content: center;
+}
+.pub-db-gauge-value {
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.pub-db-score-legend {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.pub-db-score-legend li {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10.5px;
+  color: #475569;
+  font-weight: 500;
+}
+.pub-db-score-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.pub-db-score-range {
+  margin-left: auto;
+  color: #94a3b8;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+/* =======================================
+   Section titles
+   ======================================= */
+.pub-db-section-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 16px 0;
+}
+
+/* =======================================
+   Row 3: Course cards + Static info list
+   ======================================= */
+.pub-db-row-3 {
+  display: grid;
+  grid-template-columns: 1.7fr 1fr;
+  gap: 30px;
+}
+.pub-db-course-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+.pub-db-course-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 4px;
+}
+.pub-db-course-card-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  margin-bottom: 10px;
+}
+.pub-db-course-num {
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.pub-db-course-card-head h4 {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 700;
+  color: #0f172a;
+  text-align: left;
+  line-height: 1.35;
+}
+.pub-db-course-registered {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: #64748b;
+  margin-bottom: 6px;
+}
+.pub-db-course-registered strong {
+  color: #0f172a;
+}
+.pub-db-course-caption {
+  font-size: 11px;
+  color: #94a3b8;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+.pub-db-course-legend {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+  margin-bottom: 10px;
+}
+.pub-db-course-legend span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11.5px;
+  font-weight: 500;
+  color: #334155;
+}
+.pub-db-course-footnote {
+  font-size: 10.5px;
+  color: #94a3b8;
+  line-height: 1.5;
+}
+
+/* Static info list (ข้อมูลหลักสูตรออนไลน์) */
+.pub-db-info-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.pub-db-info-list li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid #f1f5f9;
+}
+.pub-db-info-list li:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+.pub-db-info-num {
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.pub-db-info-icon {
+  flex-shrink: 0;
+  display: flex;
+}
+.pub-db-info-title {
+  flex: 1;
+  font-size: 12.5px;
+  font-weight: 500;
+  color: #334155;
+  line-height: 1.5;
+}
+.pub-db-info-badge {
+  flex-shrink: 0;
+  background: #f1f5f9;
+  color: #475569;
+  font-size: 10.5px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 50px;
+  white-space: nowrap;
+}
+
 /* =======================================
    Responsive
    ======================================= */
-@media (max-width: 1024px) {
-  .pub-db-chart-row-large {
+@media (max-width: 1200px) {
+  .pub-db-row-2 {
+    grid-template-columns: 1fr;
+  }
+  .pub-db-row-3 {
     grid-template-columns: 1fr;
   }
 }
 
 @media (max-width: 768px) {
-  .pub-db-main-content {
-    /* ปรับ padding ฝั่งมือถือด้วยเช่นกัน */
-    padding: 100px 15px 40px 15px;
+  .pub-db-header-banner {
+    padding: 26px 20px;
   }
-  .pub-db-header {
+  .pub-db-body {
+    padding: 0 15px 40px 15px;
+  }
+  .pub-db-header-inner {
     flex-direction: column;
-    align-items: flex-start;
-    gap: 15px;
+    align-items: stretch;
   }
-  .pub-db-btn-export {
-    width: 100%;
-    justify-content: center;
+  .pub-db-header-actions {
+    flex-direction: column;
+    align-items: stretch;
   }
-  .pub-db-chart-row-small {
+  .pub-db-role-grid,
+  .pub-db-course-cards-grid {
     grid-template-columns: 1fr;
+  }
+  .pub-db-role-col.with-divider {
+    border-left: none;
+    border-top: 1px solid #f1f5f9;
+    padding-top: 16px;
   }
 }

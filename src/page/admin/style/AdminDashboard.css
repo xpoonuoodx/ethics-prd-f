@@ -13,6 +13,7 @@
 
 .admin-main-content {
   flex: 1;
+  min-width: 0;
   margin-left: 270px; /* ตรงกับความกว้าง Sidebar */
   transition: margin-left 0.3s ease;
 }

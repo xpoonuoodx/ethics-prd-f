@@ -57,7 +57,7 @@ const AdminDashboard = () => {
     } catch (err) {
       console.error("Fetch Dashboard Error:", err);
       setError(
-        err.response?.data?.message || "เกิดข้อผิดพลาดในการเชื่อมต่อหลังบ้าน",
+        err.response?.data?.message || "เกิดข้อผิดพลาดในการเชื่อมต่อ",
       );
     } finally {
       setLoading(false);

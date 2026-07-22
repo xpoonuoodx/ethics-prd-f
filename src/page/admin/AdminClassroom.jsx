@@ -12,10 +12,11 @@ import {
   FaChalkboardTeacher,
 } from "react-icons/fa";
 import SidebarAdmin from "./SidebarAdmin";
-import Swal from "sweetalert2";
+import { useThemedAlert } from "../../hooks/useThemedAlert";
 import api from "../../api/Api";
 
 const AdminClassroom = () => {
+  const { fire } = useThemedAlert();
   const navigate = useNavigate();
   const [chapters, setChapters] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -52,7 +53,7 @@ const AdminClassroom = () => {
   }, []);
 
   const handleDelete = (rawId, title) => {
-    Swal.fire({
+    fire({
       title: "ยืนยันการลบบทเรียน?",
       text: `คุณต้องการลบ "${title}" ใช่หรือไม่? (วิดีโอและข้อสอบในบทนี้จะถูกลบทั้งหมด)`,
       icon: "warning",
@@ -71,7 +72,7 @@ const AdminClassroom = () => {
             // ถ้ายิงผ่าน ให้ลบข้อมูลออกจากหน้าจอ
             setChapters(chapters.filter((ch) => ch.rawId !== rawId));
 
-            Swal.fire({
+            fire({
               title: "ลบข้อมูลสำเร็จ",
               text: "บทเรียนถูกนำออกจากระบบแล้ว",
               icon: "success",
@@ -80,7 +81,7 @@ const AdminClassroom = () => {
           }
         } catch (error) {
           console.error("Delete Chapter Error:", error);
-          Swal.fire({
+          fire({
             title: "เกิดข้อผิดพลาด",
             text:
               error.response?.data?.message ||

@@ -10,9 +10,10 @@ import {
   FaSpinner,
 } from "react-icons/fa";
 import api, { getStoredUser } from "../../api/Api";
-import Swal from "sweetalert2";
+import { useThemedAlert } from "../../hooks/useThemedAlert";
 
 const UserToolsCreate = () => {
+  const { fire } = useThemedAlert();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [currentStep, setCurrentStep] = useState(1);
@@ -36,7 +37,7 @@ const UserToolsCreate = () => {
         setLevelType(response.data.data.levelType || "maturity");
       }
     } catch (error) {
-      Swal.fire("ผิดพลาด", "ไม่สามารถดึงข้อมูลเกณฑ์ตั้งต้นได้", "error");
+      fire("ผิดพลาด", "ไม่สามารถดึงข้อมูลเกณฑ์ตั้งต้นได้", "error");
     } finally {
       setLoading(false);
     }
@@ -50,9 +51,9 @@ const UserToolsCreate = () => {
 
   const handleNext = () => {
     if (currentStep === 1 && !selectedMaturity)
-      return Swal.fire("แจ้งเตือน", "กรุณาเลือกระดับเป้าหมาย", "warning");
+      return fire("แจ้งเตือน", "กรุณาเลือกระดับเป้าหมาย", "warning");
     if (currentStep === 2 && selectedPrinciples.length === 0)
-      return Swal.fire(
+      return fire(
         "แจ้งเตือน",
         "กรุณาเลือกหลักการอย่างน้อย 1 ข้อ",
         "warning",
@@ -80,7 +81,7 @@ const UserToolsCreate = () => {
         });
       }
     } catch (error) {
-      Swal.fire("ผิดพลาด", "เกิดข้อผิดพลาดในการสร้างเครื่องมือ", "error");
+      fire("ผิดพลาด", "เกิดข้อผิดพลาดในการสร้างเครื่องมือ", "error");
     } finally {
       setLoading(false);
     }

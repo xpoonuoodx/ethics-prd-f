@@ -6,6 +6,7 @@ import {
   FaPlus,
   FaSpinner,
   FaEye, // เปลี่ยนไอคอนเป็นรูปตา
+  FaEyeSlash,
   FaTrash,
   FaTimes,
   FaUserShield,
@@ -36,6 +37,7 @@ const AdminManageUser = () => {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   // ==========================================
   // Custom Alert Modal State (แทนที่ Swal)
@@ -144,6 +146,7 @@ const AdminManageUser = () => {
           id_card: "",
           role: "regulator",
         });
+        setShowPassword(false);
         openAlert("success", "สำเร็จ", "เพิ่มผู้ใช้งานใหม่เรียบร้อยแล้ว");
         fetchUsers();
       }
@@ -540,14 +543,23 @@ const AdminManageUser = () => {
                 </div>
                 <div className="admin-manage-user-form-group admin-manage-user-half-width">
                   <label>รหัสผ่าน (Password)</label>
-                  <input
-                    type="password"
-                    name="password"
-                    placeholder="ตั้งรหัสผ่าน"
-                    value={formData.password}
-                    onChange={handleInputChange}
-                    required
-                  />
+                  <div className="admin-manage-user-password-wrapper">
+                    <input
+                      type={showPassword ? "text" : "password"}
+                      name="password"
+                      placeholder="ตั้งรหัสผ่าน"
+                      value={formData.password}
+                      onChange={handleInputChange}
+                      required
+                    />
+                    <button
+                      type="button"
+                      className="admin-manage-user-toggle-password"
+                      onClick={() => setShowPassword(!showPassword)}
+                    >
+                      {showPassword ? <FaEyeSlash /> : <FaEye />}
+                    </button>
+                  </div>
                   <span className="admin-manage-user-field-hint">
                     ห้ามใช้ภาษาไทย
                   </span>

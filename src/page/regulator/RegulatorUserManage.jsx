@@ -11,14 +11,16 @@ import {
   FaTimes,
   FaSpinner,
   FaEye, // เพิ่มไอคอนตา
+  FaEyeSlash,
   FaChevronLeft,
   FaChevronRight,
 } from "react-icons/fa";
-import Swal from "sweetalert2";
+import { useThemedAlert } from "../../hooks/useThemedAlert";
 import api from "../../api/Api";
 import { sanitizeUsername, sanitizePassword } from "../../utils/validators";
 
 const RegulatorUserManage = () => {
+  const { fire } = useThemedAlert();
   const navigate = useNavigate(); // เรียกใช้งาน navigate
   const [users, setUsers] = useState([]);
   const [search, setSearch] = useState("");
@@ -31,6 +33,7 @@ const RegulatorUserManage = () => {
   // Modal State เพิ่ม user_type
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -54,7 +57,7 @@ const RegulatorUserManage = () => {
       }
     } catch (err) {
       console.error("Fetch Users Error:", err);
-      Swal.fire({
+      fire({
         icon: "error",
         title: "เกิดข้อผิดพลาด",
         text: "ไม่สามารถดึงข้อมูลบุคลากรได้",
@@ -90,7 +93,7 @@ const RegulatorUserManage = () => {
       !formData.id_card ||
       !formData.user_type
     ) {
-      Swal.fire({
+      fire({
         icon: "warning",
         title: "ข้อมูลไม่ครบถ้วน",
         text: "กรุณากรอกข้อมูลให้ครบทุกช่อง",
@@ -100,7 +103,7 @@ const RegulatorUserManage = () => {
     }
 
     if (formData.id_card.length !== 13) {
-      Swal.fire({
+      fire({
         icon: "warning",
         title: "รูปแบบข้อมูลไม่ถูกต้อง",
         text: "เลขประจำตัวประชาชนต้องมี 13 หลัก",
@@ -113,7 +116,7 @@ const RegulatorUserManage = () => {
       setIsSubmitting(true);
       const response = await api.post("/regulator/add-user", formData);
       if (response.data && response.data.success) {
-        Swal.fire({
+        fire({
           icon: "success",
           title: "สำเร็จ",
           text: "เพิ่มบุคลากรใหม่เรียบร้อยแล้ว",
@@ -128,11 +131,12 @@ const RegulatorUserManage = () => {
           id_card: "",
           user_type: "",
         });
+        setShowPassword(false);
         fetchUsers();
       }
     } catch (err) {
       console.error("Add User Error:", err);
-      Swal.fire({
+      fire({
         icon: "error",
         title: "เกิดข้อผิดพลาด",
         text: err.response?.data?.message || "ไม่สามารถเพิ่มข้อมูลได้",
@@ -144,7 +148,7 @@ const RegulatorUserManage = () => {
   };
 
   const handleDelete = (id, name) => {
-    Swal.fire({
+    fire({
       title: "ยืนยันการลบ?",
       text: `คุณต้องการลบบัญชีของ "${name}" ใช่หรือไม่?`,
       icon: "warning",
@@ -159,7 +163,7 @@ const RegulatorUserManage = () => {
           const response = await api.delete(`/regulator/delete-user/${id}`);
           if (response.data && response.data.success) {
             setUsers(users.filter((u) => u.id !== id));
-            Swal.fire({
+            fire({
               title: "ลบสำเร็จ!",
               text: "ข้อมูลถูกนำออกจากระบบแล้ว",
               icon: "success",
@@ -167,7 +171,7 @@ const RegulatorUserManage = () => {
             });
           }
         } catch (err) {
-          Swal.fire({
+          fire({
             icon: "error",
             title: "เกิดข้อผิดพลาด",
             text: "ไม่สามารถลบข้อมูลได้",
@@ -446,14 +450,23 @@ const RegulatorUserManage = () => {
 
               <div className="rum-form-group">
                 <label>รหัสผ่าน (Password)</label>
-                <input
-                  type="password"
-                  name="password"
-                  placeholder="ตั้งรหัสผ่านเริ่มต้น"
-                  value={formData.password}
-                  onChange={handleInputChange}
-                  required
-                />
+                <div className="rum-password-wrapper">
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    name="password"
+                    placeholder="ตั้งรหัสผ่านเริ่มต้น"
+                    value={formData.password}
+                    onChange={handleInputChange}
+                    required
+                  />
+                  <button
+                    type="button"
+                    className="rum-toggle-password"
+                    onClick={() => setShowPassword(!showPassword)}
+                  >
+                    {showPassword ? <FaEyeSlash /> : <FaEye />}
+                  </button>
+                </div>
                 <span className="rum-field-hint">ห้ามใช้ภาษาไทย</span>
               </div>
 

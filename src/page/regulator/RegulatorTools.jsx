@@ -10,9 +10,10 @@ import {
   FaLayerGroup,
 } from "react-icons/fa";
 import api, { getStoredUser } from "../../api/Api";
-import Swal from "sweetalert2";
+import { useThemedAlert } from "../../hooks/useThemedAlert";
 
 const RegulatorTools = () => {
+  const { fire } = useThemedAlert();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [tools, setTools] = useState([]);
@@ -41,7 +42,7 @@ const RegulatorTools = () => {
   };
 
   const handleDelete = (id) => {
-    Swal.fire({
+    fire({
       title: "ยืนยันการลบข้อมูล?",
       text: "รายการนี้จะถูกลบออกจากระบบอย่างถาวร",
       icon: "warning",
@@ -58,10 +59,10 @@ const RegulatorTools = () => {
           );
           if (response.data && response.data.success) {
             setTools(tools.filter((t) => t.id !== id));
-            Swal.fire("ลบสำเร็จ", "ข้อมูลถูกลบออกจากระบบแล้ว", "success");
+            fire("ลบสำเร็จ", "ข้อมูลถูกลบออกจากระบบแล้ว", "success");
           }
         } catch {
-          Swal.fire("ผิดพลาด", "ไม่สามารถลบข้อมูลได้", "error");
+          fire("ผิดพลาด", "ไม่สามารถลบข้อมูลได้", "error");
         }
       }
     });

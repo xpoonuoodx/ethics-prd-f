@@ -13,10 +13,26 @@ import {
 } from "react-icons/fa";
 import SidebarAdmin from "./SidebarAdmin";
 import api from "../../api/Api";
-import Swal from "sweetalert2";
+import { useThemedAlert } from "../../hooks/useThemedAlert";
 import { useNavigate } from "react-router-dom"; // เพิ่ม useNavigate
 
+// กลุ่มอุตสาหกรรมของหน่วยงาน
+const SECTOR_OPTIONS = [
+  { value: "government", label: "ภาครัฐ" },
+  { value: "finance", label: "การเงินและการธนาคาร" },
+  { value: "healthcare", label: "สาธารณสุข" },
+  { value: "education", label: "การศึกษา" },
+  { value: "industry", label: "อุตสาหกรรม" },
+  { value: "commerce", label: "พาณิชย์และบริการ" },
+  { value: "other", label: "อื่นๆ" },
+];
+const SECTOR_LABELS = SECTOR_OPTIONS.reduce((acc, opt) => {
+  acc[opt.value] = opt.label;
+  return acc;
+}, {});
+
 const AdminOrganize = () => {
+  const { fire } = useThemedAlert();
   const navigate = useNavigate(); // เรียกใช้งาน useNavigate
   const [organizations, setOrganizations] = useState([]);
   const [regulators, setRegulators] = useState([]);
@@ -34,6 +50,7 @@ const AdminOrganize = () => {
     name: "",
     regulatorName: "",
     status: "Active",
+    sector: "",
   });
 
   const fetchOrganizations = async () => {
@@ -87,9 +104,19 @@ const AdminOrganize = () => {
     e.preventDefault();
 
     if (!formData.id || !formData.name) {
-      Swal.fire({
+      fire({
         title: "ข้อมูลไม่ครบถ้วน",
         text: "กรุณากรอกรหัสและชื่อหน่วยงานให้ครบถ้วน",
+        icon: "warning",
+        confirmButtonColor: "#0f172a",
+      });
+      return;
+    }
+
+    if (!formData.sector) {
+      fire({
+        title: "ข้อมูลไม่ครบถ้วน",
+        text: "กรุณาเลือกกลุ่มอุตสาหกรรม (Sector) ของหน่วยงาน",
         icon: "warning",
         confirmButtonColor: "#0f172a",
       });
@@ -101,19 +128,25 @@ const AdminOrganize = () => {
       const response = await api.post("/admin/add-organize", formData);
 
       if (response.data && response.data.success) {
-        Swal.fire({
+        fire({
           title: "สำเร็จ",
           text: "เพิ่มหน่วยงานใหม่เรียบร้อยแล้ว",
           icon: "success",
           confirmButtonColor: "#10b981",
         });
         setIsModalOpen(false);
-        setFormData({ id: "", name: "", regulatorName: "", status: "Active" });
+        setFormData({
+          id: "",
+          name: "",
+          regulatorName: "",
+          status: "Active",
+          sector: "",
+        });
         fetchOrganizations();
       }
     } catch (err) {
       console.error("Add Organization Error:", err);
-      Swal.fire({
+      fire({
         title: "เกิดข้อผิดพลาด",
         text: err.response?.data?.message || "ไม่สามารถเพิ่มหน่วยงานได้",
         icon: "error",
@@ -125,7 +158,7 @@ const AdminOrganize = () => {
   };
 
   const handleDelete = async (id, name) => {
-    const result = await Swal.fire({
+    const result = await fire({
       title: "ยืนยันการลบหน่วยงาน?",
       text: `คุณต้องการลบหน่วยงาน "${name}" ใช่หรือไม่ ข้อมูลที่เกี่ยวข้องจะถูกลบทั้งหมด`,
       icon: "warning",
@@ -145,7 +178,7 @@ const AdminOrganize = () => {
           // อัปเดต State เฉพาะเมื่อลบในฐานข้อมูลสำเร็จแล้ว
           setOrganizations(organizations.filter((org) => org.id !== id));
 
-          Swal.fire({
+          fire({
             title: "ลบข้อมูลสำเร็จ",
             text: "ข้อมูลหน่วยงานถูกนำออกจากระบบแล้ว",
             icon: "success",
@@ -154,7 +187,7 @@ const AdminOrganize = () => {
         }
       } catch (error) {
         console.error("Delete Error:", error);
-        Swal.fire({
+        fire({
           title: "เกิดข้อผิดพลาด",
           text: error.response?.data?.message || "ไม่สามารถลบข้อมูลได้",
           icon: "error",
@@ -270,6 +303,7 @@ const AdminOrganize = () => {
                       <th>รหัสหน่วยงาน</th>
                       <th>ชื่อหน่วยงาน</th>
                       <th>ผู้กำกับดูแล (Regulator)</th>
+                      <th>Sector</th>
                       <th className="admin-organize-text-center">โครงการ</th>
                       <th className="admin-organize-text-center">ผู้ใช้งาน</th>
                       <th>สถานะ</th>
@@ -302,6 +336,17 @@ const AdminOrganize = () => {
                               </span>
                             </div>
                           </div>
+                        </td>
+                        <td>
+                          {org.sector ? (
+                            <span className="admin-organize-sector-badge">
+                              {SECTOR_LABELS[org.sector] || org.sector}
+                            </span>
+                          ) : (
+                            <span className="admin-organize-sector-badge empty">
+                              ไม่ระบุ
+                            </span>
+                          )}
                         </td>
                         <td className="admin-organize-text-center">
                           <span className="admin-organize-bold-number">
@@ -349,7 +394,7 @@ const AdminOrganize = () => {
 
                     {filteredOrganizations.length === 0 && (
                       <tr>
-                        <td colSpan="7" className="admin-organize-empty-state">
+                        <td colSpan="8" className="admin-organize-empty-state">
                           ไม่พบข้อมูลหน่วยงานในระบบ
                         </td>
                       </tr>
@@ -475,6 +520,25 @@ const AdminOrganize = () => {
                   ))}
                 </datalist>
               </div> */}
+
+              <div className="admin-organize-form-group">
+                <label>กลุ่มอุตสาหกรรม (Sector)</label>
+                <select
+                  name="sector"
+                  value={formData.sector}
+                  onChange={handleInputChange}
+                  required
+                >
+                  <option value="" disabled>
+                    -- เลือกกลุ่มอุตสาหกรรม --
+                  </option>
+                  {SECTOR_OPTIONS.map((opt) => (
+                    <option key={opt.value} value={opt.value}>
+                      {opt.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
 
               <div className="admin-organize-form-group">
                 <label>สถานะเริ่มต้น</label>

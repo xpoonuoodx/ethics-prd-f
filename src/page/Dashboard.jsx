@@ -1,187 +1,208 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Tabbar from "../component/Tabbar";
 import Footer from "../component/Footer";
 import axios from "axios";
+import jsPDF from "jspdf";
+import html2canvas from "html2canvas";
 import {
-  Building2,
-  Users,
-  Award,
-  Cpu,
+  CalendarDays,
   Download,
-  TrendingUp,
-  Activity,
-  Layers,
-  ChartPie,
+  Loader2,
+  Cpu,
+  CheckCircle2,
+  AlertTriangle,
+  Clock,
+  Users,
+  User,
+  Code2,
+  UserRound,
+  ArrowUpRight,
+  ArrowDownRight,
 } from "lucide-react";
-import {
-  AreaChart,
-  Area,
-  BarChart,
-  Bar,
-  PieChart,
-  Pie,
-  Cell,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-  ResponsiveContainer,
-  RadarChart,
-  PolarGrid,
-  PolarAngleAxis,
-  PolarRadiusAxis,
-  Radar,
-} from "recharts";
+import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
 import "./style/Dashboard.css";
 
-// ==========================================
-// ตัวเลือก filter user_type (ต้องตรงกับ enum จริงในระบบ)
-// ==========================================
-const USER_TYPE_FILTERS = [
-  "",
-  "regulator",
-  "policy",
-  "researcher",
-  "developer",
-  "service provider",
-  "users",
-];
-
-const USER_TYPE_LABELS = {
-  "": "ทั้งหมด",
-  regulator: "Regulator",
-  policy: "Policy",
-  researcher: "Researcher",
-  developer: "Developer",
-  "service provider": "Service Provider",
-  users: "Users",
+// สีและไอคอนประจำ 3 กลุ่มบทบาท ใช้ร่วมกันทั้งกราฟ Gauge, การ์ดหลักสูตร และแผงข้อมูลหลักสูตรสถิตย์
+const ROLE_META = {
+  executive: { color: "#2563eb", icon: User },
+  developer: { color: "#16a34a", icon: Code2 },
+  general: { color: "#7c3aed", icon: UserRound },
 };
 
-const THAI_MONTHS = [
-  "ม.ค.",
-  "ก.พ.",
-  "มี.ค.",
-  "เม.ย.",
-  "พ.ค.",
-  "มิ.ย.",
-  "ก.ค.",
-  "ส.ค.",
-  "ก.ย.",
-  "ต.ค.",
-  "พ.ย.",
-  "ธ.ค.",
+// Legend อธิบายระดับคะแนน (ค่าคงที่เชิงอธิบาย ใช้ตีความ % ของ Gauge ไม่ผูกกับข้อมูลจริง)
+const SCORE_BANDS = [
+  { label: "ระดับ 5 (ดีเยี่ยม)", range: "80-100%", color: "#16a34a" },
+  { label: "ระดับ 4 (ดี)", range: "60-79%", color: "#84cc16" },
+  { label: "ระดับ 3 (ปานกลาง)", range: "40-59%", color: "#eab308" },
+  { label: "ระดับ 2 (ต้องปรับปรุง)", range: "20-39%", color: "#f97316" },
+  { label: "ระดับ 1 (ต้องเร่งแก้ไข)", range: "0-19%", color: "#ef4444" },
 ];
+
+// รายชื่อหลักสูตร 3 กลุ่ม เป็นข้อมูลสถิตย์ (ระบบเก็บเนื้อหาเป็นรายบท ไม่มีชื่อ "หลักสูตร" รวมเก็บไว้ในฐานข้อมูล)
+const COURSE_INFO = [
+  {
+    key: "executive",
+    title: "หลักสูตรจริยธรรมปัญญาประดิษฐ์ สำหรับผู้บริหาร ผู้กำหนด และผู้กำกับนโยบาย",
+  },
+  {
+    key: "developer",
+    title: "หลักสูตรจริยธรรมปัญญาประดิษฐ์ สำหรับนักวิจัย นักพัฒนา และโปรแกรมเมอร์",
+  },
+  {
+    key: "general",
+    title: "หลักสูตรจริยธรรมปัญญาประดิษฐ์ สำหรับผู้ใช้งานทั่วไป และผู้มีผลกระทบ",
+  },
+];
+
+const SECTOR_COLORS = [
+  "#2563eb",
+  "#7c3aed",
+  "#0d9488",
+  "#16a34a",
+  "#f97316",
+  "#64748b",
+  "#cbd5e1",
+];
+
+// Gauge วงกลมเต็มวง (โดนัท progress ring) ใช้ร่วมกันทั้งกราฟระดับความพร้อม (ใหญ่) และอัตราผ่านหลักสูตร (เล็ก)
+function CircleGauge({ value, color, size = 150, valueFontSize = 26 }) {
+  const data = [
+    { name: "value", value },
+    { name: "remainder", value: Math.max(100 - value, 0) },
+  ];
+  return (
+    <div className="pub-db-gauge-wrap" style={{ height: size }}>
+      <ResponsiveContainer width="100%" height={size}>
+        <PieChart>
+          <Pie
+            data={data}
+            dataKey="value"
+            cx="50%"
+            cy="50%"
+            startAngle={90}
+            endAngle={-270}
+            innerRadius="72%"
+            outerRadius="100%"
+            stroke="none"
+          >
+            <Cell fill={color} />
+            <Cell fill="#f1f5f9" />
+          </Pie>
+        </PieChart>
+      </ResponsiveContainer>
+      <div className="pub-db-gauge-center-full">
+        <span
+          className="pub-db-gauge-value"
+          style={{ color, fontSize: valueFontSize }}
+        >
+          {value}%
+        </span>
+      </div>
+    </div>
+  );
+}
 
 function Dashboard() {
   const [loading, setLoading] = useState(true);
+  const [downloading, setDownloading] = useState(false);
+  const reportRef = useRef(null);
 
-  // filter มุมมองตาม user_type (ค่าว่าง = ดูภาพรวมทั้งหมด)
-  const [userTypeFilter, setUserTypeFilter] = useState("");
-
-  // State สำหรับเก็บข้อมูล Summary 4 การ์ดบน (ของจริงจาก API)
-  const [stats, setStats] = useState({
-    totalOrgs: 0,
-    totalUsers: 0,
-    totalCerts: 0,
-    totalProjects: 0,
-  });
-
-  // State สำหรับกราฟ (ของจริงจาก API ทั้งหมด)
-  const [radarData, setRadarData] = useState([]);
-  const [maturityData, setMaturityData] = useState([]);
-  const [userRoleData, setUserRoleData] = useState([]);
-  const [trendData, setTrendData] = useState([]);
+  const [summary, setSummary] = useState(null);
+  const [sectorDistribution, setSectorDistribution] = useState([]);
+  const [roleStats, setRoleStats] = useState([]);
+  const [courseStats, setCourseStats] = useState([]);
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    fetchDashboardData(userTypeFilter);
-  }, [userTypeFilter]);
+    fetchDashboardData();
+  }, []);
 
-  const fetchDashboardData = async (userType) => {
+  const fetchDashboardData = async () => {
     try {
       setLoading(true);
-
       const API_URL = `${import.meta.env.VITE_APP_API_ENDPOINT}/public/dashboard-stats`;
-      const response = await axios.get(API_URL, {
-        params: userType ? { user_type: userType } : {},
-      });
+      const response = await axios.get(API_URL);
 
       if (response.data && response.data.success) {
-        const { summary, userTypes, trend, maturityDistribution, radar } =
-          response.data.data;
-
-        // เซ็ตค่า 4 การ์ดบนจาก API
-        setStats({
-          totalOrgs: summary.totalOrgs || 0,
-          totalUsers: summary.totalUsers || 0,
-          totalCerts: summary.totalCerts || 0,
-          totalProjects: summary.totalProjects || 0,
-        });
-
-        // สัดส่วนบุคลากรตามบทบาท (ภาพรวมทั้งระบบเสมอ ไม่ผูกกับ filter)
-        setUserRoleData(
-          (userTypes || []).map((item) => ({
-            name: USER_TYPE_LABELS[item.name] || item.name,
-            value: parseInt(item.value),
-          })),
-        );
-
-        // เทรนด์ใบประกาศนียบัตรย้อนหลัง 6 เดือน
-        setTrendData(
-          (trend || []).map((item) => {
-            const monthNum = parseInt(item.month.split("-")[1], 10);
-            return {
-              month: THAI_MONTHS[monthNum - 1] || item.month,
-              certs: parseInt(item.certs),
-            };
-          }),
-        );
-
-        // สัดส่วนระดับความพร้อม (Maturity)
-        setMaturityData(
-          (maturityDistribution || []).map((item) => ({
-            level: item.level,
-            count: parseInt(item.count),
-          })),
-        );
-
-        // คะแนนเฉลี่ยจริยธรรม 7 มิติ (ประมาณการจากผลประเมินตนเองจริง)
-        setRadarData(
-          (radar || []).map((item) => ({
-            subject: item.principle_name,
-            A: Math.round(parseFloat(item.avg_score)),
-            fullMark: 100,
-          })),
-        );
+        const data = response.data.data;
+        setSummary(data.summary);
+        setSectorDistribution(data.sectorDistribution || []);
+        setRoleStats(data.roleStats || []);
+        setCourseStats(data.courseStats || []);
       }
     } catch (error) {
       console.error("Error fetching dashboard data:", error);
-      // หาก API พัง ให้โชว์เลขสแปร์เพื่อให้หน้าเว็บไม่โล่ง
-      setStats({
-        totalOrgs: 3,
-        totalUsers: 20,
-        totalCerts: 1,
-        totalProjects: 3,
-      });
-      setRadarData([]);
-      setTrendData([]);
-      setMaturityData([]);
-      setUserRoleData([]);
+      setSummary(null);
+      setSectorDistribution([]);
+      setRoleStats([]);
+      setCourseStats([]);
     } finally {
       setLoading(false);
     }
   };
 
-  // ชุดสีเดียวกับธีมหน้า Home (เขียว/กรมท่าเป็นหลัก แซมด้วยโทนเสริมกลุ่มเดียวกัน)
-  const COLORS = [
-    "#75ba40",
-    "#0f172a",
-    "#d97706",
-    "#0f766e",
-    "#64748b",
-    "#b45309",
-  ];
+  // ดาวน์โหลดรายงานเป็น PDF จริงจากเนื้อหาที่แสดงบนหน้าจอ (capture DOM -> รูปภาพ -> ตัดหน้า A4)
+  const handleDownloadPDF = async () => {
+    if (!reportRef.current) return;
+    try {
+      setDownloading(true);
+      const canvas = await html2canvas(reportRef.current, {
+        scale: 2,
+        useCORS: true,
+        backgroundColor: "#fafbfc",
+      });
+      const imgData = canvas.toDataURL("image/png");
+      const pdf = new jsPDF("portrait", "mm", "a4");
+      const pageWidth = pdf.internal.pageSize.getWidth();
+      const pageHeight = pdf.internal.pageSize.getHeight();
+      const imgWidth = pageWidth;
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+      let heightLeft = imgHeight;
+      let position = 0;
+      pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
+      heightLeft -= pageHeight;
+      while (heightLeft > 0) {
+        position = heightLeft - imgHeight;
+        pdf.addPage();
+        pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
+        heightLeft -= pageHeight;
+      }
+
+      const dateStr = new Date().toISOString().slice(0, 10);
+      pdf.save(`AI-Ethics-Dashboard-Report_${dateStr}.pdf`);
+    } catch (error) {
+      console.error("Download PDF Error:", error);
+    } finally {
+      setDownloading(false);
+    }
+  };
+
+  const now = new Date();
+  const dateLabel = now.toLocaleDateString("th-TH-u-ca-buddhist", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
+  const timeLabel = now.toLocaleTimeString("th-TH", {
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+  });
+
+  const DeltaTag = ({ pct }) => {
+    if (pct === 0) return <span className="pub-db-delta neutral">ไม่เปลี่ยนแปลง</span>;
+    const isUp = pct > 0;
+    return (
+      <span className={`pub-db-delta ${isUp ? "up" : "down"}`}>
+        {isUp ? <ArrowUpRight size={13} /> : <ArrowDownRight size={13} />}
+        {isUp ? "+" : ""}
+        {pct}% จากเดือนก่อน
+      </span>
+    );
+  };
+
+  const sectorTotal = sectorDistribution.reduce((s, x) => s + x.count, 0);
 
   if (loading) {
     return (
@@ -198,339 +219,323 @@ function Dashboard() {
     <div className="pub-db-wrapper">
       <Tabbar />
 
-      <main className="pub-db-main-content">
-        {/* Header */}
-        <div className="pub-db-header">
-          <div>
-            <span className="pub-db-eyebrow">ข้อมูลสาธารณะ</span>
-            <h1 className="pub-db-title">สถานการณ์จริยธรรม AI ระดับประเทศ</h1>
-            <p className="pub-db-subtitle">
-              ข้อมูลสถิติภาพรวมเชิงสาธารณะ (Public Aggregated Data)
-              จากระบบประเมินความพร้อมและหลักสูตร
-            </p>
-          </div>
-          <button className="pub-db-btn-export">
-            <Download size={18} /> โหลดรายงานสรุป (PDF)
-          </button>
-        </div>
-
-        {/* Filter มุมมองตาม User Type */}
-        <div className="pub-db-filter-bar">
-          {USER_TYPE_FILTERS.map((type) => (
-            <button
-              key={type || "all"}
-              className={`pub-db-filter-btn ${userTypeFilter === type ? "active" : ""}`}
-              onClick={() => setUserTypeFilter(type)}
-            >
-              {USER_TYPE_LABELS[type]}
-            </button>
-          ))}
-        </div>
-
-        {/* Summary Cards (KPIs) */}
-        <div className="pub-db-stats-grid">
-          <div className="pub-db-stat-card">
-            <div className="pub-db-stat-icon-wrapper org">
-              <Building2 size={24} />
+      <main className="pub-db-main-content" ref={reportRef}>
+        {/* Header Banner */}
+        <div className="pub-db-header-banner">
+          <div className="pub-db-header-inner">
+            <div className="pub-db-brand">
+              <div>
+                <h1 className="pub-db-title">AI REGISTRY ประเทศไทย</h1>
+                <p className="pub-db-subtitle">
+                  ภาพรวมการพัฒนาปัญญาประดิษฐ์ตามแนวปฏิบัติจริยธรรมปัญญาประดิษฐ์ของประเทศไทย
+                  (AI Ethics Guideline)
+                </p>
+              </div>
             </div>
-            <div className="pub-db-stat-info">
-              <span className="pub-db-stat-label">องค์กรที่เข้าร่วม</span>
-              <h3 className="pub-db-stat-value">
-                {stats.totalOrgs.toLocaleString()}
-              </h3>
-            </div>
-          </div>
-
-          <div className="pub-db-stat-card">
-            <div className="pub-db-stat-icon-wrapper proj">
-              <Cpu size={24} />
-            </div>
-            <div className="pub-db-stat-info">
-              <span className="pub-db-stat-label">โครงการ AI ที่ประเมิน</span>
-              <h3 className="pub-db-stat-value">
-                {stats.totalProjects.toLocaleString()}
-              </h3>
-            </div>
-          </div>
-
-          <div className="pub-db-stat-card">
-            <div className="pub-db-stat-icon-wrapper users">
-              <Users size={24} />
-            </div>
-            <div className="pub-db-stat-info">
-              <span className="pub-db-stat-label">ผู้ใช้งานในระบบ</span>
-              <h3 className="pub-db-stat-value">
-                {stats.totalUsers.toLocaleString()}
-              </h3>
-            </div>
-          </div>
-
-          <div className="pub-db-stat-card">
-            <div className="pub-db-stat-icon-wrapper cert">
-              <Award size={24} />
-            </div>
-            <div className="pub-db-stat-info">
-              <span className="pub-db-stat-label">ใบประกาศฯที่ออกแล้ว</span>
-              <h3 className="pub-db-stat-value">
-                {stats.totalCerts.toLocaleString()}
-              </h3>
-            </div>
-          </div>
-        </div>
-
-        {/* Top Charts: Radar & Area */}
-        <div className="pub-db-chart-row-large">
-          {/* Radar Chart (7-8 เหลี่ยม) */}
-          <div className="pub-db-card">
-            <div className="pub-db-card-header">
-              <h3>
-                <span className="pub-db-card-icon accent-green">
-                  <Activity size={16} />
-                </span>
-                คะแนนเฉลี่ยจริยธรรม 7 มิติ
-              </h3>
-              <p>ดัชนีภาพรวมจากการประเมินของทุกองค์กร</p>
-              <span className="pub-db-radar-note">
-                * ประมาณการจากผลการประเมินตนเองของผู้ใช้งานในระบบ
+            <div className="pub-db-header-actions">
+              <span className="pub-db-date-pill">
+                <CalendarDays size={15} />
+                {dateLabel} {timeLabel} น.
               </span>
-            </div>
-            <div className="pub-db-card-body radar-container">
-              {radarData.length > 0 ? (
-                <ResponsiveContainer width="100%" height={320}>
-                  <RadarChart
-                    cx="50%"
-                    cy="50%"
-                    outerRadius="70%"
-                    data={radarData}
-                  >
-                    <PolarGrid stroke="#e2e8f0" />
-                    <PolarAngleAxis
-                      dataKey="subject"
-                      tick={{ fill: "#475569", fontSize: 12, fontWeight: 500 }}
-                    />
-                    <PolarRadiusAxis
-                      angle={30}
-                      domain={[0, 100]}
-                      tick={{ fill: "#94a3b8" }}
-                    />
-                    <Radar
-                      name="คะแนนเฉลี่ยประเทศ"
-                      dataKey="A"
-                      stroke="#75ba40"
-                      fill="#75ba40"
-                      fillOpacity={0.35}
-                    />
-                    <Tooltip />
-                  </RadarChart>
-                </ResponsiveContainer>
-              ) : (
-                <div className="pub-db-empty-chart">
-                  ยังไม่มีข้อมูลการประเมิน
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* Area Chart */}
-          <div className="pub-db-card">
-            <div className="pub-db-card-header">
-              <h3>
-                <span className="pub-db-card-icon accent-navy">
-                  <TrendingUp size={16} />
-                </span>
-                การเติบโตของผู้ผ่านหลักสูตร
-              </h3>
-              <p>จำนวนใบประกาศนียบัตรสะสมทั้งหมด (ย้อนหลัง 6 เดือน)</p>
-            </div>
-            <div className="pub-db-card-body">
-              {trendData.length > 0 ? (
-                <ResponsiveContainer width="100%" height={320}>
-                  <AreaChart
-                    data={trendData}
-                    margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
-                  >
-                    <defs>
-                      <linearGradient
-                        id="colorCerts"
-                        x1="0"
-                        y1="0"
-                        x2="0"
-                        y2="1"
-                      >
-                        <stop
-                          offset="5%"
-                          stopColor="#0f172a"
-                          stopOpacity={0.35}
-                        />
-                        <stop
-                          offset="95%"
-                          stopColor="#0f172a"
-                          stopOpacity={0}
-                        />
-                      </linearGradient>
-                    </defs>
-                    <CartesianGrid
-                      strokeDasharray="3 3"
-                      vertical={false}
-                      stroke="#f1f5f9"
-                    />
-                    <XAxis
-                      dataKey="month"
-                      axisLine={false}
-                      tickLine={false}
-                      tick={{ fill: "#64748b" }}
-                      dy={10}
-                    />
-                    <YAxis
-                      axisLine={false}
-                      tickLine={false}
-                      tick={{ fill: "#64748b" }}
-                    />
-                    <Tooltip
-                      contentStyle={{
-                        borderRadius: "10px",
-                        border: "none",
-                        boxShadow: "0 4px 15px rgba(0,0,0,0.1)",
-                      }}
-                    />
-                    <Area
-                      type="monotone"
-                      dataKey="certs"
-                      name="ใบประกาศฯ"
-                      stroke="#0f172a"
-                      strokeWidth={3}
-                      fillOpacity={1}
-                      fill="url(#colorCerts)"
-                    />
-                  </AreaChart>
-                </ResponsiveContainer>
-              ) : (
-                <div className="pub-db-empty-chart">
-                  ยังไม่มีข้อมูลการออกใบประกาศนียบัตร
-                </div>
-              )}
+              <button
+                className="pub-db-btn-export"
+                onClick={handleDownloadPDF}
+                disabled={downloading}
+              >
+                {downloading ? (
+                  <Loader2 size={17} className="pub-db-spin-icon" />
+                ) : (
+                  <Download size={17} />
+                )}
+                {downloading ? "กำลังสร้างไฟล์..." : "ดาวน์โหลดรายงาน"}
+              </button>
             </div>
           </div>
         </div>
 
-        {/* Bottom Charts: Bar & Pie */}
-        <div className="pub-db-chart-row-small">
-          {/* Bar Chart (Maturity Levels) */}
-          <div className="pub-db-card">
-            <div className="pub-db-card-header">
-              <h3>
-                <span className="pub-db-card-icon accent-amber">
-                  <Layers size={16} />
-                </span>
-                สัดส่วนระดับความพร้อม (Maturity Level)
-              </h3>
+        <div className="pub-db-body">
+          {/* KPI Cards (5 การ์ด) */}
+          <div className="pub-db-stats-grid">
+            <div className="pub-db-stat-card">
+              <div className="pub-db-stat-icon-wrapper blue">
+                <Cpu size={22} />
+              </div>
+              <div className="pub-db-stat-info">
+                <span className="pub-db-stat-label">โครงการ AI ที่ขึ้นทะเบียน</span>
+                <h3 className="pub-db-stat-value">
+                  {(summary?.totalProjects || 0).toLocaleString()}
+                  <small> โครงการ</small>
+                </h3>
+                <DeltaTag pct={summary?.totalProjectsDeltaPct || 0} />
+              </div>
             </div>
-            <div className="pub-db-card-body">
-              {maturityData.length > 0 ? (
-                <ResponsiveContainer width="100%" height={280}>
-                  <BarChart
-                    data={maturityData}
-                    margin={{ top: 20, right: 20, left: -20, bottom: 0 }}
-                  >
-                    <CartesianGrid
-                      strokeDasharray="3 3"
-                      vertical={false}
-                      stroke="#f1f5f9"
-                    />
-                    <XAxis
-                      dataKey="level"
-                      axisLine={false}
-                      tickLine={false}
-                      tick={{ fill: "#64748b", fontSize: 12 }}
-                      dy={10}
-                    />
-                    <YAxis
-                      axisLine={false}
-                      tickLine={false}
-                      tick={{ fill: "#64748b" }}
-                    />
-                    <Tooltip
-                      cursor={{ fill: "#f8fafc" }}
-                      contentStyle={{
-                        borderRadius: "10px",
-                        border: "none",
-                        boxShadow: "0 4px 15px rgba(0,0,0,0.1)",
-                      }}
-                    />
-                    <Bar
-                      dataKey="count"
-                      name="จำนวนองค์กร"
-                      fill="#10b981"
-                      radius={[6, 6, 0, 0]}
-                      barSize={40}
-                    >
-                      {maturityData.map((entry, index) => (
-                        <Cell
-                          key={`cell-${index}`}
-                          fill={COLORS[index % COLORS.length]}
-                        />
-                      ))}
-                    </Bar>
-                  </BarChart>
-                </ResponsiveContainer>
-              ) : (
-                <div className="pub-db-empty-chart">
-                  ยังไม่มีข้อมูลการจัดระดับความพร้อม
-                </div>
-              )}
+
+            <div className="pub-db-stat-card">
+              <div className="pub-db-stat-icon-wrapper green">
+                <CheckCircle2 size={22} />
+              </div>
+              <div className="pub-db-stat-info">
+                <span className="pub-db-stat-label">โครงการที่ปฏิบัติตาม AI Ethics</span>
+                <h3 className="pub-db-stat-value">
+                  {(summary?.compliantProjects || 0).toLocaleString()}
+                  <small> โครงการ</small>
+                </h3>
+                <span className="pub-db-delta neutral">
+                  {summary?.compliantPct || 0}% ของทั้งหมด
+                </span>
+              </div>
+            </div>
+
+            <div className="pub-db-stat-card">
+              <div className="pub-db-stat-icon-wrapper purple">
+                <AlertTriangle size={22} />
+              </div>
+              <div className="pub-db-stat-info">
+                <span className="pub-db-stat-label">โครงการที่ต้องปรับปรุงตาม AI Ethics</span>
+                <h3 className="pub-db-stat-value">
+                  {(summary?.needsImprovementProjects || 0).toLocaleString()}
+                  <small> โครงการ</small>
+                </h3>
+                <span className="pub-db-delta neutral">
+                  {summary?.needsImprovementPct || 0}% ของทั้งหมด
+                </span>
+              </div>
+            </div>
+
+            <div className="pub-db-stat-card">
+              <div className="pub-db-stat-icon-wrapper orange">
+                <Clock size={22} />
+              </div>
+              <div className="pub-db-stat-info">
+                <span className="pub-db-stat-label">อยู่ระหว่างประเมิน</span>
+                <h3 className="pub-db-stat-value">
+                  {(summary?.underAssessmentProjects || 0).toLocaleString()}
+                  <small> โครงการ</small>
+                </h3>
+                <span className="pub-db-delta neutral">
+                  {summary?.underAssessmentPct || 0}% ของทั้งหมด
+                </span>
+              </div>
+            </div>
+
+            <div className="pub-db-stat-card">
+              <div className="pub-db-stat-icon-wrapper teal">
+                <Users size={22} />
+              </div>
+              <div className="pub-db-stat-info">
+                <span className="pub-db-stat-label">ผู้ใช้งานทั้งหมด</span>
+                <h3 className="pub-db-stat-value">
+                  {(summary?.totalUsers || 0).toLocaleString()}
+                  <small> คน</small>
+                </h3>
+                <DeltaTag pct={summary?.totalUsersDeltaPct || 0} />
+              </div>
             </div>
           </div>
 
-          {/* Donut Chart (User Types) */}
-          <div className="pub-db-card">
-            <div className="pub-db-card-header">
-              <h3>
-                <span className="pub-db-card-icon accent-teal">
-                  <ChartPie size={16} />
-                </span>
-                สัดส่วนบุคลากรตามบทบาท (User Type)
-              </h3>
-            </div>
-            <div className="pub-db-card-body">
-              {userRoleData.length > 0 ? (
-                <ResponsiveContainer width="100%" height={280}>
-                  <PieChart>
-                    <Pie
-                      data={userRoleData}
-                      cx="50%"
-                      cy="50%"
-                      innerRadius={70}
-                      outerRadius={100}
-                      paddingAngle={3}
-                      dataKey="value"
-                    >
-                      {userRoleData.map((entry, index) => (
-                        <Cell
-                          key={`cell-${index}`}
-                          fill={COLORS[index % COLORS.length]}
+          {/* Row 2: สัดส่วนภาคส่วน + ระดับความพร้อมตามบทบาท */}
+          <div className="pub-db-row-2">
+            <div className="pub-db-card pub-db-sector-card">
+              <div className="pub-db-card-header">
+                <h3>สถิติโครงการ AI จำแนกตามภาคส่วน</h3>
+              </div>
+              {sectorDistribution.length > 0 ? (
+                <div className="pub-db-sector-body">
+                  <div className="pub-db-sector-chart-wrap">
+                    <ResponsiveContainer width="100%" height={230}>
+                      <PieChart>
+                        <Pie
+                          data={sectorDistribution}
+                          dataKey="count"
+                          nameKey="label"
+                          cx="50%"
+                          cy="50%"
+                          innerRadius={64}
+                          outerRadius={92}
+                          paddingAngle={2}
+                        >
+                          {sectorDistribution.map((entry, index) => (
+                            <Cell
+                              key={`cell-${index}`}
+                              fill={SECTOR_COLORS[index % SECTOR_COLORS.length]}
+                            />
+                          ))}
+                        </Pie>
+                        <Tooltip
+                          contentStyle={{
+                            borderRadius: "10px",
+                            border: "none",
+                            boxShadow: "0 4px 15px rgba(0,0,0,0.1)",
+                          }}
                         />
-                      ))}
-                    </Pie>
-                    <Tooltip
-                      contentStyle={{
-                        borderRadius: "10px",
-                        border: "none",
-                        boxShadow: "0 4px 15px rgba(0,0,0,0.1)",
-                      }}
-                    />
-                    <Legend
-                      verticalAlign="bottom"
-                      height={36}
-                      iconType="circle"
-                      wrapperStyle={{ fontSize: "13px" }}
-                    />
-                  </PieChart>
-                </ResponsiveContainer>
-              ) : (
-                <div className="pub-db-empty-chart">
-                  ยังไม่มีข้อมูลบุคลากรในระบบ
+                      </PieChart>
+                    </ResponsiveContainer>
+                    <div className="pub-db-sector-center">
+                      <span className="pub-db-sector-total">
+                        {sectorTotal.toLocaleString()}
+                      </span>
+                      <span className="pub-db-sector-total-label">โครงการ</span>
+                    </div>
+                  </div>
+                  <ul className="pub-db-sector-legend">
+                    {sectorDistribution.map((s, index) => (
+                      <li key={s.sector}>
+                        <span
+                          className="pub-db-sector-dot"
+                          style={{
+                            background: SECTOR_COLORS[index % SECTOR_COLORS.length],
+                          }}
+                        />
+                        <span className="pub-db-sector-name">{s.label}</span>
+                        <span className="pub-db-sector-count">
+                          {s.count.toLocaleString()} (
+                          {sectorTotal > 0
+                            ? Math.round((s.count / sectorTotal) * 1000) / 10
+                            : 0}
+                          %)
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
+              ) : (
+                <div className="pub-db-empty-chart">ยังไม่มีข้อมูลโครงการในระบบ</div>
               )}
+            </div>
+
+            <div className="pub-db-card pub-db-role-card">
+              <div className="pub-db-card-header">
+                <h3>สถานภาพจริยธรรมปัญญาประดิษฐ์ของไทย จำแนกตามบทบาท</h3>
+              </div>
+              <div className="pub-db-role-grid">
+                {roleStats.map((role, idx) => {
+                  const meta = ROLE_META[role.key] || ROLE_META.general;
+                  const Icon = meta.icon;
+                  return (
+                    <div
+                      className={`pub-db-role-col ${idx > 0 ? "with-divider" : ""}`}
+                      key={role.key}
+                    >
+                      <div className="pub-db-role-head">
+                        <span
+                          className="pub-db-role-icon"
+                          style={{ background: `${meta.color}1a`, color: meta.color }}
+                        >
+                          <Icon size={17} />
+                        </span>
+                        <span className="pub-db-role-name">{role.label}</span>
+                      </div>
+                      <CircleGauge
+                        value={role.avgScorePct}
+                        color={meta.color}
+                        size={150}
+                        valueFontSize={26}
+                      />
+                      <span className="pub-db-role-caption">ระดับประเภท</span>
+                      <ul className="pub-db-score-legend">
+                        {SCORE_BANDS.map((band) => (
+                          <li key={band.label}>
+                            <span
+                              className="pub-db-score-dot"
+                              style={{ background: band.color }}
+                            />
+                            {band.label}
+                            <span className="pub-db-score-range">{band.range}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+
+          {/* Row 3: สถานภาพการเรียนรู้ + ข้อมูลหลักสูตร */}
+          <div className="pub-db-row-3">
+            <div className="pub-db-course-block">
+              <h2 className="pub-db-section-title">
+                สถานภาพการเรียนรู้ AI Ethics (Course Online)
+              </h2>
+              <div className="pub-db-course-cards-grid">
+                {courseStats.map((course, idx) => {
+                  const meta = ROLE_META[course.key] || ROLE_META.general;
+                  const Icon = meta.icon;
+                  const notPassedPct =
+                    course.registered > 0
+                      ? Math.round((course.notPassed / course.registered) * 1000) / 10
+                      : 0;
+                  return (
+                    <div className="pub-db-card pub-db-course-card" key={course.key}>
+                      <div className="pub-db-course-card-head">
+                        <span
+                          className="pub-db-course-num"
+                          style={{ background: meta.color }}
+                        >
+                          {idx + 1}
+                        </span>
+                        <h4>{course.label}</h4>
+                      </div>
+                      <div className="pub-db-course-registered">
+                        <Icon size={15} />
+                        ผู้ลงทะเบียน <strong>{course.registered.toLocaleString()}</strong>{" "}
+                        คน
+                      </div>
+                      <CircleGauge
+                        value={course.passRate}
+                        color={meta.color}
+                        size={120}
+                        valueFontSize={22}
+                      />
+                      <span className="pub-db-course-caption">อัตราผ่าน</span>
+                      <div className="pub-db-course-legend">
+                        <span className="pass">
+                          <span className="pub-db-score-dot" style={{ background: "#16a34a" }} />
+                          ผ่านเกณฑ์ (≥80%) {course.passed.toLocaleString()} คน (
+                          {course.passRate}%)
+                        </span>
+                        <span className="fail">
+                          <span className="pub-db-score-dot" style={{ background: "#ef4444" }} />
+                          ไม่ผ่านเกณฑ์ {course.notPassed.toLocaleString()} คน (
+                          {notPassedPct}%)
+                        </span>
+                      </div>
+                      <span className="pub-db-course-footnote">
+                        ต้องมีคะแนน ≥ 80% จึงจะได้รับใบประกาศนียบัตร
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            <div className="pub-db-course-info-block">
+              <h2 className="pub-db-section-title">
+                ข้อมูลหลักสูตรออนไลน์ AI Ethics (3 หลักสูตร)
+              </h2>
+              <div className="pub-db-card pub-db-info-card">
+                <ul className="pub-db-info-list">
+                  {COURSE_INFO.map((info, idx) => {
+                    const meta = ROLE_META[info.key] || ROLE_META.general;
+                    const Icon = meta.icon;
+                    return (
+                      <li key={info.key}>
+                        <span
+                          className="pub-db-info-num"
+                          style={{ background: meta.color }}
+                        >
+                          {idx + 1}
+                        </span>
+                        <span className="pub-db-info-icon" style={{ color: meta.color }}>
+                          <Icon size={16} />
+                        </span>
+                        <span className="pub-db-info-title">{info.title}</span>
+                        <span className="pub-db-info-badge">เกณฑ์ผ่าน ≥ 80%</span>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
             </div>
           </div>
         </div>

@@ -13,6 +13,7 @@
 
 .admin-organize-main-content {
   flex: 1;
+  min-width: 0;
   margin-left: 270px;
   transition: margin-left 0.3s ease;
 }
@@ -295,6 +296,23 @@
   border-radius: 50px;
   font-size: 12px;
   font-weight: 600;
+}
+
+.admin-organize-sector-badge {
+  display: inline-block;
+  padding: 5px 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  background: #eef2f6;
+  color: #334155;
+  white-space: nowrap;
+}
+.admin-organize-sector-badge.empty {
+  background: #f8fafc;
+  color: #94a3b8;
+  font-weight: 500;
+  font-style: italic;
 }
 
 .admin-organize-badge-dot {

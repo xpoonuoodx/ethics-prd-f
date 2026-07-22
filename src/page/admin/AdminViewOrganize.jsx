@@ -23,6 +23,21 @@ import {
 import SidebarAdmin from "./SidebarAdmin";
 import api from "../../api/Api";
 
+// กลุ่มอุตสาหกรรมของหน่วยงาน
+const SECTOR_OPTIONS = [
+  { value: "government", label: "ภาครัฐ" },
+  { value: "finance", label: "การเงินและการธนาคาร" },
+  { value: "healthcare", label: "สาธารณสุข" },
+  { value: "education", label: "การศึกษา" },
+  { value: "industry", label: "อุตสาหกรรม" },
+  { value: "commerce", label: "พาณิชย์และบริการ" },
+  { value: "other", label: "อื่นๆ" },
+];
+const SECTOR_LABELS = SECTOR_OPTIONS.reduce((acc, opt) => {
+  acc[opt.value] = opt.label;
+  return acc;
+}, {});
+
 const AdminViewOrganize = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -38,6 +53,7 @@ const AdminViewOrganize = () => {
   // ==========================================
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [editOrgName, setEditOrgName] = useState("");
+  const [editSector, setEditSector] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // ==========================================
@@ -134,6 +150,7 @@ const AdminViewOrganize = () => {
   // ==========================================
   const handleOpenEditModal = () => {
     setEditOrgName(organization.name);
+    setEditSector(organization.sector || "");
     setIsEditModalOpen(true);
   };
 
@@ -148,6 +165,7 @@ const AdminViewOrganize = () => {
       setIsSubmitting(true);
       const response = await api.put(`/admin/edit-organize/${id}`, {
         org_name: editOrgName,
+        sector: editSector || null,
       });
 
       if (response.data && response.data.success) {
@@ -303,17 +321,25 @@ const AdminViewOrganize = () => {
                           <FaEdit />
                         </button>
                       </h2>
-                      <span
-                        className={`admin-view-org-status-badge ${
-                          organization.status === "Active"
-                            ? "admin-view-org-active"
-                            : "admin-view-org-inactive"
-                        }`}
-                      >
-                        {organization.status === "Active"
-                          ? "กำลังเปิดใช้งาน"
-                          : "ระงับการใช้งาน"}
-                      </span>
+                      <div className="admin-view-org-badge-row">
+                        <span
+                          className={`admin-view-org-status-badge ${
+                            organization.status === "Active"
+                              ? "admin-view-org-active"
+                              : "admin-view-org-inactive"
+                          }`}
+                        >
+                          {organization.status === "Active"
+                            ? "กำลังเปิดใช้งาน"
+                            : "ระงับการใช้งาน"}
+                        </span>
+                        <span className="admin-view-org-sector-badge">
+                          {organization.sector
+                            ? SECTOR_LABELS[organization.sector] ||
+                              organization.sector
+                            : "ยังไม่ระบุ Sector"}
+                        </span>
+                      </div>
                     </div>
                   </div>
 
@@ -590,6 +616,20 @@ const AdminViewOrganize = () => {
                   onChange={(e) => setEditOrgName(e.target.value)}
                   required
                 />
+              </div>
+              <div className="admin-view-org-form-group">
+                <label>กลุ่มอุตสาหกรรม (Sector)</label>
+                <select
+                  value={editSector}
+                  onChange={(e) => setEditSector(e.target.value)}
+                >
+                  <option value="">-- ไม่ระบุ --</option>
+                  {SECTOR_OPTIONS.map((opt) => (
+                    <option key={opt.value} value={opt.value}>
+                      {opt.label}
+                    </option>
+                  ))}
+                </select>
               </div>
               <div className="admin-view-org-modal-footer">
                 <button

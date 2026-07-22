@@ -10,10 +10,11 @@ import {
   FaTimes,
   FaSpinner,
 } from "react-icons/fa";
-import Swal from "sweetalert2";
+import { useThemedAlert } from "../../hooks/useThemedAlert";
 import api from "../../api/Api";
 
 const AdminPrinciple = () => {
+  const { fire } = useThemedAlert();
   const [principles, setPrinciples] = useState([]);
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
@@ -79,7 +80,7 @@ const AdminPrinciple = () => {
     e.preventDefault();
 
     if (!formData.id || !formData.name) {
-      Swal.fire({
+      fire({
         icon: "warning",
         title: "ข้อมูลไม่ครบถ้วน",
         text: "กรุณากรอกรหัสและชื่อหลักการให้ครบถ้วน",
@@ -104,7 +105,7 @@ const AdminPrinciple = () => {
       }
 
       if (response.data && response.data.success) {
-        Swal.fire({
+        fire({
           icon: "success",
           title: "สำเร็จ",
           text: isEditing
@@ -117,7 +118,7 @@ const AdminPrinciple = () => {
       }
     } catch (err) {
       console.error("Submit Principle Error:", err);
-      Swal.fire({
+      fire({
         icon: "error",
         title: "เกิดข้อผิดพลาด",
         text: err.response?.data?.message || "ไม่สามารถบันทึกข้อมูลได้",
@@ -130,7 +131,7 @@ const AdminPrinciple = () => {
 
   // ลบข้อมูล
   const handleDelete = (id, name) => {
-    Swal.fire({
+    fire({
       title: "ยืนยันการลบ?",
       text: `คุณต้องการลบหลักการ "${name}" ใช่หรือไม่? หากลบไปแล้วข้อมูลที่เชื่อมโยงอยู่จะได้รับผลกระทบ`,
       icon: "warning",
@@ -144,7 +145,7 @@ const AdminPrinciple = () => {
         try {
           const response = await api.delete(`/admin/delete-principle/${id}`);
           if (response.data && response.data.success) {
-            Swal.fire({
+            fire({
               title: "ลบสำเร็จ!",
               text: "ข้อมูลถูกนำออกจากระบบแล้ว",
               icon: "success",
@@ -154,7 +155,7 @@ const AdminPrinciple = () => {
           }
         } catch (err) {
           console.error("Delete Principle Error:", err);
-          Swal.fire({
+          fire({
             icon: "error",
             title: "เกิดข้อผิดพลาด",
             text: "ไม่สามารถลบข้อมูลได้",
