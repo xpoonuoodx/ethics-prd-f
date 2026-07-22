@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import SidebarAdmin from "./SidebarAdmin";
-import Swal from "sweetalert2";
+import { useThemedAlert } from "../../hooks/useThemedAlert";
 import {
   FaPalette,
   FaSave,
@@ -13,6 +13,7 @@ import "./style/AdminManageCertificate.css";
 import api from "../../api/Api";
 
 const AdminManageCertificate = () => {
+  const { fire } = useThemedAlert();
   const [selectedGroup, setSelectedGroup] = useState(1);
   const [loading, setLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
@@ -60,7 +61,7 @@ const AdminManageCertificate = () => {
       }
     } catch (err) {
       console.error("Fetch Settings Error:", err);
-      Swal.fire("ข้อผิดพลาด", "ไม่สามารถโหลดการตั้งค่าแม่แบบได้", "error");
+      fire("ข้อผิดพลาด", "ไม่สามารถโหลดการตั้งค่าแม่แบบได้", "error");
     } finally {
       setLoading(false);
     }
@@ -74,7 +75,7 @@ const AdminManageCertificate = () => {
   const handleSave = async (e) => {
     e.preventDefault();
     if (!formData.signatory_name || !formData.signatory_position) {
-      Swal.fire({
+      fire({
         title: "ข้อมูลไม่ครบถ้วน",
         text: "กรุณากรอกชื่อและตำแหน่งของผู้ลงนามให้ครบถ้วน",
         icon: "warning",
@@ -93,7 +94,7 @@ const AdminManageCertificate = () => {
       const response = await api.post("/admin/certificate-settings", payload);
 
       if (response.data && response.data.success) {
-        Swal.fire({
+        fire({
           title: "บันทึกสำเร็จ!",
           text: `อัปเดตแม่แบบใบประกาศฯ ของกลุ่มที่ ${selectedGroup} เรียบร้อยแล้ว`,
           icon: "success",
@@ -104,7 +105,7 @@ const AdminManageCertificate = () => {
       }
     } catch (error) {
       console.error("Save Settings Error:", error);
-      Swal.fire("เกิดข้อผิดพลาด", "ไม่สามารถบันทึกข้อมูลได้", "error");
+      fire("เกิดข้อผิดพลาด", "ไม่สามารถบันทึกข้อมูลได้", "error");
     } finally {
       setIsSaving(false);
     }

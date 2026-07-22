@@ -9,10 +9,11 @@ import {
   FaCheckCircle,
   FaTimesCircle,
 } from "react-icons/fa";
-import Swal from "sweetalert2";
+import { useThemedAlert } from "../../hooks/useThemedAlert";
 import api from "../../api/Api";
 
 const AdminMaturity = () => {
+  const { fire } = useThemedAlert();
   const [levels, setLevels] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -78,7 +79,7 @@ const AdminMaturity = () => {
       );
 
       if (response.data && response.data.success) {
-        Swal.fire({
+        fire({
           icon: "success",
           title: "สำเร็จ",
           text: "อัปเดตเกณฑ์ระดับความพร้อมเรียบร้อยแล้ว",
@@ -89,7 +90,7 @@ const AdminMaturity = () => {
       }
     } catch (err) {
       console.error("Update Maturity Error:", err);
-      Swal.fire({
+      fire({
         icon: "error",
         title: "เกิดข้อผิดพลาด",
         text: err.response?.data?.message || "ไม่สามารถบันทึกข้อมูลได้",

@@ -2,10 +2,11 @@ import React, { useState, useEffect } from "react";
 import "./style/AdminMapping.css";
 import SidebarAdmin from "./SidebarAdmin";
 import { FaProjectDiagram, FaSave, FaSpinner, FaCheck } from "react-icons/fa";
-import Swal from "sweetalert2";
+import { useThemedAlert } from "../../hooks/useThemedAlert";
 import api from "../../api/Api";
 
 const AdminMapping = () => {
+  const { fire } = useThemedAlert();
   const [selectedRole, setSelectedRole] = useState("regulator"); // ค่าเริ่มต้นตั้งเป็น regulator
 
   const [principles, setPrinciples] = useState([]);
@@ -47,7 +48,7 @@ const AdminMapping = () => {
       }
     } catch (err) {
       console.error("Fetch Mapping Error:", err);
-      Swal.fire({
+      fire({
         icon: "error",
         title: "เกิดข้อผิดพลาด",
         text: "ไม่สามารถดึงข้อมูลผังการประเมินได้",
@@ -96,7 +97,7 @@ const AdminMapping = () => {
       });
 
       if (response.data && response.data.success) {
-        Swal.fire({
+        fire({
           icon: "success",
           title: "บันทึกสำเร็จ",
           text: "อัปเดตผังความสัมพันธ์เรียบร้อยแล้ว",
@@ -107,7 +108,7 @@ const AdminMapping = () => {
       }
     } catch (err) {
       console.error("Save Mapping Error:", err);
-      Swal.fire({
+      fire({
         icon: "error",
         title: "บันทึกไม่สำเร็จ",
         text: err.response?.data?.message || "เกิดข้อผิดพลาดในการบันทึกข้อมูล",

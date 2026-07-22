@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import SidebarAdmin from "./SidebarAdmin";
-import Swal from "sweetalert2";
+import { useThemedAlert } from "../../hooks/useThemedAlert";
 import {
   FaArrowLeft,
   FaSave,
@@ -15,6 +15,7 @@ import "./style/AdminAddChapter.css";
 import api from "../../api/Api";
 
 const AdminAddChapter = () => {
+  const { fire } = useThemedAlert();
   const navigate = useNavigate();
 
   // State เพิ่มฟิลด์ passingPercentage (ค่าตั้งต้น 80)
@@ -83,7 +84,7 @@ const AdminAddChapter = () => {
       questions.length === 0 ||
       !chapterData.passingPercentage
     ) {
-      Swal.fire({
+      fire({
         title: "ข้อมูลไม่ครบถ้วน",
         text: "กรุณากรอกชื่อบทเรียน เกณฑ์คะแนนสอบผ่าน ลิงก์วิดีโอ และแบบทดสอบอย่างน้อย 1 ข้อ",
         icon: "warning",
@@ -105,7 +106,7 @@ const AdminAddChapter = () => {
       const response = await api.post("/admin/classroom/add", payload);
 
       if (response.data && response.data.success) {
-        Swal.fire({
+        fire({
           title: "บันทึกข้อมูลสำเร็จ!",
           text: "ระบบได้เพิ่มบทเรียนใหม่เรียบร้อยแล้ว",
           icon: "success",
@@ -118,7 +119,7 @@ const AdminAddChapter = () => {
       }
     } catch (error) {
       console.error("Save Chapter Error:", error);
-      Swal.fire({
+      fire({
         title: "เกิดข้อผิดพลาด",
         text:
           error.response?.data?.message ||

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import SidebarAdmin from "./SidebarAdmin";
-import Swal from "sweetalert2";
+import { useThemedAlert } from "../../hooks/useThemedAlert";
 import {
   FaArrowLeft,
   FaSave,
@@ -16,6 +16,7 @@ import "./style/AdminEditChapter.css";
 import api from "../../api/Api";
 
 const AdminEditChapter = () => {
+  const { fire } = useThemedAlert();
   const navigate = useNavigate();
   const { id } = useParams();
 
@@ -75,7 +76,7 @@ const AdminEditChapter = () => {
       }
     } catch (error) {
       console.error("Error fetching chapter data:", error);
-      Swal.fire({
+      fire({
         title: "ข้อผิดพลาด",
         text: error.response?.data?.message || "ไม่สามารถดึงข้อมูลบทเรียนได้",
         icon: "error",
@@ -134,7 +135,7 @@ const AdminEditChapter = () => {
       questions.length === 0 ||
       !chapterData.passingPercentage
     ) {
-      Swal.fire({
+      fire({
         title: "ข้อมูลไม่ครบถ้วน",
         text: "กรุณากรอกชื่อบทเรียน เกณฑ์คะแนนสอบผ่าน ลิงก์วิดีโอ และแบบทดสอบอย่างน้อย 1 ข้อ",
         icon: "warning",
@@ -156,7 +157,7 @@ const AdminEditChapter = () => {
       const response = await api.put(`/admin/classroom/edit/${id}`, payload);
 
       if (response.data && response.data.success) {
-        Swal.fire({
+        fire({
           title: "อัปเดตข้อมูลสำเร็จ!",
           text: "ระบบได้บันทึกการแก้ไขบทเรียนเรียบร้อยแล้ว",
           icon: "success",
@@ -169,7 +170,7 @@ const AdminEditChapter = () => {
       }
     } catch (error) {
       console.error("Edit Chapter Error:", error);
-      Swal.fire({
+      fire({
         title: "เกิดข้อผิดพลาด",
         text: error.response?.data?.message || "ไม่สามารถอัปเดตข้อมูลได้",
         icon: "error",

@@ -13,6 +13,7 @@
 
 .admin-view-org-main-content {
   flex: 1;
+  min-width: 0;
   margin-left: 270px;
   transition: margin-left 0.3s ease;
 }
@@ -161,13 +162,20 @@
   margin-left: 5px;
 }
 
+.admin-view-org-badge-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+
 .admin-view-org-status-badge {
   display: inline-block;
   padding: 6px 14px;
   border-radius: 50px;
   font-size: 12px;
   font-weight: 600;
-  margin-top: 12px;
   width: fit-content;
 }
 .admin-view-org-active {
@@ -177,6 +185,17 @@
 .admin-view-org-inactive {
   background: #fee2e2;
   color: #991b1b;
+}
+
+.admin-view-org-sector-badge {
+  display: inline-block;
+  padding: 6px 14px;
+  border-radius: 50px;
+  font-size: 12px;
+  font-weight: 600;
+  background: #eef2f6;
+  color: #334155;
+  width: fit-content;
 }
 
 .admin-view-org-edit-name-btn {
@@ -452,7 +471,8 @@
   color: #475569;
   margin-bottom: 8px;
 }
-.admin-view-org-form-group input {
+.admin-view-org-form-group input,
+.admin-view-org-form-group select {
   width: 100%;
   padding: 12px 15px;
   border: 1px solid #e2e8f0;
@@ -460,9 +480,12 @@
   font-size: 14px;
   color: #0f172a;
   outline: none;
+  background-color: #ffffff;
+  font-family: inherit;
   transition: border 0.2s;
 }
-.admin-view-org-form-group input:focus {
+.admin-view-org-form-group input:focus,
+.admin-view-org-form-group select:focus {
   border-color: #0f172a;
 }
 

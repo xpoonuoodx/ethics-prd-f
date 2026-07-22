@@ -12,10 +12,11 @@ import {
   FaSpinner,
   FaEye, // เพิ่มไอคอนดวงตา
 } from "react-icons/fa";
-import Swal from "sweetalert2";
+import { useThemedAlert } from "../../hooks/useThemedAlert";
 import api from "../../api/Api";
 
 const RegulatorProjectManage = () => {
+  const { fire } = useThemedAlert();
   const navigate = useNavigate(); // เรียกใช้ navigate
   const [projects, setProjects] = useState([]);
   const [search, setSearch] = useState("");
@@ -77,7 +78,7 @@ const RegulatorProjectManage = () => {
       setIsSubmitting(true);
       const response = await api.post("/regulator/add-project", projectForm);
       if (response.data && response.data.success) {
-        Swal.fire({
+        fire({
           icon: "success",
           title: "สำเร็จ",
           text: "สร้างโครงการใหม่เรียบร้อยแล้ว",
@@ -88,7 +89,7 @@ const RegulatorProjectManage = () => {
         fetchProjects();
       }
     } catch (err) {
-      Swal.fire({
+      fire({
         icon: "error",
         title: "เกิดข้อผิดพลาด",
         text: err.response?.data?.message || "ไม่สามารถสร้างโครงการได้",
@@ -117,7 +118,7 @@ const RegulatorProjectManage = () => {
       });
 
       if (response.data && response.data.success) {
-        Swal.fire({
+        fire({
           icon: "success",
           title: "สำเร็จ",
           text: "เพิ่มบุคลากรเข้าโครงการเรียบร้อยแล้ว",
@@ -129,7 +130,7 @@ const RegulatorProjectManage = () => {
         fetchProjects();
       }
     } catch (err) {
-      Swal.fire({
+      fire({
         icon: "error",
         title: "เกิดข้อผิดพลาด",
         text: err.response?.data?.message || "ไม่สามารถเพิ่มบุคลากรได้",
@@ -141,7 +142,7 @@ const RegulatorProjectManage = () => {
   };
 
   const handleDelete = (id, name) => {
-    Swal.fire({
+    fire({
       title: "ยืนยันการลบ?",
       text: `คุณต้องการลบโครงการ "${name}" หรือไม่? ข้อมูลที่เกี่ยวข้องจะหายไปทั้งหมด`,
       icon: "warning",
@@ -156,7 +157,7 @@ const RegulatorProjectManage = () => {
           const response = await api.delete(`/regulator/delete-project/${id}`);
           if (response.data && response.data.success) {
             setProjects(projects.filter((p) => p.id !== id));
-            Swal.fire({
+            fire({
               title: "ลบสำเร็จ!",
               text: "โครงการถูกนำออกจากระบบแล้ว",
               icon: "success",
@@ -164,7 +165,7 @@ const RegulatorProjectManage = () => {
             });
           }
         } catch (err) {
-          Swal.fire({
+          fire({
             icon: "error",
             title: "เกิดข้อผิดพลาด",
             text: "ไม่สามารถลบโครงการได้",

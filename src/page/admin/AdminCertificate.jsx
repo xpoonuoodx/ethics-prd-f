@@ -2,10 +2,11 @@ import React, { useState, useEffect } from "react";
 import "./style/AdminCertificate.css";
 import SidebarAdmin from "./SidebarAdmin";
 import { FaAward, FaSearch, FaTrash, FaSpinner } from "react-icons/fa";
-import Swal from "sweetalert2";
+import { useThemedAlert } from "../../hooks/useThemedAlert";
 import api from "../../api/Api";
 
 const AdminCertificate = () => {
+  const { fire } = useThemedAlert();
   const [certificates, setCertificates] = useState([]);
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
@@ -31,7 +32,7 @@ const AdminCertificate = () => {
   };
 
   const handleDelete = (id, userName, groupNum) => {
-    Swal.fire({
+    fire({
       title: "ยืนยันการเพิกถอนสิทธิ์?",
       text: `คุณต้องการลบประวัติใบประกาศนียบัตรของ "${userName}" (หลักสูตรกลุ่มที่ ${groupNum}) ใช่หรือไม่?`,
       icon: "warning",
@@ -45,7 +46,7 @@ const AdminCertificate = () => {
         try {
           const response = await api.delete(`/admin/certificates/delete/${id}`);
           if (response.data && response.data.success) {
-            Swal.fire(
+            fire(
               "สำเร็จ!",
               "เพิกถอนประวัติใบประกาศนียบัตรเรียบร้อย",
               "success",
@@ -54,7 +55,7 @@ const AdminCertificate = () => {
           }
         } catch (err) {
           console.error("Delete Certificate Error:", err);
-          Swal.fire("ผิดพลาด", "ไม่สามารถลบข้อมูลได้", "error");
+          fire("ผิดพลาด", "ไม่สามารถลบข้อมูลได้", "error");
         }
       }
     });

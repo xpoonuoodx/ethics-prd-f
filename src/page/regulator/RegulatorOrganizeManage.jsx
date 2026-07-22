@@ -14,9 +14,25 @@ import {
 } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import api from "../../api/Api";
-import Swal from "sweetalert2";
+import { useThemedAlert } from "../../hooks/useThemedAlert";
+
+// กลุ่มอุตสาหกรรมของหน่วยงาน
+const SECTOR_OPTIONS = [
+  { value: "government", label: "ภาครัฐ" },
+  { value: "finance", label: "การเงินและการธนาคาร" },
+  { value: "healthcare", label: "สาธารณสุข" },
+  { value: "education", label: "การศึกษา" },
+  { value: "industry", label: "อุตสาหกรรม" },
+  { value: "commerce", label: "พาณิชย์และบริการ" },
+  { value: "other", label: "อื่นๆ" },
+];
+const SECTOR_LABELS = SECTOR_OPTIONS.reduce((acc, opt) => {
+  acc[opt.value] = opt.label;
+  return acc;
+}, {});
 
 const RegulatorOrganizeManage = () => {
+  const { fire } = useThemedAlert();
   const navigate = useNavigate();
 
   const [orgData, setOrgData] = useState(null);
@@ -34,6 +50,10 @@ const RegulatorOrganizeManage = () => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [editOrgName, setEditOrgName] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // ตั้งค่า Sector ได้ครั้งเดียว (เฉพาะตอนที่หน่วยงานยังไม่มีค่านี้)
+  const [sectorValue, setSectorValue] = useState("");
+  const [isSavingSector, setIsSavingSector] = useState(false);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -72,7 +92,7 @@ const RegulatorOrganizeManage = () => {
   const handleEditSubmit = async (e) => {
     e.preventDefault();
     if (!editOrgName.trim()) {
-      Swal.fire({
+      fire({
         title: "ข้อมูลไม่ครบถ้วน",
         text: "กรุณากรอกชื่อหน่วยงาน",
         icon: "warning",
@@ -90,7 +110,7 @@ const RegulatorOrganizeManage = () => {
       if (response.data && response.data.success) {
         setOrgData((prev) => ({ ...prev, org_name: editOrgName.trim() }));
         setIsEditModalOpen(false);
-        Swal.fire({
+        fire({
           title: "สำเร็จ",
           text: "แก้ไขชื่อหน่วยงานเรียบร้อยแล้ว",
           icon: "success",
@@ -99,7 +119,7 @@ const RegulatorOrganizeManage = () => {
       }
     } catch (err) {
       console.error("Edit Organization Info Error:", err);
-      Swal.fire({
+      fire({
         title: "เกิดข้อผิดพลาด",
         text: err.response?.data?.message || "ไม่สามารถแก้ไขชื่อหน่วยงานได้",
         icon: "error",
@@ -107,6 +127,45 @@ const RegulatorOrganizeManage = () => {
       });
     } finally {
       setIsSubmitting(false);
+    }
+  };
+
+  const handleSetSector = async () => {
+    if (!sectorValue) {
+      fire({
+        title: "ข้อมูลไม่ครบถ้วน",
+        text: "กรุณาเลือกกลุ่มอุตสาหกรรมของหน่วยงาน",
+        icon: "warning",
+        confirmButtonColor: "#0f172a",
+      });
+      return;
+    }
+
+    try {
+      setIsSavingSector(true);
+      const response = await api.put("/regulator/organization-info", {
+        sector: sectorValue,
+      });
+
+      if (response.data && response.data.success) {
+        setOrgData((prev) => ({ ...prev, sector: sectorValue }));
+        fire({
+          title: "สำเร็จ",
+          text: "ตั้งค่ากลุ่มอุตสาหกรรมของหน่วยงานเรียบร้อยแล้ว",
+          icon: "success",
+          confirmButtonColor: "#10b981",
+        });
+      }
+    } catch (err) {
+      console.error("Set Sector Error:", err);
+      fire({
+        title: "เกิดข้อผิดพลาด",
+        text: err.response?.data?.message || "ไม่สามารถตั้งค่า Sector ได้",
+        icon: "error",
+        confirmButtonColor: "#ef4444",
+      });
+    } finally {
+      setIsSavingSector(false);
     }
   };
 
@@ -182,6 +241,50 @@ const RegulatorOrganizeManage = () => {
                       * การระงับ/เปิดใช้งานหน่วยงานเป็นสิทธิ์ของผู้ดูแลระบบ
                       (Admin) เท่านั้น
                     </span>
+
+                    {/* กลุ่มอุตสาหกรรม: ตั้งค่าได้ครั้งเดียวถ้ายังไม่เคยระบุ */}
+                    {orgData.sector ? (
+                      <div className="rom-sector-display">
+                        <span className="rom-sector-label">
+                          กลุ่มอุตสาหกรรม
+                        </span>
+                        <span className="rom-sector-badge">
+                          {SECTOR_LABELS[orgData.sector] || orgData.sector}
+                        </span>
+                      </div>
+                    ) : (
+                      <div className="rom-sector-set">
+                        <span className="rom-sector-label">
+                          ยังไม่ได้ระบุกลุ่มอุตสาหกรรม
+                        </span>
+                        <div className="rom-sector-set-controls">
+                          <select
+                            value={sectorValue}
+                            onChange={(e) => setSectorValue(e.target.value)}
+                          >
+                            <option value="" disabled>
+                              -- เลือกกลุ่มอุตสาหกรรม --
+                            </option>
+                            {SECTOR_OPTIONS.map((opt) => (
+                              <option key={opt.value} value={opt.value}>
+                                {opt.label}
+                              </option>
+                            ))}
+                          </select>
+                          <button
+                            type="button"
+                            className="rom-sector-save-btn"
+                            onClick={handleSetSector}
+                            disabled={isSavingSector}
+                          >
+                            {isSavingSector ? "กำลังบันทึก..." : "บันทึก"}
+                          </button>
+                        </div>
+                        <span className="rom-sector-hint">
+                          * ตั้งค่าได้เพียงครั้งเดียว หลังจากบันทึกแล้วต้องติดต่อผู้ดูแลระบบหากต้องการเปลี่ยนแปลง
+                        </span>
+                      </div>
+                    )}
                   </div>
                 </div>
 

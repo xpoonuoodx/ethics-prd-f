@@ -24,9 +24,10 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import api from "../../api/Api";
-import Swal from "sweetalert2";
+import { useThemedAlert } from "../../hooks/useThemedAlert";
 
 const RegulatorViewProject = () => {
+  const { fire } = useThemedAlert();
   const { id } = useParams();
   const navigate = useNavigate();
 
@@ -80,7 +81,7 @@ const RegulatorViewProject = () => {
   const handleEditSubmit = async (e) => {
     e.preventDefault();
     if (!editProjectName.trim()) {
-      Swal.fire({
+      fire({
         title: "ข้อมูลไม่ครบถ้วน",
         text: "กรุณากรอกชื่อโครงการ",
         icon: "warning",
@@ -101,7 +102,7 @@ const RegulatorViewProject = () => {
           project_name: editProjectName.trim(),
         }));
         setIsEditModalOpen(false);
-        Swal.fire({
+        fire({
           title: "สำเร็จ",
           text: "แก้ไขชื่อโครงการเรียบร้อยแล้ว",
           icon: "success",
@@ -110,7 +111,7 @@ const RegulatorViewProject = () => {
       }
     } catch (err) {
       console.error("Edit Project Error:", err);
-      Swal.fire({
+      fire({
         title: "เกิดข้อผิดพลาด",
         text: err.response?.data?.message || "ไม่สามารถแก้ไขชื่อโครงการได้",
         icon: "error",
@@ -125,7 +126,7 @@ const RegulatorViewProject = () => {
   // ฟังก์ชันถอดบุคลากรออกจากโครงการ
   // ==========================================
   const handleRemoveMember = (userId, name) => {
-    Swal.fire({
+    fire({
       title: "ยืนยันการถอดออก?",
       text: `คุณต้องการถอด "${name || "บุคลากรท่านนี้"}" ออกจากโครงการนี้หรือไม่`,
       icon: "warning",
@@ -143,7 +144,7 @@ const RegulatorViewProject = () => {
           );
           if (response.data && response.data.success) {
             setMembers((prev) => prev.filter((m) => m.id !== userId));
-            Swal.fire({
+            fire({
               title: "สำเร็จ",
               text: "ถอดบุคลากรออกจากโครงการแล้ว",
               icon: "success",
@@ -152,7 +153,7 @@ const RegulatorViewProject = () => {
           }
         } catch (err) {
           console.error("Remove Member Error:", err);
-          Swal.fire({
+          fire({
             title: "เกิดข้อผิดพลาด",
             text: err.response?.data?.message || "ไม่สามารถถอดบุคลากรได้",
             icon: "error",

@@ -1,5 +1,6 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { ThemedAlertProvider } from "./component/ThemedAlert";
 
 // หน้าทั่วไป (Public Pages)
 import Home from "./page/Home";
@@ -71,6 +72,7 @@ import RegulatorOrganizeManage from "./page/regulator/RegulatorOrganizeManage";
 
 function App() {
   return (
+    <ThemedAlertProvider>
     <Router>
       <Routes>
         {/* === Public Routes === */}
@@ -455,6 +457,7 @@ function App() {
         <Route path="*" element={<UnderConstruction />} />
       </Routes>
     </Router>
+    </ThemedAlertProvider>
   );
 }
 

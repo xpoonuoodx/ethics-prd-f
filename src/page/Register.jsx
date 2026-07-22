@@ -11,7 +11,7 @@ import {
 } from "react-icons/fa";
 import logo from "../assets/logo-bde.png";
 import axios from "axios";
-import Swal from "sweetalert2";
+import { useThemedAlert } from "../hooks/useThemedAlert";
 import { sanitizeUsername, sanitizePassword } from "../utils/validators";
 
 const USER_TYPE_OPTIONS = [
@@ -23,7 +23,19 @@ const USER_TYPE_OPTIONS = [
   { value: "users", label: "Users (ผู้ใช้งานทั่วไป)" },
 ];
 
+// กลุ่มอุตสาหกรรมของหน่วยงาน (เฉพาะสมัครในฐานะหน่วยงาน)
+const SECTOR_OPTIONS = [
+  { value: "government", label: "ภาครัฐ" },
+  { value: "finance", label: "การเงินและการธนาคาร" },
+  { value: "healthcare", label: "สาธารณสุข" },
+  { value: "education", label: "การศึกษา" },
+  { value: "industry", label: "อุตสาหกรรม" },
+  { value: "commerce", label: "พาณิชย์และบริการ" },
+  { value: "other", label: "อื่นๆ" },
+];
+
 const Register = () => {
+  const { fire } = useThemedAlert();
   const [searchParams, setSearchParams] = useSearchParams();
   const accountType = searchParams.get("type"); // "organization" | "individual" | null
 
@@ -41,6 +53,7 @@ const Register = () => {
     confirmPassword: "",
     user_type: "",
     org_name: "",
+    sector: "",
   });
 
   const handleChange = (e) => {
@@ -62,7 +75,7 @@ const Register = () => {
     e.preventDefault();
 
     if (formData.password !== formData.confirmPassword) {
-      return Swal.fire({
+      return fire({
         icon: "warning",
         title: "รหัสผ่านไม่ตรงกัน",
         text: "กรุณาตรวจสอบรหัสผ่านและการยืนยันรหัสผ่านอีกครั้ง",
@@ -71,7 +84,7 @@ const Register = () => {
     }
 
     if (!formData.user_type) {
-      return Swal.fire({
+      return fire({
         icon: "warning",
         title: "ข้อมูลไม่ครบถ้วน",
         text: "กรุณาเลือกประเภทผู้ใช้งาน",
@@ -80,10 +93,19 @@ const Register = () => {
     }
 
     if (isOrganization && !formData.org_name.trim()) {
-      return Swal.fire({
+      return fire({
         icon: "warning",
         title: "ข้อมูลไม่ครบถ้วน",
         text: "กรุณากรอกชื่อหน่วยงาน",
+        confirmButtonColor: "#75ba40",
+      });
+    }
+
+    if (isOrganization && !formData.sector) {
+      return fire({
+        icon: "warning",
+        title: "ข้อมูลไม่ครบถ้วน",
+        text: "กรุณาเลือกกลุ่มอุตสาหกรรมของหน่วยงาน",
         confirmButtonColor: "#75ba40",
       });
     }
@@ -102,10 +124,12 @@ const Register = () => {
         username: formData.username,
         password: formData.password,
         user_type: formData.user_type,
-        ...(isOrganization ? { org_name: formData.org_name.trim() } : {}),
+        ...(isOrganization
+          ? { org_name: formData.org_name.trim(), sector: formData.sector }
+          : {}),
       });
 
-      Swal.fire({
+      fire({
         icon: "success",
         title: "ลงทะเบียนสำเร็จ!",
         text: response.data.message || "กรุณาตรวจสอบอีเมลเพื่อยืนยันตัวตน",
@@ -119,7 +143,7 @@ const Register = () => {
         error.response?.data?.message ||
         "เกิดข้อผิดพลาดในการเชื่อมต่อเซิร์ฟเวอร์";
 
-      Swal.fire({
+      fire({
         icon: "error",
         title: "ลงทะเบียนไม่สำเร็จ",
         text: errorMessage,
@@ -312,7 +336,7 @@ const Register = () => {
               </div>
 
               <div className="auth-register-input-group">
-                <label htmlFor="user_type">ประเภทผู้ใช้งาน (User Type)</label>
+                <label htmlFor="user_type">ประเภทผู้ใช้งาน</label>
                 <select
                   id="user_type"
                   value={formData.user_type}
@@ -384,6 +408,27 @@ const Register = () => {
                     onChange={handleChange}
                     required
                   />
+                </div>
+              )}
+
+              {isOrganization && (
+                <div className="auth-register-input-group auth-register-full-width">
+                  <label htmlFor="sector">กลุ่มอุตสาหกรรมของหน่วยงาน</label>
+                  <select
+                    id="sector"
+                    value={formData.sector}
+                    onChange={handleChange}
+                    required
+                  >
+                    <option value="" disabled>
+                      -- เลือกกลุ่มอุตสาหกรรม --
+                    </option>
+                    {SECTOR_OPTIONS.map((opt) => (
+                      <option key={opt.value} value={opt.value}>
+                        {opt.label}
+                      </option>
+                    ))}
+                  </select>
                 </div>
               )}
             </div>

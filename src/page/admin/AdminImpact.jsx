@@ -9,10 +9,11 @@ import {
   FaCheckCircle,
   FaTimesCircle,
 } from "react-icons/fa";
-import Swal from "sweetalert2";
+import { useThemedAlert } from "../../hooks/useThemedAlert";
 import api from "../../api/Api";
 
 const AdminImpact = () => {
+  const { fire } = useThemedAlert();
   const [levels, setLevels] = useState([]);
   const [maturityLevels, setMaturityLevels] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -93,7 +94,7 @@ const AdminImpact = () => {
       );
 
       if (response.data && response.data.success) {
-        Swal.fire({
+        fire({
           icon: "success",
           title: "สำเร็จ",
           text: "อัปเดตเกณฑ์ระดับผลกระทบเรียบร้อยแล้ว",
@@ -104,7 +105,7 @@ const AdminImpact = () => {
       }
     } catch (err) {
       console.error("Update Impact Error:", err);
-      Swal.fire({
+      fire({
         icon: "error",
         title: "เกิดข้อผิดพลาด",
         text: err.response?.data?.message || "ไม่สามารถบันทึกข้อมูลได้",
