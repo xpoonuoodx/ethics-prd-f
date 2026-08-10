@@ -38,10 +38,15 @@ const RegulatorViewProject = () => {
   const [error, setError] = useState(null);
 
   // ==========================================
-  // States สำหรับแก้ไขชื่อโครงการ
+  // States สำหรับแก้ไขข้อมูลโครงการ
   // ==========================================
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [editProjectName, setEditProjectName] = useState("");
+  const [editForm, setEditForm] = useState({
+    project_name: "",
+    project_type: "",
+    ai_objective: "",
+    accountable_owner: "",
+  });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
@@ -71,16 +76,26 @@ const RegulatorViewProject = () => {
   };
 
   // ==========================================
-  // ฟังก์ชันจัดการการแก้ไขชื่อโครงการ
+  // ฟังก์ชันจัดการการแก้ไขข้อมูลโครงการ
   // ==========================================
   const handleOpenEditModal = () => {
-    setEditProjectName(projectData.project_name);
+    setEditForm({
+      project_name: projectData.project_name || "",
+      project_type: projectData.project_type || "",
+      ai_objective: projectData.ai_objective || "",
+      accountable_owner: projectData.accountable_owner || "",
+    });
     setIsEditModalOpen(true);
+  };
+
+  const handleEditInputChange = (e) => {
+    const { name, value } = e.target;
+    setEditForm((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleEditSubmit = async (e) => {
     e.preventDefault();
-    if (!editProjectName.trim()) {
+    if (!editForm.project_name.trim()) {
       fire({
         title: "ข้อมูลไม่ครบถ้วน",
         text: "กรุณากรอกชื่อโครงการ",
@@ -92,19 +107,20 @@ const RegulatorViewProject = () => {
 
     try {
       setIsSubmitting(true);
-      const response = await api.put(`/regulator/edit-project/${id}`, {
-        project_name: editProjectName.trim(),
-      });
+      const payload = {
+        project_name: editForm.project_name.trim(),
+        project_type: editForm.project_type.trim(),
+        ai_objective: editForm.ai_objective.trim(),
+        accountable_owner: editForm.accountable_owner.trim(),
+      };
+      const response = await api.put(`/regulator/edit-project/${id}`, payload);
 
       if (response.data && response.data.success) {
-        setProjectData((prev) => ({
-          ...prev,
-          project_name: editProjectName.trim(),
-        }));
+        setProjectData((prev) => ({ ...prev, ...payload }));
         setIsEditModalOpen(false);
         fire({
           title: "สำเร็จ",
-          text: "แก้ไขชื่อโครงการเรียบร้อยแล้ว",
+          text: "แก้ไขข้อมูลโครงการเรียบร้อยแล้ว",
           icon: "success",
           confirmButtonColor: "#10b981",
         });
@@ -113,7 +129,7 @@ const RegulatorViewProject = () => {
       console.error("Edit Project Error:", err);
       fire({
         title: "เกิดข้อผิดพลาด",
-        text: err.response?.data?.message || "ไม่สามารถแก้ไขชื่อโครงการได้",
+        text: err.response?.data?.message || "ไม่สามารถแก้ไขข้อมูลโครงการได้",
         icon: "error",
         confirmButtonColor: "#ef4444",
       });
@@ -278,6 +294,27 @@ const RegulatorViewProject = () => {
                   </div>
                 </div>
 
+                {/* ข้อมูลกำกับดูแล AI เพิ่มเติม */}
+                <div className="rvp-list-section">
+                  <div className="rvp-list-header">
+                    <h2>ข้อมูลเพิ่มเติมของโครงการ</h2>
+                  </div>
+                  <div className="rvp-info-grid">
+                    <div className="rvp-info-item">
+                      <span>ประเภทโครงการ</span>
+                      <p>{projectData.project_type || "ยังไม่ระบุ"}</p>
+                    </div>
+                    <div className="rvp-info-item">
+                      <span>ฝ่ายงานเจ้าของ (Accountable Owner)</span>
+                      <p>{projectData.accountable_owner || "ยังไม่ระบุ"}</p>
+                    </div>
+                    <div className="rvp-info-item">
+                      <span>วัตถุประสงค์ของ AI</span>
+                      <p>{projectData.ai_objective || "ยังไม่ระบุ"}</p>
+                    </div>
+                  </div>
+                </div>
+
                 {/* รายชื่อสมาชิก */}
                 <div className="rvp-list-section">
                   <div className="rvp-list-header">
@@ -415,12 +452,12 @@ const RegulatorViewProject = () => {
         </div>
       </div>
 
-      {/* Modal แก้ไขชื่อโครงการ */}
+      {/* Modal แก้ไขข้อมูลโครงการ */}
       {isEditModalOpen && (
         <div className="rvp-modal-overlay">
           <div className="rvp-modal-container">
             <div className="rvp-modal-header">
-              <h2>แก้ไขชื่อโครงการ</h2>
+              <h2>แก้ไขข้อมูลโครงการ</h2>
               <button
                 className="rvp-modal-close"
                 onClick={() => setIsEditModalOpen(false)}
@@ -433,10 +470,40 @@ const RegulatorViewProject = () => {
                 <label>ชื่อโครงการ (AI System Name)</label>
                 <input
                   type="text"
+                  name="project_name"
                   placeholder="ระบุชื่อระบบ AI"
-                  value={editProjectName}
-                  onChange={(e) => setEditProjectName(e.target.value)}
+                  value={editForm.project_name}
+                  onChange={handleEditInputChange}
                   required
+                />
+              </div>
+              <div className="rvp-form-group">
+                <label>ประเภทโครงการ (ไม่บังคับ)</label>
+                <input
+                  type="text"
+                  name="project_type"
+                  placeholder="เช่น พัฒนาขึ้นเอง, ซื้อ, ฝังมากับระบบ/Software (Embedded), จ้างดำเนินการแทน (Outsource)"
+                  value={editForm.project_type}
+                  onChange={handleEditInputChange}
+                />
+              </div>
+              <div className="rvp-form-group">
+                <label>วัตถุประสงค์ของ AI (ไม่บังคับ)</label>
+                <textarea
+                  name="ai_objective"
+                  placeholder="อธิบายวัตถุประสงค์การใช้งาน AI ในโครงการนี้"
+                  value={editForm.ai_objective}
+                  onChange={handleEditInputChange}
+                />
+              </div>
+              <div className="rvp-form-group">
+                <label>ฝ่ายงานเจ้าของ (Accountable Owner) (ไม่บังคับ)</label>
+                <input
+                  type="text"
+                  name="accountable_owner"
+                  placeholder="เช่น ฝ่ายเทคโนโลยีสารสนเทศ"
+                  value={editForm.accountable_owner}
+                  onChange={handleEditInputChange}
                 />
               </div>
               <div className="rvp-modal-footer">

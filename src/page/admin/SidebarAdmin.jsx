@@ -20,6 +20,7 @@ import {
   FaAtlas,
   FaCertificate,
   FaPalette,
+  FaProjectDiagram,
 } from "react-icons/fa";
 import { getStoredUser } from "../../api/Api";
 
@@ -155,6 +156,16 @@ const SidebarAdmin = () => {
             <FaUsers className="admin-menu-icon" />
             <span className={`admin-menu-text ${!isOpen && "hidden"}`}>
               ผู้ใช้งานระบบ
+            </span>
+          </Link>
+
+          <Link
+            to="/admin-project-overview"
+            className={`admin-sidebar-item ${isActive("/admin-project-overview")}`}
+          >
+            <FaProjectDiagram className="admin-menu-icon" />
+            <span className={`admin-menu-text ${!isOpen && "hidden"}`}>
+              ภาพรวมโครงการ
             </span>
           </Link>
 

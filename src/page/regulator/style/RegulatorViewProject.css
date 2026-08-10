@@ -421,7 +421,8 @@
   color: #475569;
   margin-bottom: 8px;
 }
-.rvp-form-group input {
+.rvp-form-group input,
+.rvp-form-group textarea {
   width: 100%;
   padding: 12px 15px;
   border: 1px solid #e2e8f0;
@@ -431,9 +432,42 @@
   outline: none;
   transition: border 0.2s;
   background-color: #ffffff;
+  font-family: inherit;
 }
-.rvp-form-group input:focus {
+.rvp-form-group input:focus,
+.rvp-form-group textarea:focus {
   border-color: #0f172a;
+}
+.rvp-form-group textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.rvp-info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+  margin-top: 12px;
+}
+.rvp-info-item {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 16px 18px;
+}
+.rvp-info-item span {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: #94a3b8;
+  margin-bottom: 6px;
+}
+.rvp-info-item p {
+  margin: 0;
+  font-size: 14px;
+  color: #1e293b;
+  white-space: pre-wrap;
+  line-height: 1.5;
 }
 
 .rvp-modal-footer {

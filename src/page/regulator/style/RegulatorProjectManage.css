@@ -435,7 +435,8 @@
   margin-bottom: 8px;
 }
 .rpm-form-group input,
-.rpm-form-group select {
+.rpm-form-group select,
+.rpm-form-group textarea {
   width: 100%;
   padding: 12px 15px;
   border: 1px solid #e2e8f0;
@@ -445,10 +446,16 @@
   outline: none;
   transition: border 0.2s;
   background-color: #ffffff;
+  font-family: inherit;
 }
 .rpm-form-group input:focus,
-.rpm-form-group select:focus {
+.rpm-form-group select:focus,
+.rpm-form-group textarea:focus {
   border-color: #0f172a;
+}
+.rpm-form-group textarea {
+  resize: vertical;
+  min-height: 80px;
 }
 
 .rpm-modal-footer {
