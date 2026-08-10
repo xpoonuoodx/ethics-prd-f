@@ -26,6 +26,8 @@ import AdminDashboard from "./page/admin/AdminDashboard";
 import AdminOrganize from "./page/admin/AdminOrganize";
 
 import AdminManageUser from "./page/admin/AdminManageUser";
+import AdminProjectOverview from "./page/admin/AdminProjectOverview";
+import AdminViewProject from "./page/admin/AdminViewProject";
 import AdminViewOrganize from "./page/admin/AdminViewOrganize";
 import AdminPrinciple from "./page/admin/AdminPrinciple";
 import AdminMaturity from "./page/admin/AdminMaturity";
@@ -133,6 +135,22 @@ function App() {
           element={
             <AdminRoute>
               <AdminManageUser />
+            </AdminRoute>
+          }
+        />
+        <Route
+          path="/admin-project-overview"
+          element={
+            <AdminRoute>
+              <AdminProjectOverview />
+            </AdminRoute>
+          }
+        />
+        <Route
+          path="/admin-view-project/:id"
+          element={
+            <AdminRoute>
+              <AdminViewProject />
             </AdminRoute>
           }
         />

@@ -1,0 +1,428 @@
+@import url("https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap");
+
+.avp-layout * {
+  box-sizing: border-box;
+  font-family: "Prompt", sans-serif;
+}
+
+.avp-layout {
+  display: flex;
+  min-height: 100vh;
+  background-color: #f4f6f8;
+}
+
+.avp-main-content {
+  flex: 1;
+  min-width: 0;
+  margin-left: 270px;
+  transition: margin-left 0.3s ease;
+}
+
+.avp-container {
+  padding: 40px 50px;
+  /* max-width: 1200px; */
+  /* margin: 0 auto; */
+}
+
+.avp-back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  color: #475569;
+  padding: 9px 18px;
+  border-radius: 50px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-bottom: 24px;
+  transition: all 0.2s;
+}
+.avp-back-btn:hover {
+  background: #f1f5f9;
+  color: #0f172a;
+}
+
+/* ===== States ===== */
+.avp-state-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 100px 20px;
+  color: #64748b;
+}
+.avp-spin {
+  font-size: 30px;
+  color: #0f172a;
+  margin-bottom: 15px;
+  animation: avpSpin 1s linear infinite;
+}
+@keyframes avpSpin {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+.avp-error {
+  color: #dc2626;
+}
+.avp-empty-state {
+  text-align: center;
+  padding: 30px;
+  color: #94a3b8;
+  font-size: 13px;
+}
+
+/* ===== Header card (Model-card style) ===== */
+.avp-card-header {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 20px;
+  overflow: hidden;
+  margin-bottom: 24px;
+}
+
+/* แบนเนอร์สีไล่โทน แทนที่รูปปกโมเดลที่หน้านี้ไม่มีให้ใช้ */
+.avp-banner {
+  padding: 18px 32px;
+}
+.avp-org-line {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.avp-org-avatar {
+  width: 26px;
+  height: 26px;
+  border-radius: 7px;
+  background: rgba(255, 255, 255, 0.25);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.avp-org-line span {
+  font-size: 13px;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.avp-card-body {
+  padding: 22px 32px 28px 32px;
+}
+
+.avp-project-name {
+  font-size: 28px;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 10px 0;
+  letter-spacing: -0.5px;
+  word-break: break-word;
+}
+
+/* แถวสถิติย่อ ไอคอน+ตัวเลขคั่นด้วยจุด แบบเดียวกับใต้ชื่อโมเดลบน Hugging Face */
+.avp-stat-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.avp-stat-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: #64748b;
+}
+.avp-stat-item svg {
+  font-size: 12px;
+  color: #94a3b8;
+}
+.avp-stat-dot {
+  color: #cbd5e1;
+  font-size: 12px;
+}
+
+.avp-tag-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.avp-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  border: 1px solid #e2e8f0;
+  background: #ffffff;
+  color: #334155;
+}
+.avp-tag svg {
+  font-size: 11px;
+  color: #94a3b8;
+}
+.avp-tag.tag-status {
+  border: none;
+}
+.avp-status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  display: inline-block;
+}
+.avp-tag.tag-status.pending {
+  background: #fffbeb;
+  color: #d97706;
+}
+.avp-tag.tag-status.pending .avp-status-dot {
+  background: #d97706;
+}
+.avp-tag.tag-status.in-progress {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+.avp-tag.tag-status.in-progress .avp-status-dot {
+  background: #1d4ed8;
+}
+.avp-tag.tag-status.completed {
+  background: #dcfce7;
+  color: #166534;
+}
+.avp-tag.tag-status.completed .avp-status-dot {
+  background: #166534;
+}
+
+/* ===== Content grid ===== */
+.avp-content-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  gap: 24px;
+  align-items: start;
+}
+
+.avp-main-col {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  min-width: 0;
+}
+
+.avp-section {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 18px;
+  padding: 24px 28px;
+}
+.avp-section-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 6px 0;
+}
+.avp-section-subtitle {
+  font-size: 12px;
+  color: #94a3b8;
+  margin: 0 0 16px 0;
+}
+.avp-objective-text {
+  font-size: 14px;
+  color: #334155;
+  line-height: 1.7;
+  white-space: pre-wrap;
+  margin: 0;
+}
+
+.avp-radar-body {
+  margin-top: 10px;
+}
+
+/* ตารางแบบ key-value (สรุปข้อมูลโครงการ / ผลคะแนนรายหลักการ) สไตล์ตาราง spec ของ Hugging Face */
+.avp-spec-table {
+  border: 1px solid #f1f5f9;
+  border-radius: 12px;
+  overflow: hidden;
+}
+.avp-spec-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 11px 16px;
+  font-size: 13px;
+}
+.avp-spec-row:nth-child(odd) {
+  background: #f8fafc;
+}
+.avp-spec-key {
+  color: #64748b;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.avp-spec-val {
+  color: #0f172a;
+  font-weight: 600;
+  text-align: right;
+  word-break: break-word;
+}
+.avp-results-table {
+  margin-top: 16px;
+}
+.avp-score-val {
+  color: #10b981;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+}
+.avp-level-name {
+  font-size: 11px;
+  font-weight: 500;
+  color: #94a3b8;
+}
+.avp-system-avg-val {
+  font-size: 11px;
+  font-weight: 500;
+  color: #94a3b8;
+}
+
+/* Contributors */
+.avp-contributors {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.avp-contributor {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: #f8fafc;
+}
+.avp-contributor-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #f1f5f9;
+  color: #475569;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+.avp-contributor-info {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+}
+.avp-contributor-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #0f172a;
+}
+.avp-contributor-username {
+  font-size: 12px;
+  color: #94a3b8;
+}
+.avp-contributor-badges {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+.avp-assess-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  border-radius: 50px;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.avp-assess-badge.done {
+  background: #dcfce7;
+  color: #166534;
+}
+.avp-assess-badge.pending {
+  background: #f1f5f9;
+  color: #64748b;
+}
+.avp-assess-badge.certificate {
+  background: #fce7f3;
+  color: #db2777;
+}
+
+/* ===== Sidebar (metadata cards) ===== */
+.avp-side-col {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.avp-meta-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 18px;
+  padding: 22px;
+}
+.avp-meta-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 0 0 16px 0;
+}
+
+.avp-progress-track {
+  width: 100%;
+  height: 8px;
+  background: #f1f5f9;
+  border-radius: 50px;
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+.avp-progress-fill {
+  height: 100%;
+  background: #10b981;
+  border-radius: 50px;
+  transition: width 0.4s ease;
+}
+.avp-progress-fraction {
+  font-size: 12px;
+  color: #64748b;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 1024px) {
+  .avp-content-grid {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 899px) {
+  .avp-main-content {
+    margin-left: 0;
+  }
+}
+@media (max-width: 768px) {
+  .avp-container {
+    padding: 80px 15px 30px 15px;
+  }
+  .avp-card-header {
+    padding: 22px;
+  }
+  .avp-project-name {
+    font-size: 24px;
+  }
+}

@@ -27,6 +27,9 @@ const RegulatorProjectManage = () => {
   const [projectForm, setProjectForm] = useState({
     project_code: "",
     project_name: "",
+    project_type: "",
+    ai_objective: "",
+    accountable_owner: "",
   });
 
   const [isAssignModalOpen, setIsAssignModalOpen] = useState(false);
@@ -85,7 +88,13 @@ const RegulatorProjectManage = () => {
           confirmButtonColor: "#10b981",
         });
         setIsProjectModalOpen(false);
-        setProjectForm({ project_code: "", project_name: "" });
+        setProjectForm({
+          project_code: "",
+          project_name: "",
+          project_type: "",
+          ai_objective: "",
+          accountable_owner: "",
+        });
         fetchProjects();
       }
     } catch (err) {
@@ -353,6 +362,35 @@ const RegulatorProjectManage = () => {
                   value={projectForm.project_name}
                   onChange={handleProjectInputChange}
                   required
+                />
+              </div>
+              <div className="rpm-form-group">
+                <label>ประเภทโครงการ (ไม่บังคับ)</label>
+                <input
+                  type="text"
+                  name="project_type"
+                  placeholder="เช่น พัฒนาขึ้นเอง, ซื้อ, ฝังมากับระบบ/Software (Embedded), จ้างดำเนินการแทน (Outsource)"
+                  value={projectForm.project_type}
+                  onChange={handleProjectInputChange}
+                />
+              </div>
+              <div className="rpm-form-group">
+                <label>วัตถุประสงค์ของ AI (ไม่บังคับ)</label>
+                <textarea
+                  name="ai_objective"
+                  placeholder="อธิบายวัตถุประสงค์การใช้งาน AI ในโครงการนี้"
+                  value={projectForm.ai_objective}
+                  onChange={handleProjectInputChange}
+                />
+              </div>
+              <div className="rpm-form-group">
+                <label>ฝ่ายงานเจ้าของ (Accountable Owner) (ไม่บังคับ)</label>
+                <input
+                  type="text"
+                  name="accountable_owner"
+                  placeholder="เช่น ฝ่ายเทคโนโลยีสารสนเทศ"
+                  value={projectForm.accountable_owner}
+                  onChange={handleProjectInputChange}
                 />
               </div>
               <div className="rpm-modal-footer">
