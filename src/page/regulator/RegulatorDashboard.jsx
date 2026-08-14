@@ -368,6 +368,7 @@ const RegulatorDashboard = () => {
                             <td className="rgdash-text-muted">
                               {new Date(proj.created_at).toLocaleDateString(
                                 "th-TH",
+                                { timeZone: "Asia/Bangkok" },
                               )}
                             </td>
                             <td>

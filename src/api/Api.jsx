@@ -28,6 +28,14 @@ api.interceptors.request.use(
       localStorage.getItem("token") ||
       localStorage.getItem(import.meta.env.VITE_APP_TOKEN);
 
+    // ไม่มี token เลย (ยังไม่เคย login) ปล่อยผ่านไปเฉย ๆ ไม่ใช่ "หมดอายุ"
+    // สำคัญมากสำหรับหน้า public ที่ไม่ต้อง login เช่น /verify/:certNumber, /public/dashboard-stats
+    // ถ้า endpoint นั้นต้องใช้สิทธิ์จริง ๆ backend เองจะปฏิเสธด้วย 401 อยู่แล้วตอนไม่มี Authorization header
+    if (!token) {
+      hasShownAlert = false;
+      return config;
+    }
+
     // ✅ แก้จุดที่ 2: ต้องเช็คใหม่ทุกครั้งที่มีการยิง API ห้ามจำค่าเดิมไว้
     isTokenExpired = checkTokenExpiration(token);
 

@@ -176,110 +176,14 @@
   padding-bottom: 20px;
 }
 
-/* ดีไซน์ใบเซอร์สำหรับแปลงเป็น PDF */
+/* ดีไซน์ใบเซอร์สำหรับแปลงเป็น PDF - เนื้อหาจริงอยู่ใน CertificateTemplate component กลาง
+   (src/component/CertificateTemplate.jsx) กล่องนี้แค่กำหนดขนาดรอบนอกให้ */
 .ures-certificate-template {
   width: 1000px;
   height: 700px;
   background: white;
-  padding: 30px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
   flex-shrink: 0;
-}
-.cert-border {
-  border: 15px solid #1e293b;
-  width: 100%;
-  height: 100%;
-  padding: 40px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  text-align: center;
-  position: relative;
-  background: #fdfdfd;
-}
-.cert-border::before {
-  content: "";
-  position: absolute;
-  top: 5px;
-  left: 5px;
-  right: 5px;
-  bottom: 5px;
-  border: 2px solid #cbd5e1;
-}
-.cert-logo {
-  font-size: 24px;
-  font-weight: 800;
-  color: #2563eb;
-  letter-spacing: 2px;
-  margin-bottom: 30px;
-}
-.cert-header h2 {
-  font-size: 45px;
-  font-weight: 700;
-  color: #0f172a;
-  letter-spacing: 4px;
-  margin: 0 0 20px 0;
-  font-family: "Times New Roman", serif;
-}
-.cert-header p {
-  font-size: 20px;
-  color: #64748b;
-  margin: 0;
-}
-.cert-body {
-  margin: 30px 0;
-}
-.cert-name {
-  font-size: 55px;
-  font-weight: 700;
-  color: #2563eb;
-  margin: 0 0 20px 0;
-  text-transform: uppercase;
-  font-family: "Georgia", serif;
-}
-.cert-body p {
-  font-size: 20px;
-  color: #475569;
-  margin: 0 0 15px 0;
-}
-.cert-course {
-  font-size: 28px;
-  font-weight: 600;
-  color: #0f172a;
-  margin: 0;
-}
-.cert-footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  padding: 0 60px;
-  margin-top: 40px;
-}
-.cert-date span {
-  font-size: 16px;
-  color: #64748b;
-  display: block;
-  margin-bottom: 10px;
-}
-.cert-date p {
-  font-size: 18px;
-  font-weight: 600;
-  color: #0f172a;
-  margin: 0;
-  border-bottom: 1px solid #cbd5e1;
-  padding-bottom: 5px;
-}
-.cert-signature {
-  text-align: center;
-}
-.signature-line {
-  width: 250px;
-  border-bottom: 2px solid #0f172a;
-  margin-bottom: 10px;
-}
-.cert-signature span {
-  font-size: 16px;
-  color: #64748b;
 }
 
 @media (max-width: 768px) {

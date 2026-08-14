@@ -178,7 +178,8 @@
 .amc-required {
   color: #ef4444;
 }
-.amc-form-group input[type="text"] {
+.amc-form-group input[type="text"],
+.amc-form-group textarea {
   width: 100%;
   padding: 12px 15px;
   border: 1px solid #cbd5e1;
@@ -188,10 +189,16 @@
   outline: none;
   transition: all 0.2s;
   background: #ffffff;
+  font-family: inherit;
 }
-.amc-form-group input[type="text"]:focus {
+.amc-form-group input[type="text"]:focus,
+.amc-form-group textarea:focus {
   border-color: #0f172a;
   box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.05);
+}
+.amc-form-group textarea {
+  resize: vertical;
+  min-height: 60px;
 }
 .amc-hint {
   display: block;
@@ -212,122 +219,26 @@
   overflow: hidden;
 }
 
-/* 
-  Mockup Certificate (สัดส่วน A4 แนวนอน = 297 x 210) 
-  ใช้เทคนิค aspect-ratio เพื่อให้กล่องย่อขยายสมส่วนอัตโนมัติ
+/*
+  พรีวิวที่ใช้ CertificateTemplate ตัวจริง (A4 แนวนอน 297x210mm ≈ 1123x794px ที่ 96dpi)
+  ย่อลงด้วย transform: scale ให้พอดีกรอบ 700px แทนการทำ mockup แยกที่อาจไม่ตรงของจริง
 */
-.amc-certificate-mockup {
-  width: 100%;
-  max-width: 700px;
-  aspect-ratio: 297 / 210;
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
+.amc-cert-preview-scale {
+  width: 700px;
+  height: 495px;
+  max-width: 100%;
+  overflow: hidden;
+  position: relative;
   border: 1px solid #e2e8f0;
   border-radius: 4px;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding: 4%;
-  text-align: center;
+  flex-shrink: 0;
 }
-
-.amc-mock-content {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-
-.amc-mock-logo {
-  max-width: 15%;
-  max-height: 15%;
-  margin-bottom: 2%;
-  object-fit: contain;
-}
-.amc-mock-logo-placeholder {
-  width: 60px;
-  height: 60px;
-  background: #cbd5e1;
-  color: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  margin-bottom: 2%;
-  font-size: 10px;
-  font-weight: bold;
-}
-
-.amc-mock-title {
-  font-size: clamp(14px, 2vw, 24px);
-  color: #ffffff;
-  margin: 0 0 1% 0;
-  font-weight: 700;
-  letter-spacing: 2px;
-}
-.amc-mock-text {
-  font-size: clamp(10px, 1vw, 14px);
-  color: #ffffff;
-  margin: 0 0 2% 0;
-}
-.amc-mock-name {
-  font-size: clamp(18px, 3vw, 32px);
-  color: #ffffff;
-  margin: 0 0 2% 0;
-  font-weight: 600;
-  font-family: "Prompt", serif;
-  border-bottom: 1px solid #cbd5e1;
-  padding-bottom: 5px;
-  width: 60%;
-}
-.amc-mock-course {
-  font-size: clamp(12px, 1.2vw, 18px);
-  color: #0f172a;
-  margin: 0 0 5% 0;
-  font-weight: 600;
-}
-
-.amc-mock-footer {
-  width: 100%;
-  display: flex;
-  justify-content: flex-end;
-  margin-top: auto;
-  padding-right: 5%;
-}
-.amc-mock-signature-area {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 35%;
-}
-.amc-mock-signature-img {
-  max-width: 100%;
-  height: 40px;
-  object-fit: contain;
-  margin-bottom: 5px;
-}
-.amc-mock-signature-line {
-  width: 100%;
-  height: 1px;
-  background: #0f172a;
-  margin: 20px 0 5px 0;
-}
-.amc-mock-sign-name {
-  font-size: clamp(8px, 1vw, 12px);
-  font-weight: 600;
-  color: #0f172a;
-}
-.amc-mock-sign-pos {
-  font-size: clamp(7px, 0.8vw, 10px);
-  color: #475569;
-  line-height: 1.2;
-  margin-top: 2px;
+.amc-cert-preview-inner {
+  width: 1123px;
+  height: 794px;
+  transform: scale(0.6233);
+  transform-origin: top left;
 }
 
 .amc-preview-note {

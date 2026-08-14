@@ -261,7 +261,9 @@ const RegulatorProjectManage = () => {
                       <td className="rpm-text-muted">{proj.project_code}</td>
                       <td className="rpm-font-bold">{proj.project_name}</td>
                       <td className="rpm-text-muted">
-                        {new Date(proj.created_at).toLocaleDateString("th-TH")}
+                        {new Date(proj.created_at).toLocaleDateString("th-TH", {
+                          timeZone: "Asia/Bangkok",
+                        })}
                       </td>
                       <td className="rpm-text-center">
                         <span className="rpm-member-badge">

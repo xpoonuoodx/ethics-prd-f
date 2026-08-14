@@ -1,0 +1,205 @@
+/* แม่แบบใบประกาศนียบัตร - โทนสีเขียว/ดำ/ครีม อ้างอิงดีไซน์ที่ผู้ใช้ส่งมาให้ดู
+   (ยังไม่มีไฟล์รูปพื้นหลังจริง จึงสร้างองค์ประกอบตกแต่งด้วย CSS ไปก่อน
+   ถ้าตั้งค่า background_url ไว้ในหน้าตั้งค่าแม่แบบ จะใช้รูปนั้นแทนองค์ประกอบ CSS พวกนี้ทั้งหมด) */
+
+.cert-tpl {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 50px 70px;
+  background-color: #f8f6f0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  font-family: "Prompt", sans-serif;
+}
+
+/* ตราวงกลมสองโทนสีมุมบน (เขียว/ดำ) แทนโลโก้ตกแต่ง */
+.cert-tpl-badge {
+  position: absolute;
+  top: 30px;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: linear-gradient(
+    180deg,
+    #4a9d3a 0%,
+    #4a9d3a 50%,
+    #111827 50%,
+    #111827 100%
+  );
+  z-index: 1;
+}
+.cert-tpl-badge-left {
+  left: 40px;
+}
+.cert-tpl-badge-right {
+  right: 40px;
+}
+
+/* วงกลมไล่สีมุมล่างซ้ายแบบตกแต่ง */
+.cert-tpl-arc {
+  position: absolute;
+  bottom: -90px;
+  left: -90px;
+  width: 260px;
+  height: 260px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 30% 30%,
+    #86c46a 0%,
+    #4a9d3a 55%,
+    transparent 72%
+  );
+  opacity: 0.35;
+  z-index: 0;
+}
+
+/* ห่อ header+body+date-line ไว้ในบล็อกเดียว แล้วจัดกึ่งกลางแนวตั้งในพื้นที่เหนือ footer
+   กัน "เนื้อหาชิดขอบบนสุด" (footer ใช้ margin-top:auto ดันตัวเองลงล่างอยู่แล้ว
+   ถ้าไม่ห่อกลุ่มนี้ไว้ พื้นที่ว่างทั้งหมดจะไปกองอยู่ระหว่าง body กับ footer แทน) */
+.cert-tpl-main {
+  flex: 1;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.cert-tpl-header {
+  position: relative;
+  z-index: 2;
+  margin-bottom: 6px;
+}
+.cert-tpl-logo {
+  height: 56px;
+  object-fit: contain;
+  margin-bottom: 10px;
+}
+.cert-tpl-issuer {
+  font-size: 22px;
+  font-weight: 700;
+  color: #111827;
+  margin: 0 0 5px 0;
+}
+.cert-tpl-grant-line {
+  font-size: 16px;
+  color: #6b7280;
+  margin: 0;
+}
+
+.cert-tpl-body {
+  position: relative;
+  z-index: 2;
+  margin: 24px 0;
+  max-width: 760px;
+}
+.cert-tpl-name {
+  font-size: 32px;
+  font-weight: 700;
+  color: #111827;
+  margin: 0 0 16px 0;
+  border-bottom: 2px solid #111827;
+  display: inline-block;
+  padding-bottom: 7px;
+}
+.cert-tpl-course {
+  font-size: 24px;
+  font-weight: 700;
+  color: #4a9d3a;
+  margin: 0 0 12px 0;
+  white-space: pre-line;
+  line-height: 1.45;
+}
+.cert-tpl-description {
+  font-size: 15px;
+  color: #6b7280;
+  line-height: 1.7;
+  margin: 0;
+}
+
+.cert-tpl-date-line {
+  position: relative;
+  z-index: 2;
+  font-size: 15px;
+  color: #374151;
+  margin: 8px 0 0 0;
+}
+.cert-tpl-date-value {
+  display: inline-block;
+  min-width: 160px;
+  border-bottom: 1px solid #9ca3af;
+  padding: 0 8px 2px 8px;
+  font-weight: 600;
+}
+
+.cert-tpl-footer {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-top: auto;
+  padding: 0 30px;
+}
+.cert-tpl-signature {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.cert-tpl-signature-img {
+  height: 45px;
+  object-fit: contain;
+  margin-bottom: 4px;
+}
+.cert-tpl-signature-line {
+  width: 200px;
+  height: 30px;
+  border-bottom: 1.5px solid #111827;
+  margin-bottom: 8px;
+}
+.cert-tpl-signatory-name {
+  font-size: 15px;
+  font-weight: 700;
+  color: #111827;
+}
+.cert-tpl-signatory-position {
+  font-size: 13px;
+  color: #6b7280;
+  margin-top: 2px;
+  max-width: 260px;
+}
+
+.cert-tpl-qr-box {
+  width: 78px;
+  height: 78px;
+  border: 1.5px dashed #9ca3af;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+  font-weight: 600;
+  color: #9ca3af;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.cert-tpl-qr-box img {
+  width: 100%;
+  height: 100%;
+}
+
+.cert-tpl-ref {
+  position: absolute;
+  bottom: 12px;
+  left: 24px;
+  font-size: 10px;
+  color: #9ca3af;
+  font-family: monospace;
+  z-index: 2;
+}

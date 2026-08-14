@@ -199,6 +199,28 @@
   font-weight: 700;
 }
 
+/* หัวข้อเหนือรายการโครงการ */
+.apo-list-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+.apo-list-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0;
+}
+.apo-list-count {
+  background: #e2e8f0;
+  color: #475569;
+  padding: 4px 10px;
+  border-radius: 50px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
 /* GRID ของการ์ดโครงการ - 2 คอลัมน์แบบหน้า Models ของ Hugging Face */
 .apo-grid {
   display: grid;

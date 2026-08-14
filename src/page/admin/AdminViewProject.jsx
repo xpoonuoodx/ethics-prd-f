@@ -215,6 +215,7 @@ const AdminViewProject = () => {
                               day: "numeric",
                               month: "long",
                               year: "numeric",
+                              timeZone: "Asia/Bangkok",
                             })}
                           </span>
                         </div>

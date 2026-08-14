@@ -227,6 +227,15 @@ const AdminProjectOverview = () => {
             </div>
           )}
 
+          <div className="apo-list-header">
+            <h2 className="apo-list-title">รายการโครงการ</h2>
+            {!loading && !error && (
+              <span className="apo-list-count">
+                {filteredProjects.length.toLocaleString()} รายการ
+              </span>
+            )}
+          </div>
+
           {loading ? (
             <div className="apo-state-container">
               <FaSpinner className="apo-spin" />
