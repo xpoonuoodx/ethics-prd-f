@@ -14,6 +14,7 @@ import Login from "./page/Login";
 import Register from "./page/Register";
 import NewsDetail from "./page/NewsDetail";
 import UnderConstruction from "./page/UnderConstruction"; // หน้า Under Construction
+import VerifyCertificate from "./page/VerifyCertificate"; // หน้าตรวจสอบใบประกาศฯ (สแกนจาก QR)
 
 // Route Guards (สิทธิ์การเข้าถึง)
 import UserRoute from "./route/UserRoute";
@@ -88,6 +89,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/news/:id" element={<NewsDetail />} />
+        <Route path="/verify/:certNumber" element={<VerifyCertificate />} />
         {/* === Admin Routes === */}
         <Route
           path="/admin-dashboard"

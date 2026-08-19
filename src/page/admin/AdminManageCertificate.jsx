@@ -11,6 +11,18 @@ import {
 } from "react-icons/fa";
 import "./style/AdminManageCertificate.css";
 import api from "../../api/Api";
+import CertificateTemplate from "../../component/CertificateTemplate";
+
+const EMPTY_FORM = {
+  course_name: "",
+  background_url: "",
+  logo_url: "",
+  signatory_name: "",
+  signatory_position: "",
+  signature_url: "",
+  issuer_name: "",
+  description: "",
+};
 
 const AdminManageCertificate = () => {
   const { fire } = useThemedAlert();
@@ -19,14 +31,7 @@ const AdminManageCertificate = () => {
   const [isSaving, setIsSaving] = useState(false);
 
   // State สำหรับเก็บฟอร์ม
-  const [formData, setFormData] = useState({
-    course_name: "",
-    background_url: "",
-    logo_url: "",
-    signatory_name: "",
-    signatory_position: "",
-    signature_url: "",
-  });
+  const [formData, setFormData] = useState(EMPTY_FORM);
 
   // โหลดข้อมูลเมื่อเลือกกลุ่มหลักสูตรใหม่
   useEffect(() => {
@@ -48,16 +53,12 @@ const AdminManageCertificate = () => {
           signatory_name: data.signatory_name || "",
           signatory_position: data.signatory_position || "",
           signature_url: data.signature_url || "",
+          issuer_name: data.issuer_name || "",
+          description: data.description || "",
         });
       } else {
         // ถ้ายังไม่มีข้อมูล ให้เคลียร์ฟอร์ม
-        setFormData({
-          background_url: "",
-          logo_url: "",
-          signatory_name: "",
-          signatory_position: "",
-          signature_url: "",
-        });
+        setFormData(EMPTY_FORM);
       }
     } catch (err) {
       console.error("Fetch Settings Error:", err);
@@ -192,18 +193,44 @@ const AdminManageCertificate = () => {
                     <h2>ข้อมูลบนใบประกาศ (Certificate Details)</h2>
                   </div>
 
-                  {/* 👇 เพิ่มช่องนี้เข้าไป 👇 */}
+                  <div className="amc-form-group">
+                    <label>
+                      ชื่อหน่วยงานผู้ออกใบประกาศ (ขึ้นหัวใบ)
+                    </label>
+                    <input
+                      type="text"
+                      name="issuer_name"
+                      value={formData.issuer_name}
+                      onChange={handleInputChange}
+                      placeholder="เช่น สำนักงานคณะกรรมการดิจิทัลเพื่อเศรษฐกิจและสังคมแห่งชาติ"
+                    />
+                  </div>
                   <div className="amc-form-group">
                     <label>
                       ชื่อหลักสูตรที่จะแสดงบนใบประกาศ{" "}
                       <span className="amc-required">*</span>
                     </label>
-                    <input
-                      type="text"
+                    <textarea
                       name="course_name"
                       value={formData.course_name}
                       onChange={handleInputChange}
-                      placeholder="เช่น หลักสูตรการพัฒนา AI อย่างมีจริยธรรม"
+                      placeholder={
+                        "เช่น จริยธรรมปัญญาประดิษฐ์สำหรับผู้บริหาร ผู้กำหนดนโยบาย และผู้กำกับติดตาม\n(AI Ethics for Executives, Policymakers and Regulators)"
+                      }
+                      rows={2}
+                    />
+                    <small className="amc-hint">
+                      ขึ้นบรรทัดใหม่ได้ถ้าอยากใส่ชื่อภาษาอังกฤษกำกับไว้บรรทัดที่ 2
+                    </small>
+                  </div>
+                  <div className="amc-form-group">
+                    <label>คำอธิบายใต้ชื่อหลักสูตร</label>
+                    <textarea
+                      name="description"
+                      value={formData.description}
+                      onChange={handleInputChange}
+                      placeholder="เช่น ได้ผ่านการอบรมหลักสูตรด้านจริยธรรมปัญญาประดิษฐ์ เพื่อเสริมสร้างความรู้ด้านการกำกับดูแล..."
+                      rows={2}
                     />
                   </div>
                   <div className="amc-card-header">
@@ -287,68 +314,31 @@ const AdminManageCertificate = () => {
                     <h2>ตัวอย่างการแสดงผล (Preview)</h2>
                   </div>
                   <div className="amc-preview-wrapper">
-                    {/* กล่องกระดาษจำลอง */}
-                    <div
-                      className="amc-certificate-mockup"
-                      style={{
-                        backgroundImage: formData.background_url
-                          ? `url(${formData.background_url})`
-                          : "none",
-                        backgroundColor: formData.background_url
-                          ? "transparent"
-                          : "#f1f5f9",
-                      }}
-                    >
-                      <div className="amc-mock-content">
-                        {formData.logo_url ? (
-                          <img
-                            src={formData.logo_url}
-                            alt="Logo"
-                            className="amc-mock-logo"
-                          />
-                        ) : (
-                          <div className="amc-mock-logo-placeholder">LOGO</div>
-                        )}
-
-                        <h3 className="amc-mock-title">
-                          CERTIFICATE OF COMPLETION
-                        </h3>
-                        <p className="amc-mock-text">
-                          ใบประกาศนียบัตรฉบับนี้ให้ไว้เพื่อแสดงว่า
-                        </p>
-                        <h2 className="amc-mock-name">นายทดสอบ ระบบดีเยี่ยม</h2>
-                        <p className="amc-mock-text">
-                          ได้ผ่านการทดสอบและสำเร็จการศึกษา
-                        </p>
-                        <h4 className="amc-mock-course">
-                          {formData.course_name || "กรุณาพิมพ์ชื่อหลักสูตร..."}
-                        </h4>
-
-                        <div className="amc-mock-footer">
-                          <div className="amc-mock-signature-area">
-                            {formData.signature_url ? (
-                              <img
-                                src={formData.signature_url}
-                                alt="Signature"
-                                className="amc-mock-signature-img"
-                              />
-                            ) : (
-                              <div className="amc-mock-signature-line"></div>
-                            )}
-                            <div className="amc-mock-sign-name">
-                              ({formData.signatory_name || "ชื่อผู้ลงนาม"})
-                            </div>
-                            <div className="amc-mock-sign-pos">
-                              {formData.signatory_position || "ตำแหน่ง"}
-                            </div>
-                          </div>
-                        </div>
+                    {/* ใช้ component จริงตัวเดียวกับที่ผู้ใช้เห็นตอนโหลด PDF (CertificateTemplate)
+                        แค่ย่อขนาดด้วย CSS scale เพื่อให้พรีวิวตรงกับของจริง 100% ไม่ใช่ mockup แยก */}
+                    <div className="amc-cert-preview-scale">
+                      <div className="amc-cert-preview-inner">
+                        <CertificateTemplate
+                          cert={{
+                            certId: 0,
+                            course_name:
+                              formData.course_name || "กรุณาพิมพ์ชื่อหลักสูตร...",
+                            background_url: formData.background_url,
+                            logo_url: formData.logo_url,
+                            signatory_name: formData.signatory_name,
+                            signatory_position: formData.signatory_position,
+                            signature_url: formData.signature_url,
+                            issuer_name: formData.issuer_name,
+                            description: formData.description,
+                            passDate: "1 มกราคม 2569",
+                          }}
+                          userName="นายทดสอบ ระบบดีเยี่ยม"
+                        />
                       </div>
                     </div>
                   </div>
                   <p className="amc-preview-note">
-                    * นี่เป็นเพียงตัวอย่างการจัดวางตำแหน่งคร่าวๆ เท่านั้น ไฟล์
-                    PDF จริงอาจแสดงผลแตกต่างกันเล็กน้อยขึ้นอยู่กับขนาดรูปภาพ
+                    * พรีวิวนี้คือหน้าตาเดียวกับที่ผู้ใช้จะเห็นตอนดาวน์โหลด PDF จริง
                   </p>
                 </div>
               </div>

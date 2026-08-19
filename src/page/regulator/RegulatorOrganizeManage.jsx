@@ -234,6 +234,7 @@ const RegulatorOrganizeManage = () => {
                         เข้าร่วมระบบเมื่อ{" "}
                         {new Date(orgData.created_at).toLocaleDateString(
                           "th-TH",
+                          { timeZone: "Asia/Bangkok" },
                         )}
                       </span>
                     </div>
@@ -382,6 +383,7 @@ const RegulatorOrganizeManage = () => {
                             <td className="rom-text-muted">
                               {new Date(r.created_at).toLocaleDateString(
                                 "th-TH",
+                                { timeZone: "Asia/Bangkok" },
                               )}
                             </td>
                           </tr>

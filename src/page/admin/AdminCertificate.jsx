@@ -1,15 +1,24 @@
 import React, { useState, useEffect } from "react";
 import "./style/AdminCertificate.css";
 import SidebarAdmin from "./SidebarAdmin";
-import { FaAward, FaSearch, FaTrash, FaSpinner } from "react-icons/fa";
+import {
+  FaAward,
+  FaSearch,
+  FaTrash,
+  FaSpinner,
+  FaEye,
+  FaTimes,
+} from "react-icons/fa";
 import { useThemedAlert } from "../../hooks/useThemedAlert";
 import api from "../../api/Api";
+import CertificateTemplate from "../../component/CertificateTemplate";
 
 const AdminCertificate = () => {
   const { fire } = useThemedAlert();
   const [certificates, setCertificates] = useState([]);
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
+  const [previewCert, setPreviewCert] = useState(null);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -77,6 +86,18 @@ const AdminCertificate = () => {
       day: "numeric",
       hour: "2-digit",
       minute: "2-digit",
+      timeZone: "Asia/Bangkok",
+    });
+  };
+
+  // วันที่แบบไม่มีเวลา สำหรับโชว์บนตัวใบประกาศเอง (ใบเซอร์ไม่ต้องมีนาฬิกากำกับ)
+  const formatCertDate = (dateStr) => {
+    if (!dateStr) return "-";
+    return new Date(dateStr).toLocaleDateString("th-TH", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      timeZone: "Asia/Bangkok",
     });
   };
 
@@ -126,9 +147,9 @@ const AdminCertificate = () => {
                     <th style={{ width: "25%" }}>หน่วยงาน / องค์กร</th>
                     <th style={{ width: "20%" }}>หลักสูตรที่ได้รับ</th>
                     <th style={{ width: "20%" }}>วันที่ได้รับสิทธิ์</th>
-                    {/* <th className="act-text-center" style={{ width: "10%" }}>
+                    <th className="act-text-center" style={{ width: "10%" }}>
                       จัดการ
-                    </th> */}
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
@@ -147,9 +168,16 @@ const AdminCertificate = () => {
                       <td className="act-text-muted">
                         {formatDate(cert.issuedAt)}
                       </td>
-                      {/* <td>
+                      <td>
                         <div className="act-actions">
                           <button
+                            className="act-btn-action view"
+                            title="ดูตัวอย่างใบประกาศฯ"
+                            onClick={() => setPreviewCert(cert)}
+                          >
+                            <FaEye />
+                          </button>
+                          {/* <button
                             className="act-btn-action delete"
                             title="เพิกถอนสิทธิ์ใบประกาศฯ"
                             onClick={() =>
@@ -161,9 +189,9 @@ const AdminCertificate = () => {
                             }
                           >
                             <FaTrash />
-                          </button>
+                          </button> */}
                         </div>
-                      </td> */}
+                      </td>
                     </tr>
                   ))}
 
@@ -180,6 +208,50 @@ const AdminCertificate = () => {
           </div>
         </div>
       </div>
+
+      {/* Modal ดูตัวอย่างใบประกาศนียบัตร */}
+      {previewCert && (
+        <div
+          className="act-preview-overlay"
+          onClick={() => setPreviewCert(null)}
+        >
+          <div
+            className="act-preview-content"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="act-preview-header">
+              <h3>ตัวอย่างใบประกาศนียบัตร - {previewCert.userName}</h3>
+              <button
+                className="act-preview-close"
+                onClick={() => setPreviewCert(null)}
+              >
+                <FaTimes />
+              </button>
+            </div>
+            <div className="act-preview-body">
+              <div className="act-certificate-frame">
+                <CertificateTemplate
+                  cert={{
+                    certId: previewCert.certId,
+                    certNumber: previewCert.certNumber,
+                    course_name:
+                      previewCert.courseName || "AI Ethics Management",
+                    background_url: previewCert.backgroundUrl,
+                    logo_url: previewCert.logoUrl,
+                    signature_url: previewCert.signatureUrl,
+                    signatory_name: previewCert.signatoryName,
+                    signatory_position: previewCert.signatoryPosition,
+                    issuer_name: previewCert.issuerName,
+                    description: previewCert.description,
+                    passDate: formatCertDate(previewCert.issuedAt),
+                  }}
+                  userName={previewCert.userName}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

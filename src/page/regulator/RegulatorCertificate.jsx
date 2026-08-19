@@ -11,6 +11,7 @@ import {
 import api, { getStoredUser } from "../../api/Api";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
+import CertificateTemplate from "../../component/CertificateTemplate";
 import "./style/RegulatorCertificate.css";
 
 const RegulatorCertificate = () => {
@@ -70,60 +71,10 @@ const RegulatorCertificate = () => {
   };
 
   // แม่แบบใบประกาศนียบัตร ดึงค่าตาม course_group ของใบเซอนั้นๆ (ไม่ใช่ user_type ปัจจุบันของผู้ใช้)
-  // ใช้ร่วมกันทั้งตอน capture เป็น PDF และตอนโชว์ preview
+  // ใช้ร่วมกันทั้งตอน capture เป็น PDF และตอนโชว์ preview - component กลางอยู่ที่
+  // src/component/CertificateTemplate.jsx ใช้ร่วมกับ UserCertificate.jsx
   const renderCertBorder = (cert) => (
-    <div
-      className="ucert-cert-border"
-      style={{
-        backgroundImage: cert.background_url
-          ? `url(${cert.background_url})`
-          : "radial-gradient(#f1f5f9 1px, transparent 1px)",
-        backgroundSize: cert.background_url ? "cover" : "20px 20px",
-        backgroundPosition: "center",
-        border: cert.background_url ? "none" : "10px solid #0f172a",
-      }}
-    >
-      <div className="ucert-cert-header">
-        {cert.logo_url ? (
-          <img src={cert.logo_url} alt="Logo" className="ucert-custom-logo" />
-        ) : (
-          <div className="ucert-cert-logo">AI ETHIC PORTAL</div>
-        )}
-        <h2>CERTIFICATE OF COMPLETION</h2>
-        <p>ประกาศนียบัตรฉบับนี้ให้ไว้เพื่อแสดงว่า</p>
-      </div>
-      <div className="ucert-cert-body">
-        <h1 className="ucert-cert-name">{userName}</h1>
-        <p>ได้ผ่านการทดสอบและสำเร็จหลักสูตร</p>
-        <h3 className="ucert-cert-course">{cert.course_name}</h3>
-      </div>
-      <div className="ucert-cert-footer">
-        <div className="ucert-cert-date">
-          <span>วันที่สำเร็จการศึกษา</span>
-          <p>{cert.passDate}</p>
-        </div>
-        <div className="ucert-cert-signature">
-          {cert.signature_url ? (
-            <img
-              src={cert.signature_url}
-              alt="Signature"
-              className="ucert-custom-signature"
-            />
-          ) : (
-            <div className="ucert-signature-line"></div>
-          )}
-          <span>{cert.signatory_name || "ผู้อำนวยการโครงการ (Director)"}</span>
-          {cert.signatory_position && (
-            <span style={{ fontSize: "12px", marginTop: "2px" }}>
-              {cert.signatory_position}
-            </span>
-          )}
-        </div>
-      </div>
-      <div className="ucert-cert-ref">
-        Reference No: AI-CERT-{String(cert.certId).padStart(3, "0")}
-      </div>
-    </div>
+    <CertificateTemplate cert={cert} userName={userName} />
   );
 
   if (loading) {

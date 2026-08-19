@@ -244,6 +244,7 @@ const RegulatorViewProject = () => {
                         บันทึกเมื่อ:{" "}
                         {new Date(projectData.created_at).toLocaleDateString(
                           "th-TH",
+                          { timeZone: "Asia/Bangkok" },
                         )}
                       </span>
                     </div>

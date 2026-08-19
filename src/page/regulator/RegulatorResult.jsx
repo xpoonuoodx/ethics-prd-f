@@ -12,6 +12,7 @@ import {
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import { getStoredUser } from "../../api/Api";
+import CertificateTemplate from "../../component/CertificateTemplate";
 import "./style/RegulatorResult.css";
 
 const RegulatorResult = () => {
@@ -181,79 +182,28 @@ const RegulatorResult = () => {
               </h3>
               <div className="ures-cert-wrapper">
                 <div className="ures-certificate-template" ref={certRef}>
-                  <div
-                    className="cert-border"
-                    style={{
-                      backgroundImage: certSettings.background_url
-                        ? `url(${certSettings.background_url})`
-                        : "radial-gradient(#f1f5f9 1px, transparent 1px)",
-                      backgroundSize: certSettings.background_url
-                        ? "cover"
-                        : "20px 20px",
-                      backgroundPosition: "center",
-                      border: certSettings.background_url
-                        ? "none"
-                        : "10px solid #0f172a",
+                  <CertificateTemplate
+                    cert={{
+                      certId: certSettings.certId || 0,
+                      certNumber: certSettings.certNumber,
+                      course_name:
+                        certSettings.course_name || "AI Ethics Management",
+                      background_url: certSettings.background_url,
+                      logo_url: certSettings.logo_url,
+                      signature_url: certSettings.signature_url,
+                      signatory_name: certSettings.signatory_name,
+                      signatory_position: certSettings.signatory_position,
+                      issuer_name: certSettings.issuer_name,
+                      description: certSettings.description,
+                      passDate: new Date().toLocaleDateString("th-TH", {
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                        timeZone: "Asia/Bangkok",
+                      }),
                     }}
-                  >
-                    <div className="cert-header">
-                      {certSettings.logo_url ? (
-                        <img
-                          src={certSettings.logo_url}
-                          alt="Logo"
-                          className="cert-custom-logo"
-                        />
-                      ) : (
-                        <div className="cert-logo">AI ETHIC PORTAL</div>
-                      )}
-                      <h2>CERTIFICATE OF COMPLETION</h2>
-                      <p>ประกาศนียบัตรฉบับนี้ให้ไว้เพื่อแสดงว่า</p>
-                    </div>
-                    <div className="cert-body">
-                      <h1 className="cert-name">{userName}</h1>
-                      <p>ได้ผ่านการทดสอบและสำเร็จหลักสูตร</p>
-                      <h3 className="cert-course">
-                        {certSettings.course_name || "AI Ethics Management"}
-                      </h3>
-                    </div>
-                    <div className="cert-footer">
-                      <div className="cert-date">
-                        <span>วันที่สำเร็จการศึกษา</span>
-                        <p>
-                          {new Date().toLocaleDateString("th-TH", {
-                            year: "numeric",
-                            month: "long",
-                            day: "numeric",
-                          })}
-                        </p>
-                      </div>
-                      <div className="cert-signature">
-                        {certSettings.signature_url ? (
-                          <img
-                            src={certSettings.signature_url}
-                            alt="Signature"
-                            className="cert-custom-signature"
-                          />
-                        ) : (
-                          <div className="signature-line"></div>
-                        )}
-                        <span>
-                          {certSettings.signatory_name ||
-                            "ผู้อำนวยการโครงการ (Director)"}
-                        </span>
-                        {certSettings.signatory_position && (
-                          <span style={{ fontSize: "12px", marginTop: "2px" }}>
-                            {certSettings.signatory_position}
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                    {/* รหัสอ้างอิง */}
-                    <div className="ures-cert-ref">
-                      Reference No: AI-CERT-
-                      {String(certSettings.certId || 0).padStart(3, "0")}
-                    </div>
-                  </div>
+                    userName={userName}
+                  />
                 </div>
               </div>
             </div>

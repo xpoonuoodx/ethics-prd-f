@@ -203,6 +203,71 @@
   background: #fee2e2;
   color: #dc2626;
 }
+.act-btn-action.view:hover {
+  background: #f1f5f9;
+  color: #0f172a;
+}
+
+/* Modal ดูตัวอย่างใบประกาศนียบัตร */
+.act-preview-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(4px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 99999;
+  padding: 20px;
+}
+.act-preview-content {
+  background: #ffffff;
+  border-radius: 20px;
+  max-width: 95vw;
+  max-height: 92vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+}
+.act-preview-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 24px;
+  border-bottom: 1px solid #f1f5f9;
+  flex-shrink: 0;
+}
+.act-preview-header h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: #0f172a;
+}
+.act-preview-close {
+  background: none;
+  border: none;
+  font-size: 18px;
+  color: #94a3b8;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.act-preview-close:hover {
+  color: #ef4444;
+}
+.act-preview-body {
+  overflow: auto;
+  padding: 24px;
+  display: flex;
+  justify-content: center;
+}
+.act-certificate-frame {
+  width: 1000px;
+  height: 700px;
+  background: white;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  flex-shrink: 0;
+}
 
 /* Status States */
 .act-empty-state {
