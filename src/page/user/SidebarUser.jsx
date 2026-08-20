@@ -68,7 +68,7 @@ const SidebarUser = () => {
             <div className="su-brand-icon-wrapper">
               <span className="su-brand-sparkle">❈</span>
             </div>
-            <h2 className="su-brand-title">BDE AI ETHIC</h2>
+            <h2 className="su-brand-title">BDE AI ETHICS</h2>
           </div>
 
           {/* <button className="su-desktop-toggle" onClick={toggleSidebar}>

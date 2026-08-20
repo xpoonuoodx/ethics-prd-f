@@ -323,7 +323,7 @@ const UserDashboard = () => {
             <div className="ud-card">
               <div className="ud-card-header">
                 <h3 className="ud-card-title">
-                  ผลการประเมินธรรมาภิบาลระบบปัญญาประดิษฐ์ (AI Ethic Components
+                  ผลการประเมินธรรมาภิบาลระบบปัญญาประดิษฐ์ (AI Ethics Components
                   Maturity Analysis)
                 </h3>
               </div>
