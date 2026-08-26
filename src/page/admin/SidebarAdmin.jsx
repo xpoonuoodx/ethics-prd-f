@@ -110,7 +110,7 @@ const SidebarAdmin = () => {
               <span>E</span>
             </div>
             <h2 className={`admin-sidebar-brand-name ${!isOpen && "hidden"}`}>
-              EthicAdmin
+              Ethics Admin
             </h2>
           </div>
 

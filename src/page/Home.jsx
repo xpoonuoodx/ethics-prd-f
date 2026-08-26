@@ -250,7 +250,7 @@ const Home = () => {
             <div className="hm-video-placeholder large">
               {/* เปลี่ยนเป็น YouTube Embed Link */}
               <iframe
-                src="https://www.youtube.com/embed/mqLhEpib-Yg?rel=0"
+                src="https://www.youtube.com/embed/fPcKUhoWIuw?rel=0"
                 width="100%"
                 height="100%"
                 frameBorder="0"

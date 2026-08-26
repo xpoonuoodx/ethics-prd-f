@@ -42,6 +42,7 @@ const Register = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [consentChecked, setConsentChecked] = useState(false);
 
   const [formData, setFormData] = useState({
     first_name: "",
@@ -106,6 +107,15 @@ const Register = () => {
         icon: "warning",
         title: "ข้อมูลไม่ครบถ้วน",
         text: "กรุณาเลือกกลุ่มอุตสาหกรรมของหน่วยงาน",
+        confirmButtonColor: "#75ba40",
+      });
+    }
+
+    if (!consentChecked) {
+      return fire({
+        icon: "warning",
+        title: "กรุณายืนยันความยินยอม",
+        text: "กรุณาติ๊กยินยอมให้จัดเก็บและใช้ข้อมูลส่วนบุคคลก่อนสมัครสมาชิก",
         confirmButtonColor: "#75ba40",
       });
     }
@@ -433,11 +443,26 @@ const Register = () => {
               )}
             </div>
 
+            <label className="auth-register-consent">
+              <input
+                type="checkbox"
+                checked={consentChecked}
+                onChange={(e) => setConsentChecked(e.target.checked)}
+              />
+              <span>
+                ข้าพเจ้ายินยอมให้จัดเก็บ รวบรวม ใช้ และเปิดเผยข้อมูลส่วนบุคคลของข้าพเจ้า
+                (เช่น ชื่อ-นามสกุล เลขประจำตัวประชาชน อีเมล
+                {isOrganization ? " และข้อมูลหน่วยงาน" : ""})
+                เพื่อวัตถุประสงค์ในการลงทะเบียนสมาชิกและให้บริการ
+                ตามพระราชบัญญัติคุ้มครองข้อมูลส่วนบุคคล พ.ศ. 2562 (PDPA)
+              </span>
+            </label>
+
             <button
               type="submit"
               className="auth-register-submit-btn"
-              disabled={loading}
-              style={{ opacity: loading ? 0.7 : 1 }}
+              disabled={loading || !consentChecked}
+              style={{ opacity: loading || !consentChecked ? 0.7 : 1 }}
             >
               {loading ? "กำลังลงทะเบียน..." : "ลงทะเบียน"}
             </button>
