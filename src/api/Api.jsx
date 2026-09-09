@@ -2,6 +2,7 @@ import axios from "axios";
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_APP_API_ENDPOINT,
+  // baseURL: "/api", // ✅ แก้เป็นแบบนี้ครับ
 });
 
 let isTokenExpired = null;
