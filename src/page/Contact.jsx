@@ -18,7 +18,8 @@ function Contact() {
       <div className="contact-header-clean">
         <h1 className="contact-page-title">ติดต่อเรา</h1>
         <p className="contact-page-subtitle">
-          สำนักงานคณะกรรมการดิจิทัลเพื่อเศรษฐกิจและสังคมแห่งชาติ
+          <b>สำนักงานคณะกรรมการดิจิทัลเพื่อเศรษฐกิจและสังคมแห่งชาติ</b>
+          <br />
           ยินดีให้บริการและตอบทุกข้อสงสัยของคุณ
         </p>
       </div>
@@ -33,10 +34,10 @@ function Contact() {
               <div className="box-icon-circle">
                 <Phone size={24} className="box-icon" />
               </div>
-              <h2 className="box-title">02-141-XXXX</h2>
+              <h2 className="box-title">02-1421032</h2>
             </div>
             <p className="box-desc">
-              สายด่วนศูนย์บริการข้อมูลภาครัฐ 1111
+              แฟกซ์. 0 2143 7962
               <br />
               ให้บริการในวันและเวลาราชการ
               <br />
@@ -50,7 +51,7 @@ function Contact() {
               <div className="box-icon-circle">
                 <Mail size={24} className="box-icon" />
               </div>
-              <h2 className="box-title">contact@onde.go.th</h2>
+              <h2 className="box-title">saraban@bde.go.th</h2>
             </div>
             <p className="box-desc">
               ส่งอีเมลเพื่อติดต่อสอบถามข้อมูลทั่วไป แจ้งปัญหาการใช้งานระบบ
@@ -64,11 +65,12 @@ function Contact() {
               <div className="box-icon-circle">
                 <MapPin size={24} className="box-icon" />
               </div>
-              <h2 className="box-title">ศูนย์ราชการฯ แจ้งวัฒนะ</h2>
+              <h2 className="box-title" >ศูนย์ราชการฯ แจ้งวัฒนะ</h2>
             </div>
             <p className="box-desc">
-              เลขที่ 120 หมู่ 3 อาคารรัฐประศาสนภักดี (อาคารบี) แขวงทุ่งสองห้อง
-              เขตหลักสี่ กรุงเทพมหานคร 10210
+              เลขที่ 120 หมู่ 3 ชั้น 3 และ 5 ศูนย์ราชการฯ แจ้งวัฒนะ (อาคาร ซี)
+ซอยแจ้งวัฒนะ 7 ถนนแจ้งวัฒนะ แขวงทุ่งสองห้อง
+เขตหลักสี่ กรุงเทพฯ 10210
             </p>
           </div>
         </div>

@@ -215,6 +215,7 @@
    ========================================= */
 .hm-featured-video-section {
   background-color: #fafbfc;
+  padding: 25px 20px;
 }
 .hm-badge {
   background: #f0fdf4;
@@ -737,4 +738,97 @@
   .hm-policy-card-info {
     padding: 40px 20px;
   }
+}
+
+
+/* =========================================
+   Document Download Section (Card Grid)
+========================================= */
+.hm-document-section {
+  padding: 50px 0;
+  background-color: #f8fafc;
+}
+
+.hm-document-header {
+  margin-bottom: 2.5rem;
+}
+
+.hm-document-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); /* ขนาดการ์ดเล็กลง จัดเรียงอัตโนมัติ */
+  gap: 1.5rem;
+}
+
+.hm-document-card {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+
+.hm-document-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+.hm-document-img-wrapper {
+  width: 100%;
+  height: 180px; /* บังคับความสูงรูปหน้าปก */
+  border-bottom: 1px solid #f1f5f9;
+  background: #f8fafc;
+}
+
+.hm-document-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* จัดการให้รูปไม่เบี้ยว */
+  object-position: top center; /* โฟกัสส่วนหัวเอกสาร */
+}
+
+.hm-document-info {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.hm-document-title {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.125rem;
+  color: #0f172a;
+  font-family: inherit;
+  line-height: 1.4;
+}
+
+.hm-document-desc {
+  margin: 0 0 1.5rem 0;
+  font-size: 0.875rem;
+  color: #64748b;
+  flex: 1; /* ดันปุ่มดาวน์โหลดลงไปชิดด้านล่างสุดเสมอ */
+}
+
+.hm-btn-download-sm {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.75rem;
+  background-color: #eff6ff; /* พื้นหลังสีฟ้าอ่อน */
+  color: #3b82f6; /* ตัวหนังสือสีฟ้าเข้ม */
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-decoration: none;
+  font-family: inherit;
+  transition: background-color 0.2s, color 0.2s;
+  box-sizing: border-box;
+}
+
+.hm-btn-download-sm:hover {
+  background-color: #3b82f6;
+  color: white;
 }

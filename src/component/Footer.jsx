@@ -1,46 +1,36 @@
 import React from "react";
 import { Link } from "react-router-dom";
-/* นำเข้าไอคอนจาก lucide-react (เอา ChevronRight ออกเพื่อให้เรียบง่ายตามเรฟเฟอเรนซ์) */
 import { Mail, Phone, MapPin } from "lucide-react";
-/* นำเข้าไอคอน Social จาก react-icons */
-import { FaGlobe, FaFacebookF, FaTwitter, FaLinkedinIn } from "react-icons/fa";
+import { FaGlobe, FaFacebookF } from "react-icons/fa"; // ลบ Twitter, LinkedIn ออก
 
 import "./style/Footer.css";
 import logoBDE from "../assets/logo-bde.png";
+import myLogo from "../assets/my-logo.png"; // 👈 เพิ่มนำเข้าโลโก้ของคุณตรงนี้
 
 function Footer() {
   return (
     <footer className="ai-footer">
       <div className="ai-footer-container">
         <div className="ai-footer-main-grid">
+          
           {/* คอลัมน์ 1: Logo & About */}
           <div className="ai-footer-col col-about">
             <div className="footer-logo-wrapper">
-              {/* โลโก้ปรับขนาดเล็กลงแล้วผ่าน CSS */}
               <img src={logoBDE} alt="BDE Logo" className="footer-logo-img" />
             </div>
             <p className="footer-about-text">
-              โครงการสร้างความเข้าใจและส่งเสริมการใช้แนวปฏิบัติจริยธรรมปัญญาประดิษฐ์
+              การสร้างความเข้าใจและส่งเสริมการใช้แนวปฏิบัติจริยธรรมปัญญาประดิษฐ์
               (Thailand AI Ethics Guideline)
               เพื่อสังคมดิจิทัลที่ปลอดภัยและยั่งยืน
             </p>
-            <div className="footer-social-row">
-              <a href="#" className="social-link-item" aria-label="Website">
-                <FaGlobe size={16} />
-              </a>
-              <a href="#" className="social-link-item" aria-label="Facebook">
-                <FaFacebookF size={16} />
-              </a>
-              <a href="#" className="social-link-item" aria-label="Twitter">
-                <FaTwitter size={16} />
-              </a>
-              <a href="#" className="social-link-item" aria-label="LinkedIn">
-                <FaLinkedinIn size={16} />
-              </a>
+            {/* ย้าย Social Icon ออกจากตรงนี้ไปคอลัมน์ 3 แล้ว */}
+            <div className="footer-logo-wrapper">
+              {/* 👈 เพิ่มโลโก้ใหม่ใต้โลโก้เก่า ชิดซ้ายล่างของกลุ่มโลโก้ */}
+              <img src={myLogo} alt="My Logo" className="footer-logo-img-new" />
             </div>
           </div>
 
-          {/* คอลัมน์ 2: Quick Links (ดีไซน์เรียบง่ายตามเรฟ) */}
+          {/* คอลัมน์ 2: Quick Links */}
           <div className="ai-footer-col">
             <h4 className="footer-title">
               เมนูหลัก
@@ -62,7 +52,7 @@ function Footer() {
             </ul>
           </div>
 
-          {/* คอลัมน์ 3: Contact */}
+          {/* คอลัมน์ 3: Contact & Social */}
           <div className="ai-footer-col">
             <h4 className="footer-title">
               ติดต่อเรา
@@ -72,27 +62,39 @@ function Footer() {
               <li>
                 <MapPin size={18} className="contact-icon" />
                 <span>
-                  สำนักงานคณะกรรมการดิจิทัลเพื่อเศรษฐกิจและสังคมแห่งชาติ (สดช.)
-                  หลักสี่ กรุงเทพฯ
+                 เลขที่ 120 หมู่ 3 ชั้น 3 และ 5 ศูนย์ราชการฯ แจ้งวัฒนะ (อาคาร ซี)
+                 ซอยแจ้งวัฒนะ 7 ถนนแจ้งวัฒนะ แขวงทุ่งสองห้อง
+                 เขตหลักสี่ กรุงเทพฯ 10210
                 </span>
               </li>
               <li>
                 <Phone size={18} className="contact-icon" />
-                <span>02-141-XXXX</span>
+                <span>02-1421032 | Fax 0 2143 7962 </span>
               </li>
               <li>
                 <Mail size={18} className="contact-icon" />
-                <span>contact@onde.go.th</span>
+                <span>saraban@bde.go.th</span>
               </li>
             </ul>
+            
+            {/* 👈 ย้าย Social Icon มาไว้ใต้ข้อมูลติดต่อ และเหลือแค่ Web กับ Facebook */}
+            <div className="footer-social-row">
+              {/* เปลี่ยน "#" เป็นลิงก์เว็บไซต์ของคุณ */}
+              <a href="https://www.bde.go.th/" target="_blank" rel="noreferrer" className="social-link-item" aria-label="Website">
+                <FaGlobe size={16} />
+              </a>
+              {/* เปลี่ยน "#" เป็นลิงก์ Facebook ของคุณ */}
+              <a href="https://www.facebook.com/profile.php?id=61593099377543" target="_blank" rel="noreferrer" className="social-link-item" aria-label="Facebook">
+                <FaFacebookF size={16} />
+              </a>
+            </div>
           </div>
         </div>
 
         {/* ส่วนล่างสุด: Copyright */}
         <div className="ai-footer-bottom">
           <p className="copyright-text">
-            © {new Date().getFullYear()} Thailand AI Ethics Guideline. All
-            rights reserved.
+            © {new Date().getFullYear()} Thailand AI Ethics Guideline. All rights reserved.
           </p>
           <div className="legal-links">
             <Link to="/privacy">Privacy Policy</Link>

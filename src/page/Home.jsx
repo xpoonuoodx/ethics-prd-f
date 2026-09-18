@@ -12,6 +12,7 @@ import {
   Target,
   ShieldCheck,
   Scale,
+  Download,
 } from "lucide-react";
 import "./style/Home.css";
 
@@ -153,6 +154,38 @@ const newsCategoryClass = {
   อบรมสัมมนา: "amber",
 };
 
+// ข้อมูลสำหรับไฟล์เอกสารดาวน์โหลด
+export const documentData = [
+  {
+    id: 1,
+    title: "Thailand AI Ethics Guideline",
+    desc: "เอกสารแนวปฏิบัติจริยธรรมปัญญาประดิษฐ์ Thailand AI Ethics Guideline",
+    image: "/public/image1.png", // เปลี่ยนเป็นลิงก์รูปหน้าปกจริง
+    fileUrl: "/public/pdf/v64_74.pdf" // เปลี่ยนเป็น path ไฟล์ PDF ของคุณ
+  },
+  {
+    id: 2,
+    title: "Digital Thailand - AI Ethics Guideline",
+    desc: "เอกสารหลักการและแนวทางจริยธรรมปัญญาประดิษฐ์ของประเทศไทย (Digital Thailand - AI Ethics Guideline)",
+    image: "/public/image2.png",
+    fileUrl: "/public/pdf/Digital-Thailand-AI-Ethics-Principle-and-Guideline.pdf"
+  },
+  {
+    id: 3,
+    title: "AI Operating Model สำหรับองค์กรไทย",
+    desc: "แนวทางการออกแบบ Al Operating Model สำหรับองค์กรไทย จาก Al Use Case สู่การปรับวิธีสร้างคุณค่าขององค์กร",
+    image: "/public/image3.png",
+    fileUrl: "/public/pdf/AI Operating Model สำหรับองค์กรไทย.pdf"
+  },
+  {
+    id: 4,
+    title: "คู่มือการออกแบบ Human AI Workflow",
+    desc: "การออกแบบ Human-AI Workflow สำหรับภาครัฐไทย",
+    image: "/public/image4.png",
+    fileUrl: "/public/pdf/คู่มือการออกแบบ_Human-AI_Workflow_สำหรับภาครัฐไทย.pdf"
+  }
+];
+
 const Home = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [newsIndex, setNewsIndex] = useState(0);
@@ -235,6 +268,46 @@ const Home = () => {
           ))}
         </div>
       </section>
+
+      {/* =========================================
+          ส่วนเอกสารดาวน์โหลด (แบบการ์ดขนาดเล็ก)
+      ========================================= */}
+      <section className="hm-section hm-document-section">
+        <div className="hm-container">
+          <div className="hm-document-header text-center">
+            <span className="hm-eyebrow hm-eyebrow-center">เอกสารอ้างอิง</span>
+            <h2 className="hm-section-title">ดาวน์โหลดเอกสารที่เกี่ยวข้อง</h2>
+          </div>
+
+          <div className="hm-document-grid">
+            {documentData.map((doc) => (
+              <div key={doc.id} className="hm-document-card">
+                {/* รูปหน้าปกเอกสาร */}
+                <div className="hm-document-img-wrapper">
+                  <img src={doc.image} alt={doc.title} className="hm-document-img" />
+                </div>
+                
+                {/* ข้อมูลและปุ่มดาวน์โหลด */}
+                <div className="hm-document-info">
+                  <h3 className="hm-document-title">{doc.title}</h3>
+                  <p className="hm-document-desc">{doc.desc}</p>
+                  
+                  <a
+                    href={doc.fileUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hm-btn-download-sm"
+                    download
+                  >
+                    <Download size={16} strokeWidth={2} /> ดาวน์โหลด PDF
+                  </a>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+      {/* ========================================= */}
 
       {/* 2. ส่วนวิดีโอแนะนำโครงการ (ปรับเป็น YouTube) */}
       <section className="hm-section hm-featured-video-section">

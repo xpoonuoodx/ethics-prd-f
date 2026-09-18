@@ -32,7 +32,12 @@
 
 /* --- Column 1: About --- */
 .footer-logo-wrapper {
+  display: flex;
+  flex-direction: column; /* บังคับให้โลโก้เรียงซ้อนกัน (บน-ล่าง) */
+  align-items: flex-start; /* บังคับให้อยู่ชิดซ้าย */
+  gap: 15px; /* ระยะห่างระหว่างโลโก้บนและล่าง */
   margin-bottom: 20px;
+
 }
 
 .footer-logo-img {
@@ -51,6 +56,12 @@
 .footer-social-row {
   display: flex;
   gap: 15px;
+  margin-top: 20px; /* เพิ่มระยะห่างให้ห่างจากบรรทัดอีเมลด้านบนเล็กน้อย */
+}
+
+.footer-logo-img-new {
+  height: 75px; 
+  object-fit: contain;
 }
 
 .social-link-item {
