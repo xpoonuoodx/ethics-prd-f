@@ -22,6 +22,20 @@ import ethicAiImg from "../assets/ethic-ai.png";
 // ==========================================
 // ข้อมูล Data ต่างๆ (Export ออกมาเพื่อให้หน้า NewsDetail ดึงไปใช้ด้วย)
 // ==========================================
+// ==========================================
+// 1. IMPORT ไฟล์รูปภาพและ PDF จาก assets เข้ามาโดยตรง
+// ==========================================
+// ตัวอย่างการ import รูปหน้าปก
+import cover1 from "../assets/image1.png"; 
+import cover2 from "../assets/image2.png";
+import cover3 from "../assets/image3.png";
+import cover4 from "../assets/image4.png";
+
+// ตัวอย่างการ import ไฟล์ PDF
+import pdfGuideline from "../assets/pdf/v64_74.pdf";
+import pdfRisk from "../assets/pdf/Digital-Thailand-AI-Ethics-Principle-and-Guideline.pdf";
+import pdfSummary from "../assets/pdf/AI Operating Model สำหรับองค์กรไทย.pdf";
+import pdfChecklist from "../assets/pdf/คู่มือการออกแบบ_Human-AI_Workflow_สำหรับภาครัฐไทย.pdf";
 
 export const slideData = [
   {
@@ -147,7 +161,7 @@ const pillars = [
   },
 ];
 
-// จับคู่หมวดข่าวกับสีธีมของเว็บ เพื่อให้แยกประเภทข่าวได้ไวขึ้นด้วยสายตา
+// จับคู่หมวดข่าวกับสีธีมของเว็บ เพื่อให้แยกประเภทข่าวได้ไวขึ้นด้วยสายตาfdfdf
 const newsCategoryClass = {
   ข่าวประกาศ: "navy",
   กิจกรรม: "green",
@@ -160,29 +174,29 @@ export const documentData = [
     id: 1,
     title: "Thailand AI Ethics Guideline",
     desc: "เอกสารแนวปฏิบัติจริยธรรมปัญญาประดิษฐ์ Thailand AI Ethics Guideline",
-    image: "/public/image1.png", // เปลี่ยนเป็นลิงก์รูปหน้าปกจริง
-    fileUrl: "/public/pdf/v64_74.pdf" // เปลี่ยนเป็น path ไฟล์ PDF ของคุณ
+    image: cover1, // เปลี่ยนเป็นลิงก์รูปหน้าปกจริง
+    fileUrl: pdfGuideline // เปลี่ยนเป็น path ไฟล์ PDF ของคุณ
   },
   {
     id: 2,
     title: "Digital Thailand - AI Ethics Guideline",
     desc: "เอกสารหลักการและแนวทางจริยธรรมปัญญาประดิษฐ์ของประเทศไทย (Digital Thailand - AI Ethics Guideline)",
-    image: "/public/image2.png",
-    fileUrl: "/public/pdf/Digital-Thailand-AI-Ethics-Principle-and-Guideline.pdf"
+    image: cover2,
+    fileUrl: pdfRisk
   },
   {
     id: 3,
     title: "AI Operating Model สำหรับองค์กรไทย",
     desc: "แนวทางการออกแบบ Al Operating Model สำหรับองค์กรไทย จาก Al Use Case สู่การปรับวิธีสร้างคุณค่าขององค์กร",
-    image: "/public/image3.png",
-    fileUrl: "/public/pdf/AI Operating Model สำหรับองค์กรไทย.pdf"
+    image: cover3,
+    fileUrl: pdfSummary
   },
   {
     id: 4,
     title: "คู่มือการออกแบบ Human AI Workflow",
     desc: "การออกแบบ Human-AI Workflow สำหรับภาครัฐไทย",
-    image: "/public/image4.png",
-    fileUrl: "/public/pdf/คู่มือการออกแบบ_Human-AI_Workflow_สำหรับภาครัฐไทย.pdf"
+    image: cover4,
+    fileUrl: pdfChecklist
   }
 ];
 
