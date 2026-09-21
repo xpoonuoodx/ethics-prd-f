@@ -39,7 +39,6 @@ const RegulatorUserManage = () => {
     email: "",
     username: "",
     password: "",
-    id_card: "",
     user_type: "",
   });
 
@@ -70,10 +69,7 @@ const RegulatorUserManage = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    if (name === "id_card") {
-      const numericValue = value.replace(/\D/g, "");
-      setFormData((prev) => ({ ...prev, [name]: numericValue }));
-    } else if (name === "username") {
+    if (name === "username") {
       setFormData((prev) => ({ ...prev, [name]: sanitizeUsername(value) }));
     } else if (name === "password") {
       setFormData((prev) => ({ ...prev, [name]: sanitizePassword(value) }));
@@ -90,23 +86,12 @@ const RegulatorUserManage = () => {
       !formData.email ||
       !formData.username ||
       !formData.password ||
-      !formData.id_card ||
       !formData.user_type
     ) {
       fire({
         icon: "warning",
         title: "ข้อมูลไม่ครบถ้วน",
         text: "กรุณากรอกข้อมูลให้ครบทุกช่อง",
-        confirmButtonColor: "#0f172a",
-      });
-      return;
-    }
-
-    if (formData.id_card.length !== 13) {
-      fire({
-        icon: "warning",
-        title: "รูปแบบข้อมูลไม่ถูกต้อง",
-        text: "เลขประจำตัวประชาชนต้องมี 13 หลัก",
         confirmButtonColor: "#0f172a",
       });
       return;
@@ -128,7 +113,6 @@ const RegulatorUserManage = () => {
           email: "",
           username: "",
           password: "",
-          id_card: "",
           user_type: "",
         });
         setShowPassword(false);
@@ -185,8 +169,7 @@ const RegulatorUserManage = () => {
   const filteredUsers = users.filter(
     (user) =>
       (user.name || "").toLowerCase().includes(search.toLowerCase()) ||
-      (user.email || "").toLowerCase().includes(search.toLowerCase()) ||
-      (user.id_card || "").includes(search),
+      (user.email || "").toLowerCase().includes(search.toLowerCase()),
   );
 
   // กลับไปหน้า 1 เสมอเมื่อค้นหาเปลี่ยน กันโชว์หน้าว่างเปล่าค้างอยู่
@@ -404,19 +387,6 @@ const RegulatorUserManage = () => {
                   placeholder="เช่น สมชาย ใจดี"
                   value={formData.name}
                   onChange={handleInputChange}
-                  required
-                />
-              </div>
-
-              <div className="rum-form-group">
-                <label>เลขประจำตัวประชาชน 13 หลัก</label>
-                <input
-                  type="text"
-                  name="id_card"
-                  placeholder="เช่น 1234567890123"
-                  value={formData.id_card}
-                  onChange={handleInputChange}
-                  maxLength="13"
                   required
                 />
               </div>

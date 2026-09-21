@@ -13,17 +13,30 @@ import {
 import api, { getStoredUser } from "../../api/Api";
 import "./style/RegulatorTest.css";
 
+// ป้ายชื่อหลักสูตรตาม target_group (1/2/3) ใช้กับ tab เลือกหลักสูตรตอนเปิดโหมดสอบข้ามหลักสูตร
+const TRACK_LABELS = {
+  1: "ผู้กำกับดูแล / นโยบาย",
+  2: "นักพัฒนา / นักวิจัย / ผู้ให้บริการ",
+  3: "ทั่วไป",
+};
+
 const RegulatorTest = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [testList, setTestList] = useState([]);
+  // ค่าจาก backend ว่า admin เปิดโหมด "สอบข้ามหลักสูตร" ไว้ไหม และตอนนี้กำลังดูหลักสูตรไหนอยู่
+  const [meta, setMeta] = useState({
+    targetGroup: null,
+    ownTargetGroup: null,
+    allowCrossTrackTesting: false,
+  });
 
   useEffect(() => {
     window.scrollTo(0, 0);
     fetchTestsList();
   }, []);
 
-  const fetchTestsList = async () => {
+  const fetchTestsList = async (targetGroup) => {
     try {
       setLoading(true);
       const storedUser = getStoredUser();
@@ -34,9 +47,13 @@ const RegulatorTest = () => {
         return;
       }
 
-      const response = await api.get(`/regulator/tests/${userId}`);
+      const query = targetGroup ? `?targetGroup=${targetGroup}` : "";
+      const response = await api.get(`/regulator/tests/${userId}${query}`);
       if (response.data && response.data.success) {
         setTestList(response.data.data);
+        if (response.data.meta) {
+          setMeta(response.data.meta);
+        }
       }
     } catch (error) {
       console.error("Fetch Tests Error:", error);
@@ -74,6 +91,23 @@ const RegulatorTest = () => {
               เลือกแบบทดสอบประจำบทเรียนเพื่อประเมินความรู้และรับใบประกาศนียบัตร
             </p>
           </div>
+
+          {meta.allowCrossTrackTesting && (
+            <div className="utest-track-tabs">
+              {[1, 2, 3].map((group) => (
+                <button
+                  key={group}
+                  className={`utest-track-tab ${meta.targetGroup === group ? "active" : ""}`}
+                  onClick={() => fetchTestsList(group)}
+                >
+                  {TRACK_LABELS[group]}
+                  {meta.ownTargetGroup === group && (
+                    <span className="utest-track-tab-own">หลักสูตรของคุณ</span>
+                  )}
+                </button>
+              ))}
+            </div>
+          )}
 
           <div className="utest-card">
             <div className="utest-card-header">
@@ -144,7 +178,7 @@ const RegulatorTest = () => {
                   ))
                 ) : (
                   <div className="utest-empty-state">
-                    ไม่มีแบบทดสอบในระบบสำหรับกลุ่มของคุณ
+                    ไม่มีแบบทดสอบในระบบสำหรับหลักสูตรนี้
                   </div>
                 )}
               </div>

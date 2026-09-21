@@ -265,6 +265,7 @@
 }
 
 /* ปุ่ม ThaID: ปุ่มรองทรงแคปซูล กรมท่า → เขียวเวลา hover เหมือนปุ่ม "อ่านเพิ่มเติม" ในหน้า Home */
+.premium-line-btn,
 .premium-thaid-btn {
   width: 100%;
   display: flex;
@@ -281,6 +282,19 @@
   cursor: pointer;
   box-shadow: 0 4px 10px rgba(15, 23, 42, 0.15);
   transition: all 0.3s ease;
+}
+
+/* ปุ่ม LINE ใช้สีเขียวแบรนด์ของ LINE เอง (#06C755) แยกจากปุ่ม ThaID ให้แยกออกได้ชัดเจน */
+.premium-line-btn {
+  background-color: #06c755;
+  border-color: #06c755;
+  margin-bottom: 12px;
+}
+.premium-line-btn:hover {
+  background-color: #05a847;
+  border-color: #05a847;
+  transform: translateY(-3px);
+  box-shadow: 0 10px 20px -5px rgba(6, 199, 85, 0.4);
 }
 .premium-thaid-btn:hover {
   background-color: #75ba40;

@@ -87,6 +87,14 @@
   margin: 0;
 }
 
+/* หลายหลักสูตรเรียงกันในหน้าเดียว (แทนหลักสูตรเดียวแบบเดิม) */
+.ucl-courses-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  scroll-margin-top: 20px;
+}
+
 /* Main Card */
 .ucl-card {
   background: #ffffff;
@@ -94,6 +102,7 @@
   border: 1px solid #e2e8f0;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
   overflow: hidden;
+  scroll-margin-top: 20px;
 }
 .ucl-card-header {
   padding: 20px 24px;
@@ -108,6 +117,11 @@
   display: flex;
   align-items: center;
   gap: 10px;
+}
+.ucl-course-desc {
+  margin: 8px 0 0 26px;
+  font-size: 13px;
+  color: #64748b;
 }
 .ucl-card-body {
   padding: 24px;

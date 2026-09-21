@@ -50,6 +50,18 @@
   font-weight: 500;
   color: #94a3b8;
 }
+.apo-title-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  background: #eef7e8;
+  color: #3f6b21;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  margin-right: 2px;
+}
 
 .apo-search-box {
   background: #ffffff;
@@ -95,21 +107,29 @@
 }
 .apo-stat-tile {
   background: #ffffff;
-  border: 1px solid #e2e8f0;
+  border: 1px solid #f1f5f9;
   border-radius: 14px;
   padding: 16px 18px;
   display: flex;
   align-items: center;
   gap: 14px;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.04);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+.apo-stat-tile:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 22px rgba(15, 23, 42, 0.08);
 }
 .apo-stat-tile-icon {
-  width: 42px;
-  height: 42px;
-  border-radius: 12px;
+  width: 46px;
+  height: 46px;
+  border-radius: 13px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 17px;
+  font-size: 18px;
   flex-shrink: 0;
 }
 .apo-stat-tile-icon.neutral {
@@ -121,8 +141,8 @@
   color: #6d28d9;
 }
 .apo-stat-tile-icon.green {
-  background: #dcfce7;
-  color: #166534;
+  background: #eef7e8;
+  color: #3f6b21;
 }
 .apo-stat-tile-icon.amber {
   background: #fffbeb;
@@ -144,10 +164,11 @@
 
 .apo-chart-card {
   background: #ffffff;
-  border: 1px solid #e2e8f0;
+  border: 1px solid #f1f5f9;
   border-radius: 14px;
   padding: 16px 18px;
   overflow: hidden;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.04);
 }
 .apo-chart-title {
   font-size: 13px;
@@ -213,8 +234,8 @@
   margin: 0;
 }
 .apo-list-count {
-  background: #e2e8f0;
-  color: #475569;
+  background: #eef7e8;
+  color: #3f6b21;
   padding: 4px 10px;
   border-radius: 50px;
   font-size: 12px;
@@ -230,17 +251,18 @@
 
 .apo-card {
   background: #ffffff;
-  border: 1px solid #e2e8f0;
+  border: 1px solid #f1f5f9;
   border-radius: 14px;
   padding: 18px 20px;
   cursor: pointer;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.04);
   transition:
     box-shadow 0.2s,
     transform 0.2s,
     border-color 0.2s;
 }
 .apo-card:hover {
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.09);
   transform: translateY(-2px);
   border-color: #cbd5e1;
 }
@@ -309,11 +331,11 @@
   border-radius: 50%;
 }
 .apo-status-badge.completed {
-  background: #dcfce7;
-  color: #166534;
+  background: #eef7e8;
+  color: #3f6b21;
 }
 .apo-status-badge.completed .apo-status-dot {
-  background: #166534;
+  background: #3f6b21;
 }
 .apo-status-badge.pending {
   background: #fffbeb;

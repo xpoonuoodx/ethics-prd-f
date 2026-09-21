@@ -8,7 +8,6 @@ import {
   FaUserTie,
   FaBuilding,
   FaEnvelope,
-  FaIdCard,
   FaSpinner,
   FaEdit,
   FaTimes,
@@ -213,16 +212,6 @@ const AdminUserDetail = () => {
                     <div className="admin-user-detail-info-text">
                       <label>อีเมล (Email)</label>
                       <p>{user.email || "-"}</p>
-                    </div>
-                  </div>
-
-                  <div className="admin-user-detail-info-item">
-                    <div className="admin-user-detail-info-icon">
-                      <FaIdCard />
-                    </div>
-                    <div className="admin-user-detail-info-text">
-                      <label>รหัสประจำตัวประชาชน</label>
-                      <p>{user.id_card || "-"}</p>
                     </div>
                   </div>
 

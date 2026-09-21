@@ -1,0 +1,23 @@
+@import url("https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;600&display=swap");
+
+.line-callback-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  font-family: "Prompt", sans-serif;
+  color: #475569;
+  background: #f8fafc;
+}
+.line-callback-spin {
+  font-size: 36px;
+  color: #06c755;
+  animation: lineCallbackSpin 1s linear infinite;
+}
+@keyframes lineCallbackSpin {
+  100% {
+    transform: rotate(360deg);
+  }
+}

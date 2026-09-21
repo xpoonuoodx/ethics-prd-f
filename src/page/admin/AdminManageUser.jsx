@@ -71,7 +71,6 @@ const AdminManageUser = () => {
     password: "",
     name: "",
     email: "",
-    id_card: "",
     role: "regulator",
   });
 
@@ -121,8 +120,7 @@ const AdminManageUser = () => {
       !formData.username ||
       !formData.password ||
       !formData.name ||
-      !formData.email ||
-      !formData.id_card
+      !formData.email
     ) {
       openAlert(
         "warning",
@@ -143,7 +141,6 @@ const AdminManageUser = () => {
           password: "",
           name: "",
           email: "",
-          id_card: "",
           role: "regulator",
         });
         setShowPassword(false);
@@ -500,30 +497,16 @@ const AdminManageUser = () => {
                 />
               </div>
 
-              <div className="admin-manage-user-form-row">
-                <div className="admin-manage-user-form-group admin-manage-user-half-width">
-                  <label>อีเมล (Email)</label>
-                  <input
-                    type="email"
-                    name="email"
-                    placeholder="กรอกอีเมลติดต่อ"
-                    value={formData.email}
-                    onChange={handleInputChange}
-                    required
-                  />
-                </div>
-                <div className="admin-manage-user-form-group admin-manage-user-half-width">
-                  <label>รหัสประจำตัวประชาชน</label>
-                  <input
-                    type="text"
-                    name="id_card"
-                    placeholder="เลขบัตรประชาชน 13 หลัก"
-                    value={formData.id_card}
-                    onChange={handleInputChange}
-                    maxLength="13"
-                    required
-                  />
-                </div>
+              <div className="admin-manage-user-form-group">
+                <label>อีเมล (Email)</label>
+                <input
+                  type="email"
+                  name="email"
+                  placeholder="กรอกอีเมลติดต่อ"
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  required
+                />
               </div>
 
               <div className="admin-manage-user-form-row">

@@ -11,6 +11,8 @@ import {
   FaCheckCircle,
   FaBuilding,
   FaUser,
+  FaLine,
+  FaIdCard,
 } from "react-icons/fa";
 import logo from "../assets/logo-bde.png";
 import axios from "axios";
@@ -65,6 +67,22 @@ const Login = () => {
         "error",
         "เกิดข้อผิดพลาด",
         "ไม่สามารถยืนยันอีเมลได้ กรุณาลองใหม่อีกครั้ง",
+      );
+      window.history.replaceState({}, "", "/login");
+    } else if (error === "line_cancelled") {
+      window.history.replaceState({}, "", "/login");
+    } else if (error === "line_invalid" || error === "line_server_error") {
+      openModal(
+        "error",
+        "เข้าสู่ระบบด้วย LINE ไม่สำเร็จ",
+        "เกิดข้อผิดพลาดระหว่างเชื่อมต่อกับ LINE กรุณาลองใหม่อีกครั้ง",
+      );
+      window.history.replaceState({}, "", "/login");
+    } else if (error === "account_disabled") {
+      openModal(
+        "error",
+        "บัญชีนี้ถูกระงับการใช้งาน",
+        "กรุณาติดต่อผู้ดูแลระบบ",
       );
       window.history.replaceState({}, "", "/login");
     }
@@ -131,12 +149,19 @@ const Login = () => {
     );
   };
 
+  // พาไปหน้า "อนุญาต" ของ LINE โดยตรง (ไม่ใช่ axios call) เพราะเป็น OAuth redirect flow ที่ต้อง
+  // เปลี่ยนหน้าเว็บทั้งหน้าไปที่ LINE จริง ๆ - บัญชีที่เคย login ผ่าน LINE จะเข้าระบบได้ทันที
+  // ส่วนบัญชีใหม่จะถูกพาไปหน้ากรอกข้อมูลยืนยันก่อนสมัคร (ดู LineCallback.jsx)
+  const handleLineLogin = () => {
+    window.location.href = `${import.meta.env.VITE_APP_API_ENDPOINT}/auth/line/login`;
+  };
+
   return (
     <div className="premium-login-container">
       {/* ================= ส่วนซ้าย: ฟอร์มเข้าสู่ระบบ ================= */}
       <div className="premium-login-left">
         <div className="premium-login-top-nav">
-          <a href="/" className="premium-back-btn">
+          <a className="premium-back-btn" onClick={() => navigate('/')} >
             <FaArrowLeft size={14} /> กลับสู่หน้าหลัก
           </a>
         </div>
@@ -238,10 +263,18 @@ const Login = () => {
 
           <button
             type="button"
+            className="premium-line-btn"
+            onClick={handleLineLogin}
+          >
+            <FaLine size={18} /> เข้าสู่ระบบด้วย LINE
+          </button>
+
+          <button
+            type="button"
             className="premium-thaid-btn"
             onClick={handleThaiDLogin}
           >
-            เข้าสู่ระบบด้วย ThaID
+            <FaIdCard size={16} /> เข้าสู่ระบบด้วย ThaID
           </button>
         </div>
       </div>
@@ -354,6 +387,39 @@ const Login = () => {
                 </span>
               </button>
             </div>
+
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                margin: "20px 0 15px 0",
+              }}
+            >
+              <div
+                style={{ flex: 1, borderBottom: "1px solid #e2e8f0" }}
+              ></div>
+              <span
+                style={{
+                  padding: "0 15px",
+                  color: "#94a3b8",
+                  fontSize: "14px",
+                  fontWeight: "500",
+                }}
+              >
+                หรือ
+              </span>
+              <div
+                style={{ flex: 1, borderBottom: "1px solid #e2e8f0" }}
+              ></div>
+            </div>
+
+            <button
+              type="button"
+              className="premium-line-btn"
+              onClick={handleLineLogin}
+            >
+              <FaLine size={18} /> สมัครด่วนด้วย LINE (เฉพาะบุคคลทั่วไป)
+            </button>
           </div>
         </div>
       )}

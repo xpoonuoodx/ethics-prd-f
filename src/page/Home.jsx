@@ -30,12 +30,20 @@ import cover1 from "../assets/image1.png";
 import cover2 from "../assets/image2.png";
 import cover3 from "../assets/image3.png";
 import cover4 from "../assets/image4.png";
+import cover5 from "../assets/image5.jpg"; 
+import cover6 from "../assets/image6.jpg";
+import cover7 from "../assets/image7.jpg";
+
 
 // ตัวอย่างการ import ไฟล์ PDF
 import pdfGuideline from "../assets/pdf/v64_74.pdf";
 import pdfRisk from "../assets/pdf/Digital-Thailand-AI-Ethics-Principle-and-Guideline.pdf";
 import pdfSummary from "../assets/pdf/AI Operating Model สำหรับองค์กรไทย.pdf";
 import pdfChecklist from "../assets/pdf/คู่มือการออกแบบ_Human-AI_Workflow_สำหรับภาครัฐไทย.pdf";
+import pdf5 from "../assets/pdf/คำตอบ AI มาจากไหน5.pdf";
+import pdf6 from "../assets/pdf/Agentic AI สำหรับระบบแจ้งข้อมูลประชาชน6.pdf";
+import pdf7 from "../assets/pdf/การออกแบบโครงสร้างองค์กร ที่ใช้ AI Agent  copy 7.pdf";
+
 
 export const slideData = [
   {
@@ -161,7 +169,7 @@ const pillars = [
   },
 ];
 
-// จับคู่หมวดข่าวกับสีธีมของเว็บ เพื่อให้แยกประเภทข่าวได้ไวขึ้นด้วยสายตาfdfdf
+// จับคู่หมวดข่าวกับสีธีมของเว็บ เพื่อให้แยกประเภทข่าวได้ไวขึ้นด้วยสายตา
 const newsCategoryClass = {
   ข่าวประกาศ: "navy",
   กิจกรรม: "green",
@@ -197,7 +205,28 @@ export const documentData = [
     desc: "การออกแบบ Human-AI Workflow สำหรับภาครัฐไทย",
     image: cover4,
     fileUrl: pdfChecklist
-  }
+  },
+  {
+    id: 5,
+    title: "คำตอบทองAI เกิดจากอะไร",
+    desc: "ทำไม Prompt เพียงอย่างเดียว จึงไม่รับประกันคำตอบที่ดี จากโมเดลและข้อมูล สู่กฎควบคุม และการตรวจสอบโดยมนุษย์",
+    image: cover5,
+    fileUrl: pdf5
+  },
+  {
+    id: 6,
+    title: "จากข้อมูลสู่บริการที่สำเร็จ",
+    desc: "Agentic Al สำหรับการให้ข้อมูลและคำแนะนำแก่ประชาชน",
+    image: cover6,
+    fileUrl: pdf6
+  },
+  {
+    id: 7,
+    title: "การออกแบบการทำงานของ คน และ AI Agent สำหรับองค์กร",
+    desc: "แนวทางการออกแบบการทำงานของ คน และ AI Agent สำหรับองค์กร เพื่อให้เกิดความร่วมมือและการทำงานที่มีประสิทธิภาพ",
+    image: cover7,
+    fileUrl: pdf7
+  },
 ];
 
 const Home = () => {
@@ -319,6 +348,16 @@ const Home = () => {
               </div>
             ))}
           </div>
+          {/* 👇 ส่วนที่เพิ่มใหม่: ปุ่มไปหน้าเอกสารทั้งหมด 👇 */}
+          <div className="hm-document-more-action">
+            <button 
+              className="hm-btn-view-all" 
+              onClick={() => navigate('/collections-doc')} /* เปลี่ยน '/documents' เป็น URL หน้าเอกสารของคุณ */
+            >
+              ดูเอกสารทั้งหมด <ArrowRight size={16} strokeWidth={2} />
+            </button>
+          </div>
+          {/* 👆 สิ้นสุดส่วนที่เพิ่มใหม่ 👆 */}
         </div>
       </section>
       {/* ========================================= */}

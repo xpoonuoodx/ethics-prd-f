@@ -755,14 +755,15 @@
 
 .hm-document-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); /* ขนาดการ์ดเล็กลง จัดเรียงอัตโนมัติ */
-  gap: 1.5rem;
+  /* ลดความกว้างตั้งต้นลงอีก เหลือ 160px */
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); 
+  gap: 1rem; /* ลดช่องว่างระหว่างการ์ด */
 }
 
 .hm-document-card {
   background: white;
   border: 1px solid #e2e8f0;
-  border-radius: 12px;
+  border-radius: 10px; /* ลดความโค้งมนลงให้รับกับขนาดเล็ก */
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -771,12 +772,13 @@
 
 .hm-document-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 12px -3px rgba(0, 0, 0, 0.1);
 }
 
 .hm-document-img-wrapper {
   width: 100%;
-  height: 180px; /* บังคับความสูงรูปหน้าปก */
+  /* ลดความสูงรูปภาพลงอีก เหลือ 100px */
+  height: 100px; 
   border-bottom: 1px solid #f1f5f9;
   background: #f8fafc;
 }
@@ -784,44 +786,50 @@
 .hm-document-img {
   width: 100%;
   height: 100%;
-  object-fit: cover; /* จัดการให้รูปไม่เบี้ยว */
-  object-position: top center; /* โฟกัสส่วนหัวเอกสาร */
+  object-fit: cover;
+  object-position: top center;
 }
 
 .hm-document-info {
-  padding: 1.5rem;
+  /* ลด Padding รอบๆ ใหักระชับสุดๆ */
+  padding: 0.85rem; 
   display: flex;
   flex-direction: column;
   flex: 1;
 }
 
 .hm-document-title {
-  margin: 0 0 0.5rem 0;
-  font-size: 1.125rem;
+  margin: 0 0 0.4rem 0;
+  /* ลดขนาดฟอนต์หัวข้อลงอีก */
+  font-size: 0.85rem; 
   color: #0f172a;
   font-family: inherit;
-  line-height: 1.4;
+  line-height: 1.3;
 }
 
 .hm-document-desc {
-  margin: 0 0 1.5rem 0;
-  font-size: 0.875rem;
+  margin: 0 0 1rem 0;
+  /* ลดขนาดฟอนต์รายละเอียดลงอีก */
+  font-size: 0.7rem; 
   color: #64748b;
-  flex: 1; /* ดันปุ่มดาวน์โหลดลงไปชิดด้านล่างสุดเสมอ */
+  flex: 1;
+  line-height: 1.4;
 }
 
 .hm-btn-download-sm {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.35rem;
   width: 100%;
-  padding: 0.75rem;
-  background-color: #eff6ff; /* พื้นหลังสีฟ้าอ่อน */
-  color: #3b82f6; /* ตัวหนังสือสีฟ้าเข้ม */
-  border-radius: 8px;
+  /* ลดความสูงของปุ่มลงอีก */
+  padding: 0.45rem; 
+  background-color: #eff6ff;
+  color: #3b82f6;
+  border-radius: 6px;
   font-weight: 600;
-  font-size: 0.9rem;
+  /* ลดขนาดฟอนต์ปุ่มลงอีก */
+  font-size: 0.75rem; 
   text-decoration: none;
   font-family: inherit;
   transition: background-color 0.2s, color 0.2s;
@@ -831,4 +839,42 @@
 .hm-btn-download-sm:hover {
   background-color: #3b82f6;
   color: white;
+}
+
+/* บังคับขนาดไอคอนในปุ่มให้เล็กลงตาม */
+.hm-btn-download-sm svg {
+  width: 14px;
+  height: 14px;
+}
+
+/* =========================================
+   ปุ่ม ดูเอกสารทั้งหมด (View All Button)
+========================================= */
+.hm-document-more-action {
+  display: flex;
+  justify-content: center;
+  margin-top: 2rem; /* ระยะห่างจากกล่องเอกสารด้านบน */
+}
+
+.hm-btn-view-all {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: transparent;
+  color: #3b82f6; /* สีฟ้าให้ล้อไปกับปุ่มดาวน์โหลด */
+  border: 1.5px solid #3b82f6;
+  padding: 0.6rem 1.5rem;
+  border-radius: 999px; /* ทรงแคปซูลมนๆ */
+  font-weight: 600;
+  font-size: 0.9rem;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.hm-btn-view-all:hover {
+  background-color: #3b82f6;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(59, 130, 246, 0.2);
 }

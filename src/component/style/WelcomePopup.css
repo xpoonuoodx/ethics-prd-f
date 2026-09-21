@@ -1,0 +1,306 @@
+/* =========================================
+   Welcome Popup Overlay
+========================================= */
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(15, 23, 42, 0.8); /* เข้มขึ้นนิดนึงให้ Popup โดดเด่น */
+  backdrop-filter: blur(4px); 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999; 
+  padding: 0.75rem; /* ลดระยะขอบจอลงอีก */
+}
+
+/* =========================================
+   1. Popup ขนาด 85% ของหน้าจอ
+========================================= */
+.popup-content {
+  background: white;
+  width: 85vw; /* 👈 ขยายเป็น 85% ของหน้าจอ */
+  max-width: 1000px; /* 👈 ขยายเพดานสูงสุดเผื่อจอคอมใหญ่ๆ */
+  height: 94vh; /* 👈 บังคับความสูงเกือบชนขอบจอ (94%) */
+  border-radius: 12px; /* ลดความโค้งมนลงนิดให้ดูเนียนตา */
+  position: relative;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
+  animation: popupFadeInUp 0.3s ease-out forwards;
+  display: flex;
+  flex-direction: column;
+}
+
+@keyframes popupFadeInUp {
+  0% { opacity: 0; transform: translateY(20px) scale(0.98); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.popup-close-btn {
+  position: absolute;
+  top: 8px; /* ขยับชิดขอบอีกนิด */
+  right: 8px; /* ขยับชิดขอบอีกนิด */
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid #e2e8f0;
+  width: 28px; /* เล็กลงนิดนึง */
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #334155;
+  cursor: pointer;
+  z-index: 10;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+.popup-close-btn svg {
+  width: 16px;
+  height: 16px;
+}
+.popup-close-btn:hover {
+  background: #f8fafc;
+  color: #ef4444; 
+  transform: rotate(90deg); 
+}
+
+/* =========================================
+   2. บีบ Padding ให้ชิดขอบสุดๆ
+========================================= */
+.popup-body-scrollable {
+  overflow-y: auto; 
+  padding: 0.75rem 1rem; /* 👈 บีบขอบซ้ายขวา บนล่าง ให้บางลง */
+  display: flex;
+  flex-direction: column;
+  height: 100%; 
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 transparent;
+}
+.popup-body-scrollable::-webkit-scrollbar { width: 4px; } /* สกอร์บาร์บางเฉียบ */
+.popup-body-scrollable::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 999px; }
+
+/* =========================================
+   3. ย่อเนื้อหาข้างบนให้กะทัดรัด
+========================================= */
+.popup-header-text {
+  text-align: center;
+  margin-bottom: 0.35rem; /* ลดช่องว่างใต้ Header */
+}
+
+.popup-badge {
+  display: inline-block;
+  background-color: #fef3c7;
+  color: #d97706;
+  font-size: 0.65rem; /* 👈 ตัวอักษรป้ายเล็กลง */
+  font-weight: 700;
+  padding: 0.15rem 0.5rem; /* 👈 บีบป้ายให้แคบลง */
+  border-radius: 999px;
+  margin-bottom: 0.25rem; 
+  border: 1px solid #fde68a;
+}
+
+.popup-title {
+  font-size: 1rem; /* 👈 ลดขนาดหัวข้อลง */
+  color: #0f172a;
+  margin: 0 0 0.15rem 0;
+  font-family: inherit;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.popup-desc {
+  font-size: 0.75rem; /* 👈 ลดขนาดคำอธิบายลง */
+  color: #64748b;
+  margin: 0;
+  line-height: 1.3;
+}
+
+/* =========================================
+   4. โปสเตอร์ (ขยายพื้นที่ให้สุด)
+========================================= */
+.popup-poster-container {
+  width: 100%;
+  flex: 1; /* กินพื้นที่ว่างตรงกลางทั้งหมด */
+  min-height: 50vh; /* 👈 การันตีว่ารูปต้องมีพื้นที่อย่างน้อยครึ่งจอ */
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #e2e8f0;
+  margin-bottom: 0.4rem; /* ลดระยะห่างก่อนถึงปุ่ม */
+  background: #f8fafc; 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.popup-poster-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain; 
+}
+
+/* =========================================
+   5. ปุ่มกด (ย่อขนาด & บีบช่องว่าง)
+========================================= */
+.popup-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem; /* 👈 บีบระยะห่างระหว่างปุ่มให้ชิดกันสุดๆ */
+  margin-top: 0; 
+}
+
+.popup-btn-primary {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.3rem;
+  background-color: #3b82f6;
+  color: white;
+  padding: 0.45rem; /* 👈 ลดความอ้วนของปุ่มลง */
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.8rem; /* 👈 ลดขนาดฟอนต์ปุ่ม */
+  transition: all 0.2s ease;
+}
+.popup-btn-primary:hover {
+  background-color: #2563eb;
+  transform: translateY(-2px);
+}
+
+.popup-btn-primary svg {
+  width: 14px; /* 👈 ไอคอนในปุ่มเล็กลง */
+  height: 14px;
+}
+
+.popup-btn-secondary {
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  font-size: 0.7rem; /* 👈 ลดขนาดฟอนต์ */
+  font-weight: 500;
+  cursor: pointer;
+  padding: 0.25rem; /* 👈 ลด Padding */
+  transition: color 0.2s;
+  font-family: inherit;
+}
+.popup-btn-secondary:hover {
+  color: #64748b;
+  text-decoration: underline;
+}
+
+/* =========================================
+   Responsive (รองรับมือถือ)
+========================================= */
+@media (max-width: 768px) {
+  .popup-content {
+    width: 95vw; /* บนมือถือต้องใช้ความกว้างเยอะๆ ไม่งั้นรูปจะเล็กไป */
+    height: 94vh; 
+  }
+
+  .popup-body-scrollable {
+    padding: 0.75rem; 
+  }
+
+  .popup-title { font-size: 0.9rem; }
+  .popup-desc { font-size: 0.7rem; }
+}
+
+/* =========================================
+   เอฟเฟกต์คลิกขยายรูป (Hover)
+========================================= */
+.popup-poster-container {
+  /* ของเดิม */
+  width: 100%;
+  flex: 1; 
+  min-height: 50vh; 
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #e2e8f0;
+  margin-bottom: 0.4rem; 
+  background: #f8fafc; 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* สิ่งที่ต้องเพิ่ม */
+  position: relative;
+  cursor: pointer;
+}
+
+.popup-poster-hover {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(15, 23, 42, 0.4);
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.popup-poster-hover span {
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.popup-poster-container:hover .popup-poster-hover {
+  opacity: 1;
+}
+
+/* =========================================
+   โหมดรูปเต็มจอ (Fullscreen Lightbox)
+========================================= */
+.fullscreen-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.9);
+  z-index: 99999; /* ให้ลอยอยู่บนสุดทับ Popup เดิม */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: zoom-out; /* เปลี่ยนเมาส์เป็นรูปแว่นขยายลบ */
+}
+
+.fullscreen-image {
+  max-width: 90vw;
+  max-height: 90vh;
+  object-fit: contain;
+  border-radius: 8px;
+  cursor: default; /* เมาส์ชี้ที่รูปให้เป็นปกติ */
+  animation: zoomIn 0.2s ease-out;
+}
+
+@keyframes zoomIn {
+  0% { transform: scale(0.9); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.fullscreen-close-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.fullscreen-close-btn:hover {
+  background: rgba(255, 255, 255, 0.25);
+}

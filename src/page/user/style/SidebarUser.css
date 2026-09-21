@@ -100,20 +100,13 @@
   white-space: nowrap;
 }
 
-.su-brand-icon-wrapper {
-  color: #213f3f; /* สีเขียวเข้มแบบในเรฟ */
-  font-size: 26px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.su-brand-title {
-  font-size: 17px;
-  font-weight: 700;
-  color: #111827;
-  margin: 0;
-  letter-spacing: 0.5px;
+/* โลโก้จริง (logo-bde.png) - โชว์เต็มภาพ ไม่ครอป ย่อพอดีความกว้างที่ sidebar มีให้ */
+.su-brand-logo {
+  width: 100%;
+  max-width: 210px;
+  height: auto;
+  object-fit: contain;
+  display: block;
 }
 
 .su-desktop-toggle {
@@ -173,9 +166,29 @@
   padding: 14px 0;
 }
 
+/* กล่องไอคอน - ปกติเป็นเทาอ่อนกลาง ๆ เหมือนกันทุกเมนู ไม่มีสีต่างกันต่อรายการ */
+.su-icon-badge {
+  width: 34px;
+  height: 34px;
+  min-width: 34px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f3f4f6;
+  color: #6b7280;
+  transition: all 0.2s ease;
+}
+
+.su-container.closed .su-icon-badge {
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+}
+
 .su-icon {
-  font-size: 18px;
-  min-width: 18px;
+  font-size: 16px;
+  min-width: 16px;
   display: flex;
   justify-content: center;
   transition: color 0.2s ease;
@@ -192,18 +205,25 @@
   color: #374151;
 }
 
-/* Active State (ปรับตามเรฟเป๊ะๆ) */
-.su-menu-item.active {
-  background-color: #f0fdf4; /* พื้นหลังสีเขียวอ่อนมาก */
-  color: #213f3f; /* สีเขียวเข้ม/เทาเข้ม */
+.su-menu-item:hover .su-icon-badge {
+  transform: scale(1.06);
 }
 
-.su-menu-item.active .su-icon {
-  color: #213f3f;
+/* Active State - เขียวแบรนด์ BDE สีเดียว (#74C042 จากโลโก้จริง) ไม่ต่างกันต่อเมนู */
+.su-menu-item.active {
+  background-color: #eef7e8; /* เขียวอ่อนมาก โทนเดียวกับ #74c042 */
+  color: #3f6b21; /* เขียวเข้มลง ให้อ่านออกชัดบนพื้นขาว/อ่อน */
+}
+
+.su-menu-item.active .su-icon-badge {
+  background-color: #74c042;
+  color: #ffffff;
+  box-shadow: 0 3px 8px rgba(116, 192, 66, 0.4);
 }
 
 .su-menu-item.active .su-text {
   font-weight: 600; /* ทำให้ตัวหนาขึ้นเวลา Active */
+  color: #3f6b21;
 }
 
 /* =========================================
@@ -274,7 +294,7 @@
   height: 42px;
   min-width: 42px;
   border-radius: 50%;
-  background-color: #213f3f; /* สีเขียวเข้ม */
+  background-color: #74c042; /* เขียวแบรนด์ BDE */
   color: #ffffff;
   display: flex;
   align-items: center;
@@ -282,6 +302,12 @@
   font-size: 15px;
   font-weight: 600;
   letter-spacing: 1px;
+  overflow: hidden;
+}
+.su-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .su-user-info {
@@ -297,10 +323,18 @@
   color: #111827;
 }
 
-.su-user-email {
-  margin: 0;
-  font-size: 12.5px;
-  color: #9ca3af;
+/* ป้ายบอก user_type ใต้ชื่อ กันงงว่ากำลังใช้บัญชีฐานไหนอยู่ เพราะทุก user_type
+   เห็นเมนู/หลักสูตรเหมือนกันหมดแล้ว */
+.su-user-type-badge {
+  display: inline-block;
+  margin-top: 3px;
+  padding: 2px 9px;
+  border-radius: 20px;
+  background-color: #eef7e8;
+  color: #3f6b21;
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
 }
 
 /* =========================================

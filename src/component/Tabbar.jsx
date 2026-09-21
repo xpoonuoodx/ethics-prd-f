@@ -80,6 +80,9 @@ function Tabbar() {
                 <li>
                   <Link to="/about/participation">รูปแบบการเข้าร่วมประชุม</Link>
                 </li>
+                <li>
+                  <Link to="/collections-doc">เอกสารที่เกี่ยวข้อง</Link>
+                </li>
               </ul>
             </li>
 

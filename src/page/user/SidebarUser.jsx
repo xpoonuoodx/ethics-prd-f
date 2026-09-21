@@ -5,15 +5,14 @@ import {
   FaBookOpen,
   FaClipboardCheck,
   FaTools,
-  FaFileDownload,
-  FaCog,
+  FaUserCircle,
   FaSignOutAlt,
   FaBars,
   FaTimes,
-  FaGripLinesVertical,
   FaCertificate,
 } from "react-icons/fa";
 import { getStoredUser } from "../../api/Api";
+import logoBde from "../../assets/logo-bde.png";
 
 const SidebarUser = () => {
   const [isOpen, setIsOpen] = useState(true);
@@ -24,6 +23,19 @@ const SidebarUser = () => {
   const getInitials = (name) => {
     if (!name) return "US";
     return name.substring(0, 2).toUpperCase();
+  };
+
+  // ตอนนี้ role=user ทุกคนเรียนได้ทุกหลักสูตรเหมือนกันหมด เลยต้องมีป้ายบอกว่าบัญชีนี้
+  // สังกัด user_type ไหน (จับคู่ badge เดียวกับที่ใช้ในหน้า UserDashboard) กัน sidebar
+  // หน้าตาเหมือนกันหมดจนงงว่ากำลังใช้บัญชีฐานไหนอยู่
+  const getUserTypeBadge = (userType) => {
+    const t = (userType || "").toLowerCase();
+    if (t.includes("regulator") || t.includes("policy"))
+      return "ผู้กำกับดูแลและนโยบาย";
+    if (t.includes("researcher")) return "นักวิจัย";
+    if (t.includes("developer") || t.includes("provider"))
+      return "นักพัฒนาและผู้ให้บริการ";
+    return "ผู้ใช้งานทั่วไป";
   };
 
   const toggleSidebar = () => {
@@ -65,10 +77,7 @@ const SidebarUser = () => {
         {/* ================= Header ================= */}
         <div className="su-header">
           <div className={`su-brand ${!isOpen && "hidden"}`}>
-            <div className="su-brand-icon-wrapper">
-              <span className="su-brand-sparkle">❈</span>
-            </div>
-            <h2 className="su-brand-title">BDE AI ETHICS</h2>
+            <img src={logoBde} alt="BDE" className="su-brand-logo" />
           </div>
 
           {/* <button className="su-desktop-toggle" onClick={toggleSidebar}>
@@ -77,6 +86,7 @@ const SidebarUser = () => {
         </div>
 
         {/* ================= Main Menu ================= */}
+        {/* สีเดียวทั้งหมด (เขียวแบรนด์ BDE #74C042) ไม่ใช้สีต่างกันต่อเมนูแบบที่เคยลองไปแล้ว */}
         <nav className="su-menu">
           <a
             href="/user-dashboard"
@@ -85,7 +95,9 @@ const SidebarUser = () => {
             }`}
             title="แดชบอร์ด"
           >
-            <FaHome className="su-icon" />
+            <span className="su-icon-badge">
+              <FaHome className="su-icon" />
+            </span>
             <span className={`su-text ${!isOpen && "hidden"}`}>แดชบอร์ด</span>
           </a>
 
@@ -99,7 +111,9 @@ const SidebarUser = () => {
             }`}
             title="สื่อการเรียนรู้"
           >
-            <FaBookOpen className="su-icon" />
+            <span className="su-icon-badge">
+              <FaBookOpen className="su-icon" />
+            </span>
             <span className={`su-text ${!isOpen && "hidden"}`}>
               สื่อการเรียนรู้
             </span>
@@ -115,7 +129,9 @@ const SidebarUser = () => {
             }`}
             title="แบบทดสอบ"
           >
-            <FaClipboardCheck className="su-icon" />
+            <span className="su-icon-badge">
+              <FaClipboardCheck className="su-icon" />
+            </span>
             <span className={`su-text ${!isOpen && "hidden"}`}>แบบทดสอบ</span>
           </a>
 
@@ -126,7 +142,9 @@ const SidebarUser = () => {
             }`}
             title="เครื่องมือ"
           >
-            <FaTools className="su-icon" />
+            <span className="su-icon-badge">
+              <FaTools className="su-icon" />
+            </span>
             <span className={`su-text ${!isOpen && "hidden"}`}>เครื่องมือ</span>
           </a>
 
@@ -137,7 +155,9 @@ const SidebarUser = () => {
             }`}
             title="ใบประกาศนียบัตร"
           >
-            <FaCertificate className="su-icon" />
+            <span className="su-icon-badge">
+              <FaCertificate className="su-icon" />
+            </span>
             <span className={`su-text ${!isOpen && "hidden"}`}>ใบประกาศนียบัตร</span>
           </a>
 
@@ -158,16 +178,20 @@ const SidebarUser = () => {
         {/* ================= Footer ================= */}
         <div className="su-footer">
           <div className="su-bottom-menu">
-            {/* <a
-              href="/user-settings"
-              className="su-menu-item"
-              title="ตั้งค่าบัญชี"
+            <a
+              href="/user-profile"
+              className={`su-menu-item ${
+                currentPath === "/user-profile" ? "active" : ""
+              }`}
+              title="ข้อมูลส่วนตัว"
             >
-              <FaCog className="su-icon" />
-              <span className={`su-text ${!isOpen && "hidden"}`}>
-                ตั้งค่าบัญชี
+              <span className="su-icon-badge">
+                <FaUserCircle className="su-icon" />
               </span>
-            </a> */}
+              <span className={`su-text ${!isOpen && "hidden"}`}>
+                ข้อมูลส่วนตัว
+              </span>
+            </a>
             <button
               onClick={handleLogout}
               className="su-menu-item su-logout-btn"
@@ -180,13 +204,22 @@ const SidebarUser = () => {
             </button>
           </div>
 
-          <div className="su-user-card" title={user?.name || "ผู้ใช้งาน"}>
-            <div className="su-avatar">{getInitials(user?.name)}</div>
+          <div
+            className="su-user-card"
+            title={`${user?.name || "ผู้ใช้งาน"} (${user?.username || ""})`}
+          >
+            <div className="su-avatar">
+              {user?.profile_image_url ? (
+                <img src={user.profile_image_url} alt={user?.name || "ผู้ใช้งาน"} />
+              ) : (
+                getInitials(user?.name)
+              )}
+            </div>
             <div className={`su-user-info ${!isOpen && "hidden"}`}>
               <p className="su-user-name">{user?.name || "ผู้ใช้งานระบบ"}</p>
-              <p className="su-user-email">
-                {user?.username || "user@email.com"}
-              </p>
+              <span className="su-user-type-badge">
+                {getUserTypeBadge(user?.user_type)}
+              </span>
             </div>
           </div>
         </div>

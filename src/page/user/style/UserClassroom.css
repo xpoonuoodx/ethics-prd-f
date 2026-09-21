@@ -39,20 +39,6 @@
   }
 }
 
-/* Utilities */
-.text-blue {
-  color: #2563eb;
-}
-.bg-blue-light {
-  background: #dbeafe;
-}
-.text-green {
-  color: #10b981;
-}
-.bg-green-light {
-  background: #d1fae5;
-}
-
 /* Header */
 .ucl-header {
   margin-bottom: 30px;
@@ -80,11 +66,33 @@
   color: #111827;
   margin: 0 0 8px 0;
   letter-spacing: -0.3px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.ucl-title-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 11px;
+  background: #eef7e8;
+  color: #3f6b21;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 17px;
 }
 .ucl-subtitle {
   font-size: 15px;
   color: #64748b;
   margin: 0;
+}
+
+/* หลายหลักสูตรเรียงกันในหน้าเดียว (แทนหลักสูตรเดียวแบบเดิม) */
+.ucl-courses-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  scroll-margin-top: 20px;
 }
 
 /* Main Card */
@@ -94,6 +102,7 @@
   border: 1px solid #e2e8f0;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
   overflow: hidden;
+  scroll-margin-top: 20px;
 }
 .ucl-card-header {
   padding: 20px 24px;
@@ -107,7 +116,26 @@
   color: #0f172a;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
+}
+/* สีประจำหลักสูตร มาจาก --course-color/--course-color-soft ที่ตั้งไว้ต่อการ์ดใน JSX
+   (สีชุดเดียวกับการ์ดในหน้า Dashboard) */
+.ucl-card-icon-badge {
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
+  border-radius: 10px;
+  background: var(--course-color-soft, #eef7e8);
+  color: var(--course-color, #3f6b21);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+}
+.ucl-course-desc {
+  margin: 8px 0 0 44px;
+  font-size: 13px;
+  color: #64748b;
 }
 .ucl-card-body {
   padding: 24px;
@@ -141,6 +169,8 @@
   align-items: center;
   gap: 16px;
 }
+/* "ยังไม่เรียน" ใช้สีประจำหลักสูตรของการ์ดนั้น ๆ, "เรียนจบแล้ว" ใช้เขียวแบรนด์เสมอ
+   ไม่ว่าจะเป็นหลักสูตรไหน (สื่อว่า "เสร็จแล้ว" เป็นสถานะกลางของทั้งระบบ) */
 .ucl-lesson-icon-box {
   width: 48px;
   height: 48px;
@@ -150,6 +180,12 @@
   align-items: center;
   font-size: 20px;
   flex-shrink: 0;
+  background: var(--course-color-soft, #dbeafe);
+  color: var(--course-color, #3b82f6);
+}
+.ucl-lesson-icon-box.completed {
+  background: #eef7e8;
+  color: #3f6b21;
 }
 
 .ucl-lesson-details {
@@ -177,7 +213,7 @@
   gap: 10px;
 }
 .ucl-btn-primary {
-  background: #2563eb;
+  background: #3f6b21;
   color: white;
   border: none;
   padding: 10px 18px;
@@ -192,47 +228,7 @@
   white-space: nowrap;
 }
 .ucl-btn-primary:hover {
-  background: #1d4ed8;
-}
-
-.ucl-btn-success {
-  background: #10b981;
-  color: white;
-  border: none;
-  padding: 10px 18px;
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: 500;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  cursor: pointer;
-  transition: background 0.2s;
-  white-space: nowrap;
-}
-.ucl-btn-success:hover {
-  background: #059669;
-}
-
-.ucl-btn-outline {
-  background: white;
-  border: 1px solid #cbd5e1;
-  color: #475569;
-  padding: 10px 16px;
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: 500;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  transition: all 0.2s;
-  white-space: nowrap;
-}
-.ucl-btn-outline:disabled {
-  background: #f8fafc;
-  color: #94a3b8;
-  border-color: #e2e8f0;
-  cursor: not-allowed;
+  background: #345a1b;
 }
 
 .ucl-empty-state {

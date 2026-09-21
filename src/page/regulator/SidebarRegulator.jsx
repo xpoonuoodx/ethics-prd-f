@@ -5,17 +5,18 @@ import {
   FaUsers,
   FaFolderOpen,
   FaBuilding,
+  FaUserCircle,
   FaSignOutAlt,
   FaBars,
   FaTimes,
   FaGripLinesVertical,
-  FaShieldAlt,
   FaBookOpen,
   FaClipboardCheck,
   FaTools,
   FaCertificate,
 } from "react-icons/fa";
 import { getStoredUser } from "../../api/Api";
+import logoBde from "../../assets/logo-bde.png";
 
 const SidebarRegulator = () => {
   const [isOpen, setIsOpen] = useState(true);
@@ -66,10 +67,7 @@ const SidebarRegulator = () => {
         {/* Header Section */}
         <div className="rgsidebar-header">
           <div className={`rgsidebar-brand ${!isOpen ? "hidden" : ""}`}>
-            <div className="rgsidebar-brand-icon">
-              <FaShieldAlt />
-            </div>
-            <h2 className="rgsidebar-title">Organizer</h2>
+            <img src={logoBde} alt="BDE" className="rgsidebar-logo" />
           </div>
 
           {/* <button className="rgsidebar-desktop-toggle" onClick={toggleSidebar}>
@@ -87,7 +85,9 @@ const SidebarRegulator = () => {
             href="/regulator-dashboard"
             className={`rgsidebar-item ${currentPath.includes("dashboard") ? "active" : ""}`}
           >
-            <FaHome className="rgsidebar-icon" />
+            <span className="rgsidebar-icon-badge">
+              <FaHome className="rgsidebar-icon" />
+            </span>
             <span className={`rgsidebar-text ${!isOpen ? "hidden" : ""}`}>
               แดชบอร์ด
             </span>
@@ -97,7 +97,9 @@ const SidebarRegulator = () => {
             href="/regulator-user-manage"
             className={`rgsidebar-item ${currentPath.includes("user") ? "active" : ""}`}
           >
-            <FaUsers className="rgsidebar-icon" />
+            <span className="rgsidebar-icon-badge">
+              <FaUsers className="rgsidebar-icon" />
+            </span>
             <span className={`rgsidebar-text ${!isOpen ? "hidden" : ""}`}>
               จัดการบุคลากร
             </span>
@@ -107,7 +109,9 @@ const SidebarRegulator = () => {
             href="/regulator-project-manage"
             className={`rgsidebar-item ${currentPath.includes("project") ? "active" : ""}`}
           >
-            <FaFolderOpen className="rgsidebar-icon" />
+            <span className="rgsidebar-icon-badge">
+              <FaFolderOpen className="rgsidebar-icon" />
+            </span>
             <span className={`rgsidebar-text ${!isOpen ? "hidden" : ""}`}>
               จัดการโครงการ
             </span>
@@ -123,7 +127,9 @@ const SidebarRegulator = () => {
             href="/regulator-classroom"
             className={`rgsidebar-item ${currentPath.includes("classroom") ? "active" : ""}`}
           >
-            <FaBookOpen className="rgsidebar-icon" />
+            <span className="rgsidebar-icon-badge">
+              <FaBookOpen className="rgsidebar-icon" />
+            </span>
             <span className={`rgsidebar-text ${!isOpen ? "hidden" : ""}`}>
               สื่อการเรียนรู้
             </span>
@@ -133,7 +139,9 @@ const SidebarRegulator = () => {
             href="/regulator-test"
             className={`rgsidebar-item ${currentPath.includes("test") ? "active" : ""}`}
           >
-            <FaClipboardCheck className="rgsidebar-icon" />
+            <span className="rgsidebar-icon-badge">
+              <FaClipboardCheck className="rgsidebar-icon" />
+            </span>
             <span className={`rgsidebar-text ${!isOpen ? "hidden" : ""}`}>
               แบบทดสอบ
             </span>
@@ -143,7 +151,9 @@ const SidebarRegulator = () => {
             href="/regulator-tools"
             className={`rgsidebar-item ${currentPath.includes("tools") ? "active" : ""}`}
           >
-            <FaTools className="rgsidebar-icon" />
+            <span className="rgsidebar-icon-badge">
+              <FaTools className="rgsidebar-icon" />
+            </span>
             <span className={`rgsidebar-text ${!isOpen ? "hidden" : ""}`}>
               เครื่องมือประเมิน
             </span>
@@ -153,7 +163,9 @@ const SidebarRegulator = () => {
             href="/regulator-certificate"
             className={`rgsidebar-item ${currentPath.includes("certificate") ? "active" : ""}`}
           >
-            <FaCertificate className="rgsidebar-icon" />
+            <span className="rgsidebar-icon-badge">
+              <FaCertificate className="rgsidebar-icon" />
+            </span>
             <span className={`rgsidebar-text ${!isOpen ? "hidden" : ""}`}>
               ใบประกาศนียบัตร
             </span>
@@ -169,9 +181,23 @@ const SidebarRegulator = () => {
             href="/regulator-org-manage"
             className={`rgsidebar-item ${currentPath.includes("org") ? "active" : ""}`}
           >
-            <FaBuilding className="rgsidebar-icon" />
+            <span className="rgsidebar-icon-badge">
+              <FaBuilding className="rgsidebar-icon" />
+            </span>
             <span className={`rgsidebar-text ${!isOpen ? "hidden" : ""}`}>
               ข้อมูลหน่วยงาน
+            </span>
+          </a>
+
+          <a
+            href="/regulator-profile"
+            className={`rgsidebar-item ${currentPath.includes("profile") ? "active" : ""}`}
+          >
+            <span className="rgsidebar-icon-badge">
+              <FaUserCircle className="rgsidebar-icon" />
+            </span>
+            <span className={`rgsidebar-text ${!isOpen ? "hidden" : ""}`}>
+              ข้อมูลส่วนตัว
             </span>
           </a>
         </div>
@@ -191,7 +217,16 @@ const SidebarRegulator = () => {
           </div>
 
           <div className="rgsidebar-user-card">
-            <div className="rgsidebar-avatar">{getInitials(user?.name)}</div>
+            <div className="rgsidebar-avatar">
+              {user?.profile_image_url ? (
+                <img
+                  src={user.profile_image_url}
+                  alt={user?.name || "Organizer"}
+                />
+              ) : (
+                getInitials(user?.name)
+              )}
+            </div>
             <div className={`rgsidebar-user-info ${!isOpen ? "hidden" : ""}`}>
               <p className="rgsidebar-user-name">{user?.name || "Organizer"}</p>
               <p className="rgsidebar-user-role">ผู้กำกับดูแล</p>

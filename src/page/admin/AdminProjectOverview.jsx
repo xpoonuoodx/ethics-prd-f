@@ -86,7 +86,7 @@ const AdminProjectOverview = () => {
     projects.map((p) => p.org_name).filter(Boolean),
   ).size;
   const statusChartData = [
-    { name: "เสร็จสิ้น", value: statusCounts.completed, color: "#166534" },
+    { name: "เสร็จสิ้น", value: statusCounts.completed, color: "#3f6b21" },
     {
       name: "กำลังดำเนินการ",
       value: statusCounts["in-progress"],
@@ -102,6 +102,9 @@ const AdminProjectOverview = () => {
         <div className="apo-container">
           <div className="apo-header">
             <h1 className="apo-title">
+              <span className="apo-title-icon">
+                <FaProjectDiagram />
+              </span>
               ภาพรวมโครงการ
               <span className="apo-count">
                 {projects.length.toLocaleString()}

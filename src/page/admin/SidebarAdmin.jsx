@@ -13,7 +13,6 @@ import {
   FaSignOutAlt,
   FaBars,
   FaTimes,
-  FaUserCircle,
   FaClipboardCheck, // ไอคอนสำหรับจัดการการประเมิน
   FaChevronDown, // ไอคอนลูกศรชี้ลง
   FaChevronRight, // ไอคอนลูกศรชี้ขวา
@@ -23,6 +22,7 @@ import {
   FaProjectDiagram,
 } from "react-icons/fa";
 import { getStoredUser } from "../../api/Api";
+import logoBde from "../../assets/logo-bde.png";
 
 const SidebarAdmin = () => {
   const [isOpen, setIsOpen] = useState(true);
@@ -33,6 +33,11 @@ const SidebarAdmin = () => {
   const location = useLocation();
   const user = getStoredUser() || {
     name: "ผู้ดูแลระบบ",
+  };
+
+  const getInitials = (name) => {
+    if (!name) return "AD";
+    return name.substring(0, 2).toUpperCase();
   };
 
   // Responsive: จัดการเปิด/ปิด Sidebar
@@ -105,13 +110,10 @@ const SidebarAdmin = () => {
 
       <div className={`admin-sidebar-container ${isOpen ? "open" : "closed"}`}>
         <div className="admin-sidebar-header">
-          <div className="admin-sidebar-brand-wrapper">
-            <div className="admin-brand-logo-box">
-              <span>E</span>
-            </div>
-            <h2 className={`admin-sidebar-brand-name ${!isOpen && "hidden"}`}>
-              Ethics Admin
-            </h2>
+          <div
+            className={`admin-sidebar-brand-wrapper ${!isOpen && "hidden"}`}
+          >
+            <img src={logoBde} alt="BDE" className="admin-sidebar-logo" />
           </div>
 
           {!isOpen && (
@@ -129,7 +131,9 @@ const SidebarAdmin = () => {
             to="/admin-dashboard"
             className={`admin-sidebar-item ${isActive("/admin-dashboard")}`}
           >
-            <FaThLarge className="admin-menu-icon" />
+            <span className="admin-icon-badge">
+              <FaThLarge className="admin-menu-icon" />
+            </span>
             <span className={`admin-menu-text ${!isOpen && "hidden"}`}>
               หน้าหลัก
             </span>
@@ -143,7 +147,9 @@ const SidebarAdmin = () => {
             to="/admin-organize"
             className={`admin-sidebar-item ${isActive("/admin-organize")}`}
           >
-            <FaBuilding className="admin-menu-icon" />
+            <span className="admin-icon-badge">
+              <FaBuilding className="admin-menu-icon" />
+            </span>
             <span className={`admin-menu-text ${!isOpen && "hidden"}`}>
               หน่วยงานทั้งหมด
             </span>
@@ -153,7 +159,9 @@ const SidebarAdmin = () => {
             to="/admin-user"
             className={`admin-sidebar-item ${isActive("/admin-user")}`}
           >
-            <FaUsers className="admin-menu-icon" />
+            <span className="admin-icon-badge">
+              <FaUsers className="admin-menu-icon" />
+            </span>
             <span className={`admin-menu-text ${!isOpen && "hidden"}`}>
               ผู้ใช้งานระบบ
             </span>
@@ -163,7 +171,9 @@ const SidebarAdmin = () => {
             to="/admin-project-overview"
             className={`admin-sidebar-item ${isActive("/admin-project-overview")}`}
           >
-            <FaProjectDiagram className="admin-menu-icon" />
+            <span className="admin-icon-badge">
+              <FaProjectDiagram className="admin-menu-icon" />
+            </span>
             <span className={`admin-menu-text ${!isOpen && "hidden"}`}>
               ภาพรวมโครงการ
             </span>
@@ -191,7 +201,9 @@ const SidebarAdmin = () => {
               }}
               style={{ cursor: "pointer" }}
             >
-              <FaClipboardCheck className="admin-menu-icon" />
+              <span className="admin-icon-badge">
+                <FaClipboardCheck className="admin-menu-icon" />
+              </span>
               <span
                 className={`admin-menu-text ${!isOpen && "hidden"}`}
                 style={{ flex: 1 }}
@@ -284,7 +296,9 @@ const SidebarAdmin = () => {
             to="/admin-classroom"
             className={`admin-sidebar-item ${isActive("/admin-classroom")}`}
           >
-            <FaAtlas className="admin-menu-icon" />
+            <span className="admin-icon-badge">
+              <FaAtlas className="admin-menu-icon" />
+            </span>
             <span className={`admin-menu-text ${!isOpen && "hidden"}`}>
               จัดการสื่อการเรียนรู้
             </span>
@@ -298,9 +312,9 @@ const SidebarAdmin = () => {
             to="/admin-certificate"
             className={`admin-sidebar-item ${isActive("/admin-certificate")}`}
           >
-            <FaCertificate
-              className="admin-menu-icon"
-            />
+            <span className="admin-icon-badge">
+              <FaCertificate className="admin-menu-icon" />
+            </span>
             <span className="admin-menu-text">ผู้ได้รับใบประกาศฯ</span>
           </Link>
 
@@ -308,9 +322,9 @@ const SidebarAdmin = () => {
             to="/admin-manage-certificate"
             className={`admin-sidebar-item ${isActive("/admin-manage-certificate")}`}
           >
-            <FaPalette
-              className="admin-menu-icon"
-            />
+            <span className="admin-icon-badge">
+              <FaPalette className="admin-menu-icon" />
+            </span>
             <span className="admin-menu-text">ตั้งค่าแม่แบบใบประกาศ</span>
           </Link>
         </div>
@@ -318,10 +332,12 @@ const SidebarAdmin = () => {
         <div className="admin-sidebar-bottom">
           <div className="admin-sidebar-bottom-menus">
             <Link
-              to="/admin/settings"
-              className={`admin-sidebar-item ${isActive("/admin/settings")}`}
+              to="/admin-settings"
+              className={`admin-sidebar-item ${isActive("/admin-settings")}`}
             >
-              <FaCog className="admin-menu-icon" />
+              <span className="admin-icon-badge">
+                <FaCog className="admin-menu-icon" />
+              </span>
               <span className={`admin-menu-text ${!isOpen && "hidden"}`}>
                 ตั้งค่าระบบ
               </span>
@@ -334,9 +350,7 @@ const SidebarAdmin = () => {
               className="admin-user-pill-btn"
               title="ออกจากระบบ"
             >
-              <div className="admin-user-avatar">
-                <FaUserCircle size={28} color="#94a3b8" />
-              </div>
+              <div className="admin-user-avatar">{getInitials(user?.name)}</div>
               <div className={`admin-user-info ${!isOpen && "hidden"}`}>
                 <span className="admin-user-name">
                   {user?.name || "ผู้ดูแลระบบ"}

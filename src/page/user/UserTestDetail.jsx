@@ -10,7 +10,7 @@ import {
   FaPlay,
   FaSpinner,
 } from "react-icons/fa";
-import api, { getStoredUser } from "../../api/Api";
+import api from "../../api/Api";
 import "./style/UserTestDetail.css";
 
 const UserTestDetail = () => {
@@ -26,7 +26,7 @@ const UserTestDetail = () => {
   const [step, setStep] = useState("intro");
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState(null);
-  const [score, setScore] = useState(0);
+  const [answers, setAnswers] = useState([]);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -54,39 +54,36 @@ const UserTestDetail = () => {
 
   const handleStartQuiz = () => {
     setStep("quiz");
-    setScore(0);
+    setAnswers([]);
     setCurrentQuestion(0);
     setSelectedAnswer(null);
   };
 
   const handleNext = async () => {
-    let currentScore = score;
-    // ตรวจคำตอบว่าตรงกับ answer (index ที่ถูกหลังจากสลับช้อยส์) หรือไม่
-    if (selectedAnswer === questions[currentQuestion].answer) {
-      currentScore += 1;
-      setScore(currentScore);
-    }
+    // บันทึกแค่ "ข้อความคำตอบที่เลือก" ไว้ส่งให้ backend ตรวจเองตอนส่งคำตอบ
+    // (การตัดเกรดต้องทำฝั่งเซิร์ฟเวอร์เท่านั้น ห้ามคำนวณ/เชื่อคะแนนจากฝั่ง client)
+    const currentQ = questions[currentQuestion];
+    const updatedAnswers = [
+      ...answers,
+      { questionId: currentQ.id, selectedOption: currentQ.options[selectedAnswer] },
+    ];
+    setAnswers(updatedAnswers);
 
     if (currentQuestion + 1 < questions.length) {
       setCurrentQuestion(currentQuestion + 1);
       setSelectedAnswer(null);
     } else {
-      submitTest(currentScore);
+      submitTest(updatedAnswers);
     }
   };
 
-  const submitTest = async (finalScore) => {
+  const submitTest = async (finalAnswers) => {
     try {
       setLoading(true);
-      const storedUser = getStoredUser();
-      const userId = storedUser?.id || storedUser?.user_id;
 
       const payload = {
-        userId,
         chapterId,
-        score: finalScore,
-        totalQuestions: questions.length,
-        passingPercentage: chapterInfo.passing_percentage,
+        answers: finalAnswers,
       };
 
       const response = await api.post(`/user/test-submit`, payload);

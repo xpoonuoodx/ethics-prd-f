@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useSearchParams } from "react-router-dom";
+import { useNavigate } from 'react-router-dom';
 import "./style/Register.css";
 import {
   FaEye,
@@ -8,20 +9,18 @@ import {
   FaBuilding,
   FaUser,
   FaCheckCircle,
+  FaLine,
 } from "react-icons/fa";
 import logo from "../assets/logo-bde.png";
 import axios from "axios";
 import { useThemedAlert } from "../hooks/useThemedAlert";
-import { sanitizeUsername, sanitizePassword } from "../utils/validators";
-
-const USER_TYPE_OPTIONS = [
-  { value: "regulator", label: "Regulator (ผู้กำกับดูแล)" },
-  { value: "policy", label: "Policy (ผู้วางนโยบาย)" },
-  { value: "researcher", label: "Researcher (นักวิจัย)" },
-  { value: "developer", label: "Developer (นักพัฒนา)" },
-  { value: "service provider", label: "Service Provider (ผู้ให้บริการ)" },
-  { value: "users", label: "Users (ผู้ใช้งานทั่วไป)" },
-];
+import {
+  sanitizeUsername,
+  sanitizePassword,
+  sanitizePhone,
+} from "../utils/validators";
+import LineRegisterComplete from "./LineRegisterComplete";
+import { USER_TYPE_OPTIONS } from "../constants/registerOptions";
 
 // กลุ่มอุตสาหกรรมของหน่วยงาน (เฉพาะสมัครในฐานะหน่วยงาน)
 const SECTOR_OPTIONS = [
@@ -35,9 +34,11 @@ const SECTOR_OPTIONS = [
 ];
 
 const Register = () => {
+  const navigate = useNavigate();
   const { fire } = useThemedAlert();
   const [searchParams, setSearchParams] = useSearchParams();
   const accountType = searchParams.get("type"); // "organization" | "individual" | null
+  const linePendingId = searchParams.get("line_pending");
 
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -47,8 +48,8 @@ const Register = () => {
   const [formData, setFormData] = useState({
     first_name: "",
     last_name: "",
-    id_card: "",
     email: "",
+    phone: "",
     username: "",
     password: "",
     confirmPassword: "",
@@ -63,6 +64,7 @@ const Register = () => {
     if (id === "username") finalValue = sanitizeUsername(value);
     if (id === "password" || id === "confirmPassword")
       finalValue = sanitizePassword(value);
+    if (id === "phone") finalValue = sanitizePhone(value);
 
     setFormData({
       ...formData,
@@ -80,6 +82,15 @@ const Register = () => {
         icon: "warning",
         title: "รหัสผ่านไม่ตรงกัน",
         text: "กรุณาตรวจสอบรหัสผ่านและการยืนยันรหัสผ่านอีกครั้ง",
+        confirmButtonColor: "#75ba40",
+      });
+    }
+
+    if (formData.phone.length < 9) {
+      return fire({
+        icon: "warning",
+        title: "รูปแบบข้อมูลไม่ถูกต้อง",
+        text: "กรุณากรอกเบอร์โทรศัพท์ให้ถูกต้อง (ตัวเลข 9-10 หลัก ขึ้นต้นด้วย 0)",
         confirmButtonColor: "#75ba40",
       });
     }
@@ -127,10 +138,10 @@ const Register = () => {
 
       const response = await axios.post(API_URL, {
         account_type: accountType,
-        id_card: formData.id_card,
         first_name: formData.first_name,
         last_name: formData.last_name,
         email: formData.email,
+        phone: formData.phone,
         username: formData.username,
         password: formData.password,
         user_type: formData.user_type,
@@ -165,13 +176,21 @@ const Register = () => {
   };
 
   // ==========================================
+  // สมัครผ่าน LINE ครั้งแรก - backend redirect กลับมาที่นี่พร้อม ?line_pending=<id>
+  // (ดู LineRegisterComplete.jsx สำหรับฟอร์มยืนยันข้อมูลก่อนสมัครจริง)
+  // ==========================================
+  if (linePendingId) {
+    return <LineRegisterComplete pendingId={linePendingId} />;
+  }
+
+  // ==========================================
   // หน้าจอเลือกประเภทการลงทะเบียน (ยังไม่ได้เลือก type)
   // ==========================================
   if (!isOrganization && accountType !== "individual") {
     return (
       <div className="auth-register-container">
         <div className="auth-register-left">
-          <a href="/login" className="auth-register-back-btn">
+          <a className="auth-register-back-btn" onClick={() => navigate('/login')}>
             <FaArrowLeft /> กลับสู่หน้าเข้าสู่ระบบ
           </a>
 
@@ -216,6 +235,20 @@ const Register = () => {
                 </span>
               </button>
             </div>
+
+            <div className="auth-register-divider">
+              <span>หรือ</span>
+            </div>
+
+            <button
+              type="button"
+              className="auth-register-line-btn"
+              onClick={() =>
+                (window.location.href = `${import.meta.env.VITE_APP_API_ENDPOINT}/auth/line/login`)
+              }
+            >
+              <FaLine size={18} /> สมัครด่วนด้วย LINE (เฉพาะบุคคลทั่วไป)
+            </button>
           </div>
         </div>
 
@@ -306,25 +339,25 @@ const Register = () => {
               </div>
 
               <div className="auth-register-input-group">
-                <label htmlFor="id_card">เลขประจำตัวประชาชน</label>
-                <input
-                  type="text"
-                  id="id_card"
-                  placeholder="เลข 13 หลัก"
-                  maxLength="13"
-                  value={formData.id_card}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
-
-              <div className="auth-register-input-group">
                 <label htmlFor="email">อีเมล</label>
                 <input
                   type="email"
                   id="email"
                   placeholder="example@email.com"
                   value={formData.email}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+
+              <div className="auth-register-input-group">
+                <label htmlFor="phone">เบอร์โทรศัพท์</label>
+                <input
+                  type="tel"
+                  id="phone"
+                  placeholder="เช่น 0812345678"
+                  maxLength="10"
+                  value={formData.phone}
                   onChange={handleChange}
                   required
                 />
@@ -451,7 +484,7 @@ const Register = () => {
               />
               <span>
                 ข้าพเจ้ายินยอมให้จัดเก็บ รวบรวม ใช้ และเปิดเผยข้อมูลส่วนบุคคลของข้าพเจ้า
-                (เช่น ชื่อ-นามสกุล เลขประจำตัวประชาชน อีเมล
+                (เช่น ชื่อ-นามสกุล อีเมล เบอร์โทรศัพท์
                 {isOrganization ? " และข้อมูลหน่วยงาน" : ""})
                 เพื่อวัตถุประสงค์ในการลงทะเบียนสมาชิกและให้บริการ
                 ตามพระราชบัญญัติคุ้มครองข้อมูลส่วนบุคคล พ.ศ. 2562 (PDPA)

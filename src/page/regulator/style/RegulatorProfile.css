@@ -1,0 +1,238 @@
+@import url("https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap");
+
+.user-portal-layout * {
+  box-sizing: border-box;
+  font-family: "Prompt", sans-serif;
+}
+.user-portal-layout {
+  display: flex;
+  min-height: 100vh;
+  background-color: #f4f6f8;
+}
+.user-portal-content {
+  flex: 1;
+  min-width: 0;
+  margin-left: 260px;
+  transition: margin-left 0.3s ease;
+}
+
+.rp-flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+.rp-loading-spin {
+  font-size: 32px;
+  color: #3f6b21;
+  animation: rpSpin 1s linear infinite;
+}
+@keyframes rpSpin {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.rp-container {
+  padding: 40px;
+  max-width: 900px;
+}
+
+.rp-back-btn {
+  background: none;
+  border: none;
+  color: #64748b;
+  font-size: 14px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  padding: 0;
+  margin-bottom: 25px;
+  transition: color 0.2s;
+}
+.rp-back-btn:hover {
+  color: #0f172a;
+}
+
+.rp-header {
+  margin-bottom: 24px;
+}
+.rp-title {
+  font-size: 26px;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 8px 0;
+  letter-spacing: -0.3px;
+}
+.rp-subtitle {
+  font-size: 15px;
+  color: #64748b;
+  margin: 0;
+}
+
+/* Card */
+.rp-card {
+  background: #ffffff;
+  border: 1px solid #f1f5f9;
+  border-radius: 14px;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.04);
+  padding: 24px;
+  margin-bottom: 24px;
+}
+.rp-card-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+.rp-card-header h2 {
+  font-size: 16px;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0;
+}
+.rp-card-header-icon {
+  color: #3f6b21;
+  font-size: 16px;
+}
+
+/* ข้อมูลบัญชี (แก้ไขไม่ได้) */
+.rp-account-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+.rp-account-item label {
+  display: block;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #94a3b8;
+  margin-bottom: 4px;
+}
+.rp-account-item p {
+  margin: 0;
+  font-size: 14.5px;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+/* Form */
+.rp-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.rp-form-row.rp-col-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+.rp-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.rp-form-group label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #475569;
+}
+.rp-form-group input {
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.rp-form-group input:focus {
+  border-color: #74c042;
+}
+
+.rp-btn-primary {
+  align-self: flex-start;
+  background: #3f6b21;
+  color: #ffffff;
+  border: none;
+  padding: 11px 24px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.rp-btn-primary:hover {
+  background: #345a1b;
+}
+.rp-btn-primary:disabled {
+  background: #94a3b8;
+  cursor: not-allowed;
+}
+
+/* รูปโปรไฟล์ */
+.rp-avatar-row {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+.rp-avatar-preview {
+  width: 72px;
+  height: 72px;
+  min-width: 72px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: #74c042;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  font-weight: 700;
+}
+.rp-avatar-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.rp-avatar-hint {
+  margin: 6px 0 0 0;
+  font-size: 12px;
+  color: #94a3b8;
+}
+.rp-btn-outline {
+  background: #ffffff;
+  color: #3f6b21;
+  border: 1px solid #74c042;
+  padding: 9px 18px;
+  border-radius: 10px;
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.rp-btn-outline:hover {
+  background: #eef7e8;
+}
+.rp-btn-outline:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+@media (max-width: 899px) {
+  .user-portal-content {
+    margin-left: 0;
+  }
+}
+@media (max-width: 700px) {
+  .rp-container {
+    padding: 20px 15px;
+  }
+  .rp-account-grid {
+    grid-template-columns: 1fr;
+  }
+  .rp-form-row.rp-col-2 {
+    grid-template-columns: 1fr;
+  }
+}

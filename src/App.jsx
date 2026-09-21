@@ -3,6 +3,8 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { ThemedAlertProvider } from "./component/ThemedAlert";
 
 // หน้าทั่วไป (Public Pages)
+import WelcomePopup from "./component/WelcomePopup"; // Popup ต้อนรับผู้ใช้
+import WelcomePopup2 from "./component/WelcomePopup2"; // Popup ต้อนรับผู้ใช้เวอร์ชัน 2
 import Home from "./page/Home";
 import Dashboard from "./page/Dashboard";
 import AboutBackground from "./page/AboutBackground";
@@ -15,6 +17,8 @@ import Register from "./page/Register";
 import NewsDetail from "./page/NewsDetail";
 import UnderConstruction from "./page/UnderConstruction"; // หน้า Under Construction
 import VerifyCertificate from "./page/VerifyCertificate"; // หน้าตรวจสอบใบประกาศฯ (สแกนจาก QR)
+import CollectionsDoc from "./page/CollectionsDoc"; 
+import LineCallback from "./page/LineCallback"; // หน้ากลางตอน login ผ่าน LINE สำเร็จ (บัญชีเดิม)
 
 // Route Guards (สิทธิ์การเข้าถึง)
 import UserRoute from "./route/UserRoute";
@@ -42,6 +46,7 @@ import AdminAddChapter from "./page/admin/AdminAddChapter"; // หน้าเ�
 import AdminEditChapter from "./page/admin/AdminEditChapter"; // หน้าแก้ไขบทเรียนของ Admin
 import AdminCertificate from "./page/admin/AdminCertificate";
 import AdminManageCertificate from "./page/admin/AdminManageCertificate";
+import AdminSetting from "./page/admin/AdminSetting";
 import AdminUserDetail from "./page/admin/AdminUserDetail";
 // User Pages
 import UserDashboard from "./page/user/UserDashboard";
@@ -55,6 +60,7 @@ import UserToolsCreate from "./page/user/UserToolsCreate";
 import UserTestDetail from "./page/user/UserTestDetail";
 import UserToolsResult from "./page/user/UserToolsResult";
 import UserResult from "./page/user/UserResult"; // หน้าแสดงผลการสอบ
+import UserProfile from "./page/user/UserProfile"; // หน้าข้อมูลส่วนตัว
 
 //Ragulator Pages
 import RegulatorDashboard from "./page/regulator/RegulatorDashboard"; // หน้าแดชบอร์ดของ Regulator
@@ -72,11 +78,14 @@ import RegulatorToolsCreate from "./page/regulator/RegulatorToolsCreate";
 import RegulatorToolsResult from "./page/regulator/RegulatorToolsResult";
 import RegulatorCertificate from "./page/regulator/RegulatorCertificate";
 import RegulatorOrganizeManage from "./page/regulator/RegulatorOrganizeManage";
+import RegulatorProfile from "./page/regulator/RegulatorProfile"; // หน้าข้อมูลส่วนตัว
 
 function App() {
   return (
     <ThemedAlertProvider>
     <Router>
+      {/* <WelcomePopup /> */}
+      <WelcomePopup2 /> 
       <Routes>
         {/* === Public Routes === */}
         <Route path="/" element={<Home />} />
@@ -90,6 +99,8 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/news/:id" element={<NewsDetail />} />
         <Route path="/verify/:certNumber" element={<VerifyCertificate />} />
+        <Route path="/collections-doc" element={<CollectionsDoc />} />
+        <Route path="/line-callback" element={<LineCallback />} />
         {/* === Admin Routes === */}
         <Route
           path="/admin-dashboard"
@@ -240,6 +251,15 @@ function App() {
         />
 
         <Route
+          path="/admin-settings"
+          element={
+            <AdminRoute>
+              <AdminSetting />
+            </AdminRoute>
+          }
+        />
+
+        <Route
           path="/admin-user-detail/:id"
           element={
             <AdminRoute>
@@ -351,6 +371,14 @@ function App() {
           element={
             <UserRoute>
               <UserResult />
+            </UserRoute>
+          }
+        />
+        <Route
+          path="/user-profile"
+          element={
+            <UserRoute>
+              <UserProfile />
             </UserRoute>
           }
         />
@@ -468,6 +496,14 @@ function App() {
           element={
             <RegulatorRoute>
               <RegulatorOrganizeManage />
+            </RegulatorRoute>
+          }
+        />
+        <Route
+          path="/regulator-profile"
+          element={
+            <RegulatorRoute>
+              <RegulatorProfile />
             </RegulatorRoute>
           }
         />

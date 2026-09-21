@@ -188,6 +188,47 @@
   box-shadow: 0 10px 25px rgba(117, 186, 64, 0.15);
 }
 
+.auth-register-divider {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin: 25px 0 20px 0;
+  color: #94a3b8;
+  font-size: 14px;
+  font-weight: 500;
+}
+.auth-register-divider::before,
+.auth-register-divider::after {
+  content: "";
+  flex: 1;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.auth-register-line-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 14px;
+  background-color: #06c755;
+  color: #ffffff;
+  border: 1px solid #06c755;
+  border-radius: 50px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  box-shadow: 0 4px 10px rgba(6, 199, 85, 0.15);
+  transition: all 0.3s ease;
+}
+.auth-register-line-btn:hover {
+  background-color: #05a847;
+  border-color: #05a847;
+  transform: translateY(-3px);
+  box-shadow: 0 10px 20px -5px rgba(6, 199, 85, 0.4);
+}
+
 .auth-register-choice-icon {
   width: 60px;
   height: 60px;
@@ -445,4 +486,65 @@
   .auth-register-form-grid {
     grid-template-columns: 1fr;
   }
+}
+
+/* ===========================================
+   หน้า "ยืนยันข้อมูลก่อนสมัคร" ตอนสมัครผ่าน LINE (LineRegisterComplete.jsx)
+   =========================================== */
+.line-register-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  min-height: 100vh;
+  text-align: center;
+  padding: 20px;
+}
+.line-register-spin {
+  font-size: 36px;
+  color: #06c755;
+  animation: lineRegisterSpin 1s linear infinite;
+}
+@keyframes lineRegisterSpin {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+.line-register-error-icon {
+  font-size: 36px;
+  color: #ef4444;
+}
+.line-register-loading p {
+  color: #475569;
+  font-size: 15px;
+  max-width: 340px;
+}
+
+.line-register-avatar-preview {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+.line-register-avatar-preview img {
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #eef7e8;
+}
+
+/* คำเตือนให้ตรวจสอบชื่อ-นามสกุล-เบอร์โทรให้ถูกต้อง เพราะจะถูกใช้ออกใบประกาศนียบัตร */
+.line-register-warning {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  background-color: #fffbeb;
+  border: 1px solid #fde68a;
+  color: #92400e;
+  font-size: 13px;
+  line-height: 1.6;
+  padding: 12px 16px;
+  border-radius: 12px;
+  margin-bottom: 20px;
 }

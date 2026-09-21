@@ -22,6 +22,7 @@ const UserClassroomDetail = () => {
   const [chapterData, setChapterData] = useState({
     title: "กำลังโหลดข้อมูล...",
     video_url: "",
+    canTakeTest: false,
   });
 
   useEffect(() => {
@@ -143,28 +144,41 @@ const UserClassroomDetail = () => {
                         <p>รับชมวิดีโอและทำความเข้าใจ</p>
                       </div>
                     </li>
-                    <li className="step-item">
-                      <div className="step-circle">
-                        <FaClipboardList />
-                      </div>
-                      <div className="step-text">
-                        <h4>ขั้นที่ 2: แบบทดสอบ</h4>
-                        <p>ทดสอบความรู้เก็บคะแนน</p>
-                      </div>
-                    </li>
+                    {chapterData.canTakeTest && (
+                      <li className="step-item">
+                        <div className="step-circle">
+                          <FaClipboardList />
+                        </div>
+                        <div className="step-text">
+                          <h4>ขั้นที่ 2: แบบทดสอบ</h4>
+                          <p>ทดสอบความรู้เก็บคะแนน</p>
+                        </div>
+                      </li>
+                    )}
                   </ul>
 
-                  <div className="ucd-alert-box">
-                    เมื่อศึกษาเนื้อหาเสร็จสิ้น
-                    ให้คลิกปุ่มด้านล่างเพื่อทำการทดสอบ
-                  </div>
+                  {chapterData.canTakeTest ? (
+                    <>
+                      <div className="ucd-alert-box">
+                        เมื่อศึกษาเนื้อหาเสร็จสิ้น
+                        ให้คลิกปุ่มด้านล่างเพื่อทำการทดสอบ
+                      </div>
 
-                  <button
-                    className="ucd-btn-success"
-                    onClick={() => navigate(`/user-test?lesson=${lessonId}`)}
-                  >
-                    <FaClipboardList size={16} /> เข้าสู่แบบทดสอบ
-                  </button>
+                      <button
+                        className="ucd-btn-success"
+                        onClick={() =>
+                          navigate(`/user-test?lesson=${lessonId}`)
+                        }
+                      >
+                        <FaClipboardList size={16} /> เข้าสู่แบบทดสอบ
+                      </button>
+                    </>
+                  ) : (
+                    <div className="ucd-alert-box">
+                      บทเรียนนี้เป็นของหลักสูตรอื่น ดูวิดีโอเพื่อเรียนรู้ได้
+                      แต่ทำแบบทดสอบได้เฉพาะหลักสูตรของกลุ่มผู้ใช้งานของคุณเท่านั้น
+                    </div>
+                  )}
                 </div>
               </div>
             </div>

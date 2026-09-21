@@ -1,0 +1,348 @@
+import React, { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import SidebarUser from "./SidebarUser";
+import {
+  FaArrowLeft,
+  FaSpinner,
+  FaUserCircle,
+  FaIdBadge,
+  FaCamera,
+} from "react-icons/fa";
+import api, { getStoredUser } from "../../api/Api";
+import { useThemedAlert } from "../../hooks/useThemedAlert";
+import { sanitizePhone } from "../../utils/validators";
+import "./style/UserProfile.css";
+
+const MAX_IMAGE_SIZE_BYTES = 2 * 1024 * 1024;
+
+const getInitials = (name) => {
+  if (!name) return "US";
+  return name.substring(0, 2).toUpperCase();
+};
+
+// แปลง user_type (6 ประเภทย่อย) ให้เป็นข้อความอ่านง่าย ใช้ชุดเดียวกับ badge ใน SidebarUser
+const getUserTypeLabel = (userType) => {
+  const t = (userType || "").toLowerCase();
+  if (t.includes("regulator") || t.includes("policy"))
+    return "ผู้กำกับดูแลและนโยบาย";
+  if (t.includes("researcher")) return "นักวิจัย";
+  if (t.includes("developer") || t.includes("provider"))
+    return "นักพัฒนาและผู้ให้บริการ";
+  return "ผู้ใช้งานทั่วไป";
+};
+
+const UserProfile = () => {
+  const navigate = useNavigate();
+  const { fire } = useThemedAlert();
+
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [uploadingImage, setUploadingImage] = useState(false);
+  const [account, setAccount] = useState(null);
+  const [formData, setFormData] = useState({
+    first_name: "",
+    last_name: "",
+    email: "",
+    mobile: "",
+  });
+  const fileInputRef = useRef(null);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+    fetchProfile();
+  }, []);
+
+  const fetchProfile = async () => {
+    try {
+      setLoading(true);
+      const response = await api.get("/user/profile");
+      if (response.data && response.data.success) {
+        const data = response.data.data;
+        setAccount(data);
+        setFormData({
+          first_name: data.first_name_th || "",
+          last_name: data.last_name_th || "",
+          email: data.email || "",
+          mobile: data.mobile || "",
+        });
+      }
+    } catch (error) {
+      console.error("Fetch Profile Error:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: name === "mobile" ? sanitizePhone(value) : value,
+    }));
+  };
+
+  const handleImageButtonClick = () => fileInputRef.current?.click();
+
+  const handleImageChange = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!["image/jpeg", "image/png", "image/webp"].includes(file.type)) {
+      fire({
+        icon: "warning",
+        title: "ไฟล์ไม่ถูกต้อง",
+        text: "รองรับเฉพาะไฟล์รูปภาพ .jpg .png .webp เท่านั้น",
+        confirmButtonColor: "#3f6b21",
+      });
+      e.target.value = "";
+      return;
+    }
+    if (file.size > MAX_IMAGE_SIZE_BYTES) {
+      fire({
+        icon: "warning",
+        title: "ไฟล์มีขนาดใหญ่เกินไป",
+        text: "ขนาดไฟล์รูปภาพต้องไม่เกิน 2MB",
+        confirmButtonColor: "#3f6b21",
+      });
+      e.target.value = "";
+      return;
+    }
+
+    const uploadData = new FormData();
+    uploadData.append("image", file);
+
+    try {
+      setUploadingImage(true);
+      const response = await api.post("/user/profile-image", uploadData);
+      if (response.data && response.data.success) {
+        const newUrl = response.data.data.profile_image_url;
+        setAccount((prev) => ({ ...prev, profile_image_url: newUrl }));
+
+        // sync ค่าใน localStorage ด้วย เพื่อให้ Sidebar โชว์รูปใหม่ทันที (Sidebar เป็นคนละ
+        // component ไม่ได้ผูก state ร่วมกับหน้านี้ เลยต้อง reload หน้าถึงจะอ่านค่าใหม่)
+        const storedUser = getStoredUser();
+        if (storedUser) {
+          localStorage.setItem(
+            "user",
+            JSON.stringify({ ...storedUser, profile_image_url: newUrl }),
+          );
+        }
+
+        fire({
+          title: "เปลี่ยนรูปโปรไฟล์สำเร็จ",
+          icon: "success",
+          confirmButtonColor: "#3f6b21",
+          timer: 1500,
+          showConfirmButton: false,
+        }).then(() => {
+          window.location.reload();
+        });
+      }
+    } catch (error) {
+      fire({
+        title: "อัปโหลดรูปไม่สำเร็จ",
+        text: error.response?.data?.message || "เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง",
+        icon: "error",
+        confirmButtonColor: "#ef4444",
+      });
+    } finally {
+      setUploadingImage(false);
+      e.target.value = "";
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (formData.mobile.length < 9) {
+      return fire({
+        icon: "warning",
+        title: "รูปแบบข้อมูลไม่ถูกต้อง",
+        text: "กรุณากรอกเบอร์โทรศัพท์ให้ถูกต้อง (ตัวเลข 9-10 หลัก ขึ้นต้นด้วย 0)",
+        confirmButtonColor: "#3f6b21",
+      });
+    }
+
+    try {
+      setSaving(true);
+      const response = await api.put("/user/profile", formData);
+      if (response.data && response.data.success) {
+        fire({
+          title: "บันทึกข้อมูลสำเร็จ",
+          icon: "success",
+          confirmButtonColor: "#3f6b21",
+          timer: 2000,
+          showConfirmButton: false,
+        });
+        fetchProfile();
+      }
+    } catch (error) {
+      fire({
+        title: "บันทึกข้อมูลไม่สำเร็จ",
+        text: error.response?.data?.message || "เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง",
+        icon: "error",
+        confirmButtonColor: "#ef4444",
+      });
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="user-portal-layout">
+        <SidebarUser />
+        <div className="user-portal-content up-flex-center">
+          <FaSpinner className="up-loading-spin" />
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="user-portal-layout">
+      <SidebarUser />
+      <div className="user-portal-content">
+        <div className="up-container">
+          <button
+            className="up-back-btn"
+            onClick={() => navigate("/user-dashboard")}
+          >
+            <FaArrowLeft /> กลับสู่แดชบอร์ด
+          </button>
+
+          <div className="up-header">
+            <h1 className="up-title">ข้อมูลส่วนตัว</h1>
+            <p className="up-subtitle">
+              ดูและแก้ไขข้อมูลส่วนตัวของบัญชีคุณ
+            </p>
+          </div>
+
+          {/* รูปโปรไฟล์ */}
+          <div className="up-card">
+            <div className="up-card-header">
+              <FaCamera className="up-card-header-icon" />
+              <h2>รูปโปรไฟล์</h2>
+            </div>
+            <div className="up-avatar-row">
+              <div className="up-avatar-preview">
+                {account?.profile_image_url ? (
+                  <img src={account.profile_image_url} alt="รูปโปรไฟล์" />
+                ) : (
+                  <span>{getInitials(account?.first_name_th)}</span>
+                )}
+              </div>
+              <div>
+                <button
+                  type="button"
+                  className="up-btn-outline"
+                  onClick={handleImageButtonClick}
+                  disabled={uploadingImage}
+                >
+                  {uploadingImage ? "กำลังอัปโหลด..." : "เปลี่ยนรูปโปรไฟล์"}
+                </button>
+                <p className="up-avatar-hint">
+                  ไฟล์ .jpg .png .webp ขนาดไม่เกิน 2MB
+                </p>
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/jpeg,image/png,image/webp"
+                  onChange={handleImageChange}
+                  hidden
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* ข้อมูลบัญชี (แก้ไขไม่ได้) */}
+          <div className="up-card">
+            <div className="up-card-header">
+              <FaIdBadge className="up-card-header-icon" />
+              <h2>ข้อมูลบัญชี</h2>
+            </div>
+            <div className="up-account-grid">
+              <div className="up-account-item">
+                <label>รหัสผู้ใช้งาน</label>
+                <p>{account?.user_code || "-"}</p>
+              </div>
+              <div className="up-account-item">
+                <label>ชื่อผู้ใช้งาน (Username)</label>
+                <p>{account?.username || "-"}</p>
+              </div>
+              <div className="up-account-item">
+                <label>ประเภทผู้ใช้งาน</label>
+                <p>{getUserTypeLabel(account?.user_type)}</p>
+              </div>
+            </div>
+          </div>
+
+          {/* แก้ไขข้อมูลส่วนตัว */}
+          <div className="up-card">
+            <div className="up-card-header">
+              <FaUserCircle className="up-card-header-icon" />
+              <h2>แก้ไขข้อมูลส่วนตัว</h2>
+            </div>
+            <form className="up-form" onSubmit={handleSubmit}>
+              <div className="up-form-row up-col-2">
+                <div className="up-form-group">
+                  <label>ชื่อจริง</label>
+                  <input
+                    type="text"
+                    name="first_name"
+                    value={formData.first_name}
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
+                <div className="up-form-group">
+                  <label>นามสกุล</label>
+                  <input
+                    type="text"
+                    name="last_name"
+                    value={formData.last_name}
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
+              </div>
+              <div className="up-form-row up-col-2">
+                <div className="up-form-group">
+                  <label>อีเมล</label>
+                  <input
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
+                <div className="up-form-group">
+                  <label>เบอร์โทรศัพท์</label>
+                  <input
+                    type="tel"
+                    name="mobile"
+                    placeholder="เช่น 0812345678"
+                    maxLength="10"
+                    value={formData.mobile}
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
+              </div>
+              <button
+                type="submit"
+                className="up-btn-primary"
+                disabled={saving}
+              >
+                {saving ? "กำลังบันทึก..." : "บันทึกข้อมูล"}
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default UserProfile;

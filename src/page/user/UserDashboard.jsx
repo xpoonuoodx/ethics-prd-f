@@ -42,6 +42,8 @@ const UserDashboard = () => {
       progressPercentage: 0,
     },
     radarData: [],
+    allowCrossTrackTesting: false,
+    groupProgress: null,
   });
 
   useEffect(() => {
@@ -146,6 +148,38 @@ const UserDashboard = () => {
 
   const activeRole = roleConfig[roleCategory];
 
+  // "โครงการ" มาจาก backend เป็น string เดียวคั่นด้วย ", " (STRING_AGG) รวมถึง fallback
+  // ข้อความ "ยังไม่มีโครงการที่รับผิดชอบ" ตอนไม่มีโครงการเลย ต้องแยกเป็นรายชื่อก่อนโชว์เป็น chip
+  const hasOrganization =
+    dashboardData.organization &&
+    dashboardData.organization !== "ไม่มีสังกัดหน่วยงาน";
+  const projectList =
+    dashboardData.projects &&
+    dashboardData.projects !== "ยังไม่มีโครงการที่รับผิดชอบ"
+      ? dashboardData.projects.split(",").map((p) => p.trim()).filter(Boolean)
+      : [];
+
+  // แปลง roleCategory (6 ประเภทย่อย) ให้เป็นกลุ่มหลักสูตรจริง 3 กลุ่ม (ตรงกับ target_group
+  // ในฐานข้อมูล) เพื่อรู้ว่าการ์ดของตัวเองอยู่กลุ่มไหน แล้วอีก 2 กลุ่มที่เหลือคือกลุ่มอะไรบ้าง
+  const getTargetGroup = (category) => {
+    if (category === "regulator" || category === "policy") return 1;
+    if (["researcher", "developer", "provider"].includes(category)) return 2;
+    return 3;
+  };
+  const ownTargetGroup = getTargetGroup(roleCategory);
+
+  // การ์ดตัวแทนของแต่ละกลุ่มหลักสูตร (ไม่ใช่ตัวแทนของทั้ง 6 user_type ย่อยเหมือน roleConfig)
+  // ใช้โชว์เป็นการ์ดเพิ่มเติมสำหรับกลุ่มที่ไม่ใช่ของตัวเอง
+  const GROUP_CARD_CONFIG = {
+    1: { ...roleConfig.regulator, title: "Regulator / Policy Maker" },
+    2: {
+      ...roleConfig.developer,
+      title: "Researcher / Developer / Service Provider",
+    },
+    3: roleConfig.users,
+  };
+  const otherGroups = [1, 2, 3].filter((g) => g !== ownTargetGroup);
+
   // แมปข้อมูลสำหรับ Recharts (ป้องกัน NaN และดึงชื่อเต็มไว้โชว์ Tooltip)
   const formattedRadarData = dashboardData.radarData.map((item) => {
     const rawLevel =
@@ -203,15 +237,6 @@ const UserDashboard = () => {
                 </strong>{" "}
                 ดูภาพรวมความก้าวหน้าและเรียนรู้ต่อได้เลย
               </p>
-
-              <div className="ud-user-meta-tags">
-                <span className="ud-meta-tag org-tag">
-                  <FaBuilding /> หน่วยงาน : {dashboardData.organization}
-                </span>
-                <span className="ud-meta-tag proj-tag">
-                  <FaFolderOpen /> โครงการ :  {dashboardData.projects}
-                </span>
-              </div>
             </div>
 
             <button
@@ -222,10 +247,55 @@ const UserDashboard = () => {
             </button>
           </div>
 
+          <div className="ud-org-project-grid">
+            <div className="ud-info-card">
+              <div className="ud-info-card-icon org">
+                <FaBuilding />
+              </div>
+              <div className="ud-info-card-body">
+                <p className="ud-info-card-label">หน่วยงานของคุณ</p>
+                <p
+                  className={`ud-info-card-value ${!hasOrganization ? "muted" : ""}`}
+                >
+                  {dashboardData.organization}
+                </p>
+              </div>
+            </div>
+
+            <div className="ud-info-card">
+              <div className="ud-info-card-icon proj">
+                <FaFolderOpen />
+              </div>
+              <div className="ud-info-card-body">
+                <p className="ud-info-card-label">
+                  โครงการที่รับผิดชอบ
+                  {projectList.length > 0 && (
+                    <span className="ud-info-card-count">
+                      {projectList.length}
+                    </span>
+                  )}
+                </p>
+                {projectList.length > 0 ? (
+                  <div className="ud-project-chip-list">
+                    {projectList.map((proj, index) => (
+                      <span key={index} className="ud-project-chip">
+                        {proj}
+                      </span>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="ud-info-card-value muted">
+                    ยังไม่มีโครงการที่รับผิดชอบ
+                  </p>
+                )}
+              </div>
+            </div>
+          </div>
+
           <div className="ud-quick-stats-grid">
             <div className="ud-stat-card">
-              <div className="ud-stat-icon bg-blue-light">
-                <FaClock className="text-blue" />
+              <div className="ud-stat-icon">
+                <FaClock />
               </div>
               <div className="ud-stat-info">
                 <p className="ud-stat-label">จำนวนการทำข้อสอบรวม</p>
@@ -236,8 +306,8 @@ const UserDashboard = () => {
               </div>
             </div>
             <div className="ud-stat-card">
-              <div className="ud-stat-icon bg-green-light">
-                <FaClipboardCheck className="text-green" />
+              <div className="ud-stat-icon">
+                <FaClipboardCheck />
               </div>
               <div className="ud-stat-info">
                 <p className="ud-stat-label">บทเรียนที่สอบผ่าน</p>
@@ -248,8 +318,8 @@ const UserDashboard = () => {
               </div>
             </div>
             <div className="ud-stat-card">
-              <div className="ud-stat-icon bg-purple-light">
-                <FaTrophy className="text-purple" />
+              <div className="ud-stat-icon">
+                <FaTrophy />
               </div>
               <div className="ud-stat-info">
                 <p className="ud-stat-label">ใบประกาศนียบัตรที่ได้รับ</p>
@@ -269,54 +339,80 @@ const UserDashboard = () => {
             เส้นทางการเรียนรู้ของคุณ (My Learning Path)
           </h2>
 
-          <div className="ud-hero-role-card">
-            <div className="ud-hero-img-wrapper">
-              <img src={activeRole.img} alt={activeRole.title} />
-              <span className="ud-hero-badge">
-                <FaStar color="#f59e0b" /> {activeRole.badge}
-              </span>
-            </div>
-            <div className="ud-hero-content">
-              <h3 className="ud-hero-title">{activeRole.title}</h3>
-              <p className="ud-hero-desc">{activeRole.desc}</p>
+          {/* เรียงลงมาทีละหลักสูตร แถวละ 1 หลักสูตร (ของตัวเองขึ้นก่อน ตามด้วยอีก 2 กลุ่ม)
+              แทนที่จะเป็นการ์ดใหญ่ของตัวเอง 1 ใบ + การ์ดเล็ก 2 ใบเรียงข้างกันแบบเดิม */}
+          <div className="ud-courses-list">
+            {[
+              { group: ownTargetGroup, card: activeRole, isOwn: true },
+              ...otherGroups.map((group) => ({
+                group,
+                card: GROUP_CARD_CONFIG[group],
+                isOwn: false,
+              })),
+            ].map(({ group, card, isOwn }) => {
+              // ถ้าเปิดโหมด "ทำแบบทดสอบข้ามหลักสูตร" ไว้ ให้โชว์ % ความคืบหน้าจริงของทุกการ์ด
+              // (ไม่ใช่แค่การ์ดของหลักสูตรตัวเอง) เพราะตอนนี้ทำข้อสอบหลักสูตรอื่นได้แล้วจริง ๆ
+              const showProgress =
+                isOwn || dashboardData.allowCrossTrackTesting;
+              const progressPercentage = isOwn
+                ? dashboardData.stats.progressPercentage
+                : dashboardData.groupProgress?.[group] || 0;
 
-              <div className="ud-hero-meta">
-                <div className="ud-meta-item">
-                  <FaChartLine className="meta-icon" />{" "}
-                  ความคืบหน้าหลักสูตรปัจจุบัน
+              return (
+              <div key={group} className="ud-hero-role-card">
+                <div className="ud-hero-img-wrapper">
+                  <img src={card.img} alt={card.title} />
+                  <span className="ud-hero-badge">
+                    <FaStar color="#f59e0b" /> {card.badge}
+                  </span>
                 </div>
-                <div className="ud-meta-item font-bold">
-                  {dashboardData.stats.progressPercentage}%
+                <div className="ud-hero-content">
+                  <h3 className="ud-hero-title">{card.title}</h3>
+                  <p className="ud-hero-desc">{card.desc}</p>
+
+                  {showProgress && (
+                    <>
+                      <div className="ud-hero-meta">
+                        <div className="ud-meta-item">
+                          <FaChartLine className="meta-icon" />{" "}
+                          ความคืบหน้าหลักสูตร{isOwn ? "ปัจจุบัน" : "นี้"}
+                        </div>
+                        <div className="ud-meta-item font-bold">
+                          {progressPercentage}%
+                        </div>
+                      </div>
+
+                      <div className="ud-hero-progress-wrap">
+                        <div
+                          className="ud-mini-progress"
+                          style={{ height: "10px" }}
+                        >
+                          <div
+                            className="ud-mini-progress-fill"
+                            style={{
+                              width: `${progressPercentage}%`,
+                              backgroundColor: card.color,
+                            }}
+                          ></div>
+                        </div>
+                      </div>
+                    </>
+                  )}
+
+                  <div className="ud-hero-actions">
+                    <button
+                      className="ud-btn-hero dark"
+                      onClick={() =>
+                        navigate(`/user-classroom?course=${group}`)
+                      }
+                    >
+                      <FaPlayCircle /> เข้าสู่ห้องเรียน
+                    </button>
+                  </div>
                 </div>
               </div>
-
-              <div className="ud-hero-progress-wrap">
-                <div className="ud-mini-progress" style={{ height: "10px" }}>
-                  <div
-                    className="ud-mini-progress-fill"
-                    style={{
-                      width: `${dashboardData.stats.progressPercentage}%`,
-                      backgroundColor: activeRole.color,
-                    }}
-                  ></div>
-                </div>
-              </div>
-
-              <div className="ud-hero-actions">
-                <button
-                  className="ud-btn-hero dark"
-                  onClick={() => navigate(`/user-classroom`)}
-                >
-                  <FaPlayCircle /> เข้าสู่ห้องเรียน
-                </button>
-                <button
-                  className="ud-btn-hero outline"
-                  onClick={() => navigate(`/user-classroom`)}
-                >
-                  <FaClipboardCheck /> เริ่มทำแบบทดสอบ
-                </button>
-              </div>
-            </div>
+              );
+            })}
           </div>
 
           <div className="ud-progress-layout full-width">

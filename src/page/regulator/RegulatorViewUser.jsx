@@ -5,7 +5,6 @@ import {
   FaArrowLeft,
   FaUser,
   FaEnvelope,
-  FaIdCard,
   FaBuilding,
   FaSpinner,
   FaEdit,
@@ -198,16 +197,6 @@ const RegulatorViewUser = () => {
                     <div className="regulator-view-user-info-text">
                       <label>อีเมลติดต่อ (Email)</label>
                       <p>{user.email || "-"}</p>
-                    </div>
-                  </div>
-
-                  <div className="regulator-view-user-info-item">
-                    <div className="regulator-view-user-info-icon">
-                      <FaIdCard />
-                    </div>
-                    <div className="regulator-view-user-info-text">
-                      <label>เลขประจำตัวประชาชน</label>
-                      <p>{user.id_card || "-"}</p>
                     </div>
                   </div>
 
