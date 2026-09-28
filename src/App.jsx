@@ -85,7 +85,7 @@ function App() {
     <ThemedAlertProvider>
     <Router>
       {/* <WelcomePopup /> */}
-      <WelcomePopup2 /> 
+      {/* <WelcomePopup2 />  */}
       <Routes>
         {/* === Public Routes === */}
         <Route path="/" element={<Home />} />

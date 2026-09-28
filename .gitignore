@@ -33,5 +33,4 @@ dist-ssr
 .env.development.local
 .env.uat.local
 .env.production.local
-
 .tar

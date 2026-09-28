@@ -43,11 +43,21 @@ import pdfChecklist from "../assets/pdf/คู่มือการออกแ�
 import pdf5 from "../assets/pdf/คำตอบ AI มาจากไหน5.pdf";
 import pdf6 from "../assets/pdf/Agentic AI สำหรับระบบแจ้งข้อมูลประชาชน6.pdf";
 import pdf7 from "../assets/pdf/การออกแบบโครงสร้างองค์กร ที่ใช้ AI Agent  copy 7.pdf";
+import WelcomePopup2 from "../component/WelcomePopup2";
+// นำเข้ารูปภาพแบนเนอร์ (ตรวจสอบ path โฟลเดอร์ของคุณให้ถูกต้อง)
+import banner1 from "../assets/Banner.png"; // ตัวอย่างแบนเนอร์แรก
 
 
 export const slideData = [
+  {id: 1,
+    image: banner1,
+    title: "", 
+    subtitle: "",
+    buttons: [],
+    link: "https://forms.gle/7qYxX5X46WGsLYsHA" // 👈 เพิ่มตัวแปร link สำหรับให้คลิกที่รูป
+  },
   {
-    id: 1,
+    id: 2,
     image:
       "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=1920&auto=format&fit=crop",
     title: "เครื่องมือประเมินความพร้อม AI",
@@ -59,7 +69,7 @@ export const slideData = [
     ],
   },
   {
-    id: 2,
+    id: 3,
     image:
       "https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=1920&auto=format&fit=crop",
     title: "แนวทางจริยธรรมปัญญาประดิษฐ์ของประเทศไทย",
@@ -71,7 +81,7 @@ export const slideData = [
     ],
   },
   {
-    id: 3,
+    id: 4,
     image:
       "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?q=80&w=1920&auto=format&fit=crop",
     title: "รางวัลยกย่องบุคคลและองค์กรดีเด่น",
@@ -259,42 +269,71 @@ const Home = () => {
     navigate(`/news/${newsId}`);
   };
 
-  useEffect(() => {
-    const slideInterval = setInterval(nextSlide, 6000); // ปรับเวลาสไลด์ให้นานขึ้นนิดนึงเพื่อความหรูหรา
-    return () => clearInterval(slideInterval);
-  }, []);
+  // useEffect(() => {
+  //   const slideInterval = setInterval(nextSlide, 6000); // ปรับเวลาสไลด์ให้นานขึ้นนิดนึงเพื่อความหรูหรา
+  //   return () => clearInterval(slideInterval);
+  // }, []);
 
   return (
     <div className="hm-wrapper">
+      <WelcomePopup2 /> 
       <Tabbar />
 
-      {/* 1. แบนเนอร์สไลด์ */}
+{/* 1. แบนเนอร์สไลด์ */}
       <section className="hm-hero-slider">
-        {slideData.map((slide, index) => (
-          <div
-            key={slide.id}
-            className={`hm-slide ${index === currentSlide ? "active" : ""}`}
-            style={{ backgroundImage: `url(${slide.image})` }}
-          >
-            {/* ปรับ Overlay ให้เป็น Gradient แทนสีดำทึบ */}
-            <div className="hm-slide-overlay"></div>
-            <div className="hm-slide-content">
-              <h1 className="hm-slide-title">{slide.title}</h1>
-              <p className="hm-slide-subtitle">{slide.subtitle}</p>
-              <div className="hm-slide-actions">
-                {slide.buttons.map((btn, i) => (
-                  <button
-                    key={i}
-                    className={i === 0 ? "hm-btn-primary" : "hm-btn-secondary"}
-                    onClick={btn.link ? () => navigate(btn.link) : undefined}
-                  >
-                    {btn.label}
-                  </button>
-                ))}
-              </div>
+        {slideData.map((slide, index) => {
+          const isPosterMode = !slide.title; 
+
+          return (
+            <div
+              key={slide.id}
+              className={`hm-slide ${index === currentSlide ? "active" : ""} ${isPosterMode ? "poster-mode" : ""}`}
+              style={!isPosterMode ? { backgroundImage: `url(${slide.image})` } : { backgroundColor: "#060925" }}
+            >
+              {!isPosterMode && <div className="hm-slide-overlay"></div>}
+
+              {/* โหมดโปสเตอร์: โชว์รูปภาพและตั้งให้คลิกที่รูปได้เลย */}
+              {isPosterMode && (
+                <div 
+                  className="hm-poster-wrapper"
+                  onClick={() => {
+                    if (slide.link) window.open(slide.link, "_blank");
+                  }}
+                  style={{ cursor: slide.link ? "pointer" : "default" }}
+                >
+                  <img src={slide.image} alt="Banner" className="hm-poster-img" />
+                </div>
+              )}
+              
+              {/* ซ่อน content ทั้งหมดถ้าเป็นโหมดโปสเตอร์ */}
+              {!isPosterMode && (
+                <div className="hm-slide-content">
+                  <h1 className="hm-slide-title">{slide.title}</h1>
+                  <p className="hm-slide-subtitle">{slide.subtitle}</p>
+                  
+                  {slide.buttons && slide.buttons.length > 0 && (
+                    <div className="hm-slide-actions">
+                      {slide.buttons.map((btn, i) => (
+                        <button
+                          key={i}
+                          className={i === 0 ? "hm-btn-primary" : "hm-btn-secondary"}
+                          onClick={() => {
+                            if (btn.link) {
+                              if (btn.link.startsWith("http")) window.open(btn.link, "_blank");
+                              else navigate(btn.link);
+                            }
+                          }}
+                        >
+                          {btn.label}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
-          </div>
-        ))}
+          );
+        })}
         <button className="hm-slider-arrow left" onClick={prevSlide}>
           <ChevronLeft size={28} strokeWidth={1.5} />
         </button>
@@ -322,9 +361,11 @@ const Home = () => {
             <h2 className="hm-section-title">ดาวน์โหลดเอกสารที่เกี่ยวข้อง</h2>
           </div>
 
-          <div className="hm-document-grid">
-            {documentData.map((doc) => (
+<div className="hm-document-grid">
+            {/* 👇 เติม .slice(0, 4) เข้าไปก่อน .map เพื่อจำกัดการแสดงผลแค่ 4 การ์ดแรก */}
+            {documentData.slice(0, 4).map((doc) => (
               <div key={doc.id} className="hm-document-card">
+                
                 {/* รูปหน้าปกเอกสาร */}
                 <div className="hm-document-img-wrapper">
                   <img src={doc.image} alt={doc.title} className="hm-document-img" />

@@ -9,24 +9,23 @@ const GOOGLE_FORM_LINK = "https://forms.gle/jXyxHfLYLXqsEyMB9";
 const WelcomePopup2 = () => {
   const [isOpen, setIsOpen] = useState(false);
 
-  useEffect(() => {
-    // เช็คว่าเคยเห็น Popup นี้หรือยังจาก localStorage
-    // const hasSeenPopup = localStorage.getItem("hasSeenWelcomePopup");
+useEffect(() => {
+    // ใช้ sessionStorage แทน localStorage
+    const hasSeenPopup = sessionStorage.getItem("hasSeenWelcomePopup");
     
-    // // ถ้ายังไม่เคยเห็น ให้หน่วงเวลา 1 วินาทีแล้วค่อยเด้งขึ้นมา (ให้เว็บโหลดเสร็จก่อน)
-    // if (!hasSeenPopup) {
-    //   const timer = setTimeout(() => {
-    //     setIsOpen(true);
-    //   }, 1000);
-    //   return () => clearTimeout(timer);
-    // }
-    setIsOpen(true);
+    // ถ้ายังไม่เคยเห็นใน session นี้ ให้หน่วงเวลา 1 วินาทีแล้วเด้งขึ้นมา
+    if (!hasSeenPopup) {
+      const timer = setTimeout(() => {
+        setIsOpen(true);
+      }, 1000);
+      return () => clearTimeout(timer);
+    }
   }, []);
 
-  // ฟังก์ชันปิด Popup และบันทึกค่าว่าเคยเห็นแล้ว
   const handleClose = () => {
     setIsOpen(false);
-    localStorage.setItem("hasSeenWelcomePopup", "true");
+    // บันทึกค่าลง sessionStorage เพื่อไม่ให้เด้งซ้ำจนกว่าจะปิดเบราว์เซอร์
+    sessionStorage.setItem("hasSeenWelcomePopup", "true");
   };
 
   // ถ้า isOpen เป็น false ไม่ต้องแสดงอะไร
