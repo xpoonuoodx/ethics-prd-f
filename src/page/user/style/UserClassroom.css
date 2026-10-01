@@ -207,6 +207,27 @@
   margin: 0;
 }
 
+/* ป้ายคะแนนที่ดีที่สุด - เขียวถ้าผ่านเกณฑ์แล้ว เหลือง/ส้มถ้ายังไม่ผ่าน (แสดงเฉพาะบทที่เคย
+   ทำแบบทดสอบมาก่อนแล้วเท่านั้น) */
+.ucl-score-badge {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  margin-top: 2px;
+}
+.ucl-score-badge.passed {
+  background: #eef7e8;
+  color: #3f6b21;
+}
+.ucl-score-badge.failed {
+  background: #fef3c7;
+  color: #b45309;
+}
+
 /* Actions & Buttons */
 .ucl-lesson-actions {
   display: flex;
@@ -229,6 +250,27 @@
 }
 .ucl-btn-primary:hover {
   background: #345a1b;
+}
+
+/* ปุ่ม "ทำแบบทดสอบ" ทางลัด - ใช้สีประจำหลักสูตร (--course-color) แบบ outline ให้แยกจาก
+   ปุ่มหลัก "เริ่มเรียน" ชัดเจน แต่ยังสื่อว่าอยู่หลักสูตรเดียวกัน */
+.ucl-btn-outline {
+  background: #ffffff;
+  color: var(--course-color);
+  border: 1.5px solid var(--course-color);
+  padding: 10px 18px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: background 0.2s;
+  white-space: nowrap;
+}
+.ucl-btn-outline:hover {
+  background: var(--course-color-soft);
 }
 
 .ucl-empty-state {

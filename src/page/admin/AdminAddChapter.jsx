@@ -10,21 +10,38 @@ import {
   FaVideo,
   FaFileAlt,
   FaBookOpen,
+  FaAlignLeft,
 } from "react-icons/fa";
+import ReactQuill from "react-quill-new";
+import "react-quill-new/dist/quill.snow.css";
 import "./style/AdminAddChapter.css";
 import api from "../../api/Api";
+
+// Toolbar เท่าที่จำเป็นสำหรับ "รายละเอียดบทเรียน" - ตัวหนา/ตัวเอียง/หัวข้อ/bullet/ลิงก์
+// (ไม่เปิดพวก font/color/image เพื่อไม่ให้แอดมินหลงเปิด option เยอะเกินจำเป็น)
+const DESCRIPTION_EDITOR_MODULES = {
+  toolbar: [
+    [{ header: [false, 2, 3] }],
+    ["bold", "italic", "underline"],
+    [{ list: "ordered" }, { list: "bullet" }],
+    ["blockquote", "link"],
+    ["clean"],
+  ],
+};
 
 const AdminAddChapter = () => {
   const { fire } = useThemedAlert();
   const navigate = useNavigate();
 
-  // State เพิ่มฟิลด์ passingPercentage (ค่าตั้งต้น 80)
+  // State เพิ่มฟิลด์ passingPercentage (ค่าตั้งต้น 80) และ description (รายละเอียดบทเรียน
+  // เก็บเป็น markdown text - ไม่บังคับกรอก)
   const [chapterData, setChapterData] = useState({
     title: "",
     targetRole: "",
     status: "Active",
     videoUrl: "",
     passingPercentage: "80",
+    description: "",
   });
 
   const [questions, setQuestions] = useState([
@@ -37,6 +54,16 @@ const AdminAddChapter = () => {
 
   const handleChangeInfo = (e) => {
     setChapterData({ ...chapterData, [e.target.name]: e.target.value });
+  };
+
+  // ReactQuill ส่งค่ากลับมาเป็น HTML string ตรง ๆ (ไม่ใช่ event) ต่างจาก input ทั่วไป
+  const handleDescriptionChange = (value) => {
+    // Quill เวลาช่องว่างเปล่า ๆ จะส่ง "<p><br></p>" กลับมาแทนที่จะเป็น "" เปล่า ๆ
+    // เช็กแล้วแปลงเป็น "" เพื่อให้ fallback ข้อความ "ไม่มีรายละเอียด" ที่หน้า user/regulator ทำงานถูก
+    setChapterData({
+      ...chapterData,
+      description: value === "<p><br></p>" ? "" : value,
+    });
   };
 
   const handleAddQuestion = () => {
@@ -100,6 +127,7 @@ const AdminAddChapter = () => {
         status: chapterData.status,
         videoUrl: chapterData.videoUrl,
         passingPercentage: parseInt(chapterData.passingPercentage), // ส่งข้อมูลผ่าน Payload ไปคุมหลังบ้าน
+        description: chapterData.description,
         questions: questions,
       };
 
@@ -299,6 +327,25 @@ const AdminAddChapter = () => {
                 <div className="aac-video-preview-wrapper">
                   {renderVideoPreview(chapterData.videoUrl)}
                 </div>
+              </div>
+            </div>
+
+            {/* รายละเอียดบทเรียน - เขียนเป็น Markdown ได้ (ตัวหนา, bullet, หัวข้อย่อย ฯลฯ)
+                ผู้ใช้/ผู้กำกับดูแลจะเห็นข้อความนี้ที่หน้าเรียนวิดีโอ ไม่บังคับกรอก */}
+            <div className="aac-form-card">
+              <div className="aac-card-header">
+                <FaAlignLeft className="aac-card-icon" />
+                <h2>รายละเอียดบทเรียน</h2>
+              </div>
+              <div className="aac-form-row">
+                <ReactQuill
+                  theme="snow"
+                  value={chapterData.description}
+                  onChange={handleDescriptionChange}
+                  modules={DESCRIPTION_EDITOR_MODULES}
+                  placeholder="อธิบายเนื้อหาของบทเรียนนี้ เช่น หัวข้อที่ครอบคลุม จุดสำคัญที่ควรรู้ ฯลฯ (ไม่บังคับกรอก)"
+                  className="aac-description-editor"
+                />
               </div>
             </div>
 

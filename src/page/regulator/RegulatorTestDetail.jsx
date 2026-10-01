@@ -31,7 +31,7 @@ const RegulatorTestDetail = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
     if (!chapterId) {
-      navigate("/regulator-test");
+      navigate("/regulator-classroom");
       return;
     }
     fetchQuestions();
@@ -122,9 +122,11 @@ const RegulatorTestDetail = () => {
           {step !== "quiz" && (
             <button
               className="utd-back-btn"
-              onClick={() => navigate("/regulator-test")}
+              // ใช้ navigate(-1) แทนปลายทางตายตัว (ดูเหตุผลเดียวกับ UserTestDetail.jsx) เพราะ
+              // เข้าหน้านี้ได้ 2 ทาง: ผ่านหน้าวิดีโอ หรือกด "ทำแบบทดสอบ" ลัดจากหน้ารายการตรง ๆ
+              onClick={() => navigate(-1)}
             >
-              <FaArrowLeft /> ย้อนกลับหน้ารายการ
+              <FaArrowLeft /> ย้อนกลับ
             </button>
           )}
 

@@ -209,6 +209,11 @@
   font-weight: 600;
   margin-bottom: 5px;
   line-height: 1.3;
+  /* กันบรรทัดที่ยาวจนตัดขึ้น 2 บรรทัด ดันตัวเลขข้างล่างเลื่อนลงไม่เท่ากันระหว่างการ์ด
+     จองพื้นที่ไว้ 2 บรรทัดเสมอ ทุกการ์ดเลยเริ่มตัวเลขที่บรรทัดเดียวกันพอดี ไม่ว่า label จะสั้นหรือยาว */
+  min-height: 32.5px;
+  display: flex;
+  align-items: flex-start;
 }
 .pub-db-stat-value {
   font-size: 24px;
@@ -260,6 +265,22 @@
   color: #1e293b;
   margin: 0;
 }
+.pub-db-card-header-icon-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.pub-db-card-header-icon {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  border-radius: 9px;
+  background: #eef2ff;
+  color: #4f46e5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 .pub-db-empty-chart {
   display: flex;
   justify-content: center;
@@ -275,7 +296,7 @@
 
 .pub-db-row-2 {
   display: grid;
-  grid-template-columns: 0.85fr 1.6fr;
+  grid-template-columns: 1.6fr 0.85fr;
   gap: 22px;
   margin-bottom: 30px;
   align-items: stretch;
@@ -284,10 +305,19 @@
 /* =======================================
    Sector Donut Card
    ======================================= */
+/* การ์ดนี้ถูก grid (.pub-db-row-2 align-items:stretch) ยืดสูงเท่าการ์ดอัตราผ่านตามหลักสูตร
+   ที่เนื้อหายาวกว่า (มี 3 การ์ดย่อย) ถ้าไม่ทำให้เป็น flex column เนื้อหาข้างในจะลอยชิดบน
+   เหลือพื้นที่ว่างข้างล่างไม่สมดุลกับอีกฝั่ง เลยให้ body ยืด flex:1 แล้วจัดกึ่งกลางแทน */
+.pub-db-card.pub-db-sector-card {
+  display: flex;
+  flex-direction: column;
+}
 .pub-db-sector-body {
+  flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   gap: 16px;
 }
 .pub-db-sector-chart-wrap {
@@ -322,9 +352,14 @@
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 9px;
+  gap: 14px;
 }
 .pub-db-sector-legend li {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.pub-db-sector-row-top {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -332,8 +367,8 @@
   color: #334155;
 }
 .pub-db-sector-dot {
-  width: 9px;
-  height: 9px;
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
   flex-shrink: 0;
 }
@@ -341,36 +376,50 @@
   flex: 1;
   font-weight: 500;
 }
-.pub-db-sector-count {
+.pub-db-sector-pct {
   font-weight: 700;
   color: #0f172a;
   font-variant-numeric: tabular-nums;
   flex-shrink: 0;
 }
+.pub-db-sector-bar-track {
+  width: 100%;
+  height: 5px;
+  border-radius: 50px;
+  background: #f1f5f9;
+  overflow: hidden;
+}
+.pub-db-sector-bar-fill {
+  height: 100%;
+  border-radius: 50px;
+  transition: width 0.4s ease;
+}
 
 /* =======================================
-   Role Maturity Gauge Card
+   Hero Gauge Card (ระดับความพร้อมตามบทบาท - จุดสนใจหลักของหน้า)
    ======================================= */
-.pub-db-role-grid {
+.pub-db-hero-gauge-card {
+  margin-bottom: 22px;
+}
+.pub-db-hero-gauge-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
+  gap: 20px;
+  padding: 10px 0 20px 0;
 }
-.pub-db-role-col {
+.pub-db-hero-gauge-col {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 0 12px;
-}
-.pub-db-role-col.with-divider {
-  border-left: 1px solid #f1f5f9;
+  gap: 14px;
+  padding: 24px 16px;
+  border-radius: 16px;
+  background: #f8fafc;
 }
 .pub-db-role-head {
   display: flex;
   align-items: center;
   gap: 8px;
-  margin-bottom: 8px;
-  min-height: 34px;
 }
 .pub-db-role-icon {
   flex-shrink: 0;
@@ -382,17 +431,34 @@
   justify-content: center;
 }
 .pub-db-role-name {
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 700;
   color: #1e293b;
   line-height: 1.35;
   text-align: left;
 }
-.pub-db-role-caption {
-  font-size: 11.5px;
-  color: #94a3b8;
+
+/* Legend เกณฑ์คะแนน - แชร์ร่วมกันแถวเดียวใต้ gauge ทั้ง 3 วง (เดิมพิมพ์ซ้ำทุกคอลัมน์) */
+.pub-db-score-legend-shared {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+  justify-content: center;
+  padding-top: 18px;
+  border-top: 1px solid #f1f5f9;
+}
+.pub-db-score-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
   font-weight: 600;
-  margin-bottom: 12px;
+  color: #475569;
+}
+.pub-db-score-legend-item em {
+  font-style: normal;
+  color: #94a3b8;
+  font-weight: 500;
 }
 
 /* Gauge วงกลมเต็มวง (ใช้ร่วมกันทั้งขนาดใหญ่และเล็ก) */
@@ -410,38 +476,21 @@
   justify-content: center;
 }
 .pub-db-gauge-value {
-  font-weight: 700;
+  font-weight: 800;
   font-variant-numeric: tabular-nums;
+  letter-spacing: -0.5px;
+}
+.pub-db-gauge-percent-sign {
+  font-size: 0.45em;
+  font-weight: 700;
+  margin-left: 1px;
 }
 
-.pub-db-score-legend {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-.pub-db-score-legend li {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 10.5px;
-  color: #475569;
-  font-weight: 500;
-}
 .pub-db-score-dot {
   width: 7px;
   height: 7px;
   border-radius: 50%;
   flex-shrink: 0;
-}
-.pub-db-score-range {
-  margin-left: auto;
-  color: #94a3b8;
-  font-weight: 600;
-  font-variant-numeric: tabular-nums;
 }
 
 /* =======================================
@@ -455,13 +504,8 @@
 }
 
 /* =======================================
-   Row 3: Course cards + Static info list
+   Course cards (อัตราผ่านตามหลักสูตร)
    ======================================= */
-.pub-db-row-3 {
-  display: grid;
-  grid-template-columns: 1.7fr 1fr;
-  gap: 30px;
-}
 .pub-db-course-cards-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -473,6 +517,9 @@
   align-items: center;
   text-align: center;
   gap: 4px;
+  padding: 18px 14px;
+  border-radius: 14px;
+  background: #f8fafc;
 }
 .pub-db-course-card-head {
   display: flex;
@@ -533,39 +580,32 @@
   font-weight: 500;
   color: #334155;
 }
-.pub-db-course-footnote {
-  font-size: 10.5px;
-  color: #94a3b8;
-  line-height: 1.5;
+/* ข้อมูลหลักสูตรออนไลน์ - การ์ดแนวนอน 3 คอลัมน์ (เดิมเป็น list แนวตั้งอยู่คอลัมน์แคบ ๆ) */
+.pub-db-course-info-block {
+  margin-top: 8px;
 }
-
-/* Static info list (ข้อมูลหลักสูตรออนไลน์) */
-.pub-db-info-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
+.pub-db-info-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+.pub-db-info-card {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 12px;
 }
-.pub-db-info-list li {
+.pub-db-info-card-head {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding-bottom: 14px;
-  border-bottom: 1px solid #f1f5f9;
-}
-.pub-db-info-list li:last-child {
-  border-bottom: none;
-  padding-bottom: 0;
 }
 .pub-db-info-num {
   flex-shrink: 0;
-  width: 22px;
-  height: 22px;
+  width: 26px;
+  height: 26px;
   border-radius: 50%;
   color: #ffffff;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 700;
   display: flex;
   align-items: center;
@@ -577,13 +617,14 @@
 }
 .pub-db-info-title {
   flex: 1;
-  font-size: 12.5px;
-  font-weight: 500;
+  font-size: 13px;
+  font-weight: 600;
   color: #334155;
-  line-height: 1.5;
+  line-height: 1.55;
+  margin: 0;
 }
 .pub-db-info-badge {
-  flex-shrink: 0;
+  align-self: flex-start;
   background: #f1f5f9;
   color: #475569;
   font-size: 10.5px;
@@ -600,8 +641,11 @@
   .pub-db-row-2 {
     grid-template-columns: 1fr;
   }
-  .pub-db-row-3 {
+  .pub-db-hero-gauge-grid {
     grid-template-columns: 1fr;
+  }
+  .pub-db-info-grid {
+    grid-template-columns: 1fr 1fr;
   }
 }
 
@@ -620,13 +664,8 @@
     flex-direction: column;
     align-items: stretch;
   }
-  .pub-db-role-grid,
-  .pub-db-course-cards-grid {
+  .pub-db-course-cards-grid,
+  .pub-db-info-grid {
     grid-template-columns: 1fr;
-  }
-  .pub-db-role-col.with-divider {
-    border-left: none;
-    border-top: 1px solid #f1f5f9;
-    padding-top: 16px;
   }
 }

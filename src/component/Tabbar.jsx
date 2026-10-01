@@ -96,6 +96,14 @@ function Tabbar() {
             </li>
             <li>
               <Link
+                to="/alumni"
+                className={location.pathname === "/alumni" ? "active" : ""}
+              >
+                ทำเนียบรุ่น
+              </Link>
+            </li>
+            <li>
+              <Link
                 to="/contact"
                 className={location.pathname === "/contact" ? "active" : ""}
               >
@@ -107,12 +115,9 @@ function Tabbar() {
 
         {/* --- ฝั่งขวา: ปุ่มกด (Desktop) --- */}
         <div className="ai-tabbar-right-desktop">
-          {/* เพิ่มปุ่มสมัครเข้าร่วมโครงการ */}
-          <Link to="/register" className="ai-tabbar-outline-btn">
-            สมัครเข้าร่วมโครงการ
-          </Link>
-          <Link to="/login" className="ai-tabbar-btn">
-            เข้าสู่ระบบ
+          {/* ปรับเหลือปุ่มเดียวและเปลี่ยนชื่อเป็น สมัครและเข้าสู่ระบบ */}
+          <Link to="/register" className="ai-tabbar-btn">
+            สมัครและเข้าสู่ระบบ
           </Link>
         </div>
 
@@ -204,6 +209,9 @@ function Tabbar() {
               <Link to="/guideline">Thailand AI Ethics Guideline</Link>
             </li>
             <li>
+              <Link to="/alumni">ทำเนียบรุ่น</Link>
+            </li>
+            <li>
               <Link to="/contact">ติดต่อเรา</Link>
             </li>
           </ul>
@@ -212,12 +220,9 @@ function Tabbar() {
             <Link to="/download" className="ai-mobile-download-link">
               ดาวน์โหลดเอกสาร
             </Link>
-            {/* เพิ่มปุ่มสมัครเข้าร่วมโครงการในมือถือ */}
-            <Link to="/register" className="ai-mobile-outline-btn">
-              สมัครเข้าร่วมโครงการ
-            </Link>
-            <Link to="/login" className="ai-mobile-login-btn">
-              เข้าสู่ระบบ
+            {/* ปรับปุ่มในมือถือให้เหลือปุ่มเดียวและเปลี่ยนชื่อ */}
+            <Link to="/register" className="ai-mobile-login-btn">
+              สมัครและเข้าสู่ระบบ
             </Link>
           </div>
         </div>

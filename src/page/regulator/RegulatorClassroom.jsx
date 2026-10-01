@@ -88,8 +88,7 @@ const RegulatorClassroom = () => {
             </button>
             <h1 className="ucl-title">สื่อการเรียนรู้ทั้งหมด</h1>
             <p className="ucl-subtitle">
-              เรียนได้ทุกหลักสูตรไม่ว่าคุณจะเป็นผู้ใช้งานกลุ่มไหน
-              ส่วนการทำแบบทดสอบและรับใบประกาศนียบัตรไปที่เมนู "แบบทดสอบ"
+              เรียนและทำแบบทดสอบได้ทุกหลักสูตรไม่ว่าคุณจะเป็นผู้ใช้งานกลุ่มไหน
             </p>
           </div>
 
@@ -130,6 +129,24 @@ const RegulatorClassroom = () => {
                                 <h3 className="ucl-lesson-name">
                                   {lesson.chapterTitle}
                                 </h3>
+                                {/* แสดงคะแนนที่ดีที่สุดที่เคยทำได้ เฉพาะบทที่เคยทำแบบทดสอบแล้ว
+                                    (userScore เป็น null ถ้ายังไม่เคยทำ - เช็คแบบนี้เพราะ 0 ก็เป็น
+                                    ค่าคะแนนที่ถูกต้องได้เหมือนกัน ต่างจากยังไม่เคยทำ) */}
+                                {lesson.userScore !== null &&
+                                  lesson.userScore !== undefined && (
+                                    <span
+                                      className={`ucl-score-badge ${lesson.isPassed ? "passed" : "failed"}`}
+                                    >
+                                      คะแนนที่ดีที่สุด:{" "}
+                                      {Math.round(
+                                        (lesson.userScore /
+                                          parseInt(lesson.totalQuestions, 10)) *
+                                          100,
+                                      )}
+                                      % ({lesson.userScore}/
+                                      {lesson.totalQuestions})
+                                    </span>
+                                  )}
                               </div>
                             </div>
 

@@ -46,11 +46,12 @@ import pdf7 from "../assets/pdf/การออกแบบโครงสร้
 import WelcomePopup2 from "../component/WelcomePopup2";
 // นำเข้ารูปภาพแบนเนอร์ (ตรวจสอบ path โฟลเดอร์ของคุณให้ถูกต้อง)
 import banner1 from "../assets/Banner.png"; // ตัวอย่างแบนเนอร์แรก
+import banner2 from "../assets/banner0.jpg"; // ตัวอย่างแบนเนอร์ที่สอง
 
 
 export const slideData = [
   {id: 1,
-    image: banner1,
+    image: banner2,
     title: "", 
     subtitle: "",
     buttons: [],
@@ -77,7 +78,7 @@ export const slideData = [
       "สมัครเข้าร่วมโครงการอบรมจริยธรรม ปัญญาประดิษฐ์ (หลักสูตรออนไลน์)",
     buttons: [
       { label: "อ่านรายละเอียดเพิ่มเติม", link: null },
-      { label: "สมัครเข้าร่วมโครงการ", link: "/register" },
+      { label: "สมัครและเข้าสู่ระบบ", link: "/register" },
     ],
   },
   {

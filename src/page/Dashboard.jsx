@@ -18,15 +18,17 @@ import {
   UserRound,
   ArrowUpRight,
   ArrowDownRight,
+  Building2,
 } from "lucide-react";
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
 import "./style/Dashboard.css";
 
 // สีและไอคอนประจำ 3 กลุ่มบทบาท ใช้ร่วมกันทั้งกราฟ Gauge, การ์ดหลักสูตร และแผงข้อมูลหลักสูตรสถิตย์
+// ใช้โทนสดใสแบบ infographic (แดงกุหลาบ/ฟ้า/ส้มทอง) ให้ตัดกันชัดเจนบนวง gauge หนา ๆ
 const ROLE_META = {
-  executive: { color: "#2563eb", icon: User },
-  developer: { color: "#16a34a", icon: Code2 },
-  general: { color: "#7c3aed", icon: UserRound },
+  executive: { color: "#e11d48", icon: User },
+  developer: { color: "#2563eb", icon: Code2 },
+  general: { color: "#f59e0b", icon: UserRound },
 };
 
 // Legend อธิบายระดับคะแนน (ค่าคงที่เชิงอธิบาย ใช้ตีความ % ของ Gauge ไม่ผูกกับข้อมูลจริง)
@@ -65,11 +67,16 @@ const SECTOR_COLORS = [
 ];
 
 // Gauge วงกลมเต็มวง (โดนัท progress ring) ใช้ร่วมกันทั้งกราฟระดับความพร้อม (ใหญ่) และอัตราผ่านหลักสูตร (เล็ก)
+// ดีไซน์วงหนา ปลายมน สีสด ตามภาพอ้างอิงที่ต้องการ (ใช้ cornerRadius + paddingAngle ของ recharts
+// จำลองปลายมน แทนการ stroke-linecap ตรง ๆ ซึ่ง Pie/Cell ไม่รองรับ)
 function CircleGauge({ value, color, size = 150, valueFontSize = 26 }) {
+  const safeValue = Math.min(Math.max(value, 0), 100);
   const data = [
-    { name: "value", value },
-    { name: "remainder", value: Math.max(100 - value, 0) },
+    { name: "value", value: safeValue },
+    { name: "remainder", value: Math.max(100 - safeValue, 0) },
   ];
+  // เว้นช่องว่าง/มนปลายเฉพาะตอนไม่ใช่ 0% หรือ 100% เต็มวง กันเกิดรอยหักแปลก ๆ ตอนสุดขอบ
+  const isPartial = safeValue > 0 && safeValue < 100;
   return (
     <div className="pub-db-gauge-wrap" style={{ height: size }}>
       <ResponsiveContainer width="100%" height={size}>
@@ -81,12 +88,14 @@ function CircleGauge({ value, color, size = 150, valueFontSize = 26 }) {
             cy="50%"
             startAngle={90}
             endAngle={-270}
-            innerRadius="72%"
+            innerRadius="68%"
             outerRadius="100%"
+            cornerRadius={isPartial ? 10 : 0}
+            paddingAngle={isPartial ? 4 : 0}
             stroke="none"
           >
             <Cell fill={color} />
-            <Cell fill="#f1f5f9" />
+            <Cell fill="#eef1f6" />
           </Pie>
         </PieChart>
       </ResponsiveContainer>
@@ -95,7 +104,8 @@ function CircleGauge({ value, color, size = 150, valueFontSize = 26 }) {
           className="pub-db-gauge-value"
           style={{ color, fontSize: valueFontSize }}
         >
-          {value}%
+          {safeValue}
+          <span className="pub-db-gauge-percent-sign">%</span>
         </span>
       </div>
     </div>
@@ -333,130 +343,53 @@ function Dashboard() {
             </div>
           </div>
 
-          {/* Row 2: สัดส่วนภาคส่วน + ระดับความพร้อมตามบทบาท */}
-          <div className="pub-db-row-2">
-            <div className="pub-db-card pub-db-sector-card">
-              <div className="pub-db-card-header">
-                <h3>สถิติโครงการ AI จำแนกตามภาคส่วน</h3>
-              </div>
-              {sectorDistribution.length > 0 ? (
-                <div className="pub-db-sector-body">
-                  <div className="pub-db-sector-chart-wrap">
-                    <ResponsiveContainer width="100%" height={230}>
-                      <PieChart>
-                        <Pie
-                          data={sectorDistribution}
-                          dataKey="count"
-                          nameKey="label"
-                          cx="50%"
-                          cy="50%"
-                          innerRadius={64}
-                          outerRadius={92}
-                          paddingAngle={2}
-                        >
-                          {sectorDistribution.map((entry, index) => (
-                            <Cell
-                              key={`cell-${index}`}
-                              fill={SECTOR_COLORS[index % SECTOR_COLORS.length]}
-                            />
-                          ))}
-                        </Pie>
-                        <Tooltip
-                          contentStyle={{
-                            borderRadius: "10px",
-                            border: "none",
-                            boxShadow: "0 4px 15px rgba(0,0,0,0.1)",
-                          }}
-                        />
-                      </PieChart>
-                    </ResponsiveContainer>
-                    <div className="pub-db-sector-center">
-                      <span className="pub-db-sector-total">
-                        {sectorTotal.toLocaleString()}
+          {/* Hero section: 3 gauge ใหญ่ระดับความพร้อมตามบทบาท - จุดสนใจหลักของหน้า
+              (legend เกณฑ์คะแนนแชร์ร่วมกันแถวเดียวด้านล่าง แทนที่จะพิมพ์ซ้ำ 3 รอบเหมือนก่อน) */}
+          <div className="pub-db-card pub-db-hero-gauge-card">
+            <div className="pub-db-card-header">
+              <h3>สถานภาพจริยธรรมปัญญาประดิษฐ์ของไทย จำแนกตามบทบาท</h3>
+            </div>
+            <div className="pub-db-hero-gauge-grid">
+              {roleStats.map((role) => {
+                const meta = ROLE_META[role.key] || ROLE_META.general;
+                const Icon = meta.icon;
+                return (
+                  <div className="pub-db-hero-gauge-col" key={role.key}>
+                    <CircleGauge
+                      value={role.avgScorePct}
+                      color={meta.color}
+                      size={190}
+                      valueFontSize={36}
+                    />
+                    <div className="pub-db-role-head">
+                      <span
+                        className="pub-db-role-icon"
+                        style={{ background: `${meta.color}1a`, color: meta.color }}
+                      >
+                        <Icon size={17} />
                       </span>
-                      <span className="pub-db-sector-total-label">โครงการ</span>
+                      <span className="pub-db-role-name">{role.label}</span>
                     </div>
                   </div>
-                  <ul className="pub-db-sector-legend">
-                    {sectorDistribution.map((s, index) => (
-                      <li key={s.sector}>
-                        <span
-                          className="pub-db-sector-dot"
-                          style={{
-                            background: SECTOR_COLORS[index % SECTOR_COLORS.length],
-                          }}
-                        />
-                        <span className="pub-db-sector-name">{s.label}</span>
-                        <span className="pub-db-sector-count">
-                          {s.count.toLocaleString()} (
-                          {sectorTotal > 0
-                            ? Math.round((s.count / sectorTotal) * 1000) / 10
-                            : 0}
-                          %)
-                        </span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              ) : (
-                <div className="pub-db-empty-chart">ยังไม่มีข้อมูลโครงการในระบบ</div>
-              )}
+                );
+              })}
             </div>
-
-            <div className="pub-db-card pub-db-role-card">
-              <div className="pub-db-card-header">
-                <h3>สถานภาพจริยธรรมปัญญาประดิษฐ์ของไทย จำแนกตามบทบาท</h3>
-              </div>
-              <div className="pub-db-role-grid">
-                {roleStats.map((role, idx) => {
-                  const meta = ROLE_META[role.key] || ROLE_META.general;
-                  const Icon = meta.icon;
-                  return (
-                    <div
-                      className={`pub-db-role-col ${idx > 0 ? "with-divider" : ""}`}
-                      key={role.key}
-                    >
-                      <div className="pub-db-role-head">
-                        <span
-                          className="pub-db-role-icon"
-                          style={{ background: `${meta.color}1a`, color: meta.color }}
-                        >
-                          <Icon size={17} />
-                        </span>
-                        <span className="pub-db-role-name">{role.label}</span>
-                      </div>
-                      <CircleGauge
-                        value={role.avgScorePct}
-                        color={meta.color}
-                        size={150}
-                        valueFontSize={26}
-                      />
-                      <span className="pub-db-role-caption">ระดับประเภท</span>
-                      <ul className="pub-db-score-legend">
-                        {SCORE_BANDS.map((band) => (
-                          <li key={band.label}>
-                            <span
-                              className="pub-db-score-dot"
-                              style={{ background: band.color }}
-                            />
-                            {band.label}
-                            <span className="pub-db-score-range">{band.range}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  );
-                })}
-              </div>
+            <div className="pub-db-score-legend-shared">
+              {SCORE_BANDS.map((band) => (
+                <span className="pub-db-score-legend-item" key={band.label}>
+                  <span className="pub-db-score-dot" style={{ background: band.color }} />
+                  {band.label} <em>({band.range})</em>
+                </span>
+              ))}
             </div>
           </div>
 
-          {/* Row 3: สถานภาพการเรียนรู้ + ข้อมูลหลักสูตร */}
-          <div className="pub-db-row-3">
-            <div className="pub-db-course-block">
-              <h2 className="pub-db-section-title">
-                สถานภาพการเรียนรู้ AI Ethics (Course Online)
-              </h2>
+          {/* Row 2: อัตราผ่านตามหลักสูตร (กว้าง) + สัดส่วนภาคส่วน (แคบ) */}
+          <div className="pub-db-row-2">
+            <div className="pub-db-card pub-db-course-rate-card">
+              <div className="pub-db-card-header">
+                <h3>อัตราผ่านเกณฑ์ AI Ethics ตามหลักสูตร (Course Online)</h3>
+              </div>
               <div className="pub-db-course-cards-grid">
                 {courseStats.map((course, idx) => {
                   const meta = ROLE_META[course.key] || ROLE_META.general;
@@ -466,7 +399,7 @@ function Dashboard() {
                       ? Math.round((course.notPassed / course.registered) * 1000) / 10
                       : 0;
                   return (
-                    <div className="pub-db-card pub-db-course-card" key={course.key}>
+                    <div className="pub-db-course-card" key={course.key}>
                       <div className="pub-db-course-card-head">
                         <span
                           className="pub-db-course-num"
@@ -500,42 +433,120 @@ function Dashboard() {
                           {notPassedPct}%)
                         </span>
                       </div>
-                      <span className="pub-db-course-footnote">
-                        ต้องมีคะแนน ≥ 80% จึงจะได้รับใบประกาศนียบัตร
-                      </span>
                     </div>
                   );
                 })}
               </div>
             </div>
 
-            <div className="pub-db-course-info-block">
-              <h2 className="pub-db-section-title">
-                ข้อมูลหลักสูตรออนไลน์ AI Ethics (3 หลักสูตร)
-              </h2>
-              <div className="pub-db-card pub-db-info-card">
-                <ul className="pub-db-info-list">
-                  {COURSE_INFO.map((info, idx) => {
-                    const meta = ROLE_META[info.key] || ROLE_META.general;
-                    const Icon = meta.icon;
-                    return (
-                      <li key={info.key}>
-                        <span
-                          className="pub-db-info-num"
-                          style={{ background: meta.color }}
-                        >
-                          {idx + 1}
-                        </span>
-                        <span className="pub-db-info-icon" style={{ color: meta.color }}>
-                          <Icon size={16} />
-                        </span>
-                        <span className="pub-db-info-title">{info.title}</span>
-                        <span className="pub-db-info-badge">เกณฑ์ผ่าน ≥ 80%</span>
-                      </li>
-                    );
-                  })}
-                </ul>
+            <div className="pub-db-card pub-db-sector-card">
+              <div className="pub-db-card-header pub-db-card-header-icon-row">
+                <span className="pub-db-card-header-icon">
+                  <Building2 size={17} />
+                </span>
+                <h3>สถิติโครงการ AI จำแนกตามภาคส่วน</h3>
               </div>
+              {sectorDistribution.length > 0 ? (
+                <div className="pub-db-sector-body">
+                  <div className="pub-db-sector-chart-wrap">
+                    <ResponsiveContainer width="100%" height={200}>
+                      <PieChart>
+                        <Pie
+                          data={sectorDistribution}
+                          dataKey="count"
+                          nameKey="label"
+                          cx="50%"
+                          cy="50%"
+                          innerRadius={66}
+                          outerRadius={92}
+                          cornerRadius={8}
+                          paddingAngle={3}
+                          stroke="none"
+                        >
+                          {sectorDistribution.map((entry, index) => (
+                            <Cell
+                              key={`cell-${index}`}
+                              fill={SECTOR_COLORS[index % SECTOR_COLORS.length]}
+                            />
+                          ))}
+                        </Pie>
+                        <Tooltip
+                          contentStyle={{
+                            borderRadius: "10px",
+                            border: "none",
+                            boxShadow: "0 4px 15px rgba(0,0,0,0.1)",
+                          }}
+                        />
+                      </PieChart>
+                    </ResponsiveContainer>
+                    <div className="pub-db-sector-center">
+                      <span className="pub-db-sector-total">
+                        {sectorTotal.toLocaleString()}
+                      </span>
+                      <span className="pub-db-sector-total-label">โครงการ</span>
+                    </div>
+                  </div>
+                  <ul className="pub-db-sector-legend">
+                    {sectorDistribution.map((s, index) => {
+                      const pct =
+                        sectorTotal > 0
+                          ? Math.round((s.count / sectorTotal) * 1000) / 10
+                          : 0;
+                      const color = SECTOR_COLORS[index % SECTOR_COLORS.length];
+                      return (
+                        <li key={s.sector}>
+                          <div className="pub-db-sector-row-top">
+                            <span
+                              className="pub-db-sector-dot"
+                              style={{ background: color }}
+                            />
+                            <span className="pub-db-sector-name">{s.label}</span>
+                            <span className="pub-db-sector-pct">{pct}%</span>
+                          </div>
+                          <div className="pub-db-sector-bar-track">
+                            <div
+                              className="pub-db-sector-bar-fill"
+                              style={{ width: `${pct}%`, background: color }}
+                            />
+                          </div>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </div>
+              ) : (
+                <div className="pub-db-empty-chart">ยังไม่มีข้อมูลโครงการในระบบ</div>
+              )}
+            </div>
+          </div>
+
+          {/* ข้อมูลหลักสูตร - เต็มความกว้าง จัดเป็นการ์ดแนวนอน 3 คอลัมน์ */}
+          <div className="pub-db-course-info-block">
+            <h2 className="pub-db-section-title">
+              ข้อมูลหลักสูตรออนไลน์ AI Ethics (3 หลักสูตร)
+            </h2>
+            <div className="pub-db-info-grid">
+              {COURSE_INFO.map((info, idx) => {
+                const meta = ROLE_META[info.key] || ROLE_META.general;
+                const Icon = meta.icon;
+                return (
+                  <div className="pub-db-card pub-db-info-card" key={info.key}>
+                    <div className="pub-db-info-card-head">
+                      <span
+                        className="pub-db-info-num"
+                        style={{ background: meta.color }}
+                      >
+                        {idx + 1}
+                      </span>
+                      <span className="pub-db-info-icon" style={{ color: meta.color }}>
+                        <Icon size={18} />
+                      </span>
+                    </div>
+                    <p className="pub-db-info-title">{info.title}</p>
+                    <span className="pub-db-info-badge">เกณฑ์ผ่าน ≥ 80%</span>
+                  </div>
+                );
+              })}
             </div>
           </div>
         </div>

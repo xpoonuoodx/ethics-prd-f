@@ -11,6 +11,7 @@ import AboutBackground from "./page/AboutBackground";
 import AboutPrinciples from "./page/AboutPrinciples";
 import AboutProcess from "./page/AboutProcess";
 import AboutParticipation from "./page/AboutParticipation";
+import Alumni from "./page/Alumni"; // หน้าทำเนียบรุ่น
 import Contact from "./page/Contact";
 import Login from "./page/Login";
 import Register from "./page/Register";
@@ -94,6 +95,7 @@ function App() {
         <Route path="/about/principles" element={<AboutPrinciples />} />
         <Route path="/about/process" element={<AboutProcess />} />
         <Route path="/about/participation" element={<AboutParticipation />} />
+        <Route path="/alumni" element={<Alumni />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />

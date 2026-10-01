@@ -32,7 +32,9 @@ function AboutParticipation() {
       <main className="about-main">
         <div className="about-card">
           <h2 className="about-section-title">
-            <UsersRound className="icon" size={28} />
+            <div className="icon-wrapper">
+              <UsersRound className="icon" size={24} strokeWidth={2.5} />
+            </div>
             ช่องทางการเข้าร่วม
           </h2>
           <div className="about-text-content">
@@ -70,7 +72,9 @@ function AboutParticipation() {
           </ul>
 
           <h2 className="about-section-title" style={{ marginTop: "40px" }}>
-            <CalendarCheck className="icon" size={28} />
+            <div className="icon-wrapper">
+              <CalendarCheck className="icon" size={24} strokeWidth={2.5} />
+            </div>
             ขั้นตอนการลงทะเบียน
           </h2>
           <div className="about-text-content">

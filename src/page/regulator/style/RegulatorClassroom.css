@@ -185,6 +185,27 @@
   margin: 0;
 }
 
+/* ป้ายคะแนนที่ดีที่สุด - เขียวถ้าผ่านเกณฑ์แล้ว เหลือง/ส้มถ้ายังไม่ผ่าน (แสดงเฉพาะบทที่เคย
+   ทำแบบทดสอบมาก่อนแล้วเท่านั้น) */
+.ucl-score-badge {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  margin-top: 2px;
+}
+.ucl-score-badge.passed {
+  background: #eef7e8;
+  color: #3f6b21;
+}
+.ucl-score-badge.failed {
+  background: #fef3c7;
+  color: #b45309;
+}
+
 /* Actions & Buttons */
 .ucl-lesson-actions {
   display: flex;

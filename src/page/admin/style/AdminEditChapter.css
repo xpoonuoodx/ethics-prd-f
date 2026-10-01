@@ -125,6 +125,26 @@
   border: 1px solid #e2e8f0;
 }
 
+/* กล่องเขียนรายละเอียดบทเรียน (WYSIWYG - Quill) เหมือนกับ AdminAddChapter.css */
+.aec-description-editor .ql-toolbar {
+  border-radius: 10px 10px 0 0;
+  border-color: #e2e8f0;
+}
+.aec-description-editor .ql-container {
+  border-radius: 0 0 10px 10px;
+  border-color: #e2e8f0;
+  font-size: 14px;
+  font-family: "Prompt", sans-serif;
+}
+.aec-description-editor .ql-editor {
+  min-height: 180px;
+}
+.aec-description-editor .ql-editor.ql-blank::before {
+  font-style: normal;
+  color: #94a3b8;
+  font-family: "Prompt", sans-serif;
+}
+
 .aec-card-header {
   display: flex;
   align-items: center;

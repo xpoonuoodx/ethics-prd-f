@@ -135,7 +135,7 @@ const SidebarRegulator = () => {
             </span>
           </a>
 
-          <a
+          {/* <a
             href="/regulator-test"
             className={`rgsidebar-item ${currentPath.includes("test") ? "active" : ""}`}
           >
@@ -145,7 +145,7 @@ const SidebarRegulator = () => {
             <span className={`rgsidebar-text ${!isOpen ? "hidden" : ""}`}>
               แบบทดสอบ
             </span>
-          </a>
+          </a> */}
 
           <a
             href="/regulator-tools"

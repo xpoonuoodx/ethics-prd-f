@@ -11,9 +11,23 @@ import {
   FaFileAlt,
   FaSpinner,
   FaEdit,
+  FaAlignLeft,
 } from "react-icons/fa";
+import ReactQuill from "react-quill-new";
+import "react-quill-new/dist/quill.snow.css";
 import "./style/AdminEditChapter.css";
 import api from "../../api/Api";
+
+// Toolbar เท่าที่จำเป็นสำหรับ "รายละเอียดบทเรียน" (เหมือนกับ AdminAddChapter.jsx)
+const DESCRIPTION_EDITOR_MODULES = {
+  toolbar: [
+    [{ header: [false, 2, 3] }],
+    ["bold", "italic", "underline"],
+    [{ list: "ordered" }, { list: "bullet" }],
+    ["blockquote", "link"],
+    ["clean"],
+  ],
+};
 
 const AdminEditChapter = () => {
   const { fire } = useThemedAlert();
@@ -28,6 +42,7 @@ const AdminEditChapter = () => {
     status: "Active",
     videoUrl: "",
     passingPercentage: "80", // เพิ่มสถานะเกณฑ์ผ่าน
+    description: "", // รายละเอียดบทเรียน (markdown)
   });
 
   const [questions, setQuestions] = useState([]);
@@ -50,15 +65,17 @@ const AdminEditChapter = () => {
           videoUrl,
           questions,
           passingPercentage,
+          description,
         } = response.data.data;
 
-        // นำค่าเกณฑ์ผ่านมาเก็บใน state ดักจับด้วย
+        // นำค่าเกณฑ์ผ่านและรายละเอียดบทเรียนมาเก็บใน state ดักจับด้วย
         setChapterData({
           title,
           targetRole,
           status,
           videoUrl,
           passingPercentage: passingPercentage?.toString() || "80",
+          description: description || "",
         });
 
         if (questions && questions.length > 0) {
@@ -91,6 +108,15 @@ const AdminEditChapter = () => {
 
   const handleChangeInfo = (e) => {
     setChapterData({ ...chapterData, [e.target.name]: e.target.value });
+  };
+
+  // ReactQuill ส่งค่ากลับมาเป็น HTML string ตรง ๆ (ไม่ใช่ event) ต่างจาก input ทั่วไป
+  // ช่องว่างเปล่า ๆ Quill จะส่ง "<p><br></p>" มาแทน "" เปล่า ๆ เลยเช็กแปลงให้ตรงนี้
+  const handleDescriptionChange = (value) => {
+    setChapterData({
+      ...chapterData,
+      description: value === "<p><br></p>" ? "" : value,
+    });
   };
 
   const handleAddQuestion = () => {
@@ -151,6 +177,7 @@ const AdminEditChapter = () => {
         status: chapterData.status,
         videoUrl: chapterData.videoUrl,
         passingPercentage: parseInt(chapterData.passingPercentage), // ส่งข้อมูลผ่าน PUT API
+        description: chapterData.description,
         questions: questions,
       };
 
@@ -353,6 +380,25 @@ const AdminEditChapter = () => {
                   <div className="aec-video-preview-wrapper">
                     {renderVideoPreview(chapterData.videoUrl)}
                   </div>
+                </div>
+              </div>
+
+              {/* รายละเอียดบทเรียน - เขียนเป็น Markdown ได้ (ตัวหนา, bullet, หัวข้อย่อย ฯลฯ)
+                  ไม่บังคับกรอก */}
+              <div className="aec-form-card">
+                <div className="aec-card-header">
+                  <FaAlignLeft className="aec-card-icon" />
+                  <h2>รายละเอียดบทเรียน</h2>
+                </div>
+                <div className="aec-form-row">
+                  <ReactQuill
+                    theme="snow"
+                    value={chapterData.description}
+                    onChange={handleDescriptionChange}
+                    modules={DESCRIPTION_EDITOR_MODULES}
+                    placeholder="อธิบายเนื้อหาของบทเรียนนี้ เช่น หัวข้อที่ครอบคลุม จุดสำคัญที่ควรรู้ ฯลฯ (ไม่บังคับกรอก)"
+                    className="aec-description-editor"
+                  />
                 </div>
               </div>
 

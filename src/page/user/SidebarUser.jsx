@@ -119,7 +119,7 @@ const SidebarUser = () => {
             </span>
           </a>
 
-          <a
+          {/* <a
             href="/user-test"
             className={`su-menu-item ${
               currentPath.includes("type=test") ||
@@ -133,7 +133,7 @@ const SidebarUser = () => {
               <FaClipboardCheck className="su-icon" />
             </span>
             <span className={`su-text ${!isOpen && "hidden"}`}>แบบทดสอบ</span>
-          </a>
+          </a> */}
 
           <a
             href="/user-tools"

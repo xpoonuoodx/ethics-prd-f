@@ -166,6 +166,60 @@
   line-height: 1.6;
 }
 
+/* จัดสไตล์ elements ที่ ReactMarkdown สร้างจากรายละเอียดบทเรียน (ตัวหนา/bullet/หัวข้อย่อย ฯลฯ)
+   ให้กลืนไปกับดีไซน์ของการ์ดโดยรอบ ไม่ใช้สไตล์ default ของเบราว์เซอร์ */
+.ucd-markdown p {
+  margin: 0 0 10px 0;
+}
+.ucd-markdown p:last-child {
+  margin-bottom: 0;
+}
+.ucd-markdown strong {
+  color: #1e293b;
+  font-weight: 700;
+}
+.ucd-markdown ul,
+.ucd-markdown ol {
+  margin: 0 0 10px 0;
+  padding-left: 22px;
+}
+.ucd-markdown li {
+  margin-bottom: 4px;
+}
+.ucd-markdown li::marker {
+  color: #3f6b21;
+}
+.ucd-markdown h1,
+.ucd-markdown h2,
+.ucd-markdown h3,
+.ucd-markdown h4 {
+  color: #1e293b;
+  font-weight: 700;
+  margin: 14px 0 8px 0;
+}
+.ucd-markdown h1:first-child,
+.ucd-markdown h2:first-child,
+.ucd-markdown h3:first-child,
+.ucd-markdown h4:first-child {
+  margin-top: 0;
+}
+.ucd-markdown code {
+  background: #f1f5f9;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 13px;
+}
+.ucd-markdown blockquote {
+  margin: 0 0 10px 0;
+  padding: 6px 14px;
+  border-left: 3px solid #3f6b21;
+  background: #f8fafc;
+  color: #64748b;
+}
+.ucd-markdown a {
+  color: #2563eb;
+}
+
 /* Right Stepper */
 .ucd-stepper {
   list-style: none;

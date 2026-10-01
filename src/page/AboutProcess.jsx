@@ -32,7 +32,9 @@ function AboutProcess() {
       <main className="about-main">
         <div className="about-card">
           <h2 className="about-section-title">
-            <Workflow className="icon" size={28} />
+            <div className="icon-wrapper">
+              <Workflow className="icon" size={24} strokeWidth={2.5} />
+            </div>
             แผนการดำเนินงาน
           </h2>
           <div className="about-text-content">

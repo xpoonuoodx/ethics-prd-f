@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import { useSearchParams } from "react-router-dom";
-import { useNavigate } from 'react-router-dom';
+import { useSearchParams, useNavigate } from "react-router-dom";
 import "./style/Register.css";
 import {
   FaEye,
@@ -10,6 +9,7 @@ import {
   FaUser,
   FaCheckCircle,
   FaLine,
+  FaSignInAlt,
 } from "react-icons/fa";
 import logo from "../assets/logo-bde.png";
 import axios from "axios";
@@ -177,7 +177,6 @@ const Register = () => {
 
   // ==========================================
   // สมัครผ่าน LINE ครั้งแรก - backend redirect กลับมาที่นี่พร้อม ?line_pending=<id>
-  // (ดู LineRegisterComplete.jsx สำหรับฟอร์มยืนยันข้อมูลก่อนสมัครจริง)
   // ==========================================
   if (linePendingId) {
     return <LineRegisterComplete pendingId={linePendingId} />;
@@ -190,8 +189,13 @@ const Register = () => {
     return (
       <div className="auth-register-container">
         <div className="auth-register-left">
-          <a className="auth-register-back-btn" onClick={() => navigate('/login')}>
-            <FaArrowLeft /> กลับสู่หน้าเข้าสู่ระบบ
+          {/* ปรับปุ่มซ้ายบนให้กลับสู่หน้าหลัก */}
+          <a
+            className="auth-register-back-btn"
+            onClick={() => navigate("/")}
+            style={{ cursor: "pointer" }}
+          >
+            <FaArrowLeft /> กลับสู่หน้าหลัก
           </a>
 
           <div className="auth-register-form-wrapper">
@@ -249,6 +253,42 @@ const Register = () => {
             >
               <FaLine size={18} /> สมัครด่วนด้วย LINE (เฉพาะบุคคลทั่วไป)
             </button>
+
+            {/* 👇 ส่วนปุ่มเข้าสู่ระบบที่ย้ายมาไว้ในหน้า Register 👇 */}
+            <div style={{ marginTop: "24px", textAlign: "center" }}>
+              <p
+                style={{
+                  fontSize: "14px",
+                  color: "#64748b",
+                  marginBottom: "10px",
+                }}
+              >
+                มีบัญชีผู้ใช้งานอยู่แล้ว?
+              </p>
+              <button
+                type="button"
+                onClick={() => navigate("/login")}
+                style={{
+                  width: "100%",
+                  padding: "12px 20px",
+                  backgroundColor: "#0f172a",
+                  color: "#ffffff",
+                  border: "none",
+                  borderRadius: "10px",
+                  fontSize: "15px",
+                  fontWeight: "600",
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: "8px",
+                  transition: "all 0.2s ease",
+                }}
+              >
+                <FaSignInAlt size={16} /> เข้าสู่ระบบ
+              </button>
+            </div>
+            {/* 👆 สิ้นสุดส่วนปุ่มเข้าสู่ระบบ 👆 */}
           </div>
         </div>
 
@@ -502,7 +542,13 @@ const Register = () => {
           </form>
 
           <p className="auth-register-login-link">
-            มีบัญชีผู้ใช้งานอยู่แล้ว? <a href="/login">เข้าสู่ระบบที่นี่</a>
+            มีบัญชีผู้ใช้งานอยู่แล้ว?{" "}
+            <a
+              onClick={() => navigate("/login")}
+              style={{ cursor: "pointer" }}
+            >
+              เข้าสู่ระบบที่นี่
+            </a>
           </p>
         </div>
       </div>

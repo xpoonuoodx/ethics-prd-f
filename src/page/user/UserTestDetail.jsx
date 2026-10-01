@@ -31,7 +31,7 @@ const UserTestDetail = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
     if (!chapterId) {
-      navigate("/user-test");
+      navigate("/user-classroom");
       return;
     }
     fetchQuestions();
@@ -122,9 +122,13 @@ const UserTestDetail = () => {
           {step !== "quiz" && (
             <button
               className="utd-back-btn"
-              onClick={() => navigate("/user-test")}
+              // ใช้ navigate(-1) (ย้อนตาม browser history จริง) แทนการ fix ปลายทางตายตัว
+              // เพราะตอนนี้เข้าหน้านี้ได้ 2 ทาง: ผ่านหน้าวิดีโอก่อน หรือกด "ทำแบบทดสอบ" ลัดจาก
+              // หน้ารายการบทเรียนตรง ๆ เลยก็ได้ - ปลายทางตายตัวจุดเดียวรองรับได้แค่ทางใดทางหนึ่ง
+              // navigate(-1) จะพากลับไปหน้าที่มาจริง ๆ ถูกทั้ง 2 เคสโดยไม่ต้องจำว่ามาทางไหน
+              onClick={() => navigate(-1)}
             >
-              <FaArrowLeft /> ย้อนกลับหน้ารายการ
+              <FaArrowLeft /> ย้อนกลับ
             </button>
           )}
 

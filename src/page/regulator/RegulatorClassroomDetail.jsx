@@ -9,12 +9,15 @@ import {
   FaBookOpen,
   FaCheck,
 } from "react-icons/fa";
+import DOMPurify from "dompurify";
 import api from "../../api/Api";
+import { useThemedAlert } from "../../hooks/useThemedAlert";
 import "./style/RegulatorClassroomDetail.css";
 
 const RegulatorClassroomDetail = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const { fire } = useThemedAlert();
   const queryParams = new URLSearchParams(location.search);
   const lessonId = queryParams.get("lesson");
 
@@ -62,6 +65,28 @@ const RegulatorClassroomDetail = () => {
   };
 
   const videoId = getYouTubeID(chapterData.video_url);
+
+  // เดิมกดปุ่มนี้แล้วพาไปหน้ารายการแบบทดสอบทั้งหมด ต้องมาหาเองอีกทีว่าอันไหนตรงกับบทที่เพิ่งดู
+  // ตอนนี้เด้ง popup ยืนยันก่อน แล้วพาตรงไปหน้าแบบทดสอบของบทเรียนนี้เลย (รหัสบทเรียนกับรหัสที่ใช้
+  // ดึงคำถามแบบทดสอบ คือ id เดียวกัน ไม่ต้องเลือกเองอีกต่อไป)
+  const handleStartTest = () => {
+    fire({
+      icon: "warning",
+      title: "ยืนยันการทำแบบทดสอบ",
+      text: "คุณแน่ใจหรือไม่ว่าต้องการเริ่มทำแบบทดสอบของบทเรียนนี้",
+      showCancelButton: true,
+      confirmButtonText: "เริ่มทำแบบทดสอบ",
+      cancelButtonText: "ยกเลิก",
+      confirmButtonColor: "#3f6b21",
+      cancelButtonColor: "#94a3b8",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // push ปกติ (เหตุผลเดียวกับ UserClassroomDetail.jsx) - ปุ่มย้อนกลับในหน้าแบบทดสอบ
+        // ใช้ navigate(-1) ซึ่งรองรับทั้งทางเข้าผ่านหน้าวิดีโอและทางลัดจากหน้ารายการได้ถูกต้อง
+        navigate(`/regulator-test-detail?chapter=${lessonId}`);
+      }
+    });
+  };
 
   if (loading) {
     return (
@@ -119,10 +144,21 @@ const RegulatorClassroomDetail = () => {
                   </h3>
                 </div>
                 <div className="ucd-card-body">
-                  <p className="ucd-desc-text">
-                    ไม่มีรายละเอียดเพิ่มเติมสำหรับบทเรียนนี้
-                    (กรุณาศึกษาเนื้อหาจากวิดีโอด้านบนเป็นหลัก)
-                  </p>
+                  {chapterData.description ? (
+                    // description มาจาก WYSIWYG editor ฝั่งแอดมิน (Quill) เก็บเป็น HTML
+                    // ต้อง sanitize ด้วย DOMPurify ก่อนเสมอ กัน stored XSS ก่อน render จริง
+                    <div
+                      className="ucd-desc-text ucd-markdown"
+                      dangerouslySetInnerHTML={{
+                        __html: DOMPurify.sanitize(chapterData.description),
+                      }}
+                    />
+                  ) : (
+                    <p className="ucd-desc-text">
+                      ไม่มีรายละเอียดเพิ่มเติมสำหรับบทเรียนนี้
+                      (กรุณาศึกษาเนื้อหาจากวิดีโอด้านบนเป็นหลัก)
+                    </p>
+                  )}
                 </div>
               </div>
             </div>
@@ -166,9 +202,7 @@ const RegulatorClassroomDetail = () => {
 
                       <button
                         className="ucd-btn-success"
-                        onClick={() =>
-                          navigate(`/regulator-test?lesson=${lessonId}`)
-                        }
+                        onClick={handleStartTest}
                       >
                         <FaClipboardList size={16} /> เข้าสู่แบบทดสอบ
                       </button>

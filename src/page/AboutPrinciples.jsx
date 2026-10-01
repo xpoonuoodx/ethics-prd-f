@@ -33,7 +33,9 @@ function AboutPrinciples() {
       <main className="about-main">
         <div className="about-card">
           <h2 className="about-section-title">
-            <Target className="icon" size={28} />
+            <div className="icon-wrapper">
+              <Target className="icon" size={24} strokeWidth={2.5} />
+            </div>
             วัตถุประสงค์โครงการ
           </h2>
           <div className="about-text-content">
@@ -44,7 +46,9 @@ function AboutPrinciples() {
           </div>
 
           <h2 className="about-section-title" style={{ marginTop: "40px" }}>
-            <Scale className="icon" size={28} />
+            <div className="icon-wrapper">
+              <Scale className="icon" size={24} strokeWidth={2.5} />
+            </div>
             หลักการสำคัญ 4 ประการ
           </h2>
           <ul className="about-list">

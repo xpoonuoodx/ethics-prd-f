@@ -7,8 +7,10 @@ import {
   FaCheckCircle,
   FaSpinner,
   FaBookOpen,
+  FaClipboardList,
 } from "react-icons/fa";
 import api, { getStoredUser } from "../../api/Api";
+import { useThemedAlert } from "../../hooks/useThemedAlert";
 import "./style/UserClassroom.css";
 
 // สีประจำแต่ละหลักสูตรตามกลุ่ม (target_group) ใช้สีชุดเดียวกับที่การ์ดในหน้า Dashboard
@@ -22,6 +24,7 @@ const COURSE_ACCENTS = {
 const UserClassroom = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { fire } = useThemedAlert();
   const [loading, setLoading] = useState(true);
 
   // เรียนได้ทุกหลักสูตรไม่ว่าจะเป็น user_type ไหน (การทำข้อสอบยังจำกัดตาม user_type
@@ -72,6 +75,25 @@ const UserClassroom = () => {
     navigate(`/user-classroom-detail?lesson=${chapterId}`);
   };
 
+  // ทางลัดทำแบบทดสอบตรงจากหน้ารายการเลย ไม่ต้องผ่านหน้าวิดีโอก่อน - ยังคงเด้ง popup ยืนยันก่อน
+  // เหมือนทางที่ผ่านหน้าวิดีโอ ให้พฤติกรรมเหมือนกันทุกจุดที่เริ่มทำแบบทดสอบได้ในระบบ
+  const handleStartTest = (chapterId) => {
+    fire({
+      icon: "warning",
+      title: "ยืนยันการทำแบบทดสอบ",
+      text: "คุณแน่ใจหรือไม่ว่าต้องการเริ่มทำแบบทดสอบของบทเรียนนี้",
+      showCancelButton: true,
+      confirmButtonText: "เริ่มทำแบบทดสอบ",
+      cancelButtonText: "ยกเลิก",
+      confirmButtonColor: "#3f6b21",
+      cancelButtonColor: "#94a3b8",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        navigate(`/user-test-detail?chapter=${chapterId}`);
+      }
+    });
+  };
+
   if (loading) {
     return (
       <div className="user-portal-layout">
@@ -103,8 +125,7 @@ const UserClassroom = () => {
               สื่อการเรียนรู้ทั้งหมด
             </h1>
             <p className="ucl-subtitle">
-              เรียนได้ทุกหลักสูตรไม่ว่าคุณจะเป็นผู้ใช้งานกลุ่มไหน
-              ส่วนการทำแบบทดสอบและรับใบประกาศนียบัตรไปที่เมนู "แบบทดสอบ"
+              เรียนและทำแบบทดสอบได้ทุกหลักสูตรไม่ว่าคุณจะเป็นผู้ใช้งานกลุ่มไหน
             </p>
           </div>
 
@@ -159,10 +180,41 @@ const UserClassroom = () => {
                                   <h3 className="ucl-lesson-name">
                                     {lesson.chapterTitle}
                                   </h3>
+                                  {/* แสดงคะแนนที่ดีที่สุดที่เคยทำได้ เฉพาะบทที่เคยทำแบบทดสอบแล้ว
+                                      (userScore เป็น null ถ้ายังไม่เคยทำ - เช็คแบบนี้เพราะ 0 ก็เป็น
+                                      ค่าคะแนนที่ถูกต้องได้เหมือนกัน ต่างจากยังไม่เคยทำ) */}
+                                  {lesson.userScore !== null &&
+                                    lesson.userScore !== undefined && (
+                                      <span
+                                        className={`ucl-score-badge ${lesson.isPassed ? "passed" : "failed"}`}
+                                      >
+                                        คะแนนที่ดีที่สุด:{" "}
+                                        {Math.round(
+                                          (lesson.userScore /
+                                            parseInt(
+                                              lesson.totalQuestions,
+                                              10,
+                                            )) *
+                                            100,
+                                        )}
+                                        % ({lesson.userScore}/
+                                        {lesson.totalQuestions})
+                                      </span>
+                                    )}
                                 </div>
                               </div>
 
                               <div className="ucl-lesson-actions">
+                                {lesson.canTakeTest && (
+                                  <button
+                                    className="ucl-btn-outline"
+                                    onClick={() =>
+                                      handleStartTest(lesson.chapterId)
+                                    }
+                                  >
+                                    <FaClipboardList /> ทำแบบทดสอบ
+                                  </button>
+                                )}
                                 <button
                                   className="ucl-btn-primary"
                                   onClick={() =>
