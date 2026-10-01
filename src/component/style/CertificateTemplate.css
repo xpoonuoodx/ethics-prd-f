@@ -1,205 +1,204 @@
-/* แม่แบบใบประกาศนียบัตร - โทนสีเขียว/ดำ/ครีม อ้างอิงดีไซน์ที่ผู้ใช้ส่งมาให้ดู
-   (ยังไม่มีไฟล์รูปพื้นหลังจริง จึงสร้างองค์ประกอบตกแต่งด้วย CSS ไปก่อน
-   ถ้าตั้งค่า background_url ไว้ในหน้าตั้งค่าแม่แบบ จะใช้รูปนั้นแทนองค์ประกอบ CSS พวกนี้ทั้งหมด) */
+/* แม่แบบใบประกาศนียบัตร - ใช้รูปพื้นหลัง cer-frame.jpg ที่มีแค่ "กรอบตกแต่ง + ลายเซ็น" เท่านั้น
+   (ไม่มีโลโก้/ข้อความ bake อยู่ในรูปแล้ว) โลโก้ทั้ง 2 อันและข้อความทั้งหมดเป็น element จริงที่
+   coded + วางตำแหน่งด้วย absolute position ทับลงไปแทน เพื่อให้คมชัดเสมอไม่ขึ้นกับความละเอียดไฟล์รูป */
+
+/* ฟอนต์ตัวเดียวกับที่เคย bake ไว้ในรูปใบประกาศเดิม (TH Sarabun New - ฟอนต์มาตรฐานเอกสารราชการไทย)
+   TH Sarabun New เองไม่มีสิทธิ์ใช้แบบ web font ฟรี เลยใช้ "Sarabun" จาก Google Fonts แทน
+   (ตระกูลเดียวกัน รูปทรงตัวอักษรใกล้เคียงกันมาก ต่างจาก Prompt ที่ใช้ในหน้าเว็บอื่น ๆ ทั้งระบบ) */
+@import url("https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700&display=swap");
 
 .cert-tpl {
   position: relative;
   height: 100%;
   width: 100%;
   box-sizing: border-box;
-  padding: 50px 70px;
   background-color: #f8f6f0;
+  background-repeat: no-repeat;
+  /* ยืดเต็มกรอบ A4 แนวนอนพอดี - รูปต้นฉบับ (1466x1068 ≈ 1.373:1) ใกล้เคียงสัดส่วน A4 แนวนอน
+     (297x210mm ≈ 1.414:1) มาก ส่วนต่างเล็กน้อยมองแทบไม่ออก เลือก stretch แทน cover กันไม่ให้
+     รูปโดนครอปขอบกรอบตกแต่งที่ขอบภาพ */
+  background-size: 100% 100%;
   overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  font-family: "Prompt", sans-serif;
 }
 
-/* ตราวงกลมสองโทนสีมุมบน (เขียว/ดำ) แทนโลโก้ตกแต่ง */
-.cert-tpl-badge {
+/* ทุก element ข้อความในใบเซอร์ ใช้ Sarabun เหมือนกันหมด - !important จำเป็นจริง ๆ ตรงนี้:
+   ทุกหน้าที่ไปเรียกใช้ component นี้ (เช่น .amc-layout *, .user-portal-layout * ใน
+   AdminManageCertificate.css/UserCertificate.css) มีการ reset font-family: Prompt ทับทุก
+   element ในหน้าไว้อยู่แล้วด้วย specificity เท่ากัน (class + *) ถ้าไม่ใส่ !important ตรงนี้
+   ฟอนต์จะถูกบังคับกลับเป็น Prompt เสมอไม่ว่าจะตั้งอะไรไว้ก็ตาม */
+.cert-tpl div,
+.cert-tpl span {
+  font-family: "Sarabun", "Prompt", sans-serif !important;
+}
+
+/* ตำแหน่ง % ของทุก element ด้านล่าง คำนวณเทียบกับภาพ cer-frame.jpg (ต้นฉบับ 1466x1068) เท่านั้น -
+   ถ้าเปลี่ยนไปใช้ background_url อื่นที่กรอบ/ลายเซ็นอยู่คนละตำแหน่ง ต้องปรับเลข % พวกนี้ใหม่ */
+
+/* ห่อโลโก้ 2 อันด้วย flex row เดียวกัน - align-items:center ทำให้อยู่บรรทัดเดียวกันเสมอ
+   (กึ่งกลางแนวตั้งเทียบกันเอง) ไม่ว่าอัตราส่วนแต่ละโลโก้จะต่างกันแค่ไหน แล้ว container เองอยู่
+   กึ่งกลางหน้ากระดาษในฐานะกลุ่มเดียว (left:50% + translateX(-50%)) แทนที่จะ fix ตำแหน่งแยกคนละอัน */
+.cert-tpl-logo-row {
   position: absolute;
-  top: 30px;
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  background: linear-gradient(
-    180deg,
-    #4a9d3a 0%,
-    #4a9d3a 50%,
-    #111827 50%,
-    #111827 100%
-  );
-  z-index: 1;
-}
-.cert-tpl-badge-left {
-  left: 40px;
-}
-.cert-tpl-badge-right {
-  right: 40px;
-}
-
-/* วงกลมไล่สีมุมล่างซ้ายแบบตกแต่ง */
-.cert-tpl-arc {
-  position: absolute;
-  bottom: -90px;
-  left: -90px;
-  width: 260px;
-  height: 260px;
-  border-radius: 50%;
-  background: radial-gradient(
-    circle at 30% 30%,
-    #86c46a 0%,
-    #4a9d3a 55%,
-    transparent 72%
-  );
-  opacity: 0.35;
-  z-index: 0;
-}
-
-/* ห่อ header+body+date-line ไว้ในบล็อกเดียว แล้วจัดกึ่งกลางแนวตั้งในพื้นที่เหนือ footer
-   กัน "เนื้อหาชิดขอบบนสุด" (footer ใช้ margin-top:auto ดันตัวเองลงล่างอยู่แล้ว
-   ถ้าไม่ห่อกลุ่มนี้ไว้ พื้นที่ว่างทั้งหมดจะไปกองอยู่ระหว่าง body กับ footer แทน) */
-.cert-tpl-main {
-  flex: 1;
-  width: 100%;
+  top: 7%;
+  left: 50%;
+  transform: translateX(-50%);
   display: flex;
-  flex-direction: column;
   align-items: center;
-  justify-content: center;
+  gap: 18px;
+}
+.cert-tpl-logo-de {
+  height: 115px;
+  width: auto;
+}
+.cert-tpl-logo-bde {
+  /* logo-bde2 ทรงเตี้ยกว่า+แคบกว่า logo-bde เดิมมาก (2 บรรทัดภาษาไทย ไม่ใช่เส้นยาวบรรทัดเดียว)
+     เลย sizing ด้วย height แทน width - ตั้งเล็กกว่าโลโก้ตราครุฑข้าง ๆ ตามที่ขอ */
+  height: 85px;
+  width: auto;
 }
 
-.cert-tpl-header {
-  position: relative;
-  z-index: 2;
-  margin-bottom: 6px;
-}
-.cert-tpl-logo {
-  height: 56px;
-  object-fit: contain;
-  margin-bottom: 10px;
-}
-.cert-tpl-issuer {
-  font-size: 22px;
+.cert-tpl-title {
+  position: absolute;
+  top: 28.1%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 40px;
   font-weight: 700;
-  color: #111827;
-  margin: 0 0 5px 0;
+  color: #000000;
+  white-space: nowrap;
 }
+
 .cert-tpl-grant-line {
-  font-size: 16px;
-  color: #6b7280;
-  margin: 0;
+  position: absolute;
+  top: 35.8%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 20px;
+  color: #374151;
+  white-space: nowrap;
 }
 
-.cert-tpl-body {
-  position: relative;
-  z-index: 2;
-  margin: 24px 0;
-  max-width: 760px;
-}
-.cert-tpl-name {
-  font-size: 32px;
+.cert-tpl-overlay-name {
+  position: absolute;
+  top: 45.5%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 30px;
   font-weight: 700;
-  color: #111827;
-  margin: 0 0 16px 0;
-  border-bottom: 2px solid #111827;
-  display: inline-block;
-  padding-bottom: 7px;
+  color: #1b3a6b; /* สีกรมท่า (navy) - แยกจากหลักสูตร/วันที่ที่เป็นสีดำ */
+  white-space: nowrap;
 }
-.cert-tpl-course {
-  font-size: 24px;
+
+.cert-tpl-pass-line {
+  position: absolute;
+  top: 52.2%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 18px;
+  color: #000000;
+  white-space: nowrap;
+}
+
+.cert-tpl-overlay-course {
+  position: absolute;
+  top: 60.5%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 72%;
+  text-align: center;
+  font-size: 20px;
   font-weight: 700;
-  color: #4a9d3a;
-  margin: 0 0 12px 0;
+  color: #000000;
   white-space: pre-line;
-  line-height: 1.45;
+  line-height: 1.4;
 }
-.cert-tpl-description {
-  font-size: 15px;
-  color: #6b7280;
-  line-height: 1.7;
-  margin: 0;
+
+.cert-tpl-issuer-line {
+  position: absolute;
+  top: 66.7%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 85%;
+  text-align: center;
+  font-size: 16px;
+  color: #374151;
+  white-space: nowrap;
 }
 
 .cert-tpl-date-line {
-  position: relative;
-  z-index: 2;
-  font-size: 15px;
-  color: #374151;
-  margin: 8px 0 0 0;
+  position: absolute;
+  top: 74%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  font-size: 16px;
+  color: #000000;
+  white-space: nowrap;
 }
-.cert-tpl-date-value {
-  display: inline-block;
-  min-width: 160px;
+.cert-tpl-date-line .cert-tpl-overlay-date {
+  /* override ตำแหน่ง absolute เดิม - ตอนนี้วันที่อยู่ใน flex row เดียวกับ label "ให้ ณ วันที่"
+     แทนที่จะ fix ตำแหน่งแยกเอง กันปัญหาวันที่สั้น/ยาวไม่เท่ากันแล้วช่องว่างเพี้ยน */
+  position: static;
+  transform: none;
+  min-width: 140px;
   border-bottom: 1px solid #9ca3af;
-  padding: 0 8px 2px 8px;
+  padding-bottom: 2px;
   font-weight: 600;
 }
 
-.cert-tpl-footer {
-  position: relative;
-  z-index: 2;
-  width: 100%;
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  margin-top: auto;
-  padding: 0 30px;
-}
-.cert-tpl-signature {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-.cert-tpl-signature-img {
-  height: 45px;
-  object-fit: contain;
-  margin-bottom: 4px;
-}
-.cert-tpl-signature-line {
-  width: 200px;
-  height: 30px;
-  border-bottom: 1.5px solid #111827;
-  margin-bottom: 8px;
-}
 .cert-tpl-signatory-name {
-  font-size: 15px;
+  position: absolute;
+  top: 87.4%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 16px;
   font-weight: 700;
-  color: #111827;
+  color: #000000;
+  white-space: nowrap;
 }
 .cert-tpl-signatory-position {
+  position: absolute;
+  top: 90.8%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 70%;
+  text-align: center;
   font-size: 13px;
-  color: #6b7280;
-  margin-top: 2px;
-  max-width: 260px;
+  color: #374151;
+  white-space: nowrap;
 }
 
-.cert-tpl-qr-box {
-  width: 78px;
-  height: 78px;
-  border: 1.5px dashed #9ca3af;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 9px;
-  font-weight: 600;
-  color: #9ca3af;
-  overflow: hidden;
-  flex-shrink: 0;
+.cert-tpl-overlay-ref {
+  position: absolute;
+  bottom: 6%;
+  left: 7%;
+  font-size: 11px;
+  color: #6b7280;
+  font-family: monospace !important;
 }
-.cert-tpl-qr-box img {
+
+.cert-tpl-overlay-qr {
+  position: absolute;
+  bottom: 6%;
+  right: 7%;
+  width: 64px;
+  height: 64px;
+}
+.cert-tpl-overlay-qr img {
   width: 100%;
   height: 100%;
 }
-
-.cert-tpl-ref {
-  position: absolute;
-  bottom: 12px;
-  left: 24px;
-  font-size: 10px;
+.cert-tpl-overlay-qr span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  border: 1.5px dashed #9ca3af;
+  border-radius: 6px;
+  font-size: 9px;
+  font-weight: 600;
   color: #9ca3af;
-  font-family: monospace;
-  z-index: 2;
 }

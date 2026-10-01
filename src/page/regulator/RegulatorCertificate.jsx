@@ -53,15 +53,19 @@ const RegulatorCertificate = () => {
       const canvas = await html2canvas(certElement, {
         scale: 2,
         useCORS: true,
+        backgroundColor: "#ffffff",
       });
       certElement.style.display = "none";
 
-      const imgData = canvas.toDataURL("image/png");
+      // ใช้ JPEG แทน PNG ตอน export (เหตุผลเดียวกับ UserCertificate.jsx) - PNG เดิมได้ไฟล์
+      // PDF ~10MB เพราะบีบอัดแบบ lossless ภาพที่มีขอบมัว (anti-aliasing) ได้ไม่ดี เปลี่ยนเป็น
+      // JPEG คุณภาพสูง (0.92) ไฟล์เล็กลงมาก แทบมองไม่ออกว่าต่างจาก PNG
+      const imgData = canvas.toDataURL("image/jpeg", 0.92);
       const pdf = new jsPDF("landscape", "mm", "a4");
       const pdfWidth = pdf.internal.pageSize.getWidth();
       const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
 
-      pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
+      pdf.addImage(imgData, "JPEG", 0, 0, pdfWidth, pdfHeight);
       pdf.save(`Certificate_${cert.course_name || "AI_Ethics"}.pdf`);
     } catch (error) {
       console.error("Download Error:", error);

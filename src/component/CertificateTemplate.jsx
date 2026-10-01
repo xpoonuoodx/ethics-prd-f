@@ -1,6 +1,17 @@
 import React, { useEffect, useState } from "react";
 import QRCode from "qrcode";
-import defaultLogo from "../assets/logo-bde.png";
+// cer-frame.jpg = รูปพื้นหลัง "เฉพาะกรอบตกแต่ง + ลายเซ็น" เท่านั้น (ไม่มีโลโก้/ข้อความ bake ไว้แล้ว
+// ต่างจากเวอร์ชันก่อนหน้า) โลโก้ทั้งสองและข้อความทั้งหมดตอนนี้เป็น element จริงที่ coded ไว้ด้านล่าง
+// เพื่อให้คมชัดเสมอไม่ขึ้นกับความละเอียดของไฟล์รูป - ดูที่มาที่ src/assets/certificate/README.md
+import certFrameBg from "../assets/certificate/cer-frame.jpg";
+// ใช้เวอร์ชัน raster (PNG) แทน logo-de.svg ตัวจริง - html2canvas (ใช้ตอนสร้าง PDF) แสดงผล SVG
+// เชิงซ้อนที่มี gradient/defs เยอะแบบนี้ไม่ได้ ได้ช่องว่างเปล่า ๆ แทนโลโก้ (bug ของ html2canvas
+// เอง) เลย render SVG ตัวจริงเป็น PNG ความละเอียดสูงไว้ล่วงหน้าแทน หน้าตาเหมือนกันทุกประการ
+import logoDe from "../assets/certificate/logo-de-raster.png";
+// โลโก้ตัวที่ 2 เปลี่ยนจาก logo-bde.png (เวอร์ชันภาษาอังกฤษ ตัวยาวแนวนอน) เป็น logo-bde2.svg
+// (เวอร์ชันภาษาไทย 2 บรรทัด - ตรงกับตัวที่ bake อยู่ในรูปใบเซอร์ต้นฉบับ) เหตุผลที่ต้อง render
+// เป็น raster PNG ไว้ล่วงหน้าเหมือนกับ logo-de: html2canvas แสดงผล SVG นี้ไม่ได้ตอน export PDF
+import logoBde from "../assets/certificate/logo-bde2-raster.png";
 import "./style/CertificateTemplate.css";
 
 // รูปพื้นหลัง/โลโก้/ลายเซ็นที่ admin วาง URL จากภายนอกไว้ (เช่น cdn.phototourl.com) มักไม่ได้ส่ง
@@ -45,86 +56,64 @@ const CertificateTemplate = ({ cert, userName }) => {
     };
   }, [qrContent]);
 
+  // ใช้รูปพื้นหลังที่แอดมินตั้งเอง (background_url) ถ้ามี ไม่งั้น fallback เป็น cer-frame.jpg
+  // (กรอบ+ลายเซ็นเปล่า ๆ) - ถ้าแอดมินจะใส่ background_url เองต้องเป็นรูป "เฉพาะกรอบ" แบบเดียวกัน
+  // ไม่งั้นข้อความที่ coded ไว้ด้านล่างจะไปซ้อนทับข้อความที่ bake อยู่ในรูปเดิมของแอดมิน
+  const backgroundImg = cert.background_url
+    ? proxiedImageUrl(cert.background_url)
+    : certFrameBg;
+
   return (
     <div
       className="cert-tpl"
-      style={
-        cert.background_url
-          ? {
-              backgroundImage: `url(${proxiedImageUrl(cert.background_url)})`,
-              backgroundSize: "cover",
-              backgroundPosition: "center",
-            }
-          : undefined
-      }
+      style={{ backgroundImage: `url(${backgroundImg})` }}
     >
-      {!cert.background_url && (
-        <>
-          <span className="cert-tpl-badge cert-tpl-badge-left"></span>
-          <span className="cert-tpl-badge cert-tpl-badge-right"></span>
-          <span className="cert-tpl-arc"></span>
-        </>
-      )}
-
-      {/* กลุ่มเนื้อหาหลัก ห่อไว้เพื่อจัดกึ่งกลางแนวตั้งในพื้นที่เหนือ footer แทนที่จะชิดขอบบนสุด */}
-      <div className="cert-tpl-main">
-        <div className="cert-tpl-header">
-          <img
-            src={cert.logo_url ? proxiedImageUrl(cert.logo_url) : defaultLogo}
-            alt="Logo"
-            className="cert-tpl-logo"
-          />
-          <h2 className="cert-tpl-issuer">
-            {cert.issuer_name || "AI Ethics Platform"}
-          </h2>
-          <p className="cert-tpl-grant-line">ขอมอบประกาศนียบัตรไว้เพื่อแสดงว่า</p>
-        </div>
-
-        <div className="cert-tpl-body">
-          <h1 className="cert-tpl-name">{userName}</h1>
-          <h3 className="cert-tpl-course">{cert.course_name}</h3>
-          {cert.description && (
-            <p className="cert-tpl-description">{cert.description}</p>
-          )}
-        </div>
-
-        <p className="cert-tpl-date-line">
-          ให้ไว้ ณ วันที่{" "}
-          <span className="cert-tpl-date-value">{cert.passDate}</span>
-        </p>
+      {/* โลโก้ 2 อัน - ของจริงที่ใช้อยู่แล้วทั้งเว็บ (ไม่ใช่ pixel ที่ bake ในรูป) เลยคมชัดเสมอ
+          ห่อด้วย flex row เดียวกัน (align-items:center) แทนการ fix top/left แยกแต่ละอัน
+          เพื่อให้อยู่บรรทัดเดียวกัน (กึ่งกลางแนวตั้งเทียบกันเองเสมอ ไม่ว่าอัตราส่วนแต่ละโลโก้จะ
+          ต่างกันแค่ไหน) และอยู่กึ่งกลางหน้ากระดาษจริง ๆ ในฐานะกลุ่มเดียว ไม่ใช่กึ่งกลางแยกกันคนละอัน */}
+      <div className="cert-tpl-logo-row">
+        <img src={logoDe} alt="DE Seal" className="cert-tpl-logo-de" />
+        <img src={logoBde} alt="BDE Logo" className="cert-tpl-logo-bde" />
       </div>
 
-      <div className="cert-tpl-footer">
-        <div className="cert-tpl-signature">
-          {cert.signature_url ? (
-            <img
-              src={proxiedImageUrl(cert.signature_url)}
-              alt="Signature"
-              className="cert-tpl-signature-img"
-            />
-          ) : (
-            <div className="cert-tpl-signature-line"></div>
-          )}
-          <span className="cert-tpl-signatory-name">
-            ({cert.signatory_name || "ผู้อำนวยการโครงการ"})
-          </span>
-          {cert.signatory_position && (
-            <span className="cert-tpl-signatory-position">
-              {cert.signatory_position}
-            </span>
-          )}
-        </div>
+      <div className="cert-tpl-title">ประกาศนียบัตร</div>
+      <div className="cert-tpl-grant-line">ให้ไว้เพื่อแสดงว่า</div>
 
-        <div className="cert-tpl-qr-box">
-          {qrDataUrl ? (
-            <img src={qrDataUrl} alt="QR Code" />
-          ) : (
-            <span>QR CODE</span>
-          )}
-        </div>
+      <div className="cert-tpl-overlay-name">{userName}</div>
+
+      <div className="cert-tpl-pass-line">
+        ได้ผ่านการอบรม ด้วยระบบการเรียนออนไลน์ในบทเรียน
+      </div>
+      <div className="cert-tpl-overlay-course">{cert.course_name}</div>
+
+      <div className="cert-tpl-issuer-line">
+        โดย{cert.issuer_name || "สำนักงานคณะกรรมการดิจิทัลเพื่อเศรษฐกิจและสังคมแห่งชาติ"}
       </div>
 
-      <div className="cert-tpl-ref">Reference No: {refNo}</div>
+      <div className="cert-tpl-date-line">
+        <span>ให้ ณ วันที่</span>
+        <span className="cert-tpl-overlay-date">{cert.passDate}</span>
+      </div>
+
+      {/* ลายเซ็น (รูปขีดเขียนจริง + เส้นใต้) เป็นส่วนหนึ่งของ cer-frame.jpg อยู่แล้ว ไม่ต้องวาดซ้ำ
+          เหลือแค่ชื่อ+ตำแหน่งผู้ลงนามที่ต้อง coded ทับ (ดึงจาก certificate_settings เหมือนเดิม) */}
+      <div className="cert-tpl-signatory-name">
+        {cert.signatory_name || "นายเวทางค์ พ่วงทรัพย์"}
+      </div>
+      <div className="cert-tpl-signatory-position">
+        {cert.signatory_position ||
+          "เลขาธิการคณะกรรมการดิจิทัลเพื่อเศรษฐกิจและสังคมแห่งชาติ"}
+      </div>
+
+      <div className="cert-tpl-overlay-ref">Ref: {refNo}</div>
+      <div className="cert-tpl-overlay-qr">
+        {qrDataUrl ? (
+          <img src={qrDataUrl} alt="QR Code" />
+        ) : (
+          <span>QR</span>
+        )}
+      </div>
     </div>
   );
 };
