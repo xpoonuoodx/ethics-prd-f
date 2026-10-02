@@ -45,12 +45,13 @@ import pdf6 from "../assets/pdf/Agentic AI สำหรับระบบแจ�
 import pdf7 from "../assets/pdf/การออกแบบโครงสร้างองค์กร ที่ใช้ AI Agent  copy 7.pdf";
 import WelcomePopup2 from "../component/WelcomePopup2";
 // นำเข้ารูปภาพแบนเนอร์ (ตรวจสอบ path โฟลเดอร์ของคุณให้ถูกต้อง)
-import banner1 from "../assets/Banner.png"; // ตัวอย่างแบนเนอร์แรก
+import banner1 from "../assets/Banner.png";
+import banner0 from "../assets/banner0.jpg"; // ตัวอย่างแบนเนอร์แรก
 
 
 export const slideData = [
   {id: 1,
-    image: banner1,
+    image: banner0,
     title: "", 
     subtitle: "",
     buttons: [],
