@@ -21,6 +21,7 @@ import cover4 from "../assets/image4.png";
 import cover5 from "../assets/image5.jpg"; 
 import cover6 from "../assets/image6.jpg";
 import cover7 from "../assets/image7.jpg";
+import cover8 from "../assets/image8.png";
 
 
 // ตัวอย่างการ import ไฟล์ PDF
@@ -31,6 +32,7 @@ import pdfChecklist from "../assets/pdf/คู่มือการออกแ�
 import pdf5 from "../assets/pdf/คำตอบ AI มาจากไหน5.pdf";
 import pdf6 from "../assets/pdf/Agentic AI สำหรับระบบแจ้งข้อมูลประชาชน6.pdf";
 import pdf7 from "../assets/pdf/การออกแบบโครงสร้างองค์กร ที่ใช้ AI Agent  copy 7.pdf";
+import pdf8 from "../assets/pdf/ภาครัฐใช้ AI อย่างไร.pdf";
 
 const allDocuments = [
   {
@@ -81,6 +83,13 @@ const allDocuments = [
       desc: "แนวทางการออกแบบการทำงานของ คน และ AI Agent สำหรับองค์กร เพื่อให้เกิดความร่วมมือและการทำงานที่มีประสิทธิภาพ",
       image: cover7,
       fileUrl: pdf7
+    },
+    {
+      id: 8,
+      title: "ภาครัฐใช้ AI อย่างไร",
+      desc: "จากงานประจำสู่บริการสาธารณะและนโยบายที่ดีขึ้น ครอบคลุมบทบาทของ AI การใช้งานในภาครัฐ การกำกับความเสี่ยง และแนวทางเริ่มต้นใน 90 วัน",
+      image: cover8,
+      fileUrl: pdf8
     },
 ];
 
