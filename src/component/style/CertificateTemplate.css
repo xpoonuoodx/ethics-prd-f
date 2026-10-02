@@ -46,14 +46,8 @@
   align-items: center;
   gap: 18px;
 }
-.cert-tpl-logo-de {
+.cert-tpl-logo-header {
   height: 115px;
-  width: auto;
-}
-.cert-tpl-logo-bde {
-  /* logo-bde2 ทรงเตี้ยกว่า+แคบกว่า logo-bde เดิมมาก (2 บรรทัดภาษาไทย ไม่ใช่เส้นยาวบรรทัดเดียว)
-     เลย sizing ด้วย height แทน width - ตั้งเล็กกว่าโลโก้ตราครุฑข้าง ๆ ตามที่ขอ */
-  height: 85px;
   width: auto;
 }
 

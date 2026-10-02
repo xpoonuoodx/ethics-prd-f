@@ -28,7 +28,7 @@ const UserResult = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
     if (!resultData || !chapterInfo) {
-      navigate("/user-test");
+      navigate("/user-classroom");
     }
     const user = getStoredUser();
     if (user) setUserName(user.name || user.firstname || "Student");
@@ -69,9 +69,9 @@ const UserResult = () => {
         <div className="ures-admin-container">
           <button
             className="ures-back-btn"
-            onClick={() => navigate("/user-test")}
+            onClick={() => navigate("/user-classroom")}
           >
-            <FaArrowLeft /> กลับหน้ารายการแบบทดสอบ
+            <FaArrowLeft /> กลับหน้ารวมหลักสูตร
           </button>
 
           <div className="ures-main-card">
@@ -164,9 +164,9 @@ const UserResult = () => {
               ) : (
                 <button
                   className="ures-btn-primary"
-                  onClick={() => navigate("/user-test")}
+                  onClick={() => navigate("/user-classroom")}
                 >
-                  <FaBookOpen /> ไปทำบทเรียนอื่นต่อ
+                  <FaBookOpen /> ไปเรียนบทเรียนอื่นต่อ
                 </button>
               )}
             </div>

@@ -4,14 +4,9 @@ import QRCode from "qrcode";
 // ต่างจากเวอร์ชันก่อนหน้า) โลโก้ทั้งสองและข้อความทั้งหมดตอนนี้เป็น element จริงที่ coded ไว้ด้านล่าง
 // เพื่อให้คมชัดเสมอไม่ขึ้นกับความละเอียดของไฟล์รูป - ดูที่มาที่ src/assets/certificate/README.md
 import certFrameBg from "../assets/certificate/cer-frame.jpg";
-// ใช้เวอร์ชัน raster (PNG) แทน logo-de.svg ตัวจริง - html2canvas (ใช้ตอนสร้าง PDF) แสดงผล SVG
-// เชิงซ้อนที่มี gradient/defs เยอะแบบนี้ไม่ได้ ได้ช่องว่างเปล่า ๆ แทนโลโก้ (bug ของ html2canvas
-// เอง) เลย render SVG ตัวจริงเป็น PNG ความละเอียดสูงไว้ล่วงหน้าแทน หน้าตาเหมือนกันทุกประการ
-import logoDe from "../assets/certificate/logo-de-raster.png";
-// โลโก้ตัวที่ 2 เปลี่ยนจาก logo-bde.png (เวอร์ชันภาษาอังกฤษ ตัวยาวแนวนอน) เป็น logo-bde2.svg
-// (เวอร์ชันภาษาไทย 2 บรรทัด - ตรงกับตัวที่ bake อยู่ในรูปใบเซอร์ต้นฉบับ) เหตุผลที่ต้อง render
-// เป็น raster PNG ไว้ล่วงหน้าเหมือนกับ logo-de: html2canvas แสดงผล SVG นี้ไม่ได้ตอน export PDF
-import logoBde from "../assets/certificate/logo-bde2-raster.png";
+// โลโก้ชุดใหม่ (ตรากระทรวง DES + BDE) เป็นภาพเดียวต่อกันแนวนอน (Picture2.svg) render เป็น PNG
+// ไว้ล่วงหน้า เพราะ html2canvas แสดงผล SVG ที่มีรูปฝังไม่ได้ตอน export PDF
+import logoHeader from "../assets/certificate/logo-new-raster.png";
 import "./style/CertificateTemplate.css";
 
 // รูปพื้นหลัง/โลโก้/ลายเซ็นที่ admin วาง URL จากภายนอกไว้ (เช่น cdn.phototourl.com) มักไม่ได้ส่ง
@@ -73,8 +68,7 @@ const CertificateTemplate = ({ cert, userName }) => {
           เพื่อให้อยู่บรรทัดเดียวกัน (กึ่งกลางแนวตั้งเทียบกันเองเสมอ ไม่ว่าอัตราส่วนแต่ละโลโก้จะ
           ต่างกันแค่ไหน) และอยู่กึ่งกลางหน้ากระดาษจริง ๆ ในฐานะกลุ่มเดียว ไม่ใช่กึ่งกลางแยกกันคนละอัน */}
       <div className="cert-tpl-logo-row">
-        <img src={logoDe} alt="DE Seal" className="cert-tpl-logo-de" />
-        <img src={logoBde} alt="BDE Logo" className="cert-tpl-logo-bde" />
+        <img src={logoHeader} alt="DES / BDE Logo" className="cert-tpl-logo-header" />
       </div>
 
       <div className="cert-tpl-title">ประกาศนียบัตร</div>
