@@ -1,3 +1,22 @@
+# ติดตั้ง/สร้างใหม่ใน Docker อยู่แล้ว (npm install / npm run build)
 node_modules
 dist
+
+# git และไฟล์ editor
 .git
+.gitignore
+.vscode
+.idea
+
+# image export และ log
+*.tar
+*.log
+
+# ไฟล์ที่ไม่จำเป็นต่อการ build
+Dockerfile
+.dockerignore
+build-image.sh
+README.md
+
+# หมายเหตุ: ห้าม ignore .env เพราะ Vite ต้องใช้ค่า VITE_* ตอน npm run build
+# (ค่าจะถูกฝังในไฟล์ dist เท่านั้น image สุดท้ายไม่มีไฟล์ .env)

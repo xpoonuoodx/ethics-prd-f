@@ -34,3 +34,6 @@ dist-ssr
 .env.uat.local
 .env.production.local
 .tar
+
+# image export
+*.tar
