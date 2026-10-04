@@ -46,17 +46,37 @@ import pdf7 from "../assets/pdf/การออกแบบโครงสร้
 import WelcomePopup2 from "../component/WelcomePopup2";
 // นำเข้ารูปภาพแบนเนอร์ (ตรวจสอบ path โฟลเดอร์ของคุณให้ถูกต้อง)
 import banner1 from "../assets/Banner.png";
-import banner0 from "../assets/banner0.jpg"; // ตัวอย่างแบนเนอร์แรก
+import bannerV1 from "../assets/bannerv1.png"; // แบนเนอร์สไลด์ที่ 1
 
 
 
 export const slideData = [
   {id: 1,
-    image: banner0,
+    image: bannerV1,
     title: "", 
     subtitle: "",
     buttons: [],
-    link: "https://forms.gle/7qYxX5X46WGsLYsHA" // 👈 เพิ่มตัวแปร link สำหรับให้คลิกที่รูป
+    link: "https://forms.gle/7qYxX5X46WGsLYsHA", // 👈 เพิ่มตัวแปร link สำหรับให้คลิกที่รูป
+    // ปุ่มโปร่งใสที่วางทับปุ่มในรูปโปสเตอร์ - ตำแหน่ง/ขนาดเป็น % ของรูป (bannerv1.png 2732x1536)
+    // เลยเลื่อนตามรูปทุกขนาดหน้าจอ (responsive)
+    posterButtons: [
+      {
+        label: "Zoom Webinar",
+        link: "https://thairen.zoom.us/j/68060546857#success",
+        left: 40.75,
+        top: 38.9,
+        width: 18.6,
+        height: 9.8,
+      },
+      {
+        label: "ลงทะเบียนเข้าร่วมอบรมออนไลน์",
+        link: "https://forms.gle/7qYxX5X46WGsLYsHA",
+        left: 73.25,
+        top: 38.9,
+        width: 18.75,
+        height: 10,
+      },
+    ],
   },
   {
     id: 2,
@@ -303,7 +323,26 @@ const Home = () => {
                   }}
                   style={{ cursor: slide.link ? "pointer" : "default" }}
                 >
-                  <img src={slide.image} alt="Banner" className="hm-poster-img" />
+                  <div className="hm-poster-frame">
+                    <img src={slide.image} alt="Banner" className="hm-poster-img" />
+                    {slide.posterButtons?.map((btn) => (
+                      <a
+                        key={btn.label}
+                        className="hm-poster-btn"
+                        href={btn.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label={btn.label}
+                        onClick={(e) => e.stopPropagation()}
+                        style={{
+                          left: `${btn.left}%`,
+                          top: `${btn.top}%`,
+                          width: `${btn.width}%`,
+                          height: `${btn.height}%`,
+                        }}
+                      />
+                    ))}
+                  </div>
                 </div>
               )}
               
