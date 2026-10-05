@@ -5,7 +5,6 @@ import { FaGlobe, FaFacebookF } from "react-icons/fa"; // ลบ Twitter, Linked
 
 import "./style/Footer.css";
 import logoBDE from "../assets/logo-bde.png";
-import myLogo from "../assets/my-logo.png"; // 👈 เพิ่มนำเข้าโลโก้ของคุณตรงนี้
 
 function Footer() {
   return (
@@ -24,10 +23,6 @@ function Footer() {
               เพื่อสังคมดิจิทัลที่ปลอดภัยและยั่งยืน
             </p>
             {/* ย้าย Social Icon ออกจากตรงนี้ไปคอลัมน์ 3 แล้ว */}
-            <div className="footer-logo-wrapper">
-              {/* 👈 เพิ่มโลโก้ใหม่ใต้โลโก้เก่า ชิดซ้ายล่างของกลุ่มโลโก้ */}
-              <img src={myLogo} alt="My Logo" className="footer-logo-img-new" />
-            </div>
           </div>
 
           {/* คอลัมน์ 2: Quick Links */}

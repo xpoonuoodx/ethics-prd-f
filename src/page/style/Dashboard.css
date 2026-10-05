@@ -1,7 +1,12 @@
 
 .pub-db-wrapper * {
-  box-sizing: border-box;
   font-family: 'IBM Plex Sans Thai', sans-serif;
+}
+
+/* box-sizing: border-box เฉพาะเนื้อหาของหน้า ไม่รวม Tabbar (ดูเหตุผลที่ Home.css) */
+.pub-db-wrapper > :not(.ai-tabbar-wrapper),
+.pub-db-wrapper > :not(.ai-tabbar-wrapper) * {
+  box-sizing: border-box;
 }
 
 .pub-db-wrapper {

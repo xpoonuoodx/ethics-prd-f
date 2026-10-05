@@ -3,6 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { Menu, X, ChevronDown } from "lucide-react";
 import "./style/Tabbar.css";
 import logoBDE from "../assets/logo-bde.png";
+import logoMahidol from "../assets/logo-MU_Color.png";
 
 function Tabbar() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -34,6 +35,11 @@ function Tabbar() {
         {/* --- ฝั่งซ้าย: โลโก้ --- */}
         <div className="ai-tabbar-left">
           <Link to="/" className="ai-logo-link">
+            <img
+              src={logoMahidol}
+              alt="Mahidol University"
+              className="ai-tabbar-logo-mu"
+            />
             <img src={logoBDE} alt="BDE Logo" className="ai-tabbar-logo-img" />
           </Link>
         </div>

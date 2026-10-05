@@ -12,6 +12,9 @@
   left: 0;
   width: 100vw;
   height: 70px;
+  /* กำหนดเองให้ความสูงรวมเส้นขอบล่างเป็น 70px พอดีทุกหน้า - ไม่งั้นหน้าที่ไม่มี reset
+     box-sizing จะสูง 71px (70 + เส้นขอบ 1px) ต่างจาก Home/Dashboard ที่มี reset ครอบอยู่ */
+  box-sizing: border-box;
   background-color: #ffffff;
   z-index: 1000;
   display: flex;
@@ -29,10 +32,32 @@
   width: 100%;
   max-width: 1440px;
   padding: 0 40px;
+  /* ล็อกไว้เอง กันกฎ reset ของแต่ละหน้ามาเปลี่ยนความกว้างรวมของ Tabbar (content-box = 1440 + padding) */
+  box-sizing: content-box;
   display: flex;
   justify-content: space-between;
   align-items: center;
   height: 100%;
+}
+
+.ai-logo-link {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+/* โลโก้ตรามหาวิทยาลัยมหิดล (ซ้ายสุด ก่อนโลโก้ BDE) - เป็นตราวงกลม จึงสูงกว่าโลโก้ BDE ที่เป็นแถบยาว
+   และมีเส้นคั่นบาง ๆ กั้นระหว่างสองโลโก้
+   ต้องระบุ box-sizing เองและใช้ selector ที่ specificity สูงกว่า เพราะบางหน้า (Home, Dashboard)
+   มี reset แบบ ".page-wrapper * { box-sizing: border-box }" ครอบ Tabbar อยู่ ทำให้ padding/เส้นคั่นถูกนับรวม
+   ใน width แล้วตราหดเหลือเล็กกว่าหน้าอื่น */
+.ai-tabbar-wrapper .ai-tabbar-logo-mu {
+  height: 62px;
+  width: 62px;
+  box-sizing: content-box;
+  object-fit: contain;
+  padding-right: 14px;
+  border-right: 1px solid #e5e7eb;
 }
 
 .ai-tabbar-logo-img {
@@ -389,5 +414,19 @@
     height: 100vh;
     background: rgba(0, 0, 0, 0.4);
     z-index: 1500;
+  }
+}
+
+@media (max-width: 480px) {
+  .ai-logo-link {
+    gap: 10px;
+  }
+  .ai-tabbar-wrapper .ai-tabbar-logo-mu {
+    height: 46px;
+    width: 46px;
+    padding-right: 10px;
+  }
+  .ai-tabbar-logo-img {
+    height: 20px;
   }
 }

@@ -2,6 +2,13 @@
 .hm-wrapper,
 .hm-wrapper * {
   font-family: "IBM Plex Sans Thai", sans-serif !important;
+}
+
+/* box-sizing: border-box เฉพาะเนื้อหาของหน้า ไม่รวม Tabbar - ถ้าครอบ Tabbar ด้วย container ของ Tabbar
+   (width 100% + max-width 1440px + padding) จะแคบกว่าหน้าอื่นบนจอกว้าง ทำให้ Tabbar ไม่เท่ากันทุกหน้า */
+.hm-wrapper,
+.hm-wrapper > :not(.ai-tabbar-wrapper),
+.hm-wrapper > :not(.ai-tabbar-wrapper) * {
   box-sizing: border-box;
 }
 
