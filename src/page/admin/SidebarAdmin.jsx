@@ -18,6 +18,7 @@ import {
   FaChevronRight, // ไอคอนลูกศรชี้ขวา
   FaAtlas,
   FaCertificate,
+  FaUserGraduate,
   FaPalette,
   FaProjectDiagram,
 } from "react-icons/fa";
@@ -326,6 +327,16 @@ const SidebarAdmin = () => {
               <FaPalette className="admin-menu-icon" />
             </span>
             <span className="admin-menu-text">ตั้งค่าแม่แบบใบประกาศ</span>
+          </Link>
+
+          <Link
+            to="/admin-alumni"
+            className={`admin-sidebar-item ${isActive("/admin-alumni")}`}
+          >
+            <span className="admin-icon-badge">
+              <FaUserGraduate className="admin-menu-icon" />
+            </span>
+            <span className="admin-menu-text">จัดการทำเนียบรุ่น</span>
           </Link>
         </div>
 

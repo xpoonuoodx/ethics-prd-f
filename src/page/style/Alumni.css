@@ -1,0 +1,122 @@
+/* หน้าทำเนียบรุ่น (Public) - ใช้โครง hero/card ร่วมกับ About.css */
+.alu-main {
+  max-width: 1200px;
+}
+
+.alu-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  text-align: center;
+  color: #64748b;
+}
+
+/* แท็บเลือกรุ่น */
+.alu-batch-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+.alu-batch-tab {
+  padding: 10px 20px;
+  border-radius: 999px;
+  border: 1px solid #cbd5e1;
+  background: #ffffff;
+  color: #475569;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.alu-batch-tab:hover {
+  border-color: #0f172a;
+  color: #0f172a;
+}
+.alu-batch-tab.active {
+  background: #0f172a;
+  border-color: #0f172a;
+  color: #ffffff;
+}
+
+.alu-card:hover {
+  transform: none;
+}
+.alu-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 14px 0;
+}
+.alu-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 24px;
+  color: #475569;
+  font-size: 0.95rem;
+  margin-bottom: 8px;
+}
+.alu-meta span {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.alu-desc {
+  color: #64748b;
+  margin: 8px 0 0 0;
+}
+
+/* รายชื่อ: ไหลเป็นคอลัมน์เรียงลงมาก่อนค่อยขึ้นคอลัมน์ใหม่ เหมือนประกาศรายชื่อ */
+.alu-list {
+  list-style: none;
+  margin: 28px 0 0 0;
+  padding: 24px 0 0 0;
+  border-top: 1px solid #e2e8f0;
+  column-count: 4;
+  column-gap: 32px;
+}
+.alu-list li {
+  display: flex;
+  gap: 8px;
+  padding: 6px 0;
+  break-inside: avoid;
+  color: #0f172a;
+  font-size: 0.95rem;
+}
+.alu-no {
+  min-width: 2.2em;
+  text-align: right;
+  color: #64748b;
+}
+.alu-empty,
+.alu-error {
+  margin: 28px 0 0 0;
+  padding-top: 24px;
+  border-top: 1px solid #e2e8f0;
+  color: #64748b;
+  text-align: center;
+}
+.alu-error {
+  color: #dc2626;
+}
+
+@media (max-width: 1024px) {
+  .alu-list {
+    column-count: 3;
+  }
+}
+@media (max-width: 768px) {
+  .alu-list {
+    column-count: 2;
+    column-gap: 20px;
+  }
+  .alu-title {
+    font-size: 1.25rem;
+  }
+}
+@media (max-width: 480px) {
+  .alu-list {
+    column-count: 1;
+  }
+}

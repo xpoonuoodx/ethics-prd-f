@@ -1,0 +1,140 @@
+.tdp-wrap,
+.tdp-popover {
+  font-family: "Prompt", sans-serif;
+}
+.tdp-wrap {
+  position: relative;
+}
+
+/* ช่องกดเปิดปฏิทิน - หน้าตาเหมือน input ในฟอร์มแอดมิน */
+.tdp-trigger {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 11px 14px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #0f172a;
+  font-family: inherit;
+  font-size: 14px;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.tdp-trigger.placeholder {
+  color: #94a3b8;
+}
+.tdp-trigger:hover,
+.tdp-trigger:focus-visible,
+.tdp-trigger[aria-expanded="true"] {
+  border-color: #0f172a;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.05);
+}
+.tdp-trigger-icon {
+  flex-shrink: 0;
+  color: #64748b;
+}
+
+/* ปฏิทิน (fixed เพื่อไม่ถูกตัดโดย modal ที่เลื่อนได้) */
+.tdp-popover {
+  position: fixed;
+  z-index: 2100;
+  box-sizing: border-box;
+  padding: 14px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.18);
+}
+.tdp-popover * {
+  box-sizing: border-box;
+  font-family: inherit;
+}
+.tdp-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+.tdp-month {
+  font-size: 15px;
+  font-weight: 700;
+  color: #0f172a;
+}
+.tdp-nav {
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 8px;
+  background: #f1f5f9;
+  color: #475569;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+.tdp-nav:hover {
+  background: #e2e8f0;
+  color: #0f172a;
+}
+
+.tdp-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+}
+.tdp-weekday {
+  padding: 6px 0;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 600;
+  color: #94a3b8;
+}
+.tdp-day {
+  height: 34px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: #0f172a;
+  font-size: 13px;
+  cursor: pointer;
+}
+.tdp-day:hover:not(:disabled) {
+  background: #e2e8f0;
+}
+.tdp-day.today {
+  box-shadow: inset 0 0 0 1px #94a3b8;
+}
+.tdp-day.selected {
+  background: #0f172a;
+  color: #ffffff;
+  font-weight: 600;
+}
+.tdp-day:disabled {
+  color: #cbd5e1;
+  cursor: not-allowed;
+}
+
+.tdp-footer {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid #f1f5f9;
+}
+.tdp-link {
+  border: none;
+  background: none;
+  color: #2563eb;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.tdp-link:disabled {
+  color: #cbd5e1;
+  cursor: not-allowed;
+}
