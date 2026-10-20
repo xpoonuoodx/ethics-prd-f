@@ -77,6 +77,25 @@ const AdminCertificate = () => {
       (c.orgName || "").toLowerCase().includes(search.toLowerCase()),
   );
 
+  // สถิติคำนวณจากข้อมูลทั้งหมด (ไม่ขึ้นกับคำค้นหา)
+  const COURSE_GROUPS = [
+    { group: 1, label: "กลุ่มที่ 1 (Regulator/Policy)" },
+    { group: 2, label: "กลุ่มที่ 2 (Developer/Researcher)" },
+    { group: 3, label: "กลุ่มที่ 3 (User)" },
+  ];
+  const personKey = (c) => c.userId ?? c.userEmail;
+  const totalCerts = certificates.length;
+  const totalPeople = new Set(certificates.map(personKey)).size;
+  const statsByGroup = COURSE_GROUPS.map(({ group, label }) => {
+    const rows = certificates.filter((c) => Number(c.courseGroup) === group);
+    return {
+      group,
+      label,
+      certs: rows.length,
+      people: new Set(rows.map(personKey)).size,
+    };
+  });
+
   const formatDate = (dateStr) => {
     if (!dateStr) return "-";
     const d = new Date(dateStr);
@@ -120,6 +139,39 @@ const AdminCertificate = () => {
               </div>
             </div>
           </div>
+
+          {!loading && (
+            <div className="act-stats">
+              <div className="act-stat-card">
+                <div className="act-stat-label">จำนวนใบประกาศทั้งหมด</div>
+                <div className="act-stat-value">
+                  {totalCerts.toLocaleString("th-TH")} <span>ใบ</span>
+                </div>
+                <div className="act-stat-breakdown">
+                  {statsByGroup.map((s) => (
+                    <div key={s.group} className="act-stat-row">
+                      <span>{s.label}</span>
+                      <strong>{s.certs.toLocaleString("th-TH")} ใบ</strong>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div className="act-stat-card">
+                <div className="act-stat-label">จำนวนผู้ได้รับเกียรติบัตร</div>
+                <div className="act-stat-value">
+                  {totalPeople.toLocaleString("th-TH")} <span>คน</span>
+                </div>
+                <div className="act-stat-breakdown">
+                  {statsByGroup.map((s) => (
+                    <div key={s.group} className="act-stat-row">
+                      <span>{s.label}</span>
+                      <strong>{s.people.toLocaleString("th-TH")} คน</strong>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
 
           <div className="act-toolbar">
             <div className="act-search-box">
