@@ -338,7 +338,25 @@ function Dashboard() {
                   {(summary?.totalUsers || 0).toLocaleString()}
                   <small> คน</small>
                 </h3>
-                <DeltaTag pct={summary?.totalUsersDeltaPct || 0} />
+                {/* เทียบ % ความคืบหน้ากับเป้าหมายที่ตั้งไว้ (userGoal) แทนการเทียบเดือนก่อน
+                    กันปัญหาฐานเล็กแล้วเปอร์เซ็นต์พุ่งเวอร์แบบที่เจอตอนใช้ DeltaTag เดิม - โชว์เป็น
+                    เศษส่วน + แถบความคืบหน้าแทนตัวเลข % เฉยๆ ให้เห็นภาพว่าใกล้เป้าหมายแค่ไหน
+                    (ดูมีความลุ้นกว่าตัวเลขเปอร์เซ็นต์โดดๆ) */}
+                <div className="pub-db-goal-progress">
+                  <div className="pub-db-goal-bar-track">
+                    <div
+                      className="pub-db-goal-bar-fill"
+                      style={{
+                        width: `${Math.min(summary?.totalUsersGoalPct || 0, 100)}%`,
+                      }}
+                    />
+                  </div>
+                  <span className="pub-db-goal-text">
+                    {(summary?.totalUsers || 0).toLocaleString()} /{" "}
+                    {(summary?.userGoal || 0).toLocaleString()} คน
+                    <strong> ({summary?.totalUsersGoalPct || 0}%)</strong>
+                  </span>
+                </div>
               </div>
             </div>
           </div>
