@@ -273,7 +273,8 @@
   flex-grow: 1;
 }
 .ud-hero-title {
-  font-size: 26px;
+  font-size: 20px;
+  line-height: 1.4;
   font-weight: 700;
   color: #111827;
   margin: 0 0 12px 0;
@@ -283,7 +284,13 @@
   font-size: 15px;
   color: #6b7280;
   line-height: 1.6;
-  margin: 0 0 25px 0;
+  margin: 0 0 12px 0;
+}
+.ud-hero-desc strong {
+  color: #374151;
+}
+.ud-hero-desc:last-of-type {
+  margin-bottom: 25px;
 }
 .ud-hero-meta {
   display: flex;

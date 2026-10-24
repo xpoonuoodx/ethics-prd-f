@@ -102,10 +102,13 @@ const CollectionsDoc = () => {
   }, []);
 
   // ฟังก์ชันกรองเอกสารตามคำค้นหา
-  const filteredDocs = allDocuments.filter(doc => 
-    doc.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
-    doc.desc.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  // ซ่อนเอกสาร Thailand AI Ethics Guideline (id 1) ออกจากรายการ
+  const filteredDocs = allDocuments
+    .filter(doc => doc.id !== 1)
+    .filter(doc => 
+      doc.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
+      doc.desc.toLowerCase().includes(searchTerm.toLowerCase())
+    );
 
   return (
     <div className="cd-wrapper">

@@ -455,3 +455,20 @@
     justify-content: center;
   }
 }
+
+.admin-user-detail-change-role-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: 12px;
+  padding: 6px 14px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  background: #fff;
+  color: #334155;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+.admin-user-detail-change-role-btn:hover {
+  background: #f1f5f9;
+}

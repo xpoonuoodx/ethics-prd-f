@@ -77,7 +77,7 @@ const CertificateTemplate = ({ cert, userName }) => {
       <div className="cert-tpl-overlay-name">{userName}</div>
 
       <div className="cert-tpl-pass-line">
-        ได้ผ่านการอบรม ด้วยระบบการเรียนออนไลน์ในบทเรียน
+        ได้ผ่านการอบรมหลักสูตร
       </div>
       <div className="cert-tpl-overlay-course">{cert.course_name}</div>
 

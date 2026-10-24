@@ -178,6 +178,32 @@ const UserDashboard = () => {
     },
     3: roleConfig.users,
   };
+
+  // เนื้อหาหลักสูตรที่แสดงในส่วน "เส้นทางการเรียนรู้" แยกตามกลุ่มหลักสูตร (key = target_group)
+  const COURSE_INFO = {
+    1: {
+      title:
+        "หลักสูตรจริยธรรมปัญญาประดิษฐ์ สำหรับผู้บริหาร ผู้กำหนดนโยบายและผู้กำกับติดตาม (AI Ethics for Executives, Policymakers and Regulators)",
+      target: "ผู้กำหนดนโยบายและหน่วยงานกำกับดูแล (Regulator/Policy)",
+      objective:
+        "มุ่งพัฒนาศักยภาพของผู้บริหาร ผู้กำหนดนโยบาย และหน่วยงานกำกับดูแล ให้มีความเข้าใจในการกำกับดูแล การพัฒนานโยบาย การประเมินความพร้อมองค์กร และการบริหารความเสี่ยง ตลอดจนการติดตามและปรับปรุงการดำเนินงาน/โครงการ ด้าน AI ของหน่วยงาน",
+    },
+    2: {
+      title:
+        "หลักสูตรจริยธรรมปัญญาประดิษฐ์สำหรับผู้วิจัย ผู้ออกแบบ ผู้พัฒนาระบบ และผู้ให้บริการ (Responsible AI Development and Service)",
+      target:
+        "ผู้วิจัย ผู้ออกแบบ ผู้พัฒนาระบบและผู้ให้บริการ (Researcher/Developer/Service Provider)",
+      objective:
+        "มุ่งเน้นผู้พัฒนาเข้าใจหลักการการพัฒนา AI อย่างมีความรับผิดชอบตลอดวงจรชีวิต ตั้งแต่การออกแบบข้อมูล การพัฒนาโมเดล การทดสอบ การประเมินความเสี่ยง รวมถึงอธิบายหลักการประยุกต์การอธิบายผลลัพธ์ (Explainability) การกำกับดูแลโดยมนุษย์ (Human Oversight) และการติดตามผลหลังนำระบบไปใช้งานได้",
+    },
+    3: {
+      title:
+        "หลักสูตรจริยธรรมปัญญาประดิษฐ์สำหรับผู้ใช้งาน (Responsible AI Usage)",
+      target: "ผู้ใช้ทั่วไป และผู้มีผลกระทบ (User)",
+      objective:
+        "มุ่งเน้นการสร้างความรู้เท่าทัน AI ส่งเสริมการใช้งานอย่างปลอดภัย มีจริยธรรม และรับผิดชอบ โดยครอบคลุมการประเมินความน่าเชื่อถือของผลลัพธ์ การคุ้มครองข้อมูลส่วนบุคคล การป้องกันการเผยแพร่ข้อมูลเท็จ การใช้ AI ในการทำงานและการเรียนรู้อย่างเหมาะสม ตลอดจนการตระหนักถึงบทบาทของผู้ใช้งานในการลดผลกระทบจากปัญญาประดิษฐ์",
+    },
+  };
   const otherGroups = [1, 2, 3].filter((g) => g !== ownTargetGroup);
 
   // แมปข้อมูลสำหรับ Recharts (ป้องกัน NaN และดึงชื่อเต็มไว้โชว์ Tooltip)
@@ -367,8 +393,15 @@ const UserDashboard = () => {
                   </span>
                 </div>
                 <div className="ud-hero-content">
-                  <h3 className="ud-hero-title">{card.title}</h3>
-                  <p className="ud-hero-desc">{card.desc}</p>
+                  <h3 className="ud-hero-title">{COURSE_INFO[group].title}</h3>
+                  <p className="ud-hero-desc">
+                    <strong>กลุ่มเป้าหมาย : </strong>
+                    {COURSE_INFO[group].target}
+                  </p>
+                  <p className="ud-hero-desc">
+                    <strong>วัตถุประสงค์หลักสูตร : </strong>
+                    {COURSE_INFO[group].objective}
+                  </p>
 
                   {showProgress && (
                     <>

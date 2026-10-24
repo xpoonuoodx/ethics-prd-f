@@ -1,70 +1,29 @@
 import React, { useEffect, useState } from "react";
 import Tabbar from "../component/Tabbar";
 import Footer from "../component/Footer";
-import { Users, CalendarDays, Award } from "lucide-react";
-import api from "../api/Api";
-import { formatThaiDateRange } from "../utils/thaiDate";
+import { Award } from "lucide-react";
+import { alumniBatches } from "../data/alumniList";
+import { maskName } from "../utils/maskName";
 import "./style/About.css";
 import "./style/Alumni.css";
 
-// หน้า "ทำเนียบรุ่น" (Public) - แสดงรายชื่อผู้ได้รับใบประกาศฯ แยกตามรุ่น (แอดมินกำหนดชื่อรุ่น/ช่วงวันที่
-// ที่ /admin-alumni) ชื่อ-นามสกุลถูกปิดบังบางส่วนจาก backend แล้ว (เช่น "สม*** ใจ***")
+// หน้า "ทำเนียบรุ่น" (Public) - แสดงรายชื่อผู้ผ่านการอบรมแยกตามรุ่น จากรายชื่อคงที่ใน src/data/alumniList.js
+// ชื่อ-นามสกุลถูกปิดบังบางส่วน (เช่น "สม*** ใจ***") ก่อนแสดง
+// (ปิดการดึงข้อมูลจากหน้าจัดการทำเนียบรุ่นของแอดมินชั่วคราว)
 function Alumni() {
-  const [batches, setBatches] = useState([]);
-  const [selectedId, setSelectedId] = useState(null);
-  const [alumniByBatch, setAlumniByBatch] = useState({});
-  const [loadingBatches, setLoadingBatches] = useState(true);
-  const [loadingAlumni, setLoadingAlumni] = useState(false);
-  const [error, setError] = useState("");
+  const batches = alumniBatches;
+  const [selectedId, setSelectedId] = useState(batches[0]?.id ?? null);
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    const fetchBatches = async () => {
-      try {
-        const res = await api.get("/public/alumni");
-        const data = res.data?.data || [];
-        setBatches(data);
-        // เปิดรุ่นล่าสุด (backend เรียงใหม่สุดก่อน) เป็นค่าเริ่มต้น
-        if (data.length > 0) setSelectedId(data[0].id);
-      } catch (err) {
-        console.error("Fetch Alumni Batches Error:", err);
-        setError("ไม่สามารถโหลดข้อมูลทำเนียบรุ่นได้ กรุณาลองใหม่อีกครั้ง");
-      } finally {
-        setLoadingBatches(false);
-      }
-    };
-    fetchBatches();
   }, []);
 
-  useEffect(() => {
-    if (selectedId === null || alumniByBatch[selectedId]) return;
-    let cancelled = false;
-    const fetchAlumni = async () => {
-      try {
-        setLoadingAlumni(true);
-        setError("");
-        const res = await api.get(`/public/alumni/${selectedId}`);
-        if (!cancelled) {
-          setAlumniByBatch((prev) => ({
-            ...prev,
-            [selectedId]: res.data?.data?.alumni || [],
-          }));
-        }
-      } catch (err) {
-        console.error("Fetch Batch Alumni Error:", err);
-        if (!cancelled) setError("ไม่สามารถโหลดรายชื่อผู้จบของรุ่นนี้ได้");
-      } finally {
-        if (!cancelled) setLoadingAlumni(false);
-      }
-    };
-    fetchAlumni();
-    return () => {
-      cancelled = true;
-    };
-  }, [selectedId, alumniByBatch]);
-
   const selectedBatch = batches.find((b) => b.id === selectedId);
-  const alumni = alumniByBatch[selectedId] || [];
+  const alumni = (selectedBatch?.alumni || []).map((p, i) => ({
+    firstName: maskName(p.firstName),
+    lastName: maskName(p.lastName),
+    no: i + 1,
+  }));
 
   return (
     <div className="about-wrapper">
@@ -87,13 +46,8 @@ function Alumni() {
       </section>
 
       <main className="about-main alu-main">
-        {loadingBatches ? (
-          <div className="about-card alu-state">กำลังโหลดข้อมูล...</div>
-        ) : error && batches.length === 0 ? (
-          <div className="about-card alu-state">{error}</div>
-        ) : batches.length === 0 ? (
+        {batches.length === 0 ? (
           <div className="about-card alu-state">
-            <Users size={32} strokeWidth={1.5} />
             <p>ยังไม่มีข้อมูลทำเนียบรุ่น</p>
           </div>
         ) : (
@@ -117,26 +71,12 @@ function Alumni() {
                 <h2 className="alu-title">{selectedBatch.name}</h2>
                 <div className="alu-meta">
                   <span>
-                    <CalendarDays size={16} />
-                    {formatThaiDateRange(
-                      selectedBatch.startDate,
-                      selectedBatch.endDate,
-                    )}
-                  </span>
-                  <span>
                     <Award size={16} />
-                    ผู้ได้รับใบประกาศฯ {selectedBatch.alumniCount} คน
+                    ผู้ผ่านการอบรม {alumni.length} คน
                   </span>
                 </div>
-                {selectedBatch.description && (
-                  <p className="alu-desc">{selectedBatch.description}</p>
-                )}
 
-                {error ? (
-                  <p className="alu-error">{error}</p>
-                ) : loadingAlumni && !alumniByBatch[selectedId] ? (
-                  <p className="alu-empty">กำลังโหลดรายชื่อ...</p>
-                ) : alumni.length === 0 ? (
+                {alumni.length === 0 ? (
                   <p className="alu-empty">
                     ยังไม่มีผู้ได้รับใบประกาศฯ ในรุ่นนี้
                   </p>

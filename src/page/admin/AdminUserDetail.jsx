@@ -32,6 +32,10 @@ const AdminUserDetail = () => {
   const [editName, setEditName] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // States สำหรับเปลี่ยน role
+  const [isRoleModalOpen, setIsRoleModalOpen] = useState(false);
+  const [isChangingRole, setIsChangingRole] = useState(false);
+
   // Custom Alert Modal
   const [alertModal, setAlertModal] = useState({
     isOpen: false,
@@ -131,6 +135,36 @@ const AdminUserDetail = () => {
     }
   };
 
+  const handleChangeRole = async () => {
+    try {
+      setIsChangingRole(true);
+      const response = await api.put(`/admin/change-user-role/${id}`, {
+        role: "user",
+      });
+
+      if (response.data && response.data.success) {
+        setIsRoleModalOpen(false);
+        openAlert(
+          "success",
+          "สำเร็จ",
+          "เปลี่ยน role เป็นผู้ใช้งานทั่วไปเรียบร้อยแล้ว",
+        );
+        fetchUserDetail();
+      }
+    } catch (err) {
+      console.error("Change Role Error:", err);
+      setIsRoleModalOpen(false);
+      const blocked = err.response?.status === 409;
+      openAlert(
+        blocked ? "warning" : "error",
+        blocked ? "ยังเปลี่ยน role ไม่ได้" : "เกิดข้อผิดพลาด",
+        err.response?.data?.message || "ไม่สามารถเปลี่ยน role ได้",
+      );
+    } finally {
+      setIsChangingRole(false);
+    }
+  };
+
   return (
     <div className="admin-user-detail-layout">
       <SidebarAdmin />
@@ -190,6 +224,14 @@ const AdminUserDetail = () => {
                         {getRoleBadge(user.role).icon}{" "}
                         {getRoleBadge(user.role).label}
                       </span>
+                      {user.role?.toLowerCase() === "regulator" && (
+                        <button
+                          className="admin-user-detail-change-role-btn"
+                          onClick={() => setIsRoleModalOpen(true)}
+                        >
+                          <FaUser /> เปลี่ยนเป็นผู้ใช้งานทั่วไป
+                        </button>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -275,6 +317,49 @@ const AdminUserDetail = () => {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* Modal ยืนยันเปลี่ยน role */}
+      {isRoleModalOpen && (
+        <div className="admin-user-detail-modal-overlay">
+          <div className="admin-user-detail-modal-content">
+            <div className="admin-user-detail-modal-header">
+              <h2>เปลี่ยน role ผู้ใช้งาน</h2>
+              <button
+                className="admin-user-detail-modal-close"
+                onClick={() => setIsRoleModalOpen(false)}
+              >
+                <FaTimes />
+              </button>
+            </div>
+            <div className="admin-user-detail-modal-body">
+              <p>
+                ต้องการเปลี่ยน <b>{user?.name}</b> จาก “ผู้กำกับดูแล” เป็น
+                “ผู้ใช้งานทั่วไป” ใช่หรือไม่?
+              </p>
+              <p style={{ fontSize: "0.85rem", opacity: 0.75 }}>
+                ทำได้เมื่อผู้กำกับดูแลยังไม่ได้เพิ่มผู้ใช้ในหน่วยงานและยังไม่ได้สร้างโครงการ
+              </p>
+              <div className="admin-user-detail-modal-footer">
+                <button
+                  type="button"
+                  className="admin-user-detail-btn-cancel"
+                  onClick={() => setIsRoleModalOpen(false)}
+                >
+                  ยกเลิก
+                </button>
+                <button
+                  type="button"
+                  className="admin-user-detail-btn-submit"
+                  onClick={handleChangeRole}
+                  disabled={isChangingRole}
+                >
+                  {isChangingRole ? "กำลังบันทึก..." : "ยืนยัน"}
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       )}

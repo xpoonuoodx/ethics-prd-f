@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Tabbar from "../component/Tabbar";
 import Footer from "../component/Footer";
+import HomeFaq from "../component/HomeFaq";
 import {
   ChevronLeft,
   ChevronRight,
@@ -403,8 +404,8 @@ const Home = () => {
           </div>
 
 <div className="hm-document-grid">
-            {/* 👇 เติม .slice(0, 4) เข้าไปก่อน .map เพื่อจำกัดการแสดงผลแค่ 4 การ์ดแรก */}
-            {documentData.slice(0, 4).map((doc) => (
+            {/* ซ่อนเอกสาร Thailand AI Ethics Guideline (id 1) แล้วแสดงแค่ 4 การ์ดแรกที่เหลือ */}
+            {documentData.filter((doc) => doc.id !== 1).slice(0, 4).map((doc) => (
               <div key={doc.id} className="hm-document-card">
                 
                 {/* รูปหน้าปกเอกสาร */}
@@ -643,6 +644,9 @@ const Home = () => {
           </div>
         </div>
       </section>
+
+      {/* 6. คำถามที่พบบ่อย */}
+      <HomeFaq />
 
       <Footer />
     </div>
