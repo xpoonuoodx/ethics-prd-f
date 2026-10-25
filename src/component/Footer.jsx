@@ -1,12 +1,31 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Mail, Phone, MapPin } from "lucide-react";
+import { Mail, Phone, MapPin, Eye } from "lucide-react";
 import { FaGlobe, FaFacebookF } from "react-icons/fa"; // ลบ Twitter, LinkedIn ออก
 
 import "./style/Footer.css";
 import logoBDE from "../assets/logo-bde.png";
+import api from "../api/Api";
+import { VISIT_RECORDED_EVENT } from "../utils/visitTracker";
 
 function Footer() {
+  const [visitStats, setVisitStats] = useState(null);
+
+  // โหลดสถิติการเข้าใช้งาน และโหลดซ้ำเมื่อหน้าโฮมบันทึกการเข้าชมเสร็จ
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const res = await api.get("/public/visit-stats");
+        setVisitStats(res.data?.data || null);
+      } catch (err) {
+        console.warn("Fetch visit stats failed:", err);
+      }
+    };
+    fetchStats();
+    window.addEventListener(VISIT_RECORDED_EVENT, fetchStats);
+    return () => window.removeEventListener(VISIT_RECORDED_EVENT, fetchStats);
+  }, []);
+
   return (
     <footer className="ai-footer">
       <div className="ai-footer-container">
@@ -91,6 +110,18 @@ function Footer() {
           <p className="copyright-text">
             © {new Date().getFullYear()} Thailand AI Ethics Guideline. All rights reserved.
           </p>
+          {visitStats && (
+            <p className="footer-visit-stats">
+              <Eye size={14} />
+              <span>เข้าชมวันนี้ {visitStats.today.toLocaleString("th-TH")}</span>
+              <span className="sep">•</span>
+              <span>ทั้งหมด {visitStats.total.toLocaleString("th-TH")} ครั้ง</span>
+              <span className="sep">•</span>
+              <span>
+                ผู้เข้าชม {visitStats.uniqueVisitors.toLocaleString("th-TH")} คน
+              </span>
+            </p>
+          )}
           <div className="legal-links">
             <Link to="/privacy">Privacy Policy</Link>
             <span className="sep">•</span>

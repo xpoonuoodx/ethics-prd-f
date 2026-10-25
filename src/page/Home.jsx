@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Tabbar from "../component/Tabbar";
 import Footer from "../component/Footer";
 import HomeFaq from "../component/HomeFaq";
+import { trackHomeVisit } from "../utils/visitTracker";
 import {
   ChevronLeft,
   ChevronRight,
@@ -266,6 +267,11 @@ const Home = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [newsIndex, setNewsIndex] = useState(0);
   const navigate = useNavigate();
+
+  // นับการเข้าหน้าโฮม (1 ครั้งต่อ session)
+  useEffect(() => {
+    trackHomeVisit();
+  }, []);
 
   // Slider แบนเนอร์หลัก
   const nextSlide = () => {
