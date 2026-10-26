@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Mail, Phone, MapPin, Eye } from "lucide-react";
+import { Mail, Phone, MapPin, Eye, BarChart3 } from "lucide-react";
 import { FaGlobe, FaFacebookF } from "react-icons/fa"; // ลบ Twitter, LinkedIn ออก
 
 import "./style/Footer.css";
@@ -10,6 +10,7 @@ import { VISIT_RECORDED_EVENT } from "../utils/visitTracker";
 
 function Footer() {
   const [visitStats, setVisitStats] = useState(null);
+  const [gaStats, setGaStats] = useState(null);
 
   // โหลดสถิติการเข้าใช้งาน และโหลดซ้ำเมื่อหน้าโฮมบันทึกการเข้าชมเสร็จ
   useEffect(() => {
@@ -24,6 +25,20 @@ function Footer() {
     fetchStats();
     window.addEventListener(VISIT_RECORDED_EVENT, fetchStats);
     return () => window.removeEventListener(VISIT_RECORDED_EVENT, fetchStats);
+  }, []);
+
+  // สถิติจาก Google Analytics (GA4 Data API) - คนละแหล่งกับ visitStats ด้านบน (ที่นับเองในตาราง
+  // site_visits) แคชไว้ฝั่ง backend แล้วเลยไม่ต้อง refetch ถี่, โหลดครั้งเดียวตอน mount ก็พอ
+  useEffect(() => {
+    const fetchGaStats = async () => {
+      try {
+        const res = await api.get("/public/ga-visit-stats");
+        setGaStats(res.data?.data || null);
+      } catch (err) {
+        console.warn("Fetch GA visit stats failed:", err);
+      }
+    };
+    fetchGaStats();
   }, []);
 
   return (
@@ -113,15 +128,29 @@ function Footer() {
           {visitStats && (
             <p className="footer-visit-stats">
               <Eye size={14} />
-              <span>เข้าชมวันนี้ {visitStats.today.toLocaleString("th-TH")}</span>
-              <span className="sep">•</span>
-              <span>ทั้งหมด {visitStats.total.toLocaleString("th-TH")} ครั้ง</span>
-              <span className="sep">•</span>
+              {/* <span>เข้าชมวันนี้ {visitStats.today.toLocaleString("th-TH")}</span>
+              <span className="sep">•</span> */}
+              <span>เข้าชมทั้งหมด {visitStats.total.toLocaleString("th-TH")} ครั้ง</span>
+              {/* <span className="sep">•</span>
               <span>
                 ผู้เข้าชม {visitStats.uniqueVisitors.toLocaleString("th-TH")} คน
-              </span>
+              </span> */}
             </p>
           )}
+          {/* {gaStats && (
+            <p className="footer-visit-stats">
+              <BarChart3 size={14} />
+              <span>
+                กำลังใช้งานตอนนี้ {gaStats.today.toLocaleString("th-TH")} คน
+              </span>
+              <span className="sep">•</span>
+              <span>
+                ผู้เข้าชมทั้งหมด {gaStats.totalUsers.toLocaleString("th-TH")} คน
+              </span>
+              <span className="sep">•</span>
+              <span>(ข้อมูลจาก Google Analytics)</span>
+            </p>
+          )} */}
           <div className="legal-links">
             <Link to="/privacy">Privacy Policy</Link>
             <span className="sep">•</span>

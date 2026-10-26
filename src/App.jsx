@@ -5,6 +5,8 @@ import { ThemedAlertProvider } from "./component/ThemedAlert";
 // หน้าทั่วไป (Public Pages)
 import WelcomePopup from "./component/WelcomePopup"; // Popup ต้อนรับผู้ใช้
 import WelcomePopup2 from "./component/WelcomePopup2"; // Popup ต้อนรับผู้ใช้เวอร์ชัน 2
+import CookieConsentBanner from "./component/CookieConsentBanner"; // แบนเนอร์ขอความยินยอมใช้คุกกี้ (PDPA)
+import RouteTracker from "./component/RouteTracker"; // ยิง Google Analytics page_view ตอนเปลี่ยนหน้า
 import Home from "./page/Home";
 import Dashboard from "./page/Dashboard";
 import AboutBackground from "./page/AboutBackground";
@@ -88,6 +90,8 @@ function App() {
     <Router>
       {/* <WelcomePopup /> */}
       {/* <WelcomePopup2 />  */}
+      <RouteTracker />
+      <CookieConsentBanner />
       <Routes>
         {/* === Public Routes === */}
         <Route path="/" element={<Home />} />

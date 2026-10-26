@@ -1,0 +1,250 @@
+.cc-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+}
+.cc-overlay > * {
+  pointer-events: auto;
+}
+
+/* --- ปุ่มลอย เปิดตั้งค่าคุกกี้ใหม่ได้เสมอหลังเคยตัดสินใจไปแล้ว --- */
+.cc-reopen-btn {
+  position: fixed;
+  left: 18px;
+  bottom: 18px;
+  z-index: 9999;
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+  border: none;
+  background: #0f172a;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.3);
+  transition: background-color 0.15s ease;
+}
+.cc-reopen-btn:hover {
+  background: #1e293b;
+}
+
+/* --- แถบล่าง (ขั้นแรก) - ใช้สีกรมท่าเข้ม (#0f172a) ตามธีมหลักของเว็บ (ส่วน hero ของหน้า Home) --- */
+.cc-bar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 18px;
+  padding: 16px 28px;
+  background: #0f172a;
+  box-shadow: 0 -8px 28px rgba(15, 23, 42, 0.35);
+}
+.cc-bar-logo {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  object-fit: contain;
+  background: #ffffff;
+  padding: 3px;
+  flex-shrink: 0;
+}
+.cc-bar-text {
+  flex: 1 1 320px;
+  margin: 0;
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: #cbd5e1;
+}
+.cc-bar-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* --- ปุ่มใช้ร่วมกันทั้ง bar และ modal --- */
+.cc-btn {
+  border-radius: 8px;
+  padding: 9px 18px;
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition:
+    opacity 0.15s ease,
+    background-color 0.15s ease,
+    border-color 0.15s ease;
+}
+.cc-btn:hover {
+  opacity: 0.92;
+}
+/* เขียว #75ba40 เป็นสีหลักของปุ่ม action ทั่วทั้งเว็บ (เช่น ปุ่มสมัคร/Tabbar) */
+.cc-btn-primary {
+  background: #75ba40;
+  color: #ffffff;
+  border: 1px solid #75ba40;
+}
+.cc-btn-primary:hover {
+  background: #639d36;
+  border-color: #639d36;
+  opacity: 1;
+}
+.cc-bar .cc-btn-outline {
+  background: transparent;
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+}
+.cc-bar .cc-btn-outline:hover {
+  border-color: rgba(255, 255, 255, 0.6);
+}
+.cc-bar .cc-btn-text {
+  background: transparent;
+  color: #a7f3d0;
+  border: none;
+  text-decoration: underline;
+}
+.cc-modal-footer .cc-btn-outline {
+  background: #ffffff;
+  color: #334155;
+  border: 1px solid #cbd5e1;
+}
+.cc-modal-footer .cc-btn-text {
+  background: transparent;
+  color: #64748b;
+  border: none;
+  text-decoration: underline;
+}
+.cc-btn-full {
+  width: 100%;
+  text-align: center;
+}
+
+/* --- Modal ตั้งค่า --- */
+.cc-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+.cc-modal {
+  width: 100%;
+  max-width: 460px;
+  max-height: 88vh;
+  display: flex;
+  flex-direction: column;
+  background: #ffffff;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(15, 23, 42, 0.25);
+}
+.cc-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 20px;
+  background: #0f172a;
+}
+.cc-modal-header h3 {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 700;
+  color: #ffffff;
+}
+.cc-modal-close {
+  background: rgba(255, 255, 255, 0.12);
+  border: none;
+  border-radius: 999px;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  cursor: pointer;
+}
+.cc-modal-close:hover {
+  background: rgba(255, 255, 255, 0.22);
+}
+.cc-modal-body {
+  padding: 18px 20px;
+  overflow-y: auto;
+}
+.cc-modal-intro {
+  margin: 0 0 16px;
+  font-size: 13px;
+  line-height: 1.7;
+  color: #475569;
+}
+.cc-category {
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 14px 16px;
+  margin-bottom: 12px;
+}
+.cc-category-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.cc-category-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #0f172a;
+}
+.cc-category-desc {
+  margin: 10px 0 0;
+  font-size: 12.5px;
+  line-height: 1.7;
+  color: #64748b;
+}
+.cc-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 22px;
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+  color: #ffffff;
+}
+.cc-toggle-locked {
+  background: #94a3b8;
+  cursor: not-allowed;
+}
+.cc-toggle-on {
+  background: #75ba40;
+}
+.cc-toggle-off {
+  background: #cbd5e1;
+  color: #64748b;
+}
+.cc-modal-footer {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px 20px 20px;
+  border-top: 1px solid #e2e8f0;
+}
+
+@media (max-width: 560px) {
+  .cc-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .cc-bar-actions {
+    justify-content: flex-end;
+  }
+}
