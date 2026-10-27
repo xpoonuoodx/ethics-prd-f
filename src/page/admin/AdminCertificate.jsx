@@ -286,6 +286,9 @@ const AdminCertificate = () => {
                   cert={{
                     certId: previewCert.certId,
                     certNumber: previewCert.certNumber,
+                    courseGroup: previewCert.courseGroup,
+                    trainingStart: previewCert.trainingStart,
+                    trainingEnd: previewCert.trainingEnd,
                     course_name:
                       previewCert.courseName || "AI Ethics Management",
                     background_url: previewCert.backgroundUrl,

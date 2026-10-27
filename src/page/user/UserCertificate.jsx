@@ -124,12 +124,18 @@ const UserCertificate = () => {
                         <h4 className="ucert-course-title">
                           {cert.course_name}
                         </h4>
-                        <p className="ucert-meta">
-                          สอบผ่านครบ:{" "}
-                          <strong>
-                            {cert.score}/{cert.totalQuestions} บทเรียน
-                          </strong>
-                        </p>
+                        {cert.courseGroup === 4 ? (
+                          <p className="ucert-meta">
+                            ส่งงานครบ: <strong>2/2 วัน</strong>
+                          </p>
+                        ) : (
+                          <p className="ucert-meta">
+                            สอบผ่านครบ:{" "}
+                            <strong>
+                              {cert.score}/{cert.totalQuestions} บทเรียน
+                            </strong>
+                          </p>
+                        )}
                         <p className="ucert-meta">
                           วันที่ออกเอกสาร: {cert.passDate}
                         </p>

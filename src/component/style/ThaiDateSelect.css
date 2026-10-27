@@ -1,0 +1,72 @@
+.tds-wrap {
+  position: relative;
+  display: flex;
+  gap: 4px;
+  height: 180px;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  background: #fff;
+  overflow: hidden;
+}
+
+/* แถบไฮไลต์แถวที่เลือก (กลางวงล้อ) */
+.tds-band {
+  position: absolute;
+  left: 8px;
+  right: 8px;
+  top: 72px;
+  height: 36px;
+  border-radius: 8px;
+  background: #f1f5f9;
+  pointer-events: none;
+}
+
+.tds-col {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  overflow-y: scroll;
+  scroll-snap-type: y mandatory;
+  scrollbar-width: none;
+  padding: 72px 0;
+  box-sizing: border-box;
+  /* จางหายทั้งบนและล่าง ให้ดูเป็นวงล้อ */
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent 0,
+    #000 35%,
+    #000 65%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 0,
+    #000 35%,
+    #000 65%,
+    transparent 100%
+  );
+}
+.tds-col::-webkit-scrollbar {
+  display: none;
+}
+.tds-col.tds-month {
+  flex: 1.6;
+}
+
+.tds-item {
+  height: 36px;
+  line-height: 36px;
+  text-align: center;
+  scroll-snap-align: center;
+  color: #94a3b8;
+  font-size: 16px;
+  cursor: pointer;
+  user-select: none;
+  white-space: nowrap;
+}
+.tds-item.selected {
+  color: #0f172a;
+  font-weight: 700;
+  font-size: 18px;
+}

@@ -10,6 +10,7 @@ import {
   FaBars,
   FaTimes,
   FaCertificate,
+  FaChalkboardTeacher,
 } from "react-icons/fa";
 import { getStoredUser } from "../../api/Api";
 import logoBde from "../../assets/logo-bde.png";
@@ -145,6 +146,19 @@ const SidebarUser = () => {
               <FaTools className="su-icon" />
             </span>
             <span className={`su-text ${!isOpen && "hidden"}`}>เครื่องมือ</span>
+          </a>
+
+          <a
+            href="/user-onsite"
+            className={`su-menu-item ${
+              currentPath === "/user-onsite" ? "active" : ""
+            }`}
+            title="ภาคปฏิบัติ workshop"
+          >
+            <span className="su-icon-badge">
+              <FaChalkboardTeacher className="su-icon" />
+            </span>
+            <span className={`su-text ${!isOpen && "hidden"}`}>ภาคปฏิบัติ workshop</span>
           </a>
 
           <a

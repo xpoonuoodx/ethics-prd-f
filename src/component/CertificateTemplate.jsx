@@ -7,6 +7,7 @@ import certFrameBg from "../assets/certificate/cer-frame.jpg";
 // โลโก้ชุดใหม่ (ตรากระทรวง DES + BDE) เป็นภาพเดียวต่อกันแนวนอน (Picture2.svg) render เป็น PNG
 // ไว้ล่วงหน้า เพราะ html2canvas แสดงผล SVG ที่มีรูปฝังไม่ได้ตอน export PDF
 import logoHeader from "../assets/certificate/logo-new-raster.png";
+import { formatThaiDate } from "../utils/thaiDate";
 import "./style/CertificateTemplate.css";
 
 // รูปพื้นหลัง/โลโก้/ลายเซ็นที่ admin วาง URL จากภายนอกไว้ (เช่น cdn.phototourl.com) มักไม่ได้ส่ง
@@ -21,7 +22,16 @@ const proxiedImageUrl = (url) => {
 
 // แม่แบบใบประกาศนียบัตร ใช้ร่วมกันระหว่างหน้า User และ Regulator (เดิมโค้ดซ้ำกันทั้งไฟล์)
 // รับค่าจาก certificate_settings ของ course_group นั้น ๆ ผ่าน prop `cert`
+// กลุ่ม 4 (Workshop) ต่างจากกลุ่มอื่น: ใช้คำว่า "ผ่านการอบรม" มีบรรทัดช่วงวันอบรมใต้ชื่อหลักสูตร
+// (trainingStart/trainingEnd = วันอบรมแรกสุด/วันสุดท้ายที่ผู้ใช้ส่งไว้) และวันที่ "ให้ ณ วันที่" คือวันอบรมวันสุดท้าย
+const WORKSHOP_GROUP = 4;
+
 const CertificateTemplate = ({ cert, userName }) => {
+  const isWorkshop = Number(cert.courseGroup) === WORKSHOP_GROUP;
+  const passDate =
+    isWorkshop && cert.trainingEnd
+      ? formatThaiDate(cert.trainingEnd)
+      : cert.passDate;
   const [qrDataUrl, setQrDataUrl] = useState(null);
   // เลขที่ใบเซอร์รันตาม user_type เช่น dev-2600001 (ดู back-ai-ethic/utils/certNumber.js)
   // ใบเก่าก่อนมีระบบนี้จะไม่มี certNumber เลย fallback กลับไปใช้รูปแบบเดิมจาก id แทน
@@ -60,7 +70,7 @@ const CertificateTemplate = ({ cert, userName }) => {
 
   return (
     <div
-      className="cert-tpl"
+      className={`cert-tpl ${isWorkshop ? "cert-tpl--workshop" : ""}`}
       style={{ backgroundImage: `url(${backgroundImg})` }}
     >
       {/* โลโก้ 2 อัน - ของจริงที่ใช้อยู่แล้วทั้งเว็บ (ไม่ใช่ pixel ที่ bake ในรูป) เลยคมชัดเสมอ
@@ -77,9 +87,17 @@ const CertificateTemplate = ({ cert, userName }) => {
       <div className="cert-tpl-overlay-name">{userName}</div>
 
       <div className="cert-tpl-pass-line">
-        ได้ผ่านการอบรมหลักสูตร
+        {isWorkshop ? "ผ่านการอบรม" : "ได้ผ่านการอบรมหลักสูตร"}
       </div>
       <div className="cert-tpl-overlay-course">{cert.course_name}</div>
+      {isWorkshop && (
+        <div className="cert-tpl-period-line">
+          {cert.trainingStart && cert.trainingEnd
+            ? `ระหว่างวันที่ ${formatThaiDate(cert.trainingStart)} ถึง ${formatThaiDate(cert.trainingEnd)}`
+            : "ระหว่างวันที่ - ถึง -"}{" "}
+          (ระยะเวลาการฝึกอบรม จำนวน 2 วัน รวม 16 ชั่วโมง)
+        </div>
+      )}
 
       <div className="cert-tpl-issuer-line">
         โดย{cert.issuer_name || "สำนักงานคณะกรรมการดิจิทัลเพื่อเศรษฐกิจและสังคมแห่งชาติ"}
@@ -87,7 +105,7 @@ const CertificateTemplate = ({ cert, userName }) => {
 
       <div className="cert-tpl-date-line">
         <span>ให้ ณ วันที่</span>
-        <span className="cert-tpl-overlay-date">{cert.passDate}</span>
+        <span className="cert-tpl-overlay-date">{passDate}</span>
       </div>
 
       {/* ลายเซ็น (รูปขีดเขียนจริง + เส้นใต้) เป็นส่วนหนึ่งของ cer-frame.jpg อยู่แล้ว ไม่ต้องวาดซ้ำ

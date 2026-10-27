@@ -196,3 +196,25 @@
   font-weight: 600;
   color: #9ca3af;
 }
+
+/* กลุ่ม 4 (Workshop): มีบรรทัดช่วงวันอบรม + จำนวนชั่วโมง (บรรทัดเดียว ขนาดเท่ากัน) ใต้ชื่อหลักสูตร
+   เลยขยับชื่อหลักสูตรขึ้นเล็กน้อย แล้วดันบรรทัดผู้ออกและวันที่ลงมาให้เว้นที่ */
+.cert-tpl-period-line {
+  position: absolute;
+  top: 65.4%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  white-space: nowrap;
+  font-size: 16px;
+  color: #000000;
+}
+.cert-tpl--workshop .cert-tpl-overlay-course {
+  top: 59.5%;
+}
+.cert-tpl--workshop .cert-tpl-issuer-line {
+  top: 69.6%;
+}
+.cert-tpl--workshop .cert-tpl-date-line {
+  top: 75.6%;
+}

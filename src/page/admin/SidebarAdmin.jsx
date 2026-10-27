@@ -30,6 +30,8 @@ const SidebarAdmin = () => {
 
   // State สำหรับจัดการ Dropdown เมนูการประเมิน
   const [isAssessmentOpen, setIsAssessmentOpen] = useState(false);
+  // State สำหรับ Dropdown เมนูตั้งค่าแม่แบบใบประกาศ
+  const [isTemplateOpen, setIsTemplateOpen] = useState(false);
 
   const location = useLocation();
   const user = getStoredUser() || {
@@ -68,6 +70,9 @@ const SidebarAdmin = () => {
     ) {
       setIsAssessmentOpen(true);
     }
+    if (location.pathname.includes("/admin-manage-certificate")) {
+      setIsTemplateOpen(true);
+    }
   }, [location.pathname]);
 
   const toggleSidebar = () => {
@@ -83,6 +88,10 @@ const SidebarAdmin = () => {
     localStorage.removeItem("user");
     window.location.href = "/login";
   };
+
+  const isTemplateActive = location.pathname.includes(
+    "/admin-manage-certificate",
+  );
 
   const isActive = (path) => (location.pathname === path ? "active" : "");
 
@@ -318,15 +327,50 @@ const SidebarAdmin = () => {
             <span className="admin-menu-text">ผู้ได้รับใบประกาศฯ</span>
           </Link>
 
-          <Link
-            to="/admin-manage-certificate"
-            className={`admin-sidebar-item ${isActive("/admin-manage-certificate")}`}
-          >
-            <span className="admin-icon-badge">
-              <FaPalette className="admin-menu-icon" />
-            </span>
-            <span className="admin-menu-text">ตั้งค่าแม่แบบใบประกาศ</span>
-          </Link>
+          {/* ตั้งค่าแม่แบบใบประกาศ (Dropdown): หลักสูตรหลัก กลุ่ม 1-3 / Workshop กลุ่ม 4 */}
+          <div className="admin-sidebar-dropdown">
+            <div
+              className={`admin-sidebar-item ${isTemplateActive ? "active" : ""}`}
+              onClick={() => {
+                setIsTemplateOpen(!isTemplateOpen);
+                if (!isOpen) setIsOpen(true);
+              }}
+              style={{ cursor: "pointer" }}
+            >
+              <span className="admin-icon-badge">
+                <FaPalette className="admin-menu-icon" />
+              </span>
+              <span className="admin-menu-text" style={{ flex: 1 }}>
+                ตั้งค่าแม่แบบใบประกาศ
+              </span>
+              <div className={`admin-menu-caret ${!isOpen && "hidden"}`}>
+                {isTemplateOpen ? (
+                  <FaChevronDown size={12} />
+                ) : (
+                  <FaChevronRight size={12} />
+                )}
+              </div>
+            </div>
+
+            {isTemplateOpen && isOpen && (
+              <div className="admin-sidebar-submenus">
+                <Link
+                  to="/admin-manage-certificate"
+                  className={`admin-sidebar-subitem ${isActive("/admin-manage-certificate")}`}
+                >
+                  <span className="admin-subitem-dot"></span>
+                  <span className="admin-subitem-text">หลักสูตรหลัก (กลุ่ม 1-3)</span>
+                </Link>
+                <Link
+                  to="/admin-manage-certificate-workshop"
+                  className={`admin-sidebar-subitem ${isActive("/admin-manage-certificate-workshop")}`}
+                >
+                  <span className="admin-subitem-dot"></span>
+                  <span className="admin-subitem-text">Workshop (กลุ่ม 4)</span>
+                </Link>
+              </div>
+            )}
+          </div>
 
           <Link
             to="/admin-alumni"

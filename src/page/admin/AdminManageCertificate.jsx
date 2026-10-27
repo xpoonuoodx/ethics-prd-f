@@ -24,9 +24,15 @@ const EMPTY_FORM = {
   description: "",
 };
 
-const AdminManageCertificate = () => {
+const WORKSHOP_GROUP = 4;
+
+// workshop = true คือหน้าตั้งค่าแม่แบบของกลุ่มที่ 4 (Workshop) ที่แยกเป็นซับเมนูในไซด์บาร์
+// ส่วนหน้าปกติเลือกได้เฉพาะกลุ่มที่ 1-3
+const AdminManageCertificate = ({ workshop = false }) => {
   const { fire } = useThemedAlert();
-  const [selectedGroup, setSelectedGroup] = useState(1);
+  const [selectedGroup, setSelectedGroup] = useState(
+    workshop ? WORKSHOP_GROUP : 1,
+  );
   const [loading, setLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
 
@@ -75,16 +81,6 @@ const AdminManageCertificate = () => {
 
   const handleSave = async (e) => {
     e.preventDefault();
-    if (!formData.signatory_name || !formData.signatory_position) {
-      fire({
-        title: "ข้อมูลไม่ครบถ้วน",
-        text: "กรุณากรอกชื่อและตำแหน่งของผู้ลงนามให้ครบถ้วน",
-        icon: "warning",
-        confirmButtonColor: "#0f172a",
-      });
-      return;
-    }
-
     try {
       setIsSaving(true);
       const payload = {
@@ -118,6 +114,7 @@ const AdminManageCertificate = () => {
       return "หลักสูตรการกำกับดูแลและนโยบายจริยธรรมปัญญาประดิษฐ์";
     if (selectedGroup === 2)
       return "หลักสูตรแนวปฏิบัติและการพัฒนาปัญญาประดิษฐ์อย่างมีจริยธรรม";
+    if (selectedGroup === 4) return "กิจกรรมฝึกอบรมหลักสูตรจริยธรรมปัญญาประดิษฐ์ในภาคปฏิบัติ (Workshop)";
     return "หลักสูตรความตระหนักรู้ด้านจริยธรรมปัญญาประดิษฐ์สำหรับผู้ใช้งาน";
   };
 
@@ -133,7 +130,9 @@ const AdminManageCertificate = () => {
                 <FaPalette />
               </div>
               <div>
-                <h1 className="amc-title">ตั้งค่าแม่แบบใบประกาศนียบัตร</h1>
+                <h1 className="amc-title">
+                  ตั้งค่าแม่แบบใบประกาศนียบัตร{workshop ? " (Workshop)" : ""}
+                </h1>
                 <p className="amc-subtitle">
                   จัดการชื่อผู้ลงนาม ลายเซ็น และภาพพื้นหลัง แยกตามหลักสูตร
                 </p>
@@ -150,33 +149,35 @@ const AdminManageCertificate = () => {
             </button>
           </div>
 
-          <div className="amc-toolbar">
-            <label className="amc-toolbar-label">
-              เลือกหลักสูตรที่ต้องการตั้งค่าแม่แบบ:
-            </label>
-            <div className="amc-radio-group">
-              {[1, 2, 3].map((group) => (
-                <label
-                  key={group}
-                  className={`amc-radio-label ${selectedGroup === group ? "active" : ""}`}
-                >
-                  <input
-                    type="radio"
-                    name="courseGroup"
-                    value={group}
-                    checked={selectedGroup === group}
-                    onChange={() => setSelectedGroup(group)}
-                  />
-                  กลุ่มที่ {group}{" "}
-                  {group === 1
-                    ? "(Regulator/Policy)"
-                    : group === 2
-                      ? "(Developer/Researcher)"
-                      : "(User)"}
-                </label>
-              ))}
+          {!workshop && (
+            <div className="amc-toolbar">
+              <label className="amc-toolbar-label">
+                เลือกหลักสูตรที่ต้องการตั้งค่าแม่แบบ:
+              </label>
+              <div className="amc-radio-group">
+                {[1, 2, 3].map((group) => (
+                  <label
+                    key={group}
+                    className={`amc-radio-label ${selectedGroup === group ? "active" : ""}`}
+                  >
+                    <input
+                      type="radio"
+                      name="courseGroup"
+                      value={group}
+                      checked={selectedGroup === group}
+                      onChange={() => setSelectedGroup(group)}
+                    />
+                    กลุ่มที่ {group}{" "}
+                    {group === 1
+                      ? "(Regulator/Policy)"
+                      : group === 2
+                        ? "(Developer/Researcher)"
+                        : "(User)"}
+                  </label>
+                ))}
+              </div>
             </div>
-          </div>
+          )}
 
           {loading ? (
             <div className="amc-state-container">
@@ -240,8 +241,7 @@ const AdminManageCertificate = () => {
 
                   <div className="amc-form-group">
                     <label>
-                      ชื่อ-นามสกุล ผู้ลงนาม{" "}
-                      <span className="amc-required">*</span>
+                      ชื่อ-นามสกุล ผู้ลงนาม
                     </label>
                     <input
                       type="text"
@@ -253,7 +253,7 @@ const AdminManageCertificate = () => {
                   </div>
                   <div className="amc-form-group">
                     <label>
-                      ตำแหน่ง ผู้ลงนาม <span className="amc-required">*</span>
+                      ตำแหน่ง ผู้ลงนาม
                     </label>
                     <input
                       type="text"
@@ -321,6 +321,9 @@ const AdminManageCertificate = () => {
                         <CertificateTemplate
                           cert={{
                             certId: 0,
+                            courseGroup: selectedGroup,
+                            trainingStart: "2026-11-05",
+                            trainingEnd: "2026-11-06",
                             course_name:
                               formData.course_name || "กรุณาพิมพ์ชื่อหลักสูตร...",
                             background_url: formData.background_url,

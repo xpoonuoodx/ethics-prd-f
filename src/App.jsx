@@ -64,6 +64,7 @@ import UserToolsCreate from "./page/user/UserToolsCreate";
 import UserTestDetail from "./page/user/UserTestDetail";
 import UserToolsResult from "./page/user/UserToolsResult";
 import UserResult from "./page/user/UserResult"; // หน้าแสดงผลการสอบ
+import UserOnsite from "./page/user/UserOnsite"; // หน้าหลักสูตรออนไซต์
 import UserProfile from "./page/user/UserProfile"; // หน้าข้อมูลส่วนตัว
 
 //Ragulator Pages
@@ -258,6 +259,15 @@ function App() {
         />
 
         <Route
+          path="/admin-manage-certificate-workshop"
+          element={
+            <AdminRoute>
+              <AdminManageCertificate workshop />
+            </AdminRoute>
+          }
+        />
+
+        <Route
           path="/admin-alumni"
           element={
             <AdminRoute>
@@ -353,6 +363,14 @@ function App() {
           element={
             <UserRoute>
               <UserCertificate />
+            </UserRoute>
+          }
+        />
+        <Route
+          path="/user-onsite"
+          element={
+            <UserRoute>
+              <UserOnsite />
             </UserRoute>
           }
         />
