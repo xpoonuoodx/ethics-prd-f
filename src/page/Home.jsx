@@ -49,6 +49,8 @@ import WelcomePopup2 from "../component/WelcomePopup2";
 // นำเข้ารูปภาพแบนเนอร์ (ตรวจสอบ path โฟลเดอร์ของคุณให้ถูกต้อง)
 import banner1 from "../assets/Banner.png";
 import bannerV1 from "../assets/bannerv1.png"; // แบนเนอร์สไลด์ที่ 1
+import bannerV2 from "../assets/bannerv2.jpg"; // แบนเนอร์สไลด์ที่ 2 (เปิดรับสมัคร Workshop)
+import bannerV3 from "../assets/bannerv3.jpg"; // แบนเนอร์สไลด์ที่ 3 (ระบบอบรมภาคทฤษฎีด้วยตนเอง)
 
 
 
@@ -80,8 +82,11 @@ export const slideData = [
       },
     ],
   },
+  // แบนเนอร์โปสเตอร์ล้วน (title ว่าง = โหมดโปสเตอร์ แสดงเฉพาะรูป)
+  { id: 2, image: bannerV2, title: "", subtitle: "", buttons: [] },
+  { id: 3, image: bannerV3, title: "", subtitle: "", buttons: [] },
   {
-    id: 2,
+    id: 4,
     image:
       "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=1920&auto=format&fit=crop",
     title: "เครื่องมือประเมินความพร้อม AI",
@@ -93,7 +98,7 @@ export const slideData = [
     ],
   },
   {
-    id: 3,
+    id: 5,
     image:
       "https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=1920&auto=format&fit=crop",
     title: "แนวทางจริยธรรมปัญญาประดิษฐ์ของประเทศไทย",
@@ -105,7 +110,7 @@ export const slideData = [
     ],
   },
   {
-    id: 4,
+    id: 6,
     image:
       "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?q=80&w=1920&auto=format&fit=crop",
     title: "รางวัลยกย่องบุคคลและองค์กรดีเด่น",
@@ -266,6 +271,7 @@ export const documentData = [
 const Home = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [newsIndex, setNewsIndex] = useState(0);
+  const [isSliderPaused, setIsSliderPaused] = useState(false);
   const navigate = useNavigate();
 
   // นับการเข้าหน้าโฮม (1 ครั้งต่อ session)
@@ -280,6 +286,16 @@ const Home = () => {
   const prevSlide = () => {
     setCurrentSlide((prev) => (prev === 0 ? slideData.length - 1 : prev - 1));
   };
+
+  // เลื่อนแบนเนอร์อัตโนมัติทุก 6 วินาที - หยุดตอนเอาเมาส์ชี้ที่แบนเนอร์ และนับเวลาใหม่ทุกครั้งที่
+  // สไลด์เปลี่ยน (รวมตอนกดลูกศร/จุดเอง) เพื่อไม่ให้เด้งข้ามทันทีหลังผู้ใช้กด
+  useEffect(() => {
+    if (isSliderPaused) return undefined;
+    const timer = setTimeout(() => {
+      setCurrentSlide((prev) => (prev === slideData.length - 1 ? 0 : prev + 1));
+    }, 6000);
+    return () => clearTimeout(timer);
+  }, [currentSlide, isSliderPaused]);
 
   // Slider ข่าวสาร (เลื่อนครั้งละ 1 ใบ)
   const nextNews = () => {
@@ -309,7 +325,11 @@ const Home = () => {
       <Tabbar />
 
 {/* 1. แบนเนอร์สไลด์ */}
-      <section className="hm-hero-slider">
+      <section
+        className="hm-hero-slider"
+        onMouseEnter={() => setIsSliderPaused(true)}
+        onMouseLeave={() => setIsSliderPaused(false)}
+      >
         {slideData.map((slide, index) => {
           const isPosterMode = !slide.title; 
 
