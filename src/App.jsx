@@ -49,6 +49,8 @@ import AdminAddChapter from "./page/admin/AdminAddChapter"; // หน้าเ�
 import AdminEditChapter from "./page/admin/AdminEditChapter"; // หน้าแก้ไขบทเรียนของ Admin
 import AdminSelfTraining from "./page/admin/AdminSelfTraining"; // หน้าจัดการอบรมออนไลน์ด้วยตัวเอง
 import AdminSelfTrainingForm from "./page/admin/AdminSelfTrainingForm"; // หน้าเพิ่ม/แก้ไขวิดีโออบรมออนไลน์
+import AdminExportData from "./page/admin/AdminExportData"; // หน้าส่งออกข้อมูลผู้ใช้งานเป็น Excel
+import AdminImportData from "./page/admin/AdminImportData"; // หน้านำเข้าข้อมูล (อยู่ระหว่างพัฒนา)
 import AdminCertificate from "./page/admin/AdminCertificate";
 import AdminManageCertificate from "./page/admin/AdminManageCertificate";
 import AdminAlumni from "./page/admin/AdminAlumni";
@@ -178,6 +180,22 @@ function App() {
           element={
             <AdminRoute>
               <AdminSelfTrainingForm />
+            </AdminRoute>
+          }
+        />
+        <Route
+          path="/admin-export-data"
+          element={
+            <AdminRoute>
+              <AdminExportData />
+            </AdminRoute>
+          }
+        />
+        <Route
+          path="/admin-import-data"
+          element={
+            <AdminRoute>
+              <AdminImportData />
             </AdminRoute>
           }
         />

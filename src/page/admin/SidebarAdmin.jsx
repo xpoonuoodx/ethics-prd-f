@@ -22,6 +22,7 @@ import {
   FaPalette,
   FaProjectDiagram,
   FaYoutube,
+  FaDatabase,
 } from "react-icons/fa";
 import { getStoredUser } from "../../api/Api";
 import logoBde from "../../assets/logo-bde.png";
@@ -33,6 +34,8 @@ const SidebarAdmin = () => {
   const [isAssessmentOpen, setIsAssessmentOpen] = useState(false);
   // State สำหรับ Dropdown เมนูตั้งค่าแม่แบบใบประกาศ
   const [isTemplateOpen, setIsTemplateOpen] = useState(false);
+  // State สำหรับ Dropdown เมนูข้อมูล (นำเข้า/ส่งออก)
+  const [isDataOpen, setIsDataOpen] = useState(false);
 
   const location = useLocation();
   const user = getStoredUser() || {
@@ -74,6 +77,12 @@ const SidebarAdmin = () => {
     if (location.pathname.includes("/admin-manage-certificate")) {
       setIsTemplateOpen(true);
     }
+    if (
+      location.pathname.includes("/admin-export-data") ||
+      location.pathname.includes("/admin-import-data")
+    ) {
+      setIsDataOpen(true);
+    }
   }, [location.pathname]);
 
   const toggleSidebar = () => {
@@ -93,6 +102,9 @@ const SidebarAdmin = () => {
   const isTemplateActive = location.pathname.includes(
     "/admin-manage-certificate",
   );
+  const isDataActive =
+    location.pathname.includes("/admin-export-data") ||
+    location.pathname.includes("/admin-import-data");
 
   const isActive = (path) => (location.pathname === path ? "active" : "");
 
@@ -394,6 +406,58 @@ const SidebarAdmin = () => {
             </span>
             <span className="admin-menu-text">จัดการทำเนียบรุ่น</span>
           </Link>
+
+          <div className={`admin-sidebar-category ${!isOpen && "hidden"}`}>
+            ข้อมูล
+          </div>
+
+          {/* เมนูข้อมูล (Dropdown): นำเข้าข้อมูล / ส่งออกข้อมูล */}
+          <div className="admin-sidebar-dropdown">
+            <div
+              className={`admin-sidebar-item ${isDataActive ? "active" : ""}`}
+              onClick={() => {
+                setIsDataOpen(!isDataOpen);
+                if (!isOpen) setIsOpen(true);
+              }}
+              style={{ cursor: "pointer" }}
+            >
+              <span className="admin-icon-badge">
+                <FaDatabase className="admin-menu-icon" />
+              </span>
+              <span
+                className={`admin-menu-text ${!isOpen && "hidden"}`}
+                style={{ flex: 1 }}
+              >
+                ข้อมูล
+              </span>
+              <div className={`admin-menu-caret ${!isOpen && "hidden"}`}>
+                {isDataOpen ? (
+                  <FaChevronDown size={12} />
+                ) : (
+                  <FaChevronRight size={12} />
+                )}
+              </div>
+            </div>
+
+            {isDataOpen && isOpen && (
+              <div className="admin-sidebar-submenus">
+                <Link
+                  to="/admin-import-data"
+                  className={`admin-sidebar-subitem ${isActive("/admin-import-data")}`}
+                >
+                  <span className="admin-subitem-dot"></span>
+                  <span className="admin-subitem-text">นำเข้าข้อมูล</span>
+                </Link>
+                <Link
+                  to="/admin-export-data"
+                  className={`admin-sidebar-subitem ${isActive("/admin-export-data")}`}
+                >
+                  <span className="admin-subitem-dot"></span>
+                  <span className="admin-subitem-text">ส่งออกข้อมูล</span>
+                </Link>
+              </div>
+            )}
+          </div>
         </div>
 
         <div className="admin-sidebar-bottom">
