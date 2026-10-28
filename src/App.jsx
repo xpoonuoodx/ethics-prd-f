@@ -1,5 +1,10 @@
 import React from "react";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Navigate,
+  Route,
+  Routes,
+} from "react-router-dom";
 import { ThemedAlertProvider } from "./component/ThemedAlert";
 
 // หน้าทั่วไป (Public Pages)
@@ -9,6 +14,7 @@ import CookieConsentBanner from "./component/CookieConsentBanner"; // แบน�
 import RouteTracker from "./component/RouteTracker"; // ยิง Google Analytics page_view ตอนเปลี่ยนหน้า
 import Home from "./page/Home";
 import Dashboard from "./page/Dashboard";
+import Dashboard2 from "./page/Dashboard2"; // แดชบอร์ดข้อมูลจำลอง (mockup)
 import AboutBackground from "./page/AboutBackground";
 import AboutPrinciples from "./page/AboutPrinciples";
 import AboutProcess from "./page/AboutProcess";
@@ -104,7 +110,11 @@ function App() {
       <Routes>
         {/* === Public Routes === */}
         <Route path="/" element={<Home />} />
-        <Route path="/dashboard" element={<Dashboard />} />
+        {/* เมนู "แดชบอร์ด" ชี้ไป /dashboard2 แล้ว - /dashboard เดิมเด้งไปที่นั่น (กันลิงก์เก่า)
+            ส่วนหน้าจริงเดิมยังเข้าได้ที่ /dashboard-real */}
+        <Route path="/dashboard" element={<Navigate to="/dashboard2" replace />} />
+        <Route path="/dashboard-real" element={<Dashboard />} />
+        <Route path="/dashboard2" element={<Dashboard2 />} />
         <Route path="/about/background" element={<AboutBackground />} />
         <Route path="/about/principles" element={<AboutPrinciples />} />
         <Route path="/about/process" element={<AboutProcess />} />

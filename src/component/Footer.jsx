@@ -70,7 +70,7 @@ function Footer() {
                 <Link to="/">หน้าหลัก</Link>
               </li>
               <li>
-                <Link to="/dashboard">แดชบอร์ด</Link>
+                <Link to="/dashboard2">แดชบอร์ด</Link>
               </li>
               <li>
                 <Link to="/guideline">AI Ethics Guideline</Link>

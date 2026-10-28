@@ -57,8 +57,8 @@ function Tabbar() {
             </li>
             <li>
               <Link
-                to="/dashboard"
-                className={location.pathname === "/dashboard" ? "active" : ""}
+                to="/dashboard2"
+                className={location.pathname === "/dashboard2" ? "active" : ""}
               >
                 แดชบอร์ด
               </Link>
@@ -152,7 +152,7 @@ function Tabbar() {
               <Link to="/">หน้าหลัก</Link>
             </li>
             <li>
-              <Link to="/dashboard">แดชบอร์ด</Link>
+              <Link to="/dashboard2">แดชบอร์ด</Link>
             </li>
 
             {/* --- เมนูเกี่ยวกับเรา มือถือ (แบบ Accordion กดเพื่อกาง) --- */}
