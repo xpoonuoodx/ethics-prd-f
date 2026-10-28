@@ -47,6 +47,8 @@ import AdminGuideline from "./page/admin/AdminGuideline"; // หน้าแน�
 import AdminClassroom from "./page/admin/AdminClassroom"; // หน้าเรียนของ Admin
 import AdminAddChapter from "./page/admin/AdminAddChapter"; // หน้าเพิ่มบทเรียนของ Admin
 import AdminEditChapter from "./page/admin/AdminEditChapter"; // หน้าแก้ไขบทเรียนของ Admin
+import AdminSelfTraining from "./page/admin/AdminSelfTraining"; // หน้าจัดการอบรมออนไลน์ด้วยตัวเอง
+import AdminSelfTrainingForm from "./page/admin/AdminSelfTrainingForm"; // หน้าเพิ่ม/แก้ไขวิดีโออบรมออนไลน์
 import AdminCertificate from "./page/admin/AdminCertificate";
 import AdminManageCertificate from "./page/admin/AdminManageCertificate";
 import AdminAlumni from "./page/admin/AdminAlumni";
@@ -58,6 +60,8 @@ import UserSelectRole from "./page/user/UserSelectRole"; // หน้าเล�
 import UserClassroom from "./page/user/UserClassroom"; // หน้าเรียน
 import UserTest from "./page/user/UserTest"; // หน้าสอบ
 import UserClassroomDetail from "./page/user/UserClassroomDetail"; // หน้าเรียนรายละเอียด
+import UserSelfTraining from "./page/user/UserSelfTraining"; // หน้าอบรมออนไลน์ด้วยตัวเอง
+import UserSelfTrainingDetail from "./page/user/UserSelfTrainingDetail"; // หน้ารายละเอียดวิดีโอ
 import UserCertificate from "./page/user/UserCertificate"; // หน้าใบประกาศนียบัตร
 import UserTools from "./page/user/UserTools"; // หน้าเครื่องมือการเรียนรู้
 import UserToolsCreate from "./page/user/UserToolsCreate";
@@ -75,6 +79,8 @@ import RegulatorViewProject from "./page/regulator/RegulatorViewProject";
 import RegulatorViewUser from "./page/regulator/RegulatorViewUser";
 import RegulatorClassroom from "./page/regulator/RegulatorClassroom";
 import RegulatorClassroomDetail from "./page/regulator/RegulatorClassroomDetail";
+import RegulatorSelfTraining from "./page/regulator/RegulatorSelfTraining";
+import RegulatorSelfTrainingDetail from "./page/regulator/RegulatorSelfTrainingDetail";
 import RegulatorTest from "./page/regulator/RegulatorTest";
 import RegulatorTestDetail from "./page/regulator/RegulatorTestDetail";
 import RegulatorResult from "./page/regulator/RegulatorResult";
@@ -148,6 +154,30 @@ function App() {
           element={
             <AdminRoute>
               <AdminEditChapter />
+            </AdminRoute>
+          }
+        />
+        <Route
+          path="/admin-self-training"
+          element={
+            <AdminRoute>
+              <AdminSelfTraining />
+            </AdminRoute>
+          }
+        />
+        <Route
+          path="/admin-self-training/add"
+          element={
+            <AdminRoute>
+              <AdminSelfTrainingForm />
+            </AdminRoute>
+          }
+        />
+        <Route
+          path="/admin-self-training/edit/:id"
+          element={
+            <AdminRoute>
+              <AdminSelfTrainingForm />
             </AdminRoute>
           }
         />
@@ -359,6 +389,22 @@ function App() {
           }
         />
         <Route
+          path="/user-self-training"
+          element={
+            <UserRoute>
+              <UserSelfTraining />
+            </UserRoute>
+          }
+        />
+        <Route
+          path="/user-self-training-detail"
+          element={
+            <UserRoute>
+              <UserSelfTrainingDetail />
+            </UserRoute>
+          }
+        />
+        <Route
           path="/user-certificate"
           element={
             <UserRoute>
@@ -466,6 +512,22 @@ function App() {
           element={
             <RegulatorRoute>
               <RegulatorClassroomDetail />
+            </RegulatorRoute>
+          }
+        />
+        <Route
+          path="/regulator-self-training"
+          element={
+            <RegulatorRoute>
+              <RegulatorSelfTraining />
+            </RegulatorRoute>
+          }
+        />
+        <Route
+          path="/regulator-self-training-detail"
+          element={
+            <RegulatorRoute>
+              <RegulatorSelfTrainingDetail />
             </RegulatorRoute>
           }
         />

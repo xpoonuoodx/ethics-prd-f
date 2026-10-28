@@ -21,6 +21,7 @@ import {
   FaUserGraduate,
   FaPalette,
   FaProjectDiagram,
+  FaYoutube,
 } from "react-icons/fa";
 import { getStoredUser } from "../../api/Api";
 import logoBde from "../../assets/logo-bde.png";
@@ -310,6 +311,18 @@ const SidebarAdmin = () => {
             </span>
             <span className={`admin-menu-text ${!isOpen && "hidden"}`}>
               จัดการสื่อการเรียนรู้
+            </span>
+          </Link>
+
+          <Link
+            to="/admin-self-training"
+            className={`admin-sidebar-item ${isActive("/admin-self-training")}`}
+          >
+            <span className="admin-icon-badge">
+              <FaYoutube className="admin-menu-icon" />
+            </span>
+            <span className={`admin-menu-text ${!isOpen && "hidden"}`}>
+              จัดการออนไลน์ด้วยตัวเอง
             </span>
           </Link>
 

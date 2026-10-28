@@ -64,11 +64,23 @@
 }
 
 .su-container.open {
-  width: 270px; /* ขยายให้กว้างขึ้นนิดหน่อย ดูโปร่งขึ้น */
+  width: 290px; /* ขยายให้กว้างขึ้นนิดหน่อย ดูโปร่งขึ้น */
 }
 
 .su-container.closed {
   width: 84px;
+}
+
+/* ทุกหน้า User กำหนด .user-portal-content { margin-left: 260px } ไว้ในไฟล์ CSS ของตัวเอง
+   (คนละไฟล์กับอันนี้ และ class เดียวกันถูกใช้ซ้ำฝั่ง Regulator ที่ sidebar ยังกว้าง 260px เท่าเดิม
+   ด้วย) ถ้าไปไล่แก้ทีละไฟล์จะเสี่ยงชนกับของ Regulator เพราะ CSS ถูกรวมเป็นไฟล์เดียวกันตอน build
+   เลยแก้จุดเดียวตรงนี้แทน ใช้ sibling selector ให้เจาะจงเฉพาะหน้าที่มี sidebar ตัวนี้จริง ๆ
+   (specificity สูงกว่า .user-portal-content เฉย ๆ เลยชนะแน่นอนไม่ว่าลำดับไฟล์ CSS จะเรียงยังไง)
+   ครอบด้วย min-width:900px กันไปทับ margin-left:0 ของโหมดมือถือ */
+@media (min-width: 900px) {
+  .su-container.open ~ .user-portal-content {
+    margin-left: 290px;
+  }
 }
 
 .hidden {

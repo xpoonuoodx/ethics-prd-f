@@ -11,6 +11,8 @@ import {
   FaTimes,
   FaCertificate,
   FaChalkboardTeacher,
+  FaYoutube,
+
 } from "react-icons/fa";
 import { getStoredUser } from "../../api/Api";
 import logoBde from "../../assets/logo-bde.png";
@@ -115,7 +117,22 @@ const SidebarUser = () => {
               <FaBookOpen className="su-icon" />
             </span>
             <span className={`su-text ${!isOpen && "hidden"}`}>
-              สื่อการเรียนรู้
+              จริยธรรมปัญญาประดิษฐ์
+            </span>
+          </a>
+
+          <a
+            href="/user-self-training"
+            className={`su-menu-item ${
+              currentPath.includes("self-training") ? "active" : ""
+            }`}
+            title="อบรมออนไลน์ด้วยตัวเอง"
+          >
+            <span className="su-icon-badge">
+              <FaYoutube className="su-icon" />
+            </span>
+            <span className={`su-text ${!isOpen && "hidden"}`}>
+              อบรมออนไลน์ด้วยตัวเอง
             </span>
           </a>
 

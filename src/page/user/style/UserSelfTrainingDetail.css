@@ -1,0 +1,142 @@
+@import url("https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap");
+
+.user-portal-layout * {
+  box-sizing: border-box;
+  font-family: "Prompt", sans-serif;
+}
+
+.usd-container {
+  padding: 40px;
+  width: 100%;
+  /* max-width: 900px; */
+}
+.usd-spin-icon {
+  font-size: 40px;
+  color: #2563eb;
+  animation: usdSpin 1s linear infinite;
+}
+@keyframes usdSpin {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.text-red {
+  color: #dc2626;
+}
+
+/* Header */
+.usd-header {
+  margin-bottom: 24px;
+}
+.usd-back-btn {
+  background: none;
+  border: none;
+  color: #64748b;
+  font-size: 14px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  padding: 0;
+  margin-bottom: 20px;
+  transition: color 0.2s ease;
+}
+.usd-back-btn:hover {
+  color: #0f172a;
+}
+.usd-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #111827;
+  margin: 0;
+  letter-spacing: -0.3px;
+}
+
+/* Cards */
+.usd-video-card,
+.usd-details-card {
+  background: white;
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+  overflow: hidden;
+  margin-bottom: 24px;
+}
+.usd-card-header {
+  padding: 18px 24px;
+  border-bottom: 1px solid #f1f5f9;
+  background: #fcfcfc;
+}
+.usd-card-header h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: #0f172a;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.usd-card-body {
+  padding: 24px;
+}
+
+/* Video Player */
+.usd-video-wrapper {
+  position: relative;
+  padding-bottom: 56.25%;
+  height: 0;
+  background: #1e293b;
+}
+.usd-iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+.usd-video-empty {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: #94a3b8;
+  background: #f8fafc;
+}
+.usd-video-empty .empty-icon {
+  font-size: 50px;
+  color: #cbd5e1;
+  margin-bottom: 15px;
+}
+
+.usd-desc-text {
+  margin: 0;
+  font-size: 14.5px;
+  color: #475569;
+  line-height: 1.7;
+  white-space: pre-line;
+}
+.usd-desc-empty {
+  color: #94a3b8;
+  font-style: italic;
+}
+
+@media (max-width: 899px) {
+  .user-portal-content {
+    margin-left: 0;
+  }
+}
+@media (max-width: 768px) {
+  .usd-container {
+    padding: 20px 15px;
+  }
+  .usd-title {
+    font-size: 20px;
+  }
+}

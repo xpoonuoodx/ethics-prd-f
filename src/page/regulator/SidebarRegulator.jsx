@@ -14,6 +14,7 @@ import {
   FaClipboardCheck,
   FaTools,
   FaCertificate,
+  FaYoutube,
 } from "react-icons/fa";
 import { getStoredUser } from "../../api/Api";
 import logoBde from "../../assets/logo-bde.png";
@@ -131,6 +132,18 @@ const SidebarRegulator = () => {
             </span>
             <span className={`rgsidebar-text ${!isOpen ? "hidden" : ""}`}>
               สื่อการเรียนรู้
+            </span>
+          </a>
+
+          <a
+            href="/regulator-self-training"
+            className={`rgsidebar-item ${currentPath.includes("self-training") ? "active" : ""}`}
+          >
+            <span className="rgsidebar-icon-badge">
+              <FaYoutube className="rgsidebar-icon" />
+            </span>
+            <span className={`rgsidebar-text ${!isOpen ? "hidden" : ""}`}>
+              อบรมออนไลน์ด้วยตัวเอง
             </span>
           </a>
 

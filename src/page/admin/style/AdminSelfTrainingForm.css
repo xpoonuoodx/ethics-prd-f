@@ -1,0 +1,325 @@
+@import url("https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap");
+
+.asf-layout * {
+  box-sizing: border-box;
+  font-family: "Prompt", sans-serif;
+}
+
+.asf-layout {
+  display: flex;
+  min-height: 100vh;
+  background-color: #f4f6f8;
+}
+
+.asf-main-content {
+  flex: 1;
+  min-width: 0;
+  margin-left: 260px;
+  transition: margin-left 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+.asf-flex-center {
+  justify-content: center;
+  align-items: center;
+}
+.asf-spin-icon {
+  font-size: 40px;
+  color: #2563eb;
+  animation: asfSpin 1s linear infinite;
+}
+@keyframes asfSpin {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.asf-container {
+  padding: 40px 50px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+/* =========================================
+   HEADER
+   ========================================= */
+.asf-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 30px;
+}
+
+.asf-header-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.asf-header-icon {
+  width: 50px;
+  height: 50px;
+  background: #fee2e2;
+  color: #dc2626;
+  border-radius: 14px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 22px;
+}
+
+.asf-title {
+  font-size: 26px;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 6px 0;
+  letter-spacing: -0.5px;
+}
+
+.asf-subtitle {
+  font-size: 14px;
+  color: #64748b;
+  margin: 0;
+}
+
+.asf-header-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.asf-btn-secondary {
+  background: #ffffff;
+  color: #475569;
+  padding: 10px 20px;
+  border-radius: 50px;
+  border: 1px solid #cbd5e1;
+  font-size: 14px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.asf-btn-secondary:hover {
+  background: #f1f5f9;
+  color: #0f172a;
+}
+
+.asf-btn-primary {
+  background: #0f172a;
+  color: #ffffff;
+  padding: 10px 24px;
+  border-radius: 50px;
+  border: none;
+  font-size: 14px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 10px rgba(15, 23, 42, 0.2);
+}
+.asf-btn-primary:hover {
+  background: #1e293b;
+  transform: translateY(-2px);
+}
+
+/* =========================================
+   FORM CARDS
+   ========================================= */
+.asf-form-card {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 30px;
+  margin-bottom: 25px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+  border: 1px solid #e2e8f0;
+}
+
+.asf-card-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 25px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #f1f5f9;
+}
+.asf-card-header h2 {
+  font-size: 18px;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0;
+}
+.asf-card-icon {
+  color: #2563eb;
+  font-size: 20px;
+}
+
+/* =========================================
+   FORM INPUTS
+   ========================================= */
+.asf-form-row {
+  margin-bottom: 20px;
+}
+
+.asf-form-group {
+  display: flex;
+  flex-direction: column;
+}
+.asf-form-group label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #475569;
+  margin-bottom: 8px;
+}
+.asf-required {
+  color: #ef4444;
+}
+
+.asf-form-group input[type="text"] {
+  padding: 12px 16px;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  font-size: 14px;
+  color: #0f172a;
+  background-color: #ffffff;
+  outline: none;
+  transition: all 0.2s;
+  width: 100%;
+}
+.asf-form-group input[type="text"]:focus {
+  border-color: #0f172a;
+  box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.05);
+}
+.asf-form-group input::placeholder {
+  color: #94a3b8;
+}
+
+.asf-description-textarea {
+  padding: 14px 16px;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  font-size: 14px;
+  color: #0f172a;
+  background-color: #ffffff;
+  outline: none;
+  transition: all 0.2s;
+  width: 100%;
+  font-family: "Prompt", sans-serif;
+  resize: vertical;
+  min-height: 140px;
+}
+.asf-description-textarea:focus {
+  border-color: #0f172a;
+  box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.05);
+}
+.asf-description-textarea::placeholder {
+  color: #94a3b8;
+}
+
+/* =========================================
+   VIDEO PREVIEW
+   ========================================= */
+.asf-video-preview-container {
+  margin-top: 10px;
+  background: #f8fafc;
+  border: 1px dashed #cbd5e1;
+  border-radius: 12px;
+  padding: 15px;
+}
+.asf-preview-label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: #64748b;
+  margin-bottom: 10px;
+}
+.asf-video-preview-wrapper {
+  position: relative;
+  padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+  height: 0;
+  overflow: hidden;
+  border-radius: 8px;
+  background: #0f172a;
+}
+.asf-video-iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+.asf-video-placeholder {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #94a3b8;
+  font-size: 14px;
+  text-align: center;
+  padding: 0 20px;
+}
+
+/* =========================================
+   BOTTOM ACTIONS
+   ========================================= */
+.asf-bottom-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 30px;
+  margin-bottom: 50px;
+}
+
+.asf-btn-save-large {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #10b981;
+  color: #ffffff;
+  border: none;
+  padding: 14px 30px;
+  border-radius: 50px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 10px rgba(16, 185, 129, 0.2);
+}
+.asf-btn-save-large:hover {
+  background: #059669;
+  transform: translateY(-2px);
+}
+
+/* =========================================
+   RESPONSIVE
+   ========================================= */
+@media (max-width: 899px) {
+  .asf-main-content {
+    margin-left: 0;
+  }
+}
+@media (max-width: 768px) {
+  .asf-container {
+    padding: 80px 15px 30px 15px;
+  }
+  .asf-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+  }
+  .asf-header-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+  .asf-btn-save-large {
+    width: 100%;
+    justify-content: center;
+  }
+}
