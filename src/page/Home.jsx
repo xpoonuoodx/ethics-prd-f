@@ -35,6 +35,8 @@ import cover4 from "../assets/image4.png";
 import cover5 from "../assets/image5.jpg"; 
 import cover6 from "../assets/image6.jpg";
 import cover7 from "../assets/image7.jpg";
+import cover9 from "../assets/image9.jpg"; // หน้าปก White paper
+import pdfWhitePaper from "../assets/pdf/Thailand-AI-Ethics-Guideline-White-paper.pdf";
 
 
 // ตัวอย่างการ import ไฟล์ PDF
@@ -217,6 +219,13 @@ const newsCategoryClass = {
 
 // ข้อมูลสำหรับไฟล์เอกสารดาวน์โหลด
 export const documentData = [
+  {
+    id: 0,
+    title: "Thailand AI Ethics Guideline (White paper)",
+    desc: "เอกสารแนวปฏิบัติจริยธรรมปัญญาประดิษฐ์ (White paper) จัดทำโดยสำนักงานคณะกรรมการดิจิทัลเพื่อเศรษฐกิจและสังคมแห่งชาติ",
+    image: cover9,
+    fileUrl: pdfWhitePaper,
+  },
   {
     id: 1,
     title: "Thailand AI Ethics Guideline",
