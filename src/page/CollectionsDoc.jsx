@@ -15,7 +15,6 @@ import "./style/CollectionsDoc.css";
 // ==========================================
 // ตัวอย่างการ import รูปหน้าปก
 import cover1 from "../assets/image1.png"; 
-import cover2 from "../assets/image2.png";
 import cover3 from "../assets/image3.png";
 import cover4 from "../assets/image4.png";
 import cover5 from "../assets/image5.jpg"; 
@@ -28,7 +27,6 @@ import pdfWhitePaper from "../assets/pdf/Thailand-AI-Ethics-Guideline-White-pape
 
 // ตัวอย่างการ import ไฟล์ PDF
 import pdfGuideline from "../assets/pdf/v64_74.pdf";
-import pdfRisk from "../assets/pdf/Digital-Thailand-AI-Ethics-Principle-and-Guideline.pdf";
 import pdfSummary from "../assets/pdf/AI Operating Model สำหรับองค์กรไทย.pdf";
 import pdfChecklist from "../assets/pdf/คู่มือการออกแบบ_Human-AI_Workflow_สำหรับภาครัฐไทย.pdf";
 import pdf5 from "../assets/pdf/คำตอบ AI มาจากไหน5.pdf";
@@ -50,13 +48,6 @@ const allDocuments = [
       desc: "เอกสารแนวปฏิบัติจริยธรรมปัญญาประดิษฐ์ Thailand AI Ethics Guideline",
       image: cover1, // เปลี่ยนเป็นลิงก์รูปหน้าปกจริง
       fileUrl: pdfGuideline // เปลี่ยนเป็น path ไฟล์ PDF ของคุณ
-    },
-    {
-      id: 2,
-      title: "Digital Thailand - AI Ethics Guideline",
-      desc: "เอกสารหลักการและแนวทางจริยธรรมปัญญาประดิษฐ์ของประเทศไทย (Digital Thailand - AI Ethics Guideline)",
-      image: cover2,
-      fileUrl: pdfRisk
     },
     {
       id: 3,

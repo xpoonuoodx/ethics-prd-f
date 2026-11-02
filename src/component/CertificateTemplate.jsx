@@ -90,14 +90,18 @@ const CertificateTemplate = ({ cert, userName }) => {
         {isWorkshop ? "ผ่านการอบรม" : "ได้ผ่านการอบรมหลักสูตร"}
       </div>
       <div className="cert-tpl-overlay-course">{cert.course_name}</div>
-      {isWorkshop && (
-        <div className="cert-tpl-period-line">
-          {cert.trainingStart && cert.trainingEnd
-            ? `ระหว่างวันที่ ${formatThaiDate(cert.trainingStart)} ถึง ${formatThaiDate(cert.trainingEnd)}`
-            : "ระหว่างวันที่ - ถึง -"}{" "}
-          (ระยะเวลาการฝึกอบรม จำนวน 2 วัน รวม 16 ชั่วโมง)
-        </div>
-      )}
+      <div className="cert-tpl-period-line">
+        {isWorkshop ? (
+          <>
+            {cert.trainingStart && cert.trainingEnd
+              ? `ระหว่างวันที่ ${formatThaiDate(cert.trainingStart)} ถึง ${formatThaiDate(cert.trainingEnd)}`
+              : "ระหว่างวันที่ - ถึง -"}{" "}
+            (ระยะเวลาการฝึกอบรม จำนวน 2 วัน รวม 12 ชั่วโมง)
+          </>
+        ) : (
+          "ระยะเวลาการฝึกอบรมรวม 1.30 ชั่วโมง"
+        )}
+      </div>
 
       <div className="cert-tpl-issuer-line">
         โดย{cert.issuer_name || "สำนักงานคณะกรรมการดิจิทัลเพื่อเศรษฐกิจและสังคมแห่งชาติ"}
