@@ -45,43 +45,15 @@ import pdfChecklist from "../assets/pdf/คู่มือการออกแ�
 import pdf5 from "../assets/pdf/คำตอบ AI มาจากไหน5.pdf";
 import pdf6 from "../assets/pdf/Agentic AI สำหรับระบบแจ้งข้อมูลประชาชน6.pdf";
 import pdf7 from "../assets/pdf/การออกแบบโครงสร้างองค์กร ที่ใช้ AI Agent  copy 7.pdf";
-import WelcomePopup2 from "../component/WelcomePopup2";
 // นำเข้ารูปภาพแบนเนอร์ (ตรวจสอบ path โฟลเดอร์ของคุณให้ถูกต้อง)
 import banner1 from "../assets/Banner.png";
-import bannerV1 from "../assets/bannerv1.png"; // แบนเนอร์สไลด์ที่ 1
 import bannerV2 from "../assets/bannerv2.jpg"; // แบนเนอร์สไลด์ที่ 2 (เปิดรับสมัคร Workshop)
 import bannerV3 from "../assets/bannerv3.jpg"; // แบนเนอร์สไลด์ที่ 3 (ระบบอบรมภาคทฤษฎีด้วยตนเอง)
 
 
 
 export const slideData = [
-  {id: 1,
-    image: bannerV1,
-    title: "", 
-    subtitle: "",
-    buttons: [],
-    link: "https://forms.gle/7qYxX5X46WGsLYsHA", // 👈 เพิ่มตัวแปร link สำหรับให้คลิกที่รูป
-    // ปุ่มโปร่งใสที่วางทับปุ่มในรูปโปสเตอร์ - ตำแหน่ง/ขนาดเป็น % ของรูป (bannerv1.png 2732x1536)
-    // เลยเลื่อนตามรูปทุกขนาดหน้าจอ (responsive)
-    posterButtons: [
-      {
-        label: "Zoom Webinar",
-        link: "https://thairen.zoom.us/j/68060546857#success",
-        left: 40.75,
-        top: 38.9,
-        width: 18.6,
-        height: 9.8,
-      },
-      {
-        label: "ลงทะเบียนเข้าร่วมอบรมออนไลน์",
-        link: "https://forms.gle/7qYxX5X46WGsLYsHA",
-        left: 73.25,
-        top: 38.9,
-        width: 18.75,
-        height: 10,
-      },
-    ],
-  },
+  // (ปิดแบนเนอร์เดิมอันแรก - ลงทะเบียนอบรมออนไลน์/Zoom - ไว้ ดูโค้ดเดิมได้ใน git history)
   // แบนเนอร์โปสเตอร์ล้วน (title ว่าง = โหมดโปสเตอร์ แสดงเฉพาะรูป)
   { id: 2, image: bannerV2, title: "", subtitle: "", buttons: [] },
   { id: 3, image: bannerV3, title: "", subtitle: "", buttons: [] },
@@ -321,7 +293,6 @@ const Home = () => {
 
   return (
     <div className="hm-wrapper">
-      <WelcomePopup2 /> 
       <Tabbar />
 
 {/* 1. แบนเนอร์สไลด์ */}
