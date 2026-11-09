@@ -608,6 +608,14 @@ function App() {
           }
         />
         <Route
+          path="/regulator-onsite"
+          element={
+            <RegulatorRoute>
+              <UserOnsite role="regulator" />
+            </RegulatorRoute>
+          }
+        />
+        <Route
           path="/regulator-certificate"
           element={
             <RegulatorRoute>

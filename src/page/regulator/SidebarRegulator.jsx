@@ -14,6 +14,7 @@ import {
   FaClipboardCheck,
   FaTools,
   FaCertificate,
+  FaChalkboardTeacher,
   FaYoutube,
 } from "react-icons/fa";
 import { getStoredUser } from "../../api/Api";
@@ -168,6 +169,18 @@ const SidebarRegulator = () => {
             </span>
             <span className={`rgsidebar-text ${!isOpen ? "hidden" : ""}`}>
               เครื่องมือประเมิน
+            </span>
+          </a>
+
+          <a
+            href="/regulator-onsite"
+            className={`rgsidebar-item ${currentPath.includes("onsite") ? "active" : ""}`}
+          >
+            <span className="rgsidebar-icon-badge">
+              <FaChalkboardTeacher className="rgsidebar-icon" />
+            </span>
+            <span className={`rgsidebar-text ${!isOpen ? "hidden" : ""}`}>
+              ภาคปฏิบัติ workshop
             </span>
           </a>
 

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import SidebarUser from "./SidebarUser";
+import SidebarRegulator from "../regulator/SidebarRegulator";
 import { useThemedAlert } from "../../hooks/useThemedAlert";
 import {
   FaChalkboardTeacher,
@@ -43,7 +44,12 @@ const ghostBtn = {
   border: "1px solid #e2e8f0",
 };
 
-const UserOnsite = () => {
+// ใช้ร่วมกับบัญชีหน่วยงาน (regulator): ส่ง role="regulator" เพื่อสลับ Sidebar และลิงก์ไปหน้าใบประกาศฯ ของฝั่งนั้น
+// API เป็นชุดเดียวกัน (/user/onsite) เพราะผูกกับ account_id ของคนที่ล็อกอิน ไม่ได้จำกัด role
+const UserOnsite = ({ role = "user" }) => {
+  const isRegulator = role === "regulator";
+  const Sidebar = isRegulator ? SidebarRegulator : SidebarUser;
+  const certPath = isRegulator ? "/regulator-certificate" : "/user-certificate";
   const { fire } = useThemedAlert();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -141,7 +147,7 @@ const UserOnsite = () => {
   if (loading) {
     return (
       <div className="user-portal-layout">
-        <SidebarUser />
+        <Sidebar />
         <div className="user-portal-content flex-center">
           <FaSpinner className="ucert-spin-icon" />
         </div>
@@ -151,7 +157,7 @@ const UserOnsite = () => {
 
   return (
     <div className="user-portal-layout">
-      <SidebarUser />
+      <Sidebar />
       <div className="user-portal-content">
         <div className="ures-admin-container">
           <div className="ucert-header">
@@ -178,7 +184,7 @@ const UserOnsite = () => {
               ) : null}
               {isFull && certIssued && (
                 <a
-                  href="/user-certificate"
+                  href={certPath}
                   style={{
                     ...primaryBtn,
                     display: "inline-flex",
