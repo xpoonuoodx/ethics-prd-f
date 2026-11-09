@@ -165,6 +165,40 @@
   font-size: 18px;
 }
 
+.amc-card-header-with-action {
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.amc-card-header-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.amc-btn-outline {
+  background: #ffffff;
+  color: #2563eb;
+  border: 1px solid #2563eb;
+  padding: 8px 16px;
+  border-radius: 50px;
+  font-size: 13px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  font-family: inherit;
+}
+.amc-btn-outline:hover {
+  background: #eff6ff;
+}
+.amc-btn-outline:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 .amc-form-group {
   margin-bottom: 18px;
 }
@@ -241,6 +275,17 @@
   transform-origin: top left;
 }
 
+/* เต็มขนาดจริง A4 แนวนอน ใช้ตอนแคปเจอร์เป็น PDF ตัวอย่าง (ไม่มีชื่อ-วันที่) - ไม่ถูกย่อ
+   ด้วย transform scale เหมือนกล่อง preview ด้านบน เพื่อให้ html2canvas อ่านขนาดจริงได้
+   (ซ่อนด้วย display:none ปกติ, สลับเป็น block ชั่วคราวตอนกำลังแคปเจอร์เท่านั้น) */
+.amc-cert-blank-template {
+  width: 297mm;
+  height: 210mm;
+  background-color: #ffffff;
+  box-sizing: border-box;
+  display: none;
+}
+
 .amc-preview-note {
   font-size: 12px;
   color: #94a3b8;
@@ -293,6 +338,10 @@
     gap: 15px;
   }
   .amc-btn-primary {
+    width: 100%;
+    justify-content: center;
+  }
+  .amc-btn-outline {
     width: 100%;
     justify-content: center;
   }

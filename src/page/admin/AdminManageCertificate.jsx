@@ -8,10 +8,13 @@ import {
   FaImage,
   FaPenNib,
   FaIdBadge,
+  FaDownload,
 } from "react-icons/fa";
 import "./style/AdminManageCertificate.css";
 import api from "../../api/Api";
 import CertificateTemplate from "../../component/CertificateTemplate";
+import jsPDF from "jspdf";
+import html2canvas from "html2canvas";
 
 const EMPTY_FORM = {
   course_name: "",
@@ -35,6 +38,7 @@ const AdminManageCertificate = ({ workshop = false }) => {
   );
   const [loading, setLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [downloadingBlank, setDownloadingBlank] = useState(false);
 
   // State สำหรับเก็บฟอร์ม
   const [formData, setFormData] = useState(EMPTY_FORM);
@@ -105,6 +109,40 @@ const AdminManageCertificate = ({ workshop = false }) => {
       fire("เกิดข้อผิดพลาด", "ไม่สามารถบันทึกข้อมูลได้", "error");
     } finally {
       setIsSaving(false);
+    }
+  };
+
+  // ดาวน์โหลดใบเซอร์ตัวอย่างแบบไม่มีชื่อ-วันที่ (เผื่อให้แอดมินเอาไปตรวจ/โชว์แม่แบบจริงได้
+  // โดยไม่ผูกกับผู้รับคนใดคนหนึ่ง) ใช้ element เต็มขนาดจริงที่ซ่อนไว้ด้านล่าง (ไม่ใช่กล่อง preview
+  // ที่ย่อด้วย CSS scale ด้านบน) แคปเจอร์ด้วย html2canvas แบบเดียวกับตอนผู้ใช้โหลด PDF จริง
+  // (ดู UserCertificate.jsx) เพื่อให้ได้ไฟล์ความละเอียดเท่าของจริง ไม่เบลอ
+  const handleDownloadBlank = async () => {
+    const certElement = document.getElementById("amc-cert-blank-template");
+    if (!certElement) return;
+
+    try {
+      setDownloadingBlank(true);
+      certElement.style.display = "block";
+      const canvas = await html2canvas(certElement, {
+        scale: 2,
+        useCORS: true,
+        backgroundColor: "#ffffff",
+      });
+      certElement.style.display = "none";
+
+      const imgData = canvas.toDataURL("image/jpeg", 0.92);
+      const pdf = new jsPDF("landscape", "mm", "a4");
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+
+      pdf.addImage(imgData, "JPEG", 0, 0, pdfWidth, pdfHeight);
+      const groupLabel = workshop ? "Workshop" : `กลุ่มที่${selectedGroup}`;
+      pdf.save(`ใบเซอร์ตัวอย่าง_${groupLabel}.pdf`);
+    } catch (error) {
+      console.error("Download Blank Certificate Error:", error);
+      fire("เกิดข้อผิดพลาด", "ไม่สามารถดาวน์โหลดใบเซอร์ตัวอย่างได้", "error");
+    } finally {
+      setDownloadingBlank(false);
     }
   };
 
@@ -309,9 +347,26 @@ const AdminManageCertificate = ({ workshop = false }) => {
               {/* ฝั่งขวา: กล่องพรีวิว (จำลอง A4) */}
               <div className="amc-preview-section">
                 <div className="amc-form-card">
-                  <div className="amc-card-header">
-                    <FaIdBadge className="amc-card-icon" />
-                    <h2>ตัวอย่างการแสดงผล (Preview)</h2>
+                  <div className="amc-card-header amc-card-header-with-action">
+                    <div className="amc-card-header-left">
+                      <FaIdBadge className="amc-card-icon" />
+                      <h2>ตัวอย่างการแสดงผล (Preview)</h2>
+                    </div>
+                    <button
+                      type="button"
+                      className="amc-btn-outline"
+                      onClick={handleDownloadBlank}
+                      disabled={downloadingBlank || loading}
+                    >
+                      {downloadingBlank ? (
+                        <FaSpinner className="amc-spin-small" />
+                      ) : (
+                        <FaDownload />
+                      )}
+                      {downloadingBlank
+                        ? "กำลังสร้างไฟล์..."
+                        : "ดาวน์โหลดใบเซอร์ตัวอย่าง (ไม่มีชื่อ)"}
+                    </button>
                   </div>
                   <div className="amc-preview-wrapper">
                     {/* ใช้ component จริงตัวเดียวกับที่ผู้ใช้เห็นตอนโหลด PDF (CertificateTemplate)
@@ -343,6 +398,36 @@ const AdminManageCertificate = ({ workshop = false }) => {
                   <p className="amc-preview-note">
                     * พรีวิวนี้คือหน้าตาเดียวกับที่ผู้ใช้จะเห็นตอนดาวน์โหลด PDF จริง
                   </p>
+
+                  {/* --- DOM ที่ซ่อนไว้สำหรับสร้างไฟล์ตัวอย่างแบบไม่มีชื่อ-วันที่ (เต็มขนาดจริง
+                      ไม่ถูกย่อด้วย CSS scale เหมือนกล่อง preview ด้านบน) ข้อมูลอื่นแสดงครบทุกช่อง
+                      ตามที่กรอกไว้ในฟอร์ม --- */}
+                  <div
+                    style={{ position: "absolute", left: "-9999px", top: "-9999px" }}
+                  >
+                    <div id="amc-cert-blank-template" className="amc-cert-blank-template">
+                      <CertificateTemplate
+                        cert={{
+                          certId: 0,
+                          courseGroup: selectedGroup,
+                          trainingStart: "",
+                          trainingEnd: "",
+                          course_name:
+                            formData.course_name || "กรุณาพิมพ์ชื่อหลักสูตร...",
+                          background_url: formData.background_url,
+                          logo_url: formData.logo_url,
+                          signatory_name: formData.signatory_name,
+                          signatory_position: formData.signatory_position,
+                          signature_url: formData.signature_url,
+                          issuer_name: formData.issuer_name,
+                          description: formData.description,
+                          passDate: "",
+                        }}
+                        userName=""
+                      />
+                    </div>
+                  </div>
+                  {/* ------------------------------------------- */}
                 </div>
               </div>
             </div>

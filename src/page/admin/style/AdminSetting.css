@@ -229,6 +229,81 @@
   cursor: not-allowed;
 }
 
+/* Rate Limit */
+.as-ratelimit-hint {
+  font-size: 12.5px;
+  color: #64748b;
+  margin: -6px 0 16px 0;
+  line-height: 1.5;
+}
+.as-ratelimit-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.as-ratelimit-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  padding: 14px;
+  border: 1px solid #f1f5f9;
+  border-radius: 12px;
+}
+.as-ratelimit-info {
+  flex: 1;
+  min-width: 200px;
+}
+.as-ratelimit-controls {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-shrink: 0;
+}
+.as-ratelimit-minutes {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.as-ratelimit-minutes input {
+  width: 64px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 7px 10px;
+  font-size: 13px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.as-ratelimit-minutes input:focus {
+  border-color: #0f172a;
+}
+.as-ratelimit-minutes span {
+  font-size: 13px;
+  color: #475569;
+}
+.as-ratelimit-save-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 8px;
+  background: #eef7e8;
+  color: #3f6b21;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.as-ratelimit-save-btn:hover {
+  background: #e3f2da;
+}
+.as-ratelimit-save-btn:disabled {
+  background: #f1f5f9;
+  color: #94a3b8;
+  cursor: not-allowed;
+}
+
 /* Admin list */
 .as-admin-list {
   display: flex;
@@ -382,5 +457,9 @@
   }
   .as-admin-row {
     flex-wrap: wrap;
+  }
+  .as-ratelimit-controls {
+    width: 100%;
+    justify-content: space-between;
   }
 }

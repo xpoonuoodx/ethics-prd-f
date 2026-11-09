@@ -10,6 +10,8 @@ import {
   FaTimes,
   FaBan,
   FaCheckCircle,
+  FaShieldAlt,
+  FaSave,
 } from "react-icons/fa";
 import api, { getStoredUser } from "../../api/Api";
 import "./style/AdminSetting.css";
@@ -34,6 +36,10 @@ const AdminSetting = () => {
   const [allowCrossTrackTesting, setAllowCrossTrackTesting] = useState(false);
   const [savingSettings, setSavingSettings] = useState(false);
 
+  // --- Rate Limit ---
+  const [rateLimits, setRateLimits] = useState([]);
+  const [savingRateLimitKey, setSavingRateLimitKey] = useState(null);
+
   // --- จัดการบัญชีแอดมิน ---
   const [admins, setAdmins] = useState([]);
   const [showAddAdmin, setShowAddAdmin] = useState(false);
@@ -54,9 +60,10 @@ const AdminSetting = () => {
   const fetchAll = async () => {
     try {
       setLoading(true);
-      const [settingsRes, adminsRes] = await Promise.all([
+      const [settingsRes, adminsRes, rateLimitRes] = await Promise.all([
         api.get("/admin/settings"),
         api.get("/admin/list-admins"),
+        api.get("/admin/rate-limit-settings"),
       ]);
       if (settingsRes.data?.success) {
         setRequireEmailVerification(
@@ -68,6 +75,9 @@ const AdminSetting = () => {
       }
       if (adminsRes.data?.success) {
         setAdmins(adminsRes.data.data);
+      }
+      if (rateLimitRes.data?.success) {
+        setRateLimits(rateLimitRes.data.data);
       }
     } catch (error) {
       console.error("Fetch Admin Settings Error:", error);
@@ -161,6 +171,59 @@ const AdminSetting = () => {
     } finally {
       setSavingSettings(false);
     }
+  };
+
+  // ---------- Rate Limit ----------
+  const saveRateLimitSetting = async (key, { enabled, windowMinutes }) => {
+    try {
+      setSavingRateLimitKey(key);
+      await api.put(`/admin/rate-limit-settings/${key}`, {
+        enabled,
+        windowMinutes,
+      });
+      setRateLimits((prev) =>
+        prev.map((r) => (r.key === key ? { ...r, enabled, windowMinutes } : r)),
+      );
+    } catch (error) {
+      console.error("Update Rate Limit Setting Error:", error);
+      fire({
+        title: "บันทึกการตั้งค่าไม่สำเร็จ",
+        text: error.response?.data?.message || "เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง",
+        icon: "error",
+        confirmButtonColor: "#ef4444",
+      });
+      // ดึงค่าจริงจาก server กลับมาใหม่ เผื่อ state ฝั่งหน้าบ้านเพี้ยนไปจาก server หลัง error
+      fetchAll();
+    } finally {
+      setSavingRateLimitKey(null);
+    }
+  };
+
+  const handleToggleRateLimit = (item) => {
+    saveRateLimitSetting(item.key, {
+      enabled: !item.enabled,
+      windowMinutes: item.windowMinutes,
+    });
+  };
+
+  const handleRateLimitMinutesChange = (key, value) => {
+    setRateLimits((prev) =>
+      prev.map((r) => (r.key === key ? { ...r, windowMinutes: value } : r)),
+    );
+  };
+
+  const handleSaveRateLimitMinutes = (item) => {
+    const minutes = Number(item.windowMinutes);
+    if (!Number.isInteger(minutes) || minutes < 1 || minutes > 1440) {
+      fire({
+        title: "ระยะเวลาไม่ถูกต้อง",
+        text: "กรุณาระบุระยะเวลาเป็นจำนวนเต็ม 1-1440 นาที",
+        icon: "warning",
+        confirmButtonColor: "#0f172a",
+      });
+      return;
+    }
+    saveRateLimitSetting(item.key, { enabled: item.enabled, windowMinutes: minutes });
   };
 
   // ---------- จัดการบัญชีแอดมิน ----------
@@ -361,6 +424,61 @@ const AdminSetting = () => {
               >
                 <span className="as-switch-knob"></span>
               </button>
+            </div>
+          </div>
+
+          {/* Rate Limit */}
+          <div className="as-card">
+            <div className="as-card-header">
+              <FaShieldAlt className="as-card-header-icon" />
+              <h2>จำกัดจำนวนครั้งการใช้งาน (Rate Limit)</h2>
+            </div>
+            <p className="as-ratelimit-hint">
+              ปิดชั่วคราวได้เวลาต้องเปิดให้สมัครสมาชิก/เข้าสู่ระบบพร้อมกันจำนวนมาก (เช่น
+              วันลง workshop) แล้วอย่าลืมเปิดกลับคืนหลังใช้งานเสร็จ
+            </p>
+            <div className="as-ratelimit-list">
+              {rateLimits.map((item) => (
+                <div key={item.key} className="as-ratelimit-row">
+                  <div className="as-ratelimit-info">
+                    <p className="as-toggle-title">{item.label}</p>
+                    <p className="as-toggle-desc">
+                      จำกัด {item.max} ครั้ง ต่อ {item.windowMinutes} นาที
+                      (ต่อ IP)
+                    </p>
+                  </div>
+                  <div className="as-ratelimit-controls">
+                    <div className="as-ratelimit-minutes">
+                      <input
+                        type="number"
+                        min={1}
+                        max={1440}
+                        value={item.windowMinutes}
+                        disabled={savingRateLimitKey === item.key}
+                        onChange={(e) =>
+                          handleRateLimitMinutesChange(item.key, e.target.value)
+                        }
+                      />
+                      <span>นาที</span>
+                      <button
+                        className="as-ratelimit-save-btn"
+                        title="บันทึกระยะเวลา"
+                        disabled={savingRateLimitKey === item.key}
+                        onClick={() => handleSaveRateLimitMinutes(item)}
+                      >
+                        <FaSave />
+                      </button>
+                    </div>
+                    <button
+                      className={`as-switch ${item.enabled ? "on" : ""}`}
+                      onClick={() => handleToggleRateLimit(item)}
+                      disabled={savingRateLimitKey === item.key}
+                    >
+                      <span className="as-switch-knob"></span>
+                    </button>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
 

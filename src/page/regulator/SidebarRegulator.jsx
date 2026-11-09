@@ -132,7 +132,7 @@ const SidebarRegulator = () => {
               <FaBookOpen className="rgsidebar-icon" />
             </span>
             <span className={`rgsidebar-text ${!isOpen ? "hidden" : ""}`}>
-              สื่อการเรียนรู้
+              จริยธรรมปัญญาประดิษฐ์
             </span>
           </a>
 
@@ -168,7 +168,7 @@ const SidebarRegulator = () => {
               <FaTools className="rgsidebar-icon" />
             </span>
             <span className={`rgsidebar-text ${!isOpen ? "hidden" : ""}`}>
-              เครื่องมือประเมิน
+              เครื่องมือ
             </span>
           </a>
 
