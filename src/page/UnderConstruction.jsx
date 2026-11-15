@@ -39,7 +39,7 @@ function Manual() {
           }}
         >
           <iframe
-            src="https://www.youtube.com/embed/oOcWs15sm40" // ✅ จิมมี่แก้ลิงก์วิดีโอเป็นตัวใหม่ให้ตรงนี้ครับ
+            src="https://www.youtube.com/embed/gkabBPcDNPA" // ลิงก์วิดีโอคู่มือ: https://youtu.be/gkabBPcDNPA
             width="100%"
             height="100%"
             style={{ border: 0, display: "block" }}

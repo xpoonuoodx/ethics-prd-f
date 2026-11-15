@@ -23,6 +23,8 @@ import cover7 from "../assets/image7.jpg";
 import cover8 from "../assets/image8.png";
 import cover9 from "../assets/image9.jpg"; // หน้าปก White paper
 import pdfWhitePaper from "../assets/pdf/Thailand-AI-Ethics-Guideline-White-paper.pdf";
+import cover10 from "../assets/image10.jpg"; // หน้าปก Slide อบรมกิจกรรม On site
+import pdfOnsiteSlide from "../assets/pdf/AI-Ethics-Onsite-Training-Slides.pdf";
 
 
 // ตัวอย่างการ import ไฟล์ PDF
@@ -35,6 +37,13 @@ import pdf7 from "../assets/pdf/การออกแบบโครงสร้
 import pdf8 from "../assets/pdf/ภาครัฐใช้ AI อย่างไร.pdf";
 
 const allDocuments = [
+  {
+    id: 9,
+    title: "Slide อบรมกิจกรรม On site - AI ethics",
+    desc: "สไลด์ประกอบกิจกรรมฝึกอบรมภาคปฏิบัติ (Workshop) การประยุกต์ใช้ปัญญาประดิษฐ์อย่างมีจริยธรรม ภายใต้โครงการสร้างความตระหนักรู้การประยุกต์ใช้ปัญญาประดิษฐ์แบบมีจริยธรรม",
+    image: cover10,
+    fileUrl: pdfOnsiteSlide,
+  },
   {
     id: 0,
     title: "Thailand AI Ethics Guideline (White paper)",
