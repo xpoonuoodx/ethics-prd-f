@@ -241,6 +241,51 @@
   margin-top: 5px;
 }
 
+/* ข้อความเตือนว่าการบันทึกแม่แบบมีผลกับใบที่ออกไปแล้วด้วย */
+.amc-apply-note {
+  margin: 0 0 12px;
+  padding: 10px 14px;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 10px;
+  color: #1d4ed8;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+/* แถบแจ้ง + ปุ่มแสดง/ซ่อนช่องที่ยังไม่ได้ใช้งานในใบประกาศ */
+.amc-unused-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 12px 16px;
+  margin-bottom: 20px;
+  background: #f8fafc;
+  border: 1px dashed #cbd5e1;
+  border-radius: 12px;
+}
+.amc-unused-text {
+  flex: 1;
+  min-width: 220px;
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.5;
+  color: #64748b;
+}
+.amc-unused-tag {
+  display: inline-block;
+  margin-left: 4px;
+  padding: 2px 8px;
+  border-radius: 50px;
+  background: #fef3c7;
+  color: #b45309;
+  font-size: 11px;
+  font-weight: 600;
+  vertical-align: middle;
+}
+
 /* Preview Section */
 .amc-preview-wrapper {
   background: #f8fafc;

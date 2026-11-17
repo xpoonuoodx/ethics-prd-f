@@ -188,6 +188,7 @@ const RegulatorResult = () => {
                       certNumber: certSettings.certNumber,
                       course_name:
                         certSettings.course_name || "AI Ethics Management",
+                      duration_text: certSettings.duration_text,
                       background_url: certSettings.background_url,
                       logo_url: certSettings.logo_url,
                       signature_url: certSettings.signature_url,

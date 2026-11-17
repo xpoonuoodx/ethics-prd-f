@@ -291,6 +291,7 @@ const AdminCertificate = () => {
                     trainingEnd: previewCert.trainingEnd,
                     course_name:
                       previewCert.courseName || "AI Ethics Management",
+                    duration_text: previewCert.durationText,
                     background_url: previewCert.backgroundUrl,
                     logo_url: previewCert.logoUrl,
                     signature_url: previewCert.signatureUrl,

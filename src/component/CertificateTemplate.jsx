@@ -26,8 +26,14 @@ const proxiedImageUrl = (url) => {
 // (trainingStart/trainingEnd = วันอบรมแรกสุด/วันสุดท้ายที่ผู้ใช้ส่งไว้) และวันที่ "ให้ ณ วันที่" คือวันอบรมวันสุดท้าย
 const WORKSHOP_GROUP = 4;
 
+// ระยะเวลาอบรมที่แสดงในใบ ตั้งค่าได้ต่อกลุ่มจากหน้า "ตั้งค่าแม่แบบใบประกาศ" (cert.duration_text)
+// ถ้าแอดมินไม่ได้กรอก (หรือใบเก่าที่ยังไม่มีค่า) ใช้ค่าเริ่มต้นเดิมด้านล่างนี้แทน
+export const DEFAULT_DURATION_TEXT = "1.30 ชั่วโมง";
+export const DEFAULT_WORKSHOP_DURATION_TEXT = "2 วัน รวม 12 ชั่วโมง";
+
 const CertificateTemplate = ({ cert, userName }) => {
   const isWorkshop = Number(cert.courseGroup) === WORKSHOP_GROUP;
+  const durationText = (cert.duration_text || "").trim();
   const passDate =
     isWorkshop && cert.trainingEnd
       ? formatThaiDate(cert.trainingEnd)
@@ -96,10 +102,11 @@ const CertificateTemplate = ({ cert, userName }) => {
             {cert.trainingStart && cert.trainingEnd
               ? `ระหว่างวันที่ ${formatThaiDate(cert.trainingStart)} ถึง ${formatThaiDate(cert.trainingEnd)}`
               : "ระหว่างวันที่ - ถึง -"}{" "}
-            (ระยะเวลาการฝึกอบรม จำนวน 2 วัน รวม 12 ชั่วโมง)
+            (ระยะเวลาการฝึกอบรม จำนวน{" "}
+            {durationText || DEFAULT_WORKSHOP_DURATION_TEXT})
           </>
         ) : (
-          "ระยะเวลาการฝึกอบรมรวม 1.30 ชั่วโมง"
+          `ระยะเวลาการฝึกอบรมรวม ${durationText || DEFAULT_DURATION_TEXT}`
         )}
       </div>
 
