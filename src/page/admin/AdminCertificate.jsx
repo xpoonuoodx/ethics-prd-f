@@ -8,15 +8,20 @@ import {
   FaSpinner,
   FaEye,
   FaTimes,
+  FaChevronLeft,
+  FaChevronRight,
 } from "react-icons/fa";
 import { useThemedAlert } from "../../hooks/useThemedAlert";
 import api from "../../api/Api";
 import CertificateTemplate from "../../component/CertificateTemplate";
 
+const ITEMS_PER_PAGE = 10;
+
 const AdminCertificate = () => {
   const { fire } = useThemedAlert();
   const [certificates, setCertificates] = useState([]);
   const [search, setSearch] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const [previewCert, setPreviewCert] = useState(null);
 
@@ -75,6 +80,25 @@ const AdminCertificate = () => {
       (c.userName || "").toLowerCase().includes(search.toLowerCase()) ||
       (c.userEmail || "").toLowerCase().includes(search.toLowerCase()) ||
       (c.orgName || "").toLowerCase().includes(search.toLowerCase()),
+  );
+
+  // แบ่งหน้า: ถ้าหลังลบ/โหลดใหม่แล้วหน้าปัจจุบันเกินจำนวนหน้าจริง ให้ถอยมาหน้าสุดท้ายแทนหน้าว่าง
+  const totalPages = Math.max(
+    1,
+    Math.ceil(filteredCertificates.length / ITEMS_PER_PAGE),
+  );
+  const safeCurrentPage = Math.min(currentPage, totalPages);
+  const paginatedCertificates = filteredCertificates.slice(
+    (safeCurrentPage - 1) * ITEMS_PER_PAGE,
+    safeCurrentPage * ITEMS_PER_PAGE,
+  );
+  const rangeStart =
+    filteredCertificates.length === 0
+      ? 0
+      : (safeCurrentPage - 1) * ITEMS_PER_PAGE + 1;
+  const rangeEnd = Math.min(
+    safeCurrentPage * ITEMS_PER_PAGE,
+    filteredCertificates.length,
   );
 
   // สถิติคำนวณจากข้อมูลทั้งหมด (ไม่ขึ้นกับคำค้นหา)
@@ -180,9 +204,20 @@ const AdminCertificate = () => {
                 type="text"
                 placeholder="ค้นหาชื่อผู้ใช้, อีเมล หรือหน่วยงาน..."
                 value={search}
-                onChange={(e) => setSearch(e.target.value)}
+                onChange={(e) => {
+                  setSearch(e.target.value);
+                  // ค้นหาใหม่ให้กลับไปหน้า 1 เสมอ กันค้างอยู่หน้าที่ไม่มีผลลัพธ์
+                  setCurrentPage(1);
+                }}
               />
             </div>
+            {!loading && (
+              <span className="act-list-count">
+                {filteredCertificates.length === 0
+                  ? "0 ใบ"
+                  : `แสดง ${rangeStart}-${rangeEnd} จาก ${filteredCertificates.length.toLocaleString("th-TH")} ใบ`}
+              </span>
+            )}
           </div>
 
           <div className="act-table-wrapper">
@@ -205,7 +240,7 @@ const AdminCertificate = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredCertificates.map((cert) => (
+                  {paginatedCertificates.map((cert) => (
                     <tr key={cert.certId}>
                       <td>
                         <div className="act-user-name">{cert.userName}</div>
@@ -258,6 +293,62 @@ const AdminCertificate = () => {
               </table>
             )}
           </div>
+
+          {!loading && totalPages > 1 && (
+            <div className="act-pagination">
+              <button
+                className="act-page-btn"
+                onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                disabled={safeCurrentPage === 1}
+                aria-label="หน้าก่อนหน้า"
+              >
+                <FaChevronLeft />
+              </button>
+
+              {Array.from({ length: totalPages }, (_, i) => i + 1)
+                .filter(
+                  (page) =>
+                    page === 1 ||
+                    page === totalPages ||
+                    Math.abs(page - safeCurrentPage) <= 1,
+                )
+                .reduce((acc, page, i, arr) => {
+                  if (i > 0 && page - arr[i - 1] > 1) acc.push("...");
+                  acc.push(page);
+                  return acc;
+                }, [])
+                .map((page, i) =>
+                  page === "..." ? (
+                    <span key={`ellipsis-${i}`} className="act-page-ellipsis">
+                      …
+                    </span>
+                  ) : (
+                    <button
+                      key={page}
+                      className={`act-page-btn ${
+                        page === safeCurrentPage ? "active" : ""
+                      }`}
+                      onClick={() => setCurrentPage(page)}
+                      aria-label={`หน้า ${page}`}
+                      aria-current={page === safeCurrentPage ? "page" : undefined}
+                    >
+                      {page}
+                    </button>
+                  ),
+                )}
+
+              <button
+                className="act-page-btn"
+                onClick={() =>
+                  setCurrentPage((p) => Math.min(totalPages, p + 1))
+                }
+                disabled={safeCurrentPage === totalPages}
+                aria-label="หน้าถัดไป"
+              >
+                <FaChevronRight />
+              </button>
+            </div>
+          )}
         </div>
       </div>
 

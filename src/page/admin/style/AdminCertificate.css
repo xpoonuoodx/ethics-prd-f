@@ -147,6 +147,59 @@
   color: #94a3b8;
 }
 
+.act-list-count {
+  margin-left: auto;
+  align-self: center;
+  font-size: 13px;
+  font-weight: 500;
+  color: #64748b;
+  white-space: nowrap;
+}
+
+/* Pagination */
+.act-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 10px;
+}
+.act-page-btn {
+  min-width: 36px;
+  height: 36px;
+  padding: 0 10px;
+  border-radius: 10px;
+  border: 1px solid #e2e8f0;
+  background: #ffffff;
+  color: #475569;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+.act-page-btn:hover:not(:disabled) {
+  background: #f1f5f9;
+  border-color: #cbd5e1;
+}
+.act-page-btn.active {
+  background: #0f172a;
+  border-color: #0f172a;
+  color: #ffffff;
+}
+.act-page-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+.act-page-ellipsis {
+  color: #94a3b8;
+  font-size: 13px;
+  padding: 0 4px;
+}
+
 /* Table Component Style */
 .act-table-wrapper {
   overflow-x: auto;
@@ -365,5 +418,15 @@
   }
   .act-search-box {
     width: 100%;
+  }
+  /* มือถือ: ย้ายข้อความ "แสดง x-y จาก n" ลงใต้ช่องค้นหา ไม่ให้บีบช่องค้นหา */
+  .act-toolbar {
+    flex-direction: column;
+    gap: 10px;
+  }
+  .act-list-count {
+    margin-left: 0;
+    align-self: flex-start;
+    padding-left: 4px;
   }
 }
